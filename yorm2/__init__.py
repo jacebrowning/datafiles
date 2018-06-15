@@ -8,14 +8,18 @@ import log
 
 
 class Manager:
-    def __init__(self, synchronized_object, field_mapping, path_pattern):
+    def __init__(self, synchronized_object, path_pattern):
         self._object = synchronized_object
-        self._fields = field_mapping
         self._pattern = path_pattern
 
     @property
     def fields(self):
-        return self._fields
+        mapped_fields = {}
+        for data_field in dataclasses.fields(self._object):
+            print(data_field)
+            if issubclass(data_field.type, fields.Field):
+                mapped_fields[data_field.name] = data_field.type
+        return mapped_fields
 
     @property
     def path(self):
@@ -34,10 +38,4 @@ class Manager:
 class Model:
     @property
     def form(self):
-        fields = {
-            k: v
-            for k, v in self.Meta.__dict__.items()
-            if not k.startswith("_")
-        }
-        path = fields.pop("path")
-        return Manager(self, fields, path)
+        return Manager(self, self.Meta.path)

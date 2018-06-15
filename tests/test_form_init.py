@@ -32,10 +32,9 @@ def describe_builtin_fields():
     @dataclass
     class Sample(yorm2.Model):
         key: int
-        name: str
+        name: yorm2.fields.String
 
         class Meta:
-            name = yorm2.fields.String
             path = "tmp/{self.key}.yml"
 
     @pytest.fixture
