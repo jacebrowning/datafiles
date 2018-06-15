@@ -1,32 +1,43 @@
 __version__ = "0.1.0"
 
+from . import fields
 
-from functools import wraps
+import dataclasses, inspect
 
-
-def sync(path, *, attrs=None):
-    def decorated_class(cls):
-        return cls
-
-    return decorated_class
+import log
 
 
-class Mapper:
-    def __init__(self, synchronized_object):
+class Manager:
+    def __init__(self, synchronized_object, field_mapping, path_pattern):
         self._object = synchronized_object
+        self._fields = field_mapping
+        self._pattern = path_pattern
 
     @property
-    def attrs(self):
-        return {}
+    def fields(self):
+        return self._fields
 
     @property
     def path(self):
-        return "tmp/42.yml"
+        log.debug(f"Formatting path {self._pattern!r} using {self._object!r}")
+        return self._pattern.format(self=self._object)
 
     @property
     def data(self):
-        return {}
+        data = dataclasses.asdict(self._object)
+        for key in list(data.keys()):
+            if key not in self.fields:
+                data.pop(key)
+        return data
 
 
-def get_mapper(synchronized_object):
-    return Mapper(synchronized_object)
+class Model:
+    @property
+    def form(self):
+        fields = {
+            k: v
+            for k, v in self.Meta.__dict__.items()
+            if not k.startswith("_")
+        }
+        path = fields.pop("path")
+        return Manager(self, fields, path)

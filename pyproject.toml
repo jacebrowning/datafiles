@@ -1,12 +1,13 @@
 [tool.poetry]
 name = "yorm2"
 version = "0.1.0"
-description = ""
+description = "File-based ORM for data classes."
 authors = ["Jace Browning <jacebrowning@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "*"
 decorator = "^4.3"
+minilog = "^0.4.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^3.0"
@@ -15,3 +16,5 @@ pytest-describe = "^0.11.1"
 pytest-expecter = "^1.2"
 isort = "^4.3"
 pytest-cov = "^2.5"
+rerun = "^1.0"
+

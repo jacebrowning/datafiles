@@ -16,14 +16,21 @@ pyproject.lock: pyproject.toml
 .PHONY: ci
 ci: check test
 
-.PHONY: check
-check: install
+.PHONY: format
+format: install
 	poetry run isort yorm2 tests --recursive --apply
 	poetry run black yorm2 tests --line-length=79 --py36
+
+.PHONY: check
+check: install
 
 .PHONY: test
 test: install
 	poetry run pytest
+
+.PHONY: watch
+watch: install
+	poetry run rerun "make test check" --ignore=.coverage; make format
 
 ###############################################################################
 

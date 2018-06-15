@@ -113,6 +113,15 @@ platform = "*"
 [package.dependencies]
 futures = "*"
 [[package]]
+name = "minilog"
+version = "0.4"
+description = "Minimalistic wrapper for Python logging."
+category = "main"
+optional = false
+python-versions = "*"
+platform = "*"
+
+[[package]]
 name = "more-itertools"
 version = "4.2.0"
 description = "More routines for operating on iterables, beyond itertools"
@@ -204,6 +213,15 @@ python-versions = "*"
 platform = "*"
 
 [[package]]
+name = "rerun"
+version = "1.0.28"
+description = "Command-line script to re-run the given command when files change."
+category = "dev"
+optional = false
+python-versions = "*"
+platform = "*"
+
+[[package]]
 name = "setuptools"
 version = "39.2.0"
 description = "Easily download, build, install, upgrade, and uninstall Python packages"
@@ -233,7 +251,7 @@ platform = "*"
 [metadata]
 python-versions = "*"
 platform = "*"
-content-hash = "3be508c5ad43dc273ecf467fe252e70e829882c2ec1eeab11b51e6f3ec0aeaa4"
+content-hash = "0a3cb6bcd86f0755f5c32c3f7a9d72f2f047ffdaa6ee2d675b74a011c7162136"
 
 [metadata.hashes]
 appdirs = [ "d8b24664561d0d34ddfaec54636d502d7cea6e29c3eaf68f3df6180863e2166e", "9e5896d1372858f8dd3344faf4e5014d21849c756c8d5701f78f8a103b372d92",]
@@ -247,6 +265,7 @@ decorator = [ "2c51dff8ef3c447388fe5e4453d24a2bf128d3a4c32af3fabef1f01c6851ab82"
 funcsigs = [ "330cc27ccbf7f1e992e69fef78261dc7c6569012cf397db8d3de0234e6c937ca", "a7bb0f2cf3a3fd1ab2732cb49eba4252c2af4240442415b4abce3b87022a8f50",]
 futures = [ "ec0a6cb848cc212002b9828c3e34c675e0c9ff6741dc445cab6fdd4e1085d1f1", "9ec02aa7d674acb8618afb127e27fde7fc68994c0437ad759fa094a574adb265",]
 isort = [ "ec9ef8f4a9bc6f71eec99e1806bfa2de401650d996c59330782b89a5555c1497", "1153601da39a25b14ddc54955dbbacbb6b2d19135386699e2ad58517953b34af", "b9c40e9750f3d77e6e4d441d8b0266cf555e7cdabdcff33c4fd06366ca761ef8",]
+minilog = [ "cd1e464f0947fbb48d31d603d1fcfc16683693c0ea599d23e1fdea8408c2d9c4", "6637c7ee3a5a8b7ba886858c9c9c19151089ce07bc722631ec5c8fb95d23b264",]
 more-itertools = [ "a18d870ef2ffca2b8463c0070ad17b5978056f403fb64e3f15fe62a52db21cc0", "6703844a52d3588f951883005efcf555e49566a48afd4db4e965d69b883980d3", "2b6b9893337bfd9166bee6a62c2b0c9fe7735dcf85948b387ec8cba30e85d8e8",]
 ordereddict = [ "1c35b4ac206cef2d24816c89f89cf289dd3d38cf7c449bb3fab7bf6d43f01b1f",]
 pluggy = [ "d345c8fe681115900d6da8d048ba67c25df42973bda370783cd58826442dcd7c", "e160a7fcf25762bb60efc7e171d4497ff1d8d2d75a3d0df7a21b76821ecbf5c5", "7f8ae7f5bdf75671a718d2daf0a64b7885f74510bcd98b1a0bb420eb9a9d0cff",]
@@ -255,6 +274,7 @@ pytest = [ "26838b2bc58620e01675485491504c3aa7ee0faf335c37fcd5f8731ca4319591", "
 pytest-cov = [ "890fe5565400902b0c78b5357004aab1c814115894f4f21370e2433256a3eeec", "03aa752cf11db41d281ea1d807d954c4eda35cfa1b21d6971966cc041bbf6e2d",]
 pytest-describe = [ "bd6be131452b7822c872735ffe53ce3931b3b80cbbad1647c2b482cc9ef3d00e",]
 pytest-expecter = [ "9d579961379026f5c2211070125f042f882fc0db00488b10ebbdf79491679ff6", "efd92985547f2f2b170d8b7459d00075d9694d3ebdabfb41dbb7f71d9183d5e0",]
+rerun = [ "d54ec9d28c5ece6edcf029b4e87d0aac74aee0472fb78ee6475eee132e8b990d", "614338c8e0882b84bd1041f5f4016cffc35b81f5f0db64a030ba31a0b3dc583d",]
 setuptools = [ "8fca9275c89964f13da985c3656cb00ba029d7f3916b37990927ffdf264e7926", "f7cddbb5f5c640311eb00eab6e849f7701fa70bf6a183fc8a2c33dd1d1672fb2",]
 six = [ "832dc0e10feb1aa2c68dcc57dbb658f1c7e65b9b61af69048abc87a2db00a0eb", "70e8a77beed4562e7f14fe23a786b54f6296e34344c23bc42f07b15018ff98e9",]
 toml = [ "8e86bd6ce8cc11b9620cb637466453d94f5d57ad86f17e98a98d1f73e3baab2d",]
