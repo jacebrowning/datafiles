@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "yorm2"
+version = "0.1.0"
+description = ""
+authors = ["Jace Browning <jacebrowning@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "*"
+decorator = "^4.3"
+
+[tool.poetry.dev-dependencies]
+pytest = "^3.0"
+black = "^18.3-alpha.0"
+pytest-describe = "^0.11.1"
+pytest-expecter = "^1.2"
+isort = "^4.3"
+pytest-cov = "^2.5"
