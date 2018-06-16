@@ -1,33 +1,34 @@
 __version__ = "0.1.0"
 
-from . import fields
-
-import dataclasses, inspect
+import dataclasses
+import inspect
+from typing import Any, Dict, Optional
 
 import log
 
+from . import fields
+
 
 class Manager:
-    def __init__(self, synchronized_object, path_pattern):
+    def __init__(
+        self,
+        synchronized_object: Any,
+        path_pattern: Optional[str],
+        mapped_fields: Dict,
+    ):
         self._object = synchronized_object
         self._pattern = path_pattern
+        self.fields = mapped_fields
 
     @property
-    def fields(self):
-        mapped_fields = {}
-        for data_field in dataclasses.fields(self._object):
-            print(data_field)
-            if issubclass(data_field.type, fields.Field):
-                mapped_fields[data_field.name] = data_field.type
-        return mapped_fields
-
-    @property
-    def path(self):
+    def path(self) -> Optional[str]:
+        if not self._pattern:
+            return None
         log.debug(f"Formatting path {self._pattern!r} using {self._object!r}")
         return self._pattern.format(self=self._object)
 
     @property
-    def data(self):
+    def data(self) -> Dict:
         data = dataclasses.asdict(self._object)
         for key in list(data.keys()):
             if key not in self.fields:
@@ -37,5 +38,8 @@ class Manager:
 
 class Model:
     @property
-    def form(self):
-        return Manager(self, self.Meta.path)
+    def form(self) -> Manager:
+        meta = getattr(self, "Meta", None)
+        path = getattr(meta, "form_path", None)
+        fields = getattr(meta, "form_fields", {})
+        return Manager(self, path, fields)

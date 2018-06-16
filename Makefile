@@ -14,7 +14,7 @@ pyproject.lock: pyproject.toml
 ###############################################################################
 
 .PHONY: ci
-ci: check test
+ci: format check test
 
 .PHONY: format
 format: install
@@ -30,7 +30,7 @@ test: install
 
 .PHONY: watch
 watch: install
-	poetry run rerun "make test check" --ignore=.coverage; make format
+	poetry run rerun "make test format check" -i .coverage -i htmlcov
 
 ###############################################################################
 
