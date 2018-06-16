@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "yorm2"
+name = "form"
 version = "0.1.0"
 description = "File-based ORM for data classes."
 authors = ["Jace Browning <jacebrowning@gmail.com>"]

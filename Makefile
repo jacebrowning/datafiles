@@ -18,8 +18,8 @@ ci: check test
 
 .PHONY: format
 format: install
-	poetry run isort yorm2 tests --recursive --apply
-	poetry run black yorm2 tests --line-length=79 --py36
+	poetry run isort form tests --recursive --apply
+	poetry run black form tests --line-length=79 --py36
 
 .PHONY: check
 check: install

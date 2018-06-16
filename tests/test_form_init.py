@@ -2,12 +2,12 @@ from dataclasses import dataclass
 
 import pytest
 
-import yorm2
+import form
 
 
 def describe_zero_fields():
     @dataclass
-    class Sample(yorm2.Model):
+    class Sample(form.Model):
         key: int
         name: str
 
@@ -30,9 +30,9 @@ def describe_zero_fields():
 
 def describe_builtin_fields():
     @dataclass
-    class Sample(yorm2.Model):
+    class Sample(form.Model):
         key: int
-        name: yorm2.fields.String
+        name: form.fields.String
 
         class Meta:
             path = "tmp/{self.key}.yml"
@@ -42,7 +42,7 @@ def describe_builtin_fields():
         return Sample(42, "foobar")
 
     def test_attrs(expect, sample):
-        expect(sample.form.fields) == {"name": yorm2.fields.String}
+        expect(sample.form.fields) == {"name": form.fields.String}
 
     def test_path(expect, sample):
         expect(sample.form.path) == "tmp/42.yml"
