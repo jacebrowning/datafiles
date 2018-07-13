@@ -1,20 +1,26 @@
 [tool.poetry]
+
 name = "form"
-version = "0.1.0"
+version = "0.0.0"
 description = "File-based ORM for data classes."
 authors = ["Jace Browning <jacebrowning@gmail.com>"]
 
 [tool.poetry.dependencies]
-python = "*"
+
+python = "^3.7"
+
 decorator = "^4.3"
 minilog = "^0.4.0"
 
 [tool.poetry.dev-dependencies]
-pytest = "^3.0"
+
 black = "^18.3-alpha.0"
+isort = "^4.3"
+
+pytest = "^3.0"
+pytest-cov = "^2.5"
 pytest-describe = "^0.11.1"
 pytest-expecter = "^1.2"
-isort = "^4.3"
-pytest-cov = "^2.5"
+
 rerun = "^1.0"
 

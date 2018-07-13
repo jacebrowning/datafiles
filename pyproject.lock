@@ -1,280 +1,238 @@
 [[package]]
-name = "appdirs"
-version = "1.4.3"
+category = "dev"
 description = "A small Python module for determining appropriate platform-specific dirs, e.g. a \"user data dir\"."
-category = "dev"
+name = "appdirs"
 optional = false
-python-versions = "*"
 platform = "*"
+python-versions = "*"
+version = "1.4.3"
 
 [[package]]
-name = "atomicwrites"
-version = "1.1.5"
+category = "dev"
 description = "Atomic file writes."
-category = "dev"
+name = "atomicwrites"
 optional = false
-python-versions = "*"
 platform = "UNKNOWN"
-
-[[package]]
-name = "attrs"
-version = "18.1.0"
-description = "Classes Without Boilerplate"
-category = "dev"
-optional = false
 python-versions = "*"
-platform = "*"
+version = "1.1.5"
 
 [[package]]
-name = "black"
-version = "18.6b2"
-description = "The uncompromising code formatter."
 category = "dev"
+description = "Classes Without Boilerplate"
+name = "attrs"
 optional = false
-python-versions = ">=3.6"
 platform = "*"
+python-versions = "*"
+version = "18.1.0"
+
+[[package]]
+category = "dev"
+description = "The uncompromising code formatter."
+name = "black"
+optional = false
+platform = "*"
+python-versions = ">=3.6"
+version = "18.6b4"
 
 [package.dependencies]
-click = ">=6.5"
-attrs = ">=17.4.0"
 appdirs = "*"
+attrs = ">=17.4.0"
+click = ">=6.5"
 toml = ">=0.9.4"
-[[package]]
-name = "click"
-version = "6.7"
-description = "A simple wrapper around optparse for powerful command line utilities."
-category = "dev"
-optional = false
-python-versions = "*"
-platform = "*"
 
 [[package]]
-name = "colorama"
-version = "0.3.9"
-description = "Cross-platform colored terminal text."
 category = "dev"
+description = "A simple wrapper around optparse for powerful command line utilities."
+name = "click"
 optional = false
+platform = "*"
 python-versions = "*"
+version = "6.7"
+
+[[package]]
+category = "dev"
+description = "Cross-platform colored terminal text."
+name = "colorama"
+optional = false
 platform = "UNKNOWN"
+python-versions = "*"
+version = "0.3.9"
 
 [package.requirements]
 platform = "win32"
+
 [[package]]
-name = "coverage"
-version = "4.5.1"
+category = "dev"
 description = "Code coverage measurement for Python"
-category = "dev"
+name = "coverage"
 optional = false
+platform = "*"
 python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*, <4"
-platform = "*"
+version = "4.5.1"
 
 [[package]]
-name = "decorator"
-version = "4.3.0"
+category = "main"
 description = "Better living through Python with decorators"
-category = "main"
+name = "decorator"
 optional = false
-python-versions = "*"
 platform = "All"
-
-[[package]]
-name = "funcsigs"
-version = "1.0.2"
-description = "Python function signatures from PEP362 for Python 2.6, 2.7 and 3.2+"
-category = "dev"
-optional = false
 python-versions = "*"
-platform = "UNKNOWN"
+version = "4.3.0"
 
-[package.dependencies]
-ordereddict = "*"
-[package.requirements]
-python = "<3.0"
 [[package]]
-name = "futures"
-version = "3.2.0"
-description = "Backport of the concurrent.futures package from Python 3"
 category = "dev"
-optional = false
-python-versions = ">=2.6, <3"
-platform = "*"
-
-[package.requirements]
-python = "~2.7"
-[[package]]
-name = "isort"
-version = "4.3.4"
 description = "A Python utility / library to sort Python imports."
-category = "dev"
+name = "isort"
 optional = false
-python-versions = "*"
 platform = "*"
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
+version = "4.3.4"
 
-[package.dependencies]
-futures = "*"
 [[package]]
-name = "minilog"
-version = "0.4"
-description = "Minimalistic wrapper for Python logging."
 category = "main"
+description = "Minimalistic wrapper for Python logging."
+name = "minilog"
 optional = false
-python-versions = "*"
 platform = "*"
+python-versions = "*"
+version = "0.4"
 
 [[package]]
-name = "more-itertools"
-version = "4.2.0"
-description = "More routines for operating on iterables, beyond itertools"
 category = "dev"
+description = "More routines for operating on iterables, beyond itertools"
+name = "more-itertools"
 optional = false
-python-versions = "*"
 platform = "*"
+python-versions = "*"
+version = "4.2.0"
 
 [package.dependencies]
 six = ">=1.0.0,<2.0.0"
-[[package]]
-name = "ordereddict"
-version = "1.1"
-description = "A drop-in substitute for Py2.7's new collections.OrderedDict that works in Python 2.4-2.6."
-category = "dev"
-optional = false
-python-versions = "*"
-platform = "UNKNOWN"
 
-[package.requirements]
-python = "<2.7"
 [[package]]
-name = "pluggy"
-version = "0.6.0"
+category = "dev"
 description = "plugin and hook calling mechanisms for python"
-category = "dev"
+name = "pluggy"
 optional = false
-python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 platform = "unix"
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
+version = "0.6.0"
 
 [[package]]
-name = "py"
-version = "1.5.3"
+category = "dev"
 description = "library with cross-python path, ini-parsing, io, code, log facilities"
-category = "dev"
+name = "py"
 optional = false
-python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 platform = "unix"
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
+version = "1.5.4"
 
 [[package]]
-name = "pytest"
-version = "3.6.1"
-description = "pytest: simple powerful testing with Python"
 category = "dev"
+description = "pytest: simple powerful testing with Python"
+name = "pytest"
 optional = false
-python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 platform = "unix"
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
+version = "3.6.3"
 
 [package.dependencies]
-colorama = "*"
-funcsigs = "*"
-pluggy = ">=0.5,<0.7"
 atomicwrites = ">=1.0"
-more-itertools = ">=4.0.0"
 attrs = ">=17.4.0"
+more-itertools = ">=4.0.0"
+pluggy = ">=0.5,<0.7"
+py = ">=1.5.0"
 setuptools = "*"
 six = ">=1.10.0"
-py = ">=1.5.0"
+
+[package.dependencies.colorama]
+platform = "win32"
+version = "*"
+
 [[package]]
-name = "pytest-cov"
-version = "2.5.1"
-description = "Pytest plugin for measuring coverage."
 category = "dev"
+description = "Pytest plugin for measuring coverage."
+name = "pytest-cov"
 optional = false
-python-versions = "*"
 platform = "*"
+python-versions = "*"
+version = "2.5.1"
 
 [package.dependencies]
 coverage = ">=3.7.1"
 pytest = ">=2.6.0"
+
 [[package]]
-name = "pytest-describe"
-version = "0.11.1"
-description = "Describe-style plugin for pytest"
 category = "dev"
+description = "Describe-style plugin for pytest"
+name = "pytest-describe"
 optional = false
-python-versions = "*"
 platform = "*"
+python-versions = "*"
+version = "0.11.1"
 
 [package.dependencies]
 pytest = ">=2.6.0"
+
 [[package]]
-name = "pytest-expecter"
-version = "1.2"
+category = "dev"
 description = "Better testing with expecter and pytest."
-category = "dev"
+name = "pytest-expecter"
 optional = false
-python-versions = "*"
 platform = "*"
+python-versions = "*"
+version = "1.2"
 
 [[package]]
-name = "rerun"
-version = "1.0.28"
+category = "dev"
 description = "Command-line script to re-run the given command when files change."
-category = "dev"
+name = "rerun"
 optional = false
+platform = "*"
 python-versions = "*"
-platform = "*"
+version = "1.0.28"
 
 [[package]]
-name = "setuptools"
-version = "39.2.0"
-description = "Easily download, build, install, upgrade, and uninstall Python packages"
 category = "dev"
-optional = false
-python-versions = ">=2.7,!=3.0.*,!=3.1.*,!=3.2.*"
-platform = "*"
-
-[[package]]
-name = "six"
-version = "1.11.0"
 description = "Python 2 and 3 compatibility utilities"
-category = "dev"
+name = "six"
 optional = false
-python-versions = "*"
 platform = "*"
+python-versions = "*"
+version = "1.11.0"
 
 [[package]]
-name = "toml"
-version = "0.9.4"
-description = "Python Library for Tom's Obvious, Minimal Language"
 category = "dev"
+description = "Python Library for Tom's Obvious, Minimal Language"
+name = "toml"
 optional = false
-python-versions = "*"
 platform = "*"
+python-versions = "*"
+version = "0.9.4"
 
 [metadata]
-python-versions = "*"
+content-hash = "9082ac303d899d42b616458025dceca5dad3396730ada3fbbc602fa0ae7d3e98"
 platform = "*"
-content-hash = "0a3cb6bcd86f0755f5c32c3f7a9d72f2f047ffdaa6ee2d675b74a011c7162136"
+python-versions = "^3.7"
 
 [metadata.hashes]
-appdirs = [ "d8b24664561d0d34ddfaec54636d502d7cea6e29c3eaf68f3df6180863e2166e", "9e5896d1372858f8dd3344faf4e5014d21849c756c8d5701f78f8a103b372d92",]
-atomicwrites = [ "a24da68318b08ac9c9c45029f4a10371ab5b20e4226738e150e6e7c571630ae6", "240831ea22da9ab882b551b31d4225591e5e447a68c5e188db5b89ca1d487585",]
-attrs = [ "4b90b09eeeb9b88c35bc642cbac057e45a5fd85367b985bd2809c62b7b939265", "e0d0eb91441a3b53dab4d9b743eafc1ac44476296a2053b6ca3af0b139faf87b",]
-black = [ "3efe92eafbde15f8ac06478de11cfb84e47504896ccdde64507e751d2f91ec3a", "fc26c4ab28c541fb824f59fa83d5702f75829495d5a1dee603b29bc4fbe79095",]
-click = [ "29f99fc6125fbc931b758dc053b3114e55c77a6e4c6c3a2674a2dc986016381d", "f15516df478d5a56180fbf80e68f206010e6d160fc39fa508b65e035fd75130b",]
-colorama = [ "463f8483208e921368c9f306094eb6f725c6ca42b0f97e313cb5d5512459feda", "48eb22f4f8461b1df5734a074b57042430fb06e1d61bd1e11b078c0fe6d7a1f1",]
-coverage = [ "7608a3dd5d73cb06c531b8925e0ef8d3de31fed2544a7de6c63960a1e73ea4bc", "3a2184c6d797a125dca8367878d3b9a178b6fdd05fdc2d35d758c3006a1cd694", "f3f501f345f24383c0000395b26b726e46758b71393267aeae0bd36f8b3ade80", "0b136648de27201056c1869a6c0d4e23f464750fd9a9ba9750b8336a244429ed", "337ded681dd2ef9ca04ef5d93cfc87e52e09db2594c296b4a0a3662cb1b41249", "3eb42bf89a6be7deb64116dd1cc4b08171734d721e7a7e57ad64cc4ef29ed2f1", "be6cfcd8053d13f5f5eeb284aa8a814220c3da1b0078fa859011c7fffd86dab9", "69bf008a06b76619d3c3f3b1983f5145c75a305a0fea513aca094cae5c40a8f5", "2eb564bbf7816a9d68dd3369a510be3327f1c618d2357fa6b1216994c2e3d508", "9d6dd10d49e01571bf6e147d3b505141ffc093a06756c60b053a859cb2128b1f", "701cd6093d63e6b8ad7009d8a92425428bc4d6e7ab8d75efbb665c806c1d79ba", "5a13ea7911ff5e1796b6d5e4fbbf6952381a611209b736d48e675c2756f3f74e", "c1bb572fab8208c400adaf06a8133ac0712179a334c09224fb11393e920abcdd", "03481e81d558d30d230bc12999e3edffe392d244349a90f4ef9b88425fac74ba", "28b2191e7283f4f3568962e373b47ef7f0392993bb6660d079c62bd50fe9d162", "de4418dadaa1c01d497e539210cb6baa015965526ff5afc078c57ca69160108d", "8c3cb8c35ec4d9506979b4cf90ee9918bc2e49f84189d9bf5c36c0c1119c6558", "7e1fe19bd6dce69d9fd159d8e4a80a8f52101380d5d3a4d374b6d3eae0e5de9c", "6bc583dc18d5979dc0f6cec26a8603129de0304d5ae1f17e57a12834e7235062", "198626739a79b09fa0a2f06e083ffd12eb55449b5f8bfdbeed1df4910b2ca640", "7aa36d2b844a3e4a4b356708d79fd2c260281a7390d678a10b91ca595ddc9e99", "3d72c20bd105022d29b14a7d628462ebdc61de2f303322c0212a054352f3b287", "4635a184d0bbe537aa185a34193898eee409332a8ccb27eea36f262566585000", "e05cb4d9aad6233d67e0541caa7e511fa4047ed7750ec2510d466e806e0255d6", "76ecd006d1d8f739430ec50cc872889af1f9c1b6b8f48e29941814b09b0fd3cc", "7d3f553904b0c5c016d1dad058a7554c7ac4c91a789fca496e7d8347ad040653", "3c79a6f7b95751cdebcd9037e4d06f8d5a9b60e4ed0cd231342aa8ad7124882a", "56e448f051a201c5ebbaa86a5efd0ca90d327204d8b059ab25ad0f35fbfd79f1", "ac4fef68da01116a5c117eba4dd46f2e06847a497de5ed1d64bb99a5fda1ef91", "1c383d2ef13ade2acc636556fd544dba6e14fa30755f26812f54300e401f98f2", "b8815995e050764c8610dbc82641807d196927c3dbed207f0a079833ffcf588d", "104ab3934abaf5be871a583541e8829d6c19ce7bde2923b2751e0d3ca44db60a", "9e112fcbe0148a6fa4f0a02e8d58e94470fc6cb82a5481618fea901699bf34c4", "15b111b6a0f46ee1a485414a52a7ad1d703bdf984e9ed3c288a4414d3871dcbd", "e4d96c07229f58cb686120f168276e434660e4358cc9cf3b0464210b04913e77", "f8a923a85cb099422ad5a2e345fe877bbc89a8a8b23235824a93488150e45f6e",]
-decorator = [ "2c51dff8ef3c447388fe5e4453d24a2bf128d3a4c32af3fabef1f01c6851ab82", "c39efa13fbdeb4506c476c9b3babf6a718da943dab7811c206005a4a956c080c",]
-funcsigs = [ "330cc27ccbf7f1e992e69fef78261dc7c6569012cf397db8d3de0234e6c937ca", "a7bb0f2cf3a3fd1ab2732cb49eba4252c2af4240442415b4abce3b87022a8f50",]
-futures = [ "ec0a6cb848cc212002b9828c3e34c675e0c9ff6741dc445cab6fdd4e1085d1f1", "9ec02aa7d674acb8618afb127e27fde7fc68994c0437ad759fa094a574adb265",]
-isort = [ "ec9ef8f4a9bc6f71eec99e1806bfa2de401650d996c59330782b89a5555c1497", "1153601da39a25b14ddc54955dbbacbb6b2d19135386699e2ad58517953b34af", "b9c40e9750f3d77e6e4d441d8b0266cf555e7cdabdcff33c4fd06366ca761ef8",]
-minilog = [ "cd1e464f0947fbb48d31d603d1fcfc16683693c0ea599d23e1fdea8408c2d9c4", "6637c7ee3a5a8b7ba886858c9c9c19151089ce07bc722631ec5c8fb95d23b264",]
-more-itertools = [ "a18d870ef2ffca2b8463c0070ad17b5978056f403fb64e3f15fe62a52db21cc0", "6703844a52d3588f951883005efcf555e49566a48afd4db4e965d69b883980d3", "2b6b9893337bfd9166bee6a62c2b0c9fe7735dcf85948b387ec8cba30e85d8e8",]
-ordereddict = [ "1c35b4ac206cef2d24816c89f89cf289dd3d38cf7c449bb3fab7bf6d43f01b1f",]
-pluggy = [ "d345c8fe681115900d6da8d048ba67c25df42973bda370783cd58826442dcd7c", "e160a7fcf25762bb60efc7e171d4497ff1d8d2d75a3d0df7a21b76821ecbf5c5", "7f8ae7f5bdf75671a718d2daf0a64b7885f74510bcd98b1a0bb420eb9a9d0cff",]
-py = [ "983f77f3331356039fdd792e9220b7b8ee1aa6bd2b25f567a963ff1de5a64f6a", "29c9fab495d7528e80ba1e343b958684f4ace687327e6f789a94bf3d1915f881",]
-pytest = [ "26838b2bc58620e01675485491504c3aa7ee0faf335c37fcd5f8731ca4319591", "32c49a69566aa7c333188149ad48b58ac11a426d5352ea3d8f6ce843f88199cb",]
-pytest-cov = [ "890fe5565400902b0c78b5357004aab1c814115894f4f21370e2433256a3eeec", "03aa752cf11db41d281ea1d807d954c4eda35cfa1b21d6971966cc041bbf6e2d",]
-pytest-describe = [ "bd6be131452b7822c872735ffe53ce3931b3b80cbbad1647c2b482cc9ef3d00e",]
-pytest-expecter = [ "9d579961379026f5c2211070125f042f882fc0db00488b10ebbdf79491679ff6", "efd92985547f2f2b170d8b7459d00075d9694d3ebdabfb41dbb7f71d9183d5e0",]
-rerun = [ "d54ec9d28c5ece6edcf029b4e87d0aac74aee0472fb78ee6475eee132e8b990d", "614338c8e0882b84bd1041f5f4016cffc35b81f5f0db64a030ba31a0b3dc583d",]
-setuptools = [ "8fca9275c89964f13da985c3656cb00ba029d7f3916b37990927ffdf264e7926", "f7cddbb5f5c640311eb00eab6e849f7701fa70bf6a183fc8a2c33dd1d1672fb2",]
-six = [ "832dc0e10feb1aa2c68dcc57dbb658f1c7e65b9b61af69048abc87a2db00a0eb", "70e8a77beed4562e7f14fe23a786b54f6296e34344c23bc42f07b15018ff98e9",]
-toml = [ "8e86bd6ce8cc11b9620cb637466453d94f5d57ad86f17e98a98d1f73e3baab2d",]
+appdirs = ["9e5896d1372858f8dd3344faf4e5014d21849c756c8d5701f78f8a103b372d92", "d8b24664561d0d34ddfaec54636d502d7cea6e29c3eaf68f3df6180863e2166e"]
+atomicwrites = ["240831ea22da9ab882b551b31d4225591e5e447a68c5e188db5b89ca1d487585", "a24da68318b08ac9c9c45029f4a10371ab5b20e4226738e150e6e7c571630ae6"]
+attrs = ["4b90b09eeeb9b88c35bc642cbac057e45a5fd85367b985bd2809c62b7b939265", "e0d0eb91441a3b53dab4d9b743eafc1ac44476296a2053b6ca3af0b139faf87b"]
+black = ["22158b89c1a6b4eb333a1e65e791a3f8b998cf3b11ae094adb2570f31f769a44", "4b475bbd528acce094c503a3d2dbc2d05a4075f6d0ef7d9e7514518e14cc5191"]
+click = ["29f99fc6125fbc931b758dc053b3114e55c77a6e4c6c3a2674a2dc986016381d", "f15516df478d5a56180fbf80e68f206010e6d160fc39fa508b65e035fd75130b"]
+colorama = ["463f8483208e921368c9f306094eb6f725c6ca42b0f97e313cb5d5512459feda", "48eb22f4f8461b1df5734a074b57042430fb06e1d61bd1e11b078c0fe6d7a1f1"]
+coverage = ["03481e81d558d30d230bc12999e3edffe392d244349a90f4ef9b88425fac74ba", "0b136648de27201056c1869a6c0d4e23f464750fd9a9ba9750b8336a244429ed", "104ab3934abaf5be871a583541e8829d6c19ce7bde2923b2751e0d3ca44db60a", "15b111b6a0f46ee1a485414a52a7ad1d703bdf984e9ed3c288a4414d3871dcbd", "198626739a79b09fa0a2f06e083ffd12eb55449b5f8bfdbeed1df4910b2ca640", "1c383d2ef13ade2acc636556fd544dba6e14fa30755f26812f54300e401f98f2", "28b2191e7283f4f3568962e373b47ef7f0392993bb6660d079c62bd50fe9d162", "2eb564bbf7816a9d68dd3369a510be3327f1c618d2357fa6b1216994c2e3d508", "337ded681dd2ef9ca04ef5d93cfc87e52e09db2594c296b4a0a3662cb1b41249", "3a2184c6d797a125dca8367878d3b9a178b6fdd05fdc2d35d758c3006a1cd694", "3c79a6f7b95751cdebcd9037e4d06f8d5a9b60e4ed0cd231342aa8ad7124882a", "3d72c20bd105022d29b14a7d628462ebdc61de2f303322c0212a054352f3b287", "3eb42bf89a6be7deb64116dd1cc4b08171734d721e7a7e57ad64cc4ef29ed2f1", "4635a184d0bbe537aa185a34193898eee409332a8ccb27eea36f262566585000", "56e448f051a201c5ebbaa86a5efd0ca90d327204d8b059ab25ad0f35fbfd79f1", "5a13ea7911ff5e1796b6d5e4fbbf6952381a611209b736d48e675c2756f3f74e", "69bf008a06b76619d3c3f3b1983f5145c75a305a0fea513aca094cae5c40a8f5", "6bc583dc18d5979dc0f6cec26a8603129de0304d5ae1f17e57a12834e7235062", "701cd6093d63e6b8ad7009d8a92425428bc4d6e7ab8d75efbb665c806c1d79ba", "7608a3dd5d73cb06c531b8925e0ef8d3de31fed2544a7de6c63960a1e73ea4bc", "76ecd006d1d8f739430ec50cc872889af1f9c1b6b8f48e29941814b09b0fd3cc", "7aa36d2b844a3e4a4b356708d79fd2c260281a7390d678a10b91ca595ddc9e99", "7d3f553904b0c5c016d1dad058a7554c7ac4c91a789fca496e7d8347ad040653", "7e1fe19bd6dce69d9fd159d8e4a80a8f52101380d5d3a4d374b6d3eae0e5de9c", "8c3cb8c35ec4d9506979b4cf90ee9918bc2e49f84189d9bf5c36c0c1119c6558", "9d6dd10d49e01571bf6e147d3b505141ffc093a06756c60b053a859cb2128b1f", "9e112fcbe0148a6fa4f0a02e8d58e94470fc6cb82a5481618fea901699bf34c4", "ac4fef68da01116a5c117eba4dd46f2e06847a497de5ed1d64bb99a5fda1ef91", "b8815995e050764c8610dbc82641807d196927c3dbed207f0a079833ffcf588d", "be6cfcd8053d13f5f5eeb284aa8a814220c3da1b0078fa859011c7fffd86dab9", "c1bb572fab8208c400adaf06a8133ac0712179a334c09224fb11393e920abcdd", "de4418dadaa1c01d497e539210cb6baa015965526ff5afc078c57ca69160108d", "e05cb4d9aad6233d67e0541caa7e511fa4047ed7750ec2510d466e806e0255d6", "e4d96c07229f58cb686120f168276e434660e4358cc9cf3b0464210b04913e77", "f3f501f345f24383c0000395b26b726e46758b71393267aeae0bd36f8b3ade80", "f8a923a85cb099422ad5a2e345fe877bbc89a8a8b23235824a93488150e45f6e"]
+decorator = ["2c51dff8ef3c447388fe5e4453d24a2bf128d3a4c32af3fabef1f01c6851ab82", "c39efa13fbdeb4506c476c9b3babf6a718da943dab7811c206005a4a956c080c"]
+isort = ["1153601da39a25b14ddc54955dbbacbb6b2d19135386699e2ad58517953b34af", "b9c40e9750f3d77e6e4d441d8b0266cf555e7cdabdcff33c4fd06366ca761ef8", "ec9ef8f4a9bc6f71eec99e1806bfa2de401650d996c59330782b89a5555c1497"]
+minilog = ["6637c7ee3a5a8b7ba886858c9c9c19151089ce07bc722631ec5c8fb95d23b264", "cd1e464f0947fbb48d31d603d1fcfc16683693c0ea599d23e1fdea8408c2d9c4"]
+more-itertools = ["2b6b9893337bfd9166bee6a62c2b0c9fe7735dcf85948b387ec8cba30e85d8e8", "6703844a52d3588f951883005efcf555e49566a48afd4db4e965d69b883980d3", "a18d870ef2ffca2b8463c0070ad17b5978056f403fb64e3f15fe62a52db21cc0"]
+pluggy = ["7f8ae7f5bdf75671a718d2daf0a64b7885f74510bcd98b1a0bb420eb9a9d0cff", "d345c8fe681115900d6da8d048ba67c25df42973bda370783cd58826442dcd7c", "e160a7fcf25762bb60efc7e171d4497ff1d8d2d75a3d0df7a21b76821ecbf5c5"]
+py = ["3fd59af7435864e1a243790d322d763925431213b6b8529c6ca71081ace3bbf7", "e31fb2767eb657cbde86c454f02e99cb846d3cd9d61b318525140214fdc0e98e"]
+pytest = ["0453c8676c2bee6feb0434748b068d5510273a916295fd61d306c4f22fbfd752", "4b208614ae6d98195430ad6bde03641c78553acee7c83cec2e85d613c0cd383d"]
+pytest-cov = ["03aa752cf11db41d281ea1d807d954c4eda35cfa1b21d6971966cc041bbf6e2d", "890fe5565400902b0c78b5357004aab1c814115894f4f21370e2433256a3eeec"]
+pytest-describe = ["bd6be131452b7822c872735ffe53ce3931b3b80cbbad1647c2b482cc9ef3d00e"]
+pytest-expecter = ["9d579961379026f5c2211070125f042f882fc0db00488b10ebbdf79491679ff6", "efd92985547f2f2b170d8b7459d00075d9694d3ebdabfb41dbb7f71d9183d5e0"]
+rerun = ["614338c8e0882b84bd1041f5f4016cffc35b81f5f0db64a030ba31a0b3dc583d", "d54ec9d28c5ece6edcf029b4e87d0aac74aee0472fb78ee6475eee132e8b990d"]
+six = ["70e8a77beed4562e7f14fe23a786b54f6296e34344c23bc42f07b15018ff98e9", "832dc0e10feb1aa2c68dcc57dbb658f1c7e65b9b61af69048abc87a2db00a0eb"]
+toml = ["8e86bd6ce8cc11b9620cb637466453d94f5d57ad86f17e98a98d1f73e3baab2d"]
