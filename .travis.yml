@@ -11,7 +11,7 @@ cache:
     - ${VIRTUAL_ENV}
 
 before_install:
-  - pip install poetry==0.11.3
+  - pip install poetry
 
 install:
   - make install

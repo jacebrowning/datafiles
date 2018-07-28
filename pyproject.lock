@@ -344,7 +344,7 @@ python-versions = "*"
 version = "1.10.11"
 
 [metadata]
-content-hash = "c319810f9dad77189995f13d5584743b45c21826fddf3e430182126e03d28d98"
+content-hash = "9a8ebd033eb4a94de68782d18f621504cd7b6581a6215ae5417f47db11007ee7"
 platform = "*"
 python-versions = "^3.7"
 
