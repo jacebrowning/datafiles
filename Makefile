@@ -19,18 +19,18 @@ ci: format check test
 .PHONY: format
 format: install
 	poetry run isort form tests --recursive --apply
-	poetry run black form tests --line-length=79 --py36
+	poetry run black form tests --line-length=79 --py36 --skip-string-normalization
 
 .PHONY: check
 check: install
 
 .PHONY: test
 test: install
-	poetry run pytest
+	poetry run pytest --disable-warnings
 
 .PHONY: watch
 watch: install
-	poetry run rerun "make test format check" -i .coverage -i htmlcov
+	poetry run ptw
 
 ###############################################################################
 
