@@ -10,7 +10,7 @@ class Manager:
         synchronized_object: Any,
         path_pattern: Optional[str],
         mapped_fields: Dict,
-    ):
+    ) -> None:
         self._object = synchronized_object
         self._pattern = path_pattern
         self.fields = mapped_fields
@@ -26,7 +26,7 @@ class Manager:
 
     @property
     def data(self) -> Dict:
-        data = dataclasses.asdict(self._object)
+        data: Dict = dataclasses.asdict(self._object)
 
         for key in list(data.keys()):
             if key not in self.fields:

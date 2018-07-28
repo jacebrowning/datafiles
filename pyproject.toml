@@ -16,12 +16,11 @@ minilog = "^0.4.0"
 
 black = "^18.3-alpha.0"
 isort = "^4.3"
+pylint = "^2.0"
+mypy = "*"
 
 pytest = "^3.0"
 pytest-cov = "*"
 pytest-describe = "*"
 pytest-expecter = "*"
 pytest-watch = "*"
-
-rerun = "^1.0"
-

@@ -17,16 +17,24 @@ pyproject.lock: pyproject.toml
 
 ###############################################################################
 
+PACKAGES :=  form tests
+
+BLACK_OPTIONS := --line-length=79 --py36 --skip-string-normalization
+
 .PHONY: ci
 ci: format check test
 
 .PHONY: format
 format: install
-	poetry run isort form tests --recursive --apply
-	poetry run black form tests --line-length=79 --py36 --skip-string-normalization
+	poetry run isort $(PACKAGES) --recursive --apply
+	poetry run black $(PACKAGES) $(BLACK_OPTIONS)
 
 .PHONY: check
 check: install
+	poetry run isort $(PACKAGES) --recursive --check-only --diff
+	poetry run black $(PACKAGES) $(BLACK_OPTIONS) --check --diff
+	poetry run pylint $(PACKAGES) --rcfile=.pylint.ini
+	poetry run mypy $(PACKAGES) --config-file=.mypy.ini
 
 .PHONY: test
 test: install

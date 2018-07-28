@@ -1,3 +1,5 @@
+# pylint: disable=unused-variable
+
 from dataclasses import dataclass
 
 import pytest
@@ -7,7 +9,7 @@ import form
 
 @pytest.fixture
 def sample():
-    """A properly-decorated dataclass with a single key."""
+    """A decorated data class with a single key."""
 
     @form.sync('tmp/{self.key}.yml')
     @dataclass

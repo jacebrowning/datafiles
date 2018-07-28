@@ -8,7 +8,7 @@ from .managers import Manager
 @dataclasses.dataclass
 class Metadata:
     form_path: Optional[str] = None
-    form_fields: Dict[str, fields.Field] = None
+    form_fields: Optional[Dict[str, fields.Field]] = None
 
 
 class Model:

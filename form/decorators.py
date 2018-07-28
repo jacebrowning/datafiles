@@ -1,11 +1,11 @@
 import dataclasses
-from typing import Dict
+from typing import Dict, Optional
 
 from .fields import Field
 from .models import Metadata, Model
 
 
-def sync(path_pattern: str, mapped_fields: Dict[str, Field] = None):
+def sync(path_pattern: str, mapped_fields: Optional[Dict[str, Field]] = None):
     """Decorator to synchronize a data class to the specified path."""
 
     def decorator(cls):
