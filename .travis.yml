@@ -1,0 +1,26 @@
+language: python
+matrix:
+  include:
+    - python: 3.7
+      dist: xenial
+      sudo: true
+
+cache:
+  pip: true
+  directories:
+    - ${VIRTUAL_ENV}
+
+before_install:
+  - pip install poetry==0.11.3
+
+install:
+  - make install
+
+script:
+  - make test
+  - make check
+
+notifications:
+  email:
+    on_success: never
+    on_failure: never
