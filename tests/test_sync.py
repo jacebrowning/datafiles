@@ -22,9 +22,9 @@ def sample():
 
 def describe_sync():
     def it_populates_metadata(expect, sample):
-        expect(sample.form.fields) == {"name": form.fields.String}
-        expect(sample.form.path) == "tmp/42.yml"
-        expect(sample.form.data) == {"name": "foobar"}
+        expect(sample.form.fields) == {'name': form.fields.String}
+        expect(sample.form.path) == 'tmp/42.yml'
+        expect(sample.form.data) == {'name': "foobar"}
 
     def it_requires_dataclasses(expect):
         with expect.raises(ValueError):
