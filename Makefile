@@ -1,9 +1,13 @@
 .PHONY: all
 all: install
 
+###############################################################################
+
+VIRTUAL_ENV ?= .venv
+
 .PHONY: install
-install: .venv/flag
-.venv/flag: pyproject.lock
+install: $(VIRTUAL_ENV)/flag
+$(VIRTUAL_ENV)/flag: pyproject.lock
 	@ poetry config settings.virtualenvs.in-project true
 	poetry develop
 	@ touch $@
