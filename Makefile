@@ -30,6 +30,7 @@ check: install
 
 .PHONY: test
 test: install
+	@ mkdir -p .cache
 	poetry run pytest --disable-warnings
 
 .PHONY: watch
