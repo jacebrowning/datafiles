@@ -17,7 +17,7 @@ pyproject.lock: pyproject.toml
 
 ###############################################################################
 
-PACKAGES :=  form tests
+PACKAGES :=  datafiles tests
 
 BLACK_OPTIONS := --line-length=79 --py36 --skip-string-normalization
 

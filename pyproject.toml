@@ -1,6 +1,6 @@
 [tool.poetry]
 
-name = "form"
+name = "datafiles"
 version = "0.0.0"
 description = "File-based ORM for data classes."
 authors = ["Jace Browning <jacebrowning@gmail.com>"]
