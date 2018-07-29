@@ -29,7 +29,7 @@ class Model:
             fields = {}
             for f in dataclasses.fields(self):
                 self_name = f'self.{f.name}'
-                if self_name not in pattern:
+                if pattern is None or self_name not in pattern:
                     fields[f.name] = map_type(f.type)
 
         return Manager(self, pattern, fields)

@@ -175,7 +175,7 @@ name = "pluggy"
 optional = false
 platform = "unix"
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
-version = "0.6.0"
+version = "0.7.1"
 
 [[package]]
 category = "dev"
@@ -211,13 +211,13 @@ name = "pytest"
 optional = false
 platform = "unix"
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
-version = "3.6.3"
+version = "3.6.4"
 
 [package.dependencies]
 atomicwrites = ">=1.0"
 attrs = ">=17.4.0"
 more-itertools = ">=4.0.0"
-pluggy = ">=0.5,<0.7"
+pluggy = ">=0.5,<0.8"
 py = ">=1.5.0"
 setuptools = "*"
 six = ">=1.10.0"
@@ -357,10 +357,10 @@ minilog = ["6637c7ee3a5a8b7ba886858c9c9c19151089ce07bc722631ec5c8fb95d23b264", "
 more-itertools = ["2b6b9893337bfd9166bee6a62c2b0c9fe7735dcf85948b387ec8cba30e85d8e8", "6703844a52d3588f951883005efcf555e49566a48afd4db4e965d69b883980d3", "a18d870ef2ffca2b8463c0070ad17b5978056f403fb64e3f15fe62a52db21cc0"]
 mypy = ["673ea75fb750289b7d1da1331c125dc62fc1c3a8db9129bb372ae7b7d5bf300a", "c770605a579fdd4a014e9f0a34b6c7a36ce69b08100ff728e96e27445cef3b3c"]
 pathtools = ["7c35c5421a39bb82e58018febd90e3b6e5db34c5443aaaf742b3f33d4655f1c0"]
-pluggy = ["7f8ae7f5bdf75671a718d2daf0a64b7885f74510bcd98b1a0bb420eb9a9d0cff", "d345c8fe681115900d6da8d048ba67c25df42973bda370783cd58826442dcd7c", "e160a7fcf25762bb60efc7e171d4497ff1d8d2d75a3d0df7a21b76821ecbf5c5"]
+pluggy = ["6e3836e39f4d36ae72840833db137f7b7d35105079aee6ec4a62d9f80d594dd1", "95eb8364a4708392bae89035f45341871286a333f749c3141c20573d2b3876e1"]
 py = ["3fd59af7435864e1a243790d322d763925431213b6b8529c6ca71081ace3bbf7", "e31fb2767eb657cbde86c454f02e99cb846d3cd9d61b318525140214fdc0e98e"]
 pylint = ["2c90a24bee8fae22ac98061c896e61f45c5b73c2e0511a4bf53f99ba56e90434", "454532779425098969b8f54ab0f056000b883909f69d05905ea114df886e3251"]
-pytest = ["0453c8676c2bee6feb0434748b068d5510273a916295fd61d306c4f22fbfd752", "4b208614ae6d98195430ad6bde03641c78553acee7c83cec2e85d613c0cd383d"]
+pytest = ["341ec10361b64a24accaec3c7ba5f7d5ee1ca4cebea30f76fad3dd12db9f0541", "952c0389db115437f966c4c2079ae9d54714b9455190e56acebe14e8c38a7efa"]
 pytest-cov = ["03aa752cf11db41d281ea1d807d954c4eda35cfa1b21d6971966cc041bbf6e2d", "890fe5565400902b0c78b5357004aab1c814115894f4f21370e2433256a3eeec"]
 pytest-describe = ["bd6be131452b7822c872735ffe53ce3931b3b80cbbad1647c2b482cc9ef3d00e"]
 pytest-expecter = ["9d579961379026f5c2211070125f042f882fc0db00488b10ebbdf79491679ff6", "efd92985547f2f2b170d8b7459d00075d9694d3ebdabfb41dbb7f71d9183d5e0"]

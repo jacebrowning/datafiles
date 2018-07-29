@@ -2,6 +2,14 @@ class Field:
     pass
 
 
+class Integer(Field, int):
+    pass
+
+
+class Float(Field, float):
+    pass
+
+
 class String(Field, str):
     pass
 
