@@ -6,14 +6,11 @@ import log
 
 class Manager:
     def __init__(
-        self,
-        synchronized_object: Any,
-        path_pattern: Optional[str],
-        mapped_fields: Dict,
+        self, instance: Any, pattern: Optional[str], fields: Dict
     ) -> None:
-        self._object = synchronized_object
-        self._pattern = path_pattern
-        self.fields = mapped_fields
+        self._instance = instance
+        self._pattern = pattern
+        self.fields = fields
 
     @property
     def path(self) -> Optional[str]:
@@ -21,12 +18,12 @@ class Manager:
             log.debug(f'{self!r} has no path pattern')
             return None
 
-        log.debug(f'Formatting path {self._pattern!r} using {self._object!r}')
-        return self._pattern.format(self=self._object)
+        log.debug(f'Formatting {self._pattern!r} for {self._instance!r}')
+        return self._pattern.format(self=self._instance)
 
     @property
     def data(self) -> Dict:
-        data: Dict = dataclasses.asdict(self._object)
+        data: Dict = dataclasses.asdict(self._instance)
 
         for key in list(data.keys()):
             if key not in self.fields:

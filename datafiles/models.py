@@ -1,35 +1,35 @@
 import dataclasses
 from typing import Dict, Optional
 
-from . import fields
+from .fields import Field, map_type
 from .managers import Manager
 
 
 @dataclasses.dataclass
-class Metadata:
-    form_path: Optional[str] = None
-    form_fields: Optional[Dict[str, fields.Field]] = None
+class ModelMeta:
+    datafile_pattern: Optional[str] = None
+    datafile_fields: Optional[Dict[str, Field]] = None
 
 
 class Model:
 
-    meta: Metadata
+    Meta: ModelMeta
 
     @property
-    def form(self) -> Manager:
-        return self.get_form()
+    def datafile(self) -> Manager:
+        return self.get_datafile()
 
-    def get_form(self) -> Manager:
-        meta = getattr(self, 'Meta', Metadata())
+    def get_datafile(self) -> Manager:
+        meta = getattr(self, 'Meta', None)
 
-        path_pattern = getattr(meta, 'form_path', None)
+        pattern = getattr(meta, 'datafile_pattern', None)
 
-        mapped_fields = getattr(meta, 'form_fields', None)
-        if mapped_fields is None:
-            mapped_fields = {}
+        fields = getattr(meta, 'datafile_fields', None)
+        if fields is None:
+            fields = {}
             for f in dataclasses.fields(self):
                 self_name = f'self.{f.name}'
-                if self_name not in path_pattern:
-                    mapped_fields[f.name] = fields.map_type(f.type)
+                if self_name not in pattern:
+                    fields[f.name] = map_type(f.type)
 
-        return Manager(self, path_pattern, mapped_fields)
+        return Manager(self, pattern, fields)

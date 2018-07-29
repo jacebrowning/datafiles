@@ -23,9 +23,9 @@ def sample():
 
 def describe_sync():
     def it_populates_metadata(expect, sample):
-        expect(sample.form.fields) == {'name': String}
-        expect(sample.form.path) == 'tmp/42.yml'
-        expect(sample.form.data) == {'name': "foobar"}
+        expect(sample.datafile.fields) == {'name': String}
+        expect(sample.datafile.path) == 'tmp/42.yml'
+        expect(sample.datafile.data) == {'name': "foobar"}
 
     def it_requires_dataclasses(expect):
         with expect.raises(ValueError):
