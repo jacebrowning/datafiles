@@ -1,8 +1,10 @@
 import dataclasses
 from typing import Dict, Optional
 
+from classproperties import classproperty
+
 from .fields import Field, map_type
-from .managers import Manager
+from .managers import InstanceManager, ModelManager
 
 
 @dataclasses.dataclass
@@ -15,11 +17,15 @@ class Model:
 
     Meta: ModelMeta
 
+    @classproperty
+    def datafiles(cls) -> ModelManager:  # pylint: disable=no-self-argument
+        return ModelManager(cls)
+
     @property
-    def datafile(self) -> Manager:
+    def datafile(self) -> InstanceManager:
         return self.get_datafile()
 
-    def get_datafile(self) -> Manager:
+    def get_datafile(self) -> InstanceManager:
         meta = getattr(self, 'Meta', None)
 
         pattern = getattr(meta, 'datafile_pattern', None)
@@ -32,4 +38,4 @@ class Model:
                 if pattern is None or self_name not in pattern:
                     fields[f.name] = map_type(f.type)
 
-        return Manager(self, pattern, fields)
+        return InstanceManager(instance=self, pattern=pattern, fields=fields)

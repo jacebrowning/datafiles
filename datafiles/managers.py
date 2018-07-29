@@ -1,12 +1,22 @@
 import dataclasses
+import json
 from typing import Any, Dict, Optional
 
 import log
+from ruamel import yaml
 
 
-class Manager:
+class ModelManager:
+    def __init__(self, cls):
+        self.model = cls
+
+    def all(self):
+        raise NotImplementedError
+
+
+class InstanceManager:
     def __init__(
-        self, instance: Any, pattern: Optional[str], fields: Dict
+        self, *, instance: Any, pattern: Optional[str], fields: Dict
     ) -> None:
         self._instance = instance
         self._pattern = pattern
@@ -30,3 +40,14 @@ class Manager:
                 data.pop(key)
 
         return data
+
+    @property
+    def text(self) -> str:
+        return self.get_text()
+
+    def get_text(self, extension='yaml') -> str:
+        if extension in {'yml', 'yaml'}:
+            return yaml.round_trip_dump(self.data) if self.fields else ""
+        if extension in {'json'}:
+            return json.dumps(self.data)
+        raise ValueError(f'Unsupported file extension: {extension!r}')
