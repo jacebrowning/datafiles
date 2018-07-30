@@ -24,10 +24,13 @@ BLACK_OPTIONS := --line-length=79 --py36 --skip-string-normalization
 .PHONY: ci
 ci: format check test
 
-.PHONY: check
-check: install
+.PHONY: format
+format: install
 	poetry run isort $(PACKAGES) --recursive --apply
 	poetry run black $(PACKAGES) $(BLACK_OPTIONS)
+
+.PHONY: check
+check: install format
 ifdef CI
 	git diff --exit-code
 endif

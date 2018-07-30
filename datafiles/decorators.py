@@ -12,7 +12,7 @@ def sync(pattern: str, fields: Optional[Dict[str, Field]] = None):
         if not dataclasses.is_dataclass(cls):
             raise ValueError(f'{cls} must be a data class')
 
-        m = getattr(cls, 'Meta', ModelMeta)
+        m = getattr(cls, 'Meta', ModelMeta())
         m.datafile_pattern = getattr(m, 'datafile_pattern', None) or pattern
         m.datafile_fields = getattr(m, 'datafile_fields', None) or fields
 

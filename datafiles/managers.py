@@ -1,9 +1,14 @@
 import dataclasses
 import json
+from functools import lru_cache
+from pathlib import Path
 from typing import Any, Dict, Optional
 
 import log
 from ruamel import yaml
+
+
+cached = lru_cache()
 
 
 class ModelManager:
@@ -24,30 +29,61 @@ class InstanceManager:
 
     @property
     def path(self) -> Optional[str]:
-        if not self._pattern:
-            log.debug(f'{self!r} has no path pattern')
-            return None
-
-        log.debug(f'Formatting {self._pattern!r} for {self._instance!r}')
-        return self._pattern.format(self=self._instance)
+        return self.get_path()
 
     @property
     def data(self) -> Dict:
-        data: Dict = dataclasses.asdict(self._instance)
-
-        for key in list(data.keys()):
-            if key not in self.fields:
-                data.pop(key)
-
-        return data
+        return self.get_data()
 
     @property
     def text(self) -> str:
         return self.get_text()
 
+    @cached
+    def get_path(self) -> Optional[str]:
+        if not self._pattern:
+            log.debug(f'{self!r} has no path pattern')
+            return None
+
+        log.debug(f'Formatting pattern: {self._pattern}')
+        path = self._pattern.format(self=self._instance)
+        log.debug(f'Path: {path}')
+        return path
+
+    def get_data(self) -> Dict:
+        data: Dict = dataclasses.asdict(self._instance)
+
+        for key in list(data.keys()):
+            if key not in self.fields:
+                log.debug(f'Removed unmapped field: {key}')
+                data.pop(key)
+
+        print(repr(self.fields))
+        for name, field in self.fields.items():
+            data[name] = field.to_data(data[name])
+
+        return data
+
     def get_text(self, extension='yaml') -> str:
+        log.debug(f'Converting to {extension}: {self.data}')
+
+        text = None
         if extension in {'yml', 'yaml'}:
-            return yaml.round_trip_dump(self.data) if self.fields else ""
-        if extension in {'json'}:
-            return json.dumps(self.data)
-        raise ValueError(f'Unsupported file extension: {extension!r}')
+            text = yaml.round_trip_dump(self.data) if self.fields else ""
+        elif extension in {'json'}:
+            text = json.dumps(self.data)
+
+        if text is None:
+            raise ValueError(f'Unsupported file extension: {extension!r}')
+
+        log.debug(f'Text: {text!r}')
+        return text
+
+    def save(self):
+        if self.path:
+            path = Path(self.path)
+            path.parent.mkdir(parents=True, exist_ok=True)
+            with path.open('w') as f:
+                f.write(self.text)
+        else:
+            raise RuntimeError(f"'pattern' must be set to save the model")

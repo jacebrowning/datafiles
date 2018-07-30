@@ -13,7 +13,9 @@ class MyModel:
 
 
 class MyField:
-    pass
+    @classmethod
+    def to_data(cls, value):
+        return value
 
 
 def describe_instance_manager():
@@ -28,13 +30,18 @@ def describe_instance_manager():
             expect(manager.text) == ""
 
         def is_yaml_by_default(expect, manager):
-            manager.fields = {'foobar', MyField}
+            manager.fields = {'foobar': MyField}
             expect(manager.text) == "foobar: 42\n"
 
-        def can_specify_a_format(expect, manager):
-            manager.fields = {'foobar', MyField}
+        def with_custom_format(expect, manager):
+            manager.fields = {'foobar': MyField}
             expect(manager.get_text('json')) == '{"foobar": 42}'
 
-        def raises_an_exception_for_unknown_formats(expect, manager):
+        def with_unknown_format(expect, manager):
             with expect.raises(ValueError):
                 manager.get_text('xyz')
+
+    def describe_save():
+        def it_requires_path(expect, manager):
+            with expect.raises(RuntimeError):
+                manager.save()

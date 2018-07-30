@@ -1,17 +1,43 @@
 class Field:
-    pass
+    @classmethod
+    def to_python(cls, value):
+        return value
+
+    @classmethod
+    def to_data(cls, value):
+        return value
+
+
+class Boolean(Field):
+    @classmethod
+    def to_data(cls, value):
+        if value is None:
+            return False
+        return value
 
 
 class Integer(Field, int):
-    pass
+    @classmethod
+    def to_data(cls, value):
+        if value is None:
+            return 0
+        return value
 
 
 class Float(Field, float):
-    pass
+    @classmethod
+    def to_data(cls, value):
+        if value is None:
+            return 0.0
+        return value
 
 
 class String(Field, str):
-    pass
+    @classmethod
+    def to_data(cls, value):
+        if value is None:
+            return ''
+        return value
 
 
 def map_type(builtin_class):
@@ -20,5 +46,8 @@ def map_type(builtin_class):
     for field_class in Field.__subclasses__():
         if issubclass(field_class, builtin_class):
             return field_class
+
+    if builtin_class == bool:
+        return Boolean
 
     raise ValueError(f'Could not map type: {builtin_class}')
