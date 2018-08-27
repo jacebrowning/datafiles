@@ -4,6 +4,7 @@ from pathlib import Path
 import pytest
 
 from datafiles import sync
+from datafiles.fields import String
 
 
 @pytest.fixture(scope='session', autouse=True)
@@ -17,8 +18,13 @@ def dedent():
 
 
 @pytest.fixture
+def sample(Sample):
+    return Sample(None, None, None, None)
+
+
+@pytest.fixture
 def Sample():
-    """A decorated data class with builtin types"""
+    """A decorated data class with builtin types."""
 
     @sync('tmp/sample.yml')
     @dataclass
@@ -32,5 +38,16 @@ def Sample():
 
 
 @pytest.fixture
-def sample(Sample):
-    return Sample(None, None, None, None)
+def SampleWithCustomFields():
+    """A decorated data class with custom field configuration."""
+
+    @sync('tmp/sample.yml')
+    @dataclass
+    class Sample:
+        included: str
+        exluced: str
+
+        class Meta:
+            datafile_fields = {'included': String}
+
+    return Sample

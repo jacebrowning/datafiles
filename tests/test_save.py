@@ -37,3 +37,15 @@ def describe_save():
 
         with open('tmp/sample.yml') as f:
             expect(f.read()).excludes('extra')
+
+    def with_custom_fields(SampleWithCustomFields, expect, dedent):
+        sample = SampleWithCustomFields('foo', 'bar')
+
+        sample.datafile.save()
+
+        with open('tmp/sample.yml') as f:
+            expect(f.read()) == dedent(
+                """
+                included: foo
+                """
+            )
