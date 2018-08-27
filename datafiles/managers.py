@@ -95,8 +95,8 @@ class InstanceManager:
         if data is None:
             raise ValueError(f'Unsupported file extension: {extension!r}')
 
-        for key, value in data.items():
-            setattr(self._instance, key, value)
+        for name, field in self.fields.items():
+            setattr(self._instance, name, field.to_python(data[name]))
 
     def save(self) -> None:
         if not self.path:
