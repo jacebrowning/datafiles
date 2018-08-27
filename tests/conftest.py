@@ -24,8 +24,6 @@ def sample(Sample):
 
 @pytest.fixture
 def Sample():
-    """A decorated data class with builtin types."""
-
     @sync('tmp/sample.yml')
     @dataclass
     class Sample:
@@ -39,8 +37,6 @@ def Sample():
 
 @pytest.fixture
 def SampleWithCustomFields():
-    """A decorated data class with custom field configuration."""
-
     @sync('tmp/sample.yml')
     @dataclass
     class Sample:
@@ -49,5 +45,16 @@ def SampleWithCustomFields():
 
         class Meta:
             datafile_fields = {'included': String}
+
+    return Sample
+
+
+@pytest.fixture
+def SampleWithDefaultValues():
+    @sync('tmp/sample.yml')
+    @dataclass
+    class Sample:
+        str_without_default: str
+        str_with_default: str = 'foo'
 
     return Sample

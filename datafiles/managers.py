@@ -88,15 +88,24 @@ class InstanceManager:
 
             data = None
             if extension in {'yml', 'yaml'}:
-                data = yaml.YAML(typ='safe').load(infile)
+                data = yaml.YAML(typ='safe').load(infile) or {}
             elif extension in {'json'}:
-                data = json.load(infile)
+                data = json.load(infile) or {}
 
         if data is None:
             raise ValueError(f'Unsupported file extension: {extension!r}')
 
         for name, field in self.fields.items():
-            setattr(self._instance, name, field.to_python(data[name]))
+            value = data.get(name, self._get_default_field_value(name))
+            setattr(self._instance, name, field.to_python(value))
+
+    def _get_default_field_value(self, name):
+        for field in dataclasses.fields(self._instance):
+            if field.name == name:
+                # pylint: disable=protected-access
+                if not isinstance(field.default, dataclasses._MISSING_TYPE):
+                    return field.default
+        return None
 
     def save(self) -> None:
         if not self.path:

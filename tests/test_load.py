@@ -1,5 +1,7 @@
 # pylint: disable=unused-variable
 
+import pytest
+
 
 def describe_load():
     def with_matching_types(sample, dedent, expect):
@@ -60,3 +62,33 @@ def describe_load():
         sample.datafile.load()
 
         expect(hasattr(sample, 'extra')) == False
+
+
+def describe_load_with_defaults():
+    @pytest.fixture
+    def sample(SampleWithDefaultValues):
+        return SampleWithDefaultValues(None, None)
+
+    def with_default_values_and_empty_file(sample, expect):
+        with open('tmp/sample.yml', 'w') as f:
+            f.write("")
+
+        sample.datafile.load()
+
+        expect(sample.str_with_default) == 'foo'
+        expect(sample.str_without_default) == ''
+
+    def with_default_values_and_partial_file(sample, expect, dedent):
+        with open('tmp/sample.yml', 'w') as f:
+            f.write(
+                dedent(
+                    """
+                   str_without_default: bar
+                   """
+                )
+            )
+
+        sample.datafile.load()
+
+        expect(sample.str_with_default) == 'foo'
+        expect(sample.str_without_default) == 'bar'
