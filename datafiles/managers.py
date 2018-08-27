@@ -79,11 +79,30 @@ class InstanceManager:
         log.debug(f'Text: {text!r}')
         return text
 
-    def save(self):
-        if self.path:
-            path = Path(self.path)
-            path.parent.mkdir(parents=True, exist_ok=True)
-            with path.open('w') as f:
-                f.write(self.text)
-        else:
+    def load(self, extension='yaml') -> None:
+        if not self.path:
+            raise RuntimeError(f"'pattern' must be set to load the model")
+
+        path = Path(self.path)
+        with path.open('r') as infile:
+
+            data = None
+            if extension in {'yml', 'yaml'}:
+                data = yaml.YAML(typ='safe').load(infile)
+            elif extension in {'json'}:
+                data = json.load(infile)
+
+        if data is None:
+            raise ValueError(f'Unsupported file extension: {extension!r}')
+
+        for key, value in data.items():
+            setattr(self._instance, key, value)
+
+    def save(self) -> None:
+        if not self.path:
             raise RuntimeError(f"'pattern' must be set to save the model")
+
+        path = Path(self.path)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with path.open('w') as outfile:
+            outfile.write(self.text)
