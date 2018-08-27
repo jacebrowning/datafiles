@@ -2,9 +2,7 @@
 
 
 def describe_save():
-    def with_defaults(Sample, expect, dedent):
-        sample = Sample(None, None, None, None)
-
+    def with_defaults(sample, expect, dedent):
         sample.datafile.save()
 
         with open('tmp/sample.yml') as f:
@@ -31,3 +29,11 @@ def describe_save():
                 str_: '4'
                 """
             )
+
+    def with_extra_attributes(sample, expect):
+        sample.extra = 5
+
+        sample.datafile.save()
+
+        with open('tmp/sample.yml') as f:
+            expect(f.read()).excludes('extra')

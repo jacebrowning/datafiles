@@ -1,7 +1,7 @@
 class Field:
     @classmethod
     def to_python(cls, value):
-        raise NotImplementedError
+        return cls.to_data(value)
 
     @classmethod
     def to_data(cls, value):
@@ -10,19 +10,11 @@ class Field:
 
 class Boolean(Field):
     @classmethod
-    def to_python(cls, value):
-        return bool(value)
-
-    @classmethod
     def to_data(cls, value):
         return bool(value)
 
 
 class Integer(Field, int):
-    @classmethod
-    def to_python(cls, value):
-        return int(value)
-
     @classmethod
     def to_data(cls, value):
         if value is None:
@@ -32,10 +24,6 @@ class Integer(Field, int):
 
 class Float(Field, float):
     @classmethod
-    def to_python(cls, value):
-        return float(value)
-
-    @classmethod
     def to_data(cls, value):
         if value is None:
             return 0.0
@@ -43,10 +31,6 @@ class Float(Field, float):
 
 
 class String(Field, str):
-    @classmethod
-    def to_python(cls, value):
-        return str(value)
-
     @classmethod
     def to_data(cls, value):
         if value is None:

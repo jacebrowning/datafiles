@@ -29,3 +29,8 @@ def Sample():
         str_: str
 
     return Sample
+
+
+@pytest.fixture
+def sample(Sample):
+    return Sample(None, None, None, None)
