@@ -1,14 +1,14 @@
-import shutil
 from dataclasses import dataclass
+from pathlib import Path
 
 import pytest
 
 from datafiles import sync
 
 
-@pytest.fixture
-def clean_tmp():
-    shutil.rmtree('tmp', ignore_errors=True)
+@pytest.fixture(scope='session', autouse=True)
+def create_tmp():
+    Path('tmp').mkdir(exist_ok=True)
 
 
 @pytest.fixture(scope='session')
