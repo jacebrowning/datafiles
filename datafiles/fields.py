@@ -11,9 +11,7 @@ class Field:
 class Boolean(Field):
     @classmethod
     def to_data(cls, value):
-        if value is None:
-            return False
-        return value
+        return bool(value)
 
 
 class Integer(Field, int):
@@ -29,7 +27,7 @@ class Float(Field, float):
     def to_data(cls, value):
         if value is None:
             return 0.0
-        return value
+        return float(value)
 
 
 class String(Field, str):
@@ -37,7 +35,7 @@ class String(Field, str):
     def to_data(cls, value):
         if value is None:
             return ''
-        return value
+        return str(value)
 
 
 def map_type(builtin_class):
