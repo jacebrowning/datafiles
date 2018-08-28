@@ -1,3 +1,6 @@
+import dataclasses
+
+
 class Field:
     @classmethod
     def to_python(cls, value):
@@ -38,14 +41,17 @@ class String(Field, str):
         return str(value)
 
 
-def map_type(builtin_class):
+def map_type(cls):
     """Infer the field type from the type annotation."""
 
+    if dataclasses.is_dataclass(cls):
+        return cls
+
     for field_class in Field.__subclasses__():
-        if issubclass(field_class, builtin_class):
+        if issubclass(field_class, cls):
             return field_class
 
-    if builtin_class == bool:
+    if cls == bool:
         return Boolean
 
-    raise ValueError(f'Could not map type: {builtin_class}')
+    raise ValueError(f'Could not map type: {cls}')

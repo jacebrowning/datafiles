@@ -49,3 +49,33 @@ def describe_save():
                 included: foo
                 """
             )
+
+
+def describe_save_with_nesting():
+    def with_defaults(SampleWithNesting, expect, dedent):
+        sample = SampleWithNesting(None, None)
+
+        sample.datafile.save()
+
+        with open('tmp/sample.yml') as f:
+            expect(f.read()) == dedent(
+                """
+                name: ''
+                nested:
+                  name: ''
+                """
+            )
+
+    def with_values(SampleWithNesting, expect, dedent):
+        sample = SampleWithNesting('foo', {'name': 'bar'})
+
+        sample.datafile.save()
+
+        with open('tmp/sample.yml') as f:
+            expect(f.read()) == dedent(
+                """
+                name: foo
+                nested:
+                  name: bar
+                """
+            )
