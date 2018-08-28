@@ -47,7 +47,7 @@ class InstanceManager:
 
         log.debug(f'Formatting pattern: {self._pattern}')
         path = self._pattern.format(self=self._instance)
-        log.debug(f'Path: {path}')
+        log.debug(f'Datafile path: {path}')
         return path
 
     def get_data(self) -> Dict:
@@ -58,9 +58,14 @@ class InstanceManager:
                 log.debug(f'Removed unmapped field: {key}')
                 data.pop(key)
 
-        print(repr(self.fields))
         for name, field in self.fields.items():
-            data[name] = field.to_data(data[name])
+            if dataclasses.is_dataclass(field):
+                if data[name]:
+                    data[name] = field(**data[name]).datafile.get_data()
+                else:
+                    data[name] = field(None).datafile.get_data()
+            else:
+                data[name] = field.to_data(data[name])
 
         return data
 

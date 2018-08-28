@@ -58,3 +58,19 @@ def SampleWithDefaultValues():
         str_with_default: str = 'foo'
 
     return Sample
+
+
+@pytest.fixture
+def SampleWithNesting():
+    @sync('')  # TODO: Let this line be: @datafile
+    @dataclass
+    class Nested:
+        name: str
+
+    @sync('tmp/sample.yml')
+    @dataclass
+    class Sample:
+        name: str
+        nested: Nested
+
+    return Sample
