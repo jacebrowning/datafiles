@@ -69,13 +69,13 @@ class InstanceManager:
 
         return data
 
-    def get_text(self, extension='yaml') -> str:
+    def get_text(self, extension='.yml') -> str:
         log.debug(f'Converting to {extension}: {self.data}')
 
         text = None
-        if extension in {'yml', 'yaml'}:
+        if extension in {'.yml', '.yaml'}:
             text = yaml.round_trip_dump(self.data) if self.fields else ""
-        elif extension in {'json'}:
+        elif extension in {'.json'}:
             text = json.dumps(self.data)
 
         if text is None:
@@ -84,7 +84,7 @@ class InstanceManager:
         log.debug(f'Text: {text!r}')
         return text
 
-    def load(self, extension='yaml') -> None:
+    def load(self) -> None:
         if not self.path:
             raise RuntimeError(f"'pattern' must be set to load the model")
 
@@ -92,13 +92,13 @@ class InstanceManager:
         with path.open('r') as infile:
 
             data = None
-            if extension in {'yml', 'yaml'}:
+            if path.suffix in {'.yml', '.yaml'}:
                 data = yaml.YAML(typ='safe').load(infile) or {}
-            elif extension in {'json'}:
+            elif path.suffix in {'.json'}:
                 data = json.load(infile) or {}
 
         if data is None:
-            raise ValueError(f'Unsupported file extension: {extension!r}')
+            raise ValueError(f'Unsupported file extension: {path.suffix!r}')
 
         for name, field in self.fields.items():
             value = data.get(name, self._get_default_field_value(name))

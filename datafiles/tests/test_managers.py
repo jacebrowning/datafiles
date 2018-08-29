@@ -35,11 +35,16 @@ def describe_instance_manager():
 
         def with_custom_format(expect, manager):
             manager.fields = {'foobar': MyField}
-            expect(manager.get_text('json')) == '{"foobar": 42}'
+            expect(manager.get_text('.json')) == '{"foobar": 42}'
 
         def with_unknown_format(expect, manager):
             with expect.raises(ValueError):
                 manager.get_text('xyz')
+
+    def describe_load():
+        def it_requires_path(expect, manager):
+            with expect.raises(RuntimeError):
+                manager.load()
 
     def describe_save():
         def it_requires_path(expect, manager):

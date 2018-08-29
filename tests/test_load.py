@@ -64,12 +64,37 @@ def describe_load():
         expect(hasattr(sample, 'extra')) == False
 
 
-def describe_load_with_defaults():
+def describe_alternate_formats():
+    def with_json(sample_json, dedent, expect):
+        sample = sample_json
+        with open('tmp/sample.json', 'w') as f:
+            f.write(
+                dedent(
+                    """
+                    {
+                        "bool_": true,
+                        "int_": 1,
+                        "float_": 2.3,
+                        "str_": "foobar"
+                    }
+                    """
+                )
+            )
+
+        sample.datafile.load()
+
+        expect(sample.bool_) == True
+        expect(sample.int_) == 1
+        expect(sample.float_) == 2.3
+        expect(sample.str_) == 'foobar'
+
+
+def describe_default_values():
     @pytest.fixture
     def sample(SampleWithDefaultValues):
         return SampleWithDefaultValues(None, None)
 
-    def with_default_values_and_empty_file(sample, expect):
+    def with_empty_file(sample, expect):
         with open('tmp/sample.yml', 'w') as f:
             f.write("")
 
@@ -78,7 +103,7 @@ def describe_load_with_defaults():
         expect(sample.str_with_default) == 'foo'
         expect(sample.str_without_default) == ''
 
-    def with_default_values_and_partial_file(sample, expect, dedent):
+    def with_partial_file(sample, expect, dedent):
         with open('tmp/sample.yml', 'w') as f:
             f.write(
                 dedent(

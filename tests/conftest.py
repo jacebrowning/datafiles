@@ -23,8 +23,26 @@ def sample(Sample):
 
 
 @pytest.fixture
+def sample_json(SampleAsJSON):
+    return SampleAsJSON(None, None, None, None)
+
+
+@pytest.fixture
 def Sample():
     @sync('tmp/sample.yml')
+    @dataclass
+    class Sample:
+        bool_: bool
+        int_: int
+        float_: float
+        str_: str
+
+    return Sample
+
+
+@pytest.fixture
+def SampleAsJSON():
+    @sync('tmp/sample.json')
     @dataclass
     class Sample:
         bool_: bool
