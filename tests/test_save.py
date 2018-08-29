@@ -1,7 +1,7 @@
 # pylint: disable=unused-variable
 
 
-def describe_save():
+def describe_nominal():
     def with_defaults(sample, expect, dedent):
         sample.datafile.save()
 
@@ -51,7 +51,7 @@ def describe_save():
             )
 
 
-def describe_save_with_nesting():
+def describe_nesting():
     def with_defaults(SampleWithNesting, expect, dedent):
         sample = SampleWithNesting(None, None)
 
@@ -77,5 +77,20 @@ def describe_save_with_nesting():
                 name: foo
                 nested:
                   name: bar
+                """
+            )
+
+    def with_none(SampleWithNesting, expect, dedent):
+        sample = SampleWithNesting('foo', {'name': 'bar'})
+        sample.nested = None
+
+        sample.datafile.save()
+
+        with open('tmp/sample.yml') as f:
+            expect(f.read()) == dedent(
+                """
+                name: foo
+                nested:
+                  name: ''
                 """
             )

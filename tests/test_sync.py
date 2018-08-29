@@ -8,7 +8,7 @@ import datafiles
 from datafiles import sync
 
 
-def describe_automatic_sync():
+def describe_automatic():
     """Tests to create a data file using the decorator."""
 
     @pytest.fixture
@@ -46,7 +46,7 @@ def describe_automatic_sync():
                 name: str
 
 
-def describe_manual_sync():
+def describe_manual():
     """Tests to create a data file using the model class."""
 
     @pytest.fixture
@@ -73,7 +73,7 @@ def describe_manual_sync():
         expect(sample.datafile.data) == {'key': 2, 'name': "b", 'score': 0.25}
 
 
-def describe_manual_sync_with_fields():
+def describe_manual_with_fields():
     """Tests to create a data file with explicit fields."""
 
     @pytest.fixture
@@ -99,7 +99,7 @@ def describe_manual_sync_with_fields():
         expect(sample.datafile.data) == {'name': "c"}
 
 
-def describe_manual_sync_with_fields_and_pattern():
+def describe_manual_with_fields_and_pattern():
     """Tests to create a data file with explicit fields and pattern."""
 
     @pytest.fixture

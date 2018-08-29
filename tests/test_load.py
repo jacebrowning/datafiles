@@ -3,7 +3,7 @@
 import pytest
 
 
-def describe_load():
+def describe_nominal():
     def with_matching_types(sample, dedent, expect):
         with open('tmp/sample.yml', 'w') as f:
             f.write(
