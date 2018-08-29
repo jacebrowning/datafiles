@@ -41,11 +41,11 @@ class String(Field, str):
         return str(value)
 
 
-def map_type(cls):
+def map_type(cls, patch_dataclass):
     """Infer the field type from the type annotation."""
 
     if dataclasses.is_dataclass(cls):
-        return cls
+        return patch_dataclass(cls, None, None)
 
     for field_class in Field.__subclasses__():
         if issubclass(field_class, cls):

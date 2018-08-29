@@ -26,16 +26,30 @@ class Model:
         return self.get_datafile()
 
     def get_datafile(self) -> InstanceManager:
-        meta = getattr(self, 'Meta', None)
+        m = getattr(self, 'Meta', None)
+        pattern = getattr(m, 'datafile_pattern', None)
+        fields = getattr(m, 'datafile_fields', None)
 
-        pattern = getattr(meta, 'datafile_pattern', None)
-
-        fields = getattr(meta, 'datafile_fields', None)
         if fields is None:
             fields = {}
             for f in dataclasses.fields(self):
                 self_name = f'self.{f.name}'
                 if pattern is None or self_name not in pattern:
-                    fields[f.name] = map_type(f.type)
+                    fields[f.name] = map_type(f.type, patch_dataclass)
 
         return InstanceManager(instance=self, pattern=pattern, fields=fields)
+
+
+def patch_dataclass(cls, pattern, fields):
+    """Patch datafile attributes on to an existing dataclass."""
+    if not dataclasses.is_dataclass(cls):
+        raise ValueError(f'{cls} must be a dataclass')
+
+    m = getattr(cls, 'Meta', ModelMeta())
+    m.datafile_pattern = getattr(m, 'datafile_pattern', None) or pattern
+    m.datafile_fields = getattr(m, 'datafile_fields', None) or fields
+    cls.Meta = m
+
+    cls.datafile = property(Model.get_datafile)
+
+    return cls

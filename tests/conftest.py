@@ -62,7 +62,6 @@ def SampleWithDefaultValues():
 
 @pytest.fixture
 def SampleWithNesting():
-    @sync('')  # TODO: Let this line be: @datafile
     @dataclass
     class Nested:
         name: str
