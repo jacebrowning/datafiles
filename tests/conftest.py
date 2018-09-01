@@ -18,16 +18,6 @@ def dedent():
 
 
 @pytest.fixture
-def sample(Sample):
-    return Sample(None, None, None, None)
-
-
-@pytest.fixture
-def sample_json(SampleAsJSON):
-    return SampleAsJSON(None, None, None, None)
-
-
-@pytest.fixture
 def Sample():
     @sync('tmp/sample.yml')
     @dataclass
@@ -41,6 +31,11 @@ def Sample():
 
 
 @pytest.fixture
+def sample(Sample):
+    return Sample(None, None, None, None)
+
+
+@pytest.fixture
 def SampleAsJSON():
     @sync('tmp/sample.json')
     @dataclass
@@ -51,6 +46,11 @@ def SampleAsJSON():
         str_: str
 
     return Sample
+
+
+@pytest.fixture
+def sample_json(SampleAsJSON):
+    return SampleAsJSON(None, None, None, None)
 
 
 @pytest.fixture
@@ -83,11 +83,18 @@ def SampleWithNesting():
     @dataclass
     class Nested:
         name: str
+        score: float
 
     @sync('tmp/sample.yml')
     @dataclass
     class Sample:
         name: str
+        score: float
         nested: Nested
 
     return Sample
+
+
+@pytest.fixture
+def sample_nesting(SampleWithNesting):
+    return SampleWithNesting(None, None, None)

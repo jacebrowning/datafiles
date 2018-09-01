@@ -47,7 +47,7 @@ class InstanceManager:
 
         log.debug(f'Formatting pattern: {self._pattern}')
         path = self._pattern.format(self=self._instance)
-        log.debug(f'Datafile path: {path}')
+        log.debug(f'Formatted path: {path}')
         return path
 
     def get_data(self) -> Dict:
@@ -63,7 +63,8 @@ class InstanceManager:
                 if data[name]:
                     data[name] = field(**data[name]).datafile.get_data()
                 else:
-                    data[name] = field(None).datafile.get_data()
+                    # TODO: This needs to handle any number of arguments
+                    data[name] = field(None, None).datafile.get_data()
             else:
                 data[name] = field.to_data(data[name])
 
@@ -101,8 +102,31 @@ class InstanceManager:
             raise ValueError(f'Unsupported file extension: {path.suffix!r}')
 
         for name, field in self.fields.items():
-            value = data.get(name, self._get_default_field_value(name))
-            setattr(self._instance, name, field.to_python(value))
+            if dataclasses.is_dataclass(field):
+                # TODO: Support nesting unlimited levels
+                data2 = data.get(name)
+                log.debug(f'Converting nested data to Python: {data2}')
+
+                value = getattr(self._instance, name)
+                if value is None:
+                    value = field(**data2)
+
+                manager2 = value.datafile
+                for name2, field2 in manager2.fields.items():
+                    _value2 = data2.get(  # type: ignore
+                        # pylint: disable=protected-access
+                        name2,
+                        manager2._get_default_field_value(name2),
+                    )
+                    value2 = field2.to_python(_value2)
+                    log.debug(f"'{name2}' as Python: {value2}")
+                    setattr(value, name2, value2)
+
+                setattr(self._instance, name, value)
+
+            else:
+                value = data.get(name, self._get_default_field_value(name))
+                setattr(self._instance, name, field.to_python(value))
 
     def _get_default_field_value(self, name):
         for field in dataclasses.fields(self._instance):
