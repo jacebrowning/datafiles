@@ -69,5 +69,6 @@ def patch_dataclass(cls, pattern, fields):
         Model.__init__(self, *args, **kwargs)
 
     cls.__init__ = modified_init
+    cls.__init__.__doc__ = init.__doc__
 
     return cls
