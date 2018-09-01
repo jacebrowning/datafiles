@@ -1,4 +1,5 @@
 import dataclasses
+import inspect
 import json
 from functools import lru_cache
 from pathlib import Path
@@ -28,27 +29,29 @@ class InstanceManager:
         self.fields = fields
 
     @property
-    def path(self) -> Optional[str]:
+    def path(self) -> Optional[Path]:
         return self.get_path()
 
-    @property
-    def data(self) -> Dict:
-        return self.get_data()
-
-    @property
-    def text(self) -> str:
-        return self.get_text()
-
     @cached
-    def get_path(self) -> Optional[str]:
+    def get_path(self) -> Optional[Path]:
         if not self._pattern:
             log.debug(f'{self!r} has no path pattern')
             return None
 
         log.debug(f'Formatting pattern: {self._pattern}')
-        path = self._pattern.format(self=self._instance)
+        relpath = self._pattern.format(self=self._instance)
+
+        root = Path(inspect.getfile(self._instance.__class__)).parent
+        log.debug(f'Datafile root directory: {root}')
+
+        path = root / relpath
         log.debug(f'Formatted path: {path}')
-        return path
+
+        return path.resolve()
+
+    @property
+    def data(self) -> Dict:
+        return self.get_data()
 
     def get_data(self) -> Dict:
         data: Dict = dataclasses.asdict(self._instance)
@@ -70,6 +73,10 @@ class InstanceManager:
 
         return data
 
+    @property
+    def text(self) -> str:
+        return self.get_text()
+
     def get_text(self, extension='.yml') -> str:
         log.debug(f'Converting to {extension}: {self.data}')
 
@@ -89,17 +96,18 @@ class InstanceManager:
         if not self.path:
             raise RuntimeError(f"'pattern' must be set to load the model")
 
-        path = Path(self.path)
-        with path.open('r') as infile:
+        with self.path.open('r') as infile:
 
             data = None
-            if path.suffix in {'.yml', '.yaml'}:
+            if self.path.suffix in {'.yml', '.yaml'}:
                 data = yaml.YAML(typ='safe').load(infile) or {}
-            elif path.suffix in {'.json'}:
+            elif self.path.suffix in {'.json'}:
                 data = json.load(infile) or {}
 
         if data is None:
-            raise ValueError(f'Unsupported file extension: {path.suffix!r}')
+            raise ValueError(
+                f'Unsupported file extension: {self.path.suffix!r}'
+            )
 
         for name, field in self.fields.items():
             if dataclasses.is_dataclass(field):
@@ -140,7 +148,5 @@ class InstanceManager:
         if not self.path:
             raise RuntimeError(f"'pattern' must be set to save the model")
 
-        path = Path(self.path)
-        path.parent.mkdir(parents=True, exist_ok=True)
-        with path.open('w') as outfile:
-            outfile.write(self.text)
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+        self.path.write_text(self.text)

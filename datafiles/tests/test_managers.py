@@ -1,6 +1,7 @@
-# pylint: disable=unused-variable
+# pylint: disable=unused-variable,protected-access
 
 from dataclasses import dataclass
+from pathlib import Path
 
 import pytest
 
@@ -24,6 +25,15 @@ def describe_instance_manager():
         return managers.InstanceManager(
             instance=MyModel(foobar=42), pattern=None, fields={}
         )
+
+    def describe_path():
+        def is_none_when_no_pattern(expect, manager):
+            expect(manager.path) == None
+
+        def is_absolute_based_on_the_file(expect, manager):
+            manager._pattern = '../../tmp/sample.yml'
+            root = Path(__file__).parents[2]
+            expect(manager.path) == root / 'tmp' / 'sample.yml'
 
     def describe_text():
         def is_blank_when_no_fields(expect, manager):

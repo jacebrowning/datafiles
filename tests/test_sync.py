@@ -1,6 +1,7 @@
 # pylint: disable=unused-variable
 
 from dataclasses import dataclass
+from pathlib import Path
 
 import pytest
 
@@ -15,7 +16,7 @@ def describe_automatic():
     def sample():
         """A decorated data class with a single key."""
 
-        @sync('tmp/{self.key}.yml')
+        @sync('../tmp/{self.key}.yml')
         @dataclass
         class Sample:
             key: int
@@ -31,7 +32,8 @@ def describe_automatic():
         }
 
     def it_formats_path_from_pattern(expect, sample):
-        expect(sample.datafile.path) == 'tmp/1.yml'
+        root = Path(__file__).parents[1]
+        expect(sample.datafile.path) == root / 'tmp' / '1.yml'
 
     def it_converts_attributes(expect, sample):
         expect(sample.datafile.data) == {'name': "a", 'score': 0.5}
@@ -112,7 +114,7 @@ def describe_manual_with_fields_and_pattern():
 
             class Meta:
                 datafile_fields = {'name': datafiles.fields.String}
-                datafile_pattern = 'tmp/{self.key}.yml'
+                datafile_pattern = '../tmp/{self.key}.yml'
 
         return Sample(4, "d")
 
@@ -120,7 +122,8 @@ def describe_manual_with_fields_and_pattern():
         expect(sample.datafile.fields) == {'name': datafiles.fields.String}
 
     def it_formats_path_from_pattern(expect, sample):
-        expect(sample.datafile.path) == 'tmp/4.yml'
+        root = Path(__file__).parents[1]
+        expect(sample.datafile.path) == root / 'tmp' / '4.yml'
 
     def it_converts_attributes(expect, sample):
         expect(sample.datafile.data) == {'name': "d"}

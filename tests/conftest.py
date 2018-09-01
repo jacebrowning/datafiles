@@ -19,7 +19,7 @@ def dedent():
 
 @pytest.fixture
 def Sample():
-    @sync('tmp/sample.yml')
+    @sync('../tmp/sample.yml')
     @dataclass
     class Sample:
         bool_: bool
@@ -37,7 +37,7 @@ def sample(Sample):
 
 @pytest.fixture
 def SampleAsJSON():
-    @sync('tmp/sample.json')
+    @sync('../tmp/sample.json')
     @dataclass
     class Sample:
         bool_: bool
@@ -55,7 +55,7 @@ def sample_json(SampleAsJSON):
 
 @pytest.fixture
 def SampleWithCustomFields():
-    @sync('tmp/sample.yml')
+    @sync('../tmp/sample.yml')
     @dataclass
     class Sample:
         included: str
@@ -69,7 +69,7 @@ def SampleWithCustomFields():
 
 @pytest.fixture
 def SampleWithDefaultValues():
-    @sync('tmp/sample.yml')
+    @sync('../tmp/sample.yml')
     @dataclass
     class Sample:
         str_without_default: str
@@ -85,7 +85,7 @@ def SampleWithNesting():
         name: str
         score: float
 
-    @sync('tmp/sample.yml')
+    @sync('../tmp/sample.yml')
     @dataclass
     class Sample:
         name: str
