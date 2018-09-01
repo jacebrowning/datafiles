@@ -108,8 +108,8 @@ def describe_default_values():
             f.write(
                 dedent(
                     """
-                   str_without_default: bar
-                   """
+                    str_without_default: bar
+                    """
                 )
             )
 
@@ -117,3 +117,70 @@ def describe_default_values():
 
         expect(sample.str_with_default) == 'foo'
         expect(sample.str_without_default) == 'bar'
+
+
+def describe_nesting():
+    def with_defaults(sample_nesting, expect, dedent):
+        sample = sample_nesting
+        with open('tmp/sample.yml', 'w') as f:
+            f.write(
+                dedent(
+                    """
+                    name: ''
+                    score: 0.0
+                    nested:
+                      name: ''
+                      score: 0.0
+                    """
+                )
+            )
+
+        sample.datafile.load()
+
+        expect(sample.name) == ''
+        expect(sample.score) == 0.0
+        expect(sample.nested.name) == ''
+        expect(sample.nested.score) == 0.0
+
+    def with_convertable_types(sample_nesting, expect, dedent):
+        sample = sample_nesting
+        with open('tmp/sample.yml', 'w') as f:
+            f.write(
+                dedent(
+                    """
+                    name: 1
+                    score: '2.3'
+                    nested:
+                      name: 4
+                      score: '5.6'
+                    """
+                )
+            )
+
+        sample.datafile.load()
+
+        expect(sample.name) == '1'
+        expect(sample.score) == 2.3
+        expect(sample.nested.name) == '4'
+        expect(sample.nested.score) == 5.6
+
+    @pytest.mark.xfail
+    def with_missing_keys(sample_nesting, expect, dedent):
+        sample = sample_nesting
+        with open('tmp/sample.yml', 'w') as f:
+            f.write(
+                dedent(
+                    """
+                    name: foo
+                    nested:
+                      name: bar
+                    """
+                )
+            )
+
+        sample.datafile.load()
+
+        expect(sample.name) == 'foo'
+        expect(sample.score) == 0.0
+        expect(sample.nested.name) == 'bar'
+        expect(sample.nested.score) == 0.0
