@@ -81,7 +81,7 @@ def SampleWithDefaultValues():
 @pytest.fixture
 def SampleWithNesting():
     @dataclass
-    class Nested:
+    class Sample2:
         name: str
         score: float
 
@@ -90,7 +90,7 @@ def SampleWithNesting():
     class Sample:
         name: str
         score: float
-        nested: Nested
+        nested: Sample2
 
     return Sample
 
@@ -103,7 +103,7 @@ def sample_nesting(SampleWithNesting):
 @pytest.fixture
 def SampleWithNestingAndDefaultValues():
     @dataclass
-    class Nested:
+    class Sample2:
         name: str = 'b'
         score: float = 3.4
 
@@ -112,6 +112,6 @@ def SampleWithNestingAndDefaultValues():
     class Sample:
         name: str
         score: float = 1.2
-        nested: Nested = Nested()
+        nested: Sample2 = Sample2()
 
     return Sample

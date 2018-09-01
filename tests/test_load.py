@@ -164,7 +164,6 @@ def describe_nesting():
         expect(sample.nested.name) == '4'
         expect(sample.nested.score) == 5.6
 
-    @pytest.mark.xfail
     def with_missing_keys(sample_nesting, expect, dedent):
         sample = sample_nesting
         with open('tmp/sample.yml', 'w') as f:

@@ -1,7 +1,5 @@
 # pylint: disable=unused-variable
 
-import pytest
-
 
 def describe_nominal():
     def without_initial_values(sample, expect, dedent):
@@ -102,7 +100,6 @@ def describe_nesting():
                 """
             )
 
-    @pytest.mark.xfail
     def with_missing_keys(SampleWithNesting, expect, dedent):
         sample = SampleWithNesting('foo', 1.2, {'name': 'bar'})
 

@@ -44,16 +44,17 @@ class InstanceManager:
         root = Path(inspect.getfile(self._instance.__class__)).parent
         log.debug(f'Datafile root directory: {root}')
 
-        path = root / relpath
-        log.debug(f'Formatted path: {path}')
-
-        return path.resolve()
+        path = (root / relpath).resolve()
+        log.debug(f'Path: {path}')
+        return path
 
     @property
     def data(self) -> Dict:
         return self.get_data()
 
     def get_data(self) -> Dict:
+        class_name = self._instance.__class__.__name__
+        log.debug(f'Converting {class_name} to data')
         data: Dict = dataclasses.asdict(self._instance)
 
         for key in list(data.keys()):
@@ -62,15 +63,21 @@ class InstanceManager:
                 data.pop(key)
 
         for name, field in self.fields.items():
+            value = data[name]
+            log.debug(f"Converting '{name}' as {field.__name__}: {value!r}")
             if dataclasses.is_dataclass(field):
-                if data[name]:
-                    data[name] = field(**data[name]).datafile.get_data()
-                else:
-                    # TODO: This needs to handle any number of arguments
-                    data[name] = field(None, None).datafile.get_data()
-            else:
-                data[name] = field.to_data(data[name])
+                if value is None:
+                    value = {}
+                for f in dataclasses.fields(field):
+                    if f.name not in value:
+                        log.debug(f'Added missing nested attribute: {f.name}')
+                        value[f.name] = None
 
+                data[name] = field(**value).datafile.get_data()
+            else:
+                data[name] = field.to_data(value)
+
+        log.debug(f'Data: {data}')
         return data
 
     @property
@@ -78,7 +85,7 @@ class InstanceManager:
         return self.get_text()
 
     def get_text(self, extension='.yml') -> str:
-        log.debug(f'Converting to {extension}: {self.data}')
+        log.debug(f'Converting data to text ({extension}): {self.data}')
 
         text = None
         if extension in {'.yml', '.yaml'}:
@@ -89,7 +96,7 @@ class InstanceManager:
         if text is None:
             raise ValueError(f'Unsupported file extension: {extension!r}')
 
-        log.debug(f'Text: {text!r}')
+        log.debug(f'Text ({extension}): {text!r}')
         return text
 
     def load(self) -> None:
@@ -117,6 +124,9 @@ class InstanceManager:
 
                 value = getattr(self._instance, name)
                 if value is None:
+                    for f in dataclasses.fields(field):
+                        if f.name not in data2:  # type: ignore
+                            data2[f.name] = None  # type: ignore
                     value = field(**data2)
 
                 manager2 = value.datafile
