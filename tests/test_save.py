@@ -4,7 +4,7 @@ import pytest
 
 
 def describe_nominal():
-    def with_defaults(sample, expect, dedent):
+    def without_initial_values(sample, expect, dedent):
         sample.datafile.save()
 
         with open('tmp/sample.yml') as f:
@@ -54,7 +54,7 @@ def describe_nominal():
 
 
 def describe_nesting():
-    def with_defaults(SampleWithNesting, expect, dedent):
+    def without_initial_values(SampleWithNesting, expect, dedent):
         sample = SampleWithNesting(None, None, None)
 
         sample.datafile.save()
@@ -70,7 +70,7 @@ def describe_nesting():
                 """
             )
 
-    def with_values(SampleWithNesting, expect, dedent):
+    def with_initial_values(SampleWithNesting, expect, dedent):
         sample = SampleWithNesting('foo', 1.2, {'name': 'bar', 'score': 3.4})
 
         sample.datafile.save()
@@ -82,6 +82,22 @@ def describe_nesting():
                 score: 1.2
                 nested:
                   name: bar
+                  score: 3.4
+                """
+            )
+
+    def with_default_values(SampleWithNestingAndDefaultValues, expect, dedent):
+        sample = SampleWithNestingAndDefaultValues('a')
+
+        sample.datafile.save()
+
+        with open('tmp/sample.yml') as f:
+            expect(f.read()) == dedent(
+                """
+                name: a
+                score: 1.2
+                nested:
+                  name: b
                   score: 3.4
                 """
             )

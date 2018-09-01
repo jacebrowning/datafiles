@@ -98,3 +98,20 @@ def SampleWithNesting():
 @pytest.fixture
 def sample_nesting(SampleWithNesting):
     return SampleWithNesting(None, None, None)
+
+
+@pytest.fixture
+def SampleWithNestingAndDefaultValues():
+    @dataclass
+    class Nested:
+        name: str = 'b'
+        score: float = 3.4
+
+    @sync('../tmp/sample.yml')
+    @dataclass
+    class Sample:
+        name: str
+        score: float = 1.2
+        nested: Nested = Nested()
+
+    return Sample
