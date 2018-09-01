@@ -1,3 +1,4 @@
+import shutil
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -7,14 +8,21 @@ from datafiles import sync
 from datafiles.fields import String
 
 
-@pytest.fixture(scope='session', autouse=True)
+@pytest.fixture(autouse=True)
 def create_tmp():
-    Path('tmp').mkdir(exist_ok=True)
+    path = Path('tmp')
+    shutil.rmtree(path)
+    path.mkdir(exist_ok=True)
 
 
 @pytest.fixture(scope='session')
 def dedent():
     return lambda text: text.replace(' ' * 4, '').strip() + '\n'
+
+
+@pytest.fixture(scope='session')
+def write(dedent):
+    return lambda path, text: Path(path).write_text(dedent(text))
 
 
 @pytest.fixture

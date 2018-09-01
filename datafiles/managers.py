@@ -49,6 +49,15 @@ class InstanceManager:
         return path
 
     @property
+    def exists(self) -> bool:
+        if not self.path:
+            log.debug("'pattern' not set so datafile will never exist")
+            return False
+
+        log.debug(f'{self.path} exists: {self.path.exists()}')
+        return self.path.exists()
+
+    @property
     def data(self) -> Dict:
         return self.get_data()
 
@@ -101,7 +110,7 @@ class InstanceManager:
 
     def load(self) -> None:
         if not self.path:
-            raise RuntimeError(f"'pattern' must be set to load the model")
+            raise RuntimeError("'pattern' must be set to load the model")
 
         with self.path.open('r') as infile:
 
