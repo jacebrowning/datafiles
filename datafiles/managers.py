@@ -96,7 +96,7 @@ class InstanceManager:
 
         return text
 
-    def load(self) -> None:
+    def load(self, *, initial=False) -> None:
         log.info(f'Loading values for {self._instance}')
 
         if self.path:
@@ -105,6 +105,7 @@ class InstanceManager:
             raise RuntimeError("'pattern' must be set to load the model")
 
         for name, field in self.fields.items():
+
             if dataclasses.is_dataclass(field):
                 # TODO: Support nesting unlimited levels
                 data2 = data.get(name)
@@ -116,6 +117,8 @@ class InstanceManager:
                         if f.name not in data2:  # type: ignore
                             data2[f.name] = None  # type: ignore
                     value = field(**data2)
+                elif initial:
+                    continue  # TODO: Test this
 
                 manager2 = value.datafile
                 for name2, field2 in manager2.fields.items():
@@ -128,11 +131,29 @@ class InstanceManager:
                     log.debug(f"'{name2}' as Python: {value2}")
                     setattr(value, name2, value2)
 
+                log.debug(f"Setting '{name}' value: {value!r}")
                 setattr(self._instance, name, value)
 
             else:
-                value = data.get(name, self._get_default_field_value(name))
-                setattr(self._instance, name, field.to_python(value))
+                default_value = self._get_default_field_value(name)
+                initial_value = getattr(self._instance, name)
+                file_value = data.get(name, default_value)
+
+                if initial and file_value == default_value:
+                    log.debug(
+                        f"Ignoring default '{name}' value: {default_value!r}"
+                    )
+                    continue
+
+                if initial and initial_value != default_value:
+                    log.debug(
+                        f"Ignoring default '{name}' value: {default_value!r}"
+                    )
+                    continue
+
+                value = field.to_python(file_value)
+                log.debug(f"Setting '{name}' value: {file_value!r}")
+                setattr(self._instance, name, value)
 
     def _get_default_field_value(self, name):
         for field in dataclasses.fields(self._instance):

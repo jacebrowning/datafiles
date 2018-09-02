@@ -54,7 +54,7 @@ def deserialize(path: Path, extension: Text) -> Dict:
             if extension in formatter.extensions():
                 return formatter.deserialize(file_object)
 
-    raise ValueError(f'Unsupported file extension: {extension!r}')
+    raise ValueError(f'Unsupported file extension: {extension}')
 
 
 def serialize(data: Dict, extension: Text) -> Text:
@@ -62,4 +62,4 @@ def serialize(data: Dict, extension: Text) -> Text:
         if extension in formatter.extensions():
             return formatter.serialize(data)
 
-    raise ValueError(f'Unsupported file extension: {extension!r}')
+    raise ValueError(f'Unsupported file extension: {extension}')

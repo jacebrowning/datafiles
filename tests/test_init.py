@@ -33,7 +33,6 @@ def describe_existing_file():
         expect(sample.foo) == 2
         expect(sample.bar) == 'b'
 
-    @pytest.mark.xfail
     def it_loses_against_init_values(write, SampleWithDefaults, expect):
         write(
             'tmp/sample.yml',
