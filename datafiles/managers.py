@@ -1,12 +1,12 @@
 import dataclasses
 import inspect
-import json
 from functools import lru_cache
 from pathlib import Path
 from typing import Any, Dict, Optional
 
 import log
-from ruamel import yaml
+
+from . import formats
 
 
 cached = lru_cache()
@@ -29,8 +29,11 @@ class InstanceManager:
         self.fields = fields
 
     @property
-    @cached
     def path(self) -> Optional[Path]:
+        return self._get_path()
+
+    @cached
+    def _get_path(self) -> Optional[Path]:
         if not self._pattern:
             log.debug(f'{self!r} has no path pattern')
             return None
@@ -57,7 +60,7 @@ class InstanceManager:
     @property
     def data(self) -> Dict:
         class_name = self._instance.__class__.__name__
-        log.debug(f'Converting {class_name} to data')
+        log.debug(f'Converting object ({class_name}) to data')
         data: Dict = dataclasses.asdict(self._instance)
 
         for key in list(data.keys()):
@@ -88,35 +91,18 @@ class InstanceManager:
         extension = self.path.suffix if self.path else '.yml'
         log.debug(f'Converting data to text ({extension}): {self.data}')
 
-        text = None
-        if extension in {'.yml', '.yaml'}:
-            text = yaml.round_trip_dump(self.data) if self.fields else ""
-        elif extension in {'.json'}:
-            text = json.dumps(self.data)
-
-        if text is None:
-            raise ValueError(f'Unsupported file extension: {extension!r}')
-
+        text = formats.serialize(self.data, extension)
         log.info(f'Text ({extension}): {text!r}')
+
         return text
 
     def load(self) -> None:
         log.info(f'Loading values for {self._instance}')
-        if not self.path:
+
+        if self.path:
+            data = formats.deserialize(self.path, self.path.suffix)
+        else:
             raise RuntimeError("'pattern' must be set to load the model")
-
-        with self.path.open('r') as infile:
-
-            data = None
-            if self.path.suffix in {'.yml', '.yaml'}:
-                data = yaml.YAML(typ='safe').load(infile) or {}
-            elif self.path.suffix in {'.json'}:
-                data = json.load(infile) or {}
-
-        if data is None:
-            raise ValueError(
-                f'Unsupported file extension: {self.path.suffix!r}'
-            )
 
         for name, field in self.fields.items():
             if dataclasses.is_dataclass(field):
@@ -148,14 +134,6 @@ class InstanceManager:
                 value = data.get(name, self._get_default_field_value(name))
                 setattr(self._instance, name, field.to_python(value))
 
-    def save(self) -> None:
-        log.info(f'Saving data for {self._instance}')
-        if not self.path:
-            raise RuntimeError(f"'pattern' must be set to save the model")
-
-        self.path.parent.mkdir(parents=True, exist_ok=True)
-        self.path.write_text(self.text)
-
     def _get_default_field_value(self, name):
         for field in dataclasses.fields(self._instance):
             if field.name == name:
@@ -163,3 +141,12 @@ class InstanceManager:
                 if not isinstance(field.default, dataclasses._MISSING_TYPE):
                     return field.default
         return None
+
+    def save(self) -> None:
+        log.info(f'Saving data for {self._instance}')
+
+        if self.path:
+            self.path.parent.mkdir(parents=True, exist_ok=True)
+            self.path.write_text(self.text)
+        else:
+            raise RuntimeError(f"'pattern' must be set to save the model")

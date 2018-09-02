@@ -50,8 +50,9 @@ def describe_instance_manager():
 
         def with_unknown_format(expect, manager):
             manager._pattern = '_.xyz'
+            manager.fields = {'foobar': MyField}
             with expect.raises(ValueError):
-                manager.text
+                print(manager.text)
 
     def describe_load():
         def it_requires_path(expect, manager):

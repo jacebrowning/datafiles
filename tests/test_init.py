@@ -12,23 +12,38 @@ def SampleWithDefaults():
     @sync('../tmp/sample.yml')
     @dataclass
     class Sample:
-        foo: int = 123
-        bar: str = 'abc'
+        foo: int = 1
+        bar: str = 'a'
 
     return Sample
 
 
 def describe_existing_file():
-    def it_wins_when_no_values_specified(write, SampleWithDefaults, expect):
+    def it_wins_when_no_init_values(write, SampleWithDefaults, expect):
         write(
             'tmp/sample.yml',
             """
-            foo: 456
-            bar: 'def'
+            foo: 2
+            bar: 'b'
             """,
         )
 
         sample = SampleWithDefaults()
 
-        expect(sample.foo) == 456
-        expect(sample.bar) == 'def'
+        expect(sample.foo) == 2
+        expect(sample.bar) == 'b'
+
+    @pytest.mark.xfail
+    def it_loses_against_init_values(write, SampleWithDefaults, expect):
+        write(
+            'tmp/sample.yml',
+            """
+            foo: 3
+            bar: 'c'
+            """,
+        )
+
+        sample = SampleWithDefaults(4, 'd')
+
+        expect(sample.foo) == 4
+        expect(sample.bar) == 'd'
