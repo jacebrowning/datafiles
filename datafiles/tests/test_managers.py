@@ -15,8 +15,8 @@ class MyModel:
 
 class MyField:
     @classmethod
-    def to_data(cls, value):
-        return value
+    def to_preserialization_data(cls, python_value):
+        return python_value
 
 
 def describe_instance_manager():

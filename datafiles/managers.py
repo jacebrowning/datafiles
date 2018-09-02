@@ -81,7 +81,7 @@ class InstanceManager:
 
                 data[name] = field(**value).datafile.data
             else:
-                data[name] = field.to_data(value)
+                data[name] = field.to_preserialization_data(value)
 
         log.info(f'Data: {data}')
         return data
@@ -127,7 +127,7 @@ class InstanceManager:
                         name2,
                         manager2._get_default_field_value(name2),
                     )
-                    value2 = field2.to_python(_value2)
+                    value2 = field2.to_python_value(_value2)
                     log.debug(f"'{name2}' as Python: {value2}")
                     setattr(value, name2, value2)
 
@@ -151,7 +151,7 @@ class InstanceManager:
                     )
                     continue
 
-                value = field.to_python(file_value)
+                value = field.to_python_value(file_value)
                 log.debug(f"Setting '{name}' value: {file_value!r}")
                 setattr(self._instance, name, value)
 

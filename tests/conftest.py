@@ -1,6 +1,7 @@
 import shutil
 from dataclasses import dataclass
 from pathlib import Path
+from typing import List
 
 import pytest
 
@@ -122,5 +123,15 @@ def SampleWithNestingAndDefaultValues():
         name: str
         score: float = 1.2
         nested: Sample2 = Sample2()
+
+    return Sample
+
+
+@pytest.fixture
+def SampleWithFloatList():
+    @sync('../tmp/sample.yml')
+    @dataclass
+    class Sample:
+        items: List[float]
 
     return Sample

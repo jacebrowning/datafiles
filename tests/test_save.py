@@ -132,3 +132,20 @@ def describe_nesting():
                   score: 0.0
                 """
             )
+
+
+def describe_lists():
+    def with_conversion(SampleWithFloatList, expect, dedent):
+        sample = SampleWithFloatList([1, 2.3, '4.5'])
+
+        sample.datafile.save()
+
+        with open('tmp/sample.yml') as f:
+            expect(f.read()) == dedent(
+                """
+                items:
+                - 1.0
+                - 2.3
+                - 4.5
+                """
+            )
