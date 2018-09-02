@@ -41,7 +41,11 @@ class Integer(Field, int):
     def to_preserialization_data(cls, python_value):
         if python_value is None:
             return 0
-        return int(python_value)
+        try:
+            return int(python_value)
+        except ValueError:
+            log.warn(f'Precision lost in conversion to int: {python_value}')
+            return int(float(python_value))
 
 
 class String(Field, str):
@@ -63,10 +67,39 @@ class List(Field, list):
         return new_class
 
     @classmethod
+    def to_python_value(cls, deserialized_data):
+        value = []
+        convert = cls.__field__.to_python_value
+
+        if deserialized_data is None:
+            pass
+
+        elif isinstance(deserialized_data, str):
+            for item in deserialized_data.split(','):
+                value.append(convert(item))
+
+        elif isinstance(deserialized_data, list):
+            for item in deserialized_data:
+                value.append(convert(item))
+
+        else:
+            value.append(convert(deserialized_data))
+
+        return value
+
+    @classmethod
     def to_preserialization_data(cls, python_value):
         data = []
-        for item in python_value:
-            data.append(cls.__field__.to_preserialization_data(item))
+        convert = cls.__field__.to_preserialization_data
+
+        if python_value is None:
+            pass
+        elif isinstance(python_value, list):
+            for item in python_value:
+                data.append(convert(item))
+        else:
+            data.append(convert(python_value))
+
         return data
 
 

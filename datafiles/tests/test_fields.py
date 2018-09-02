@@ -11,6 +11,10 @@ class MyCustomNonDataclass:
     pass
 
 
+IntegerList = fields.List.of_field_type(fields.Integer)  # type: ignore
+StringList = fields.List.of_field_type(fields.String)  # type: ignore
+
+
 def describe_map_type():
     def it_handles_list_annotations(expect):
         field = fields.map_type(List[str])
@@ -56,6 +60,11 @@ def describe_field():
             (fields.String, 42, '42'),
             (fields.String, False, 'False'),
             (fields.String, True, 'True'),
+            (IntegerList, '1, 2.3', [1, 2]),
+            (IntegerList, '42', [42]),
+            (IntegerList, 42, [42]),
+            (IntegerList, [], []),
+            (IntegerList, None, []),
         ],
     )
     def to_python_value(field, preserialization_data, python_value, expect):
@@ -68,11 +77,9 @@ def describe_field():
             (fields.Float, None, 0.0),
             (fields.Integer, None, 0),
             (fields.String, None, ''),
-            (
-                fields.List.of_field_type(fields.String),  # type: ignore
-                ['abc', 123, True, False],
-                ['abc', '123', 'True', 'False'],
-            ),
+            (StringList, [123, True, False], ['123', 'True', 'False']),
+            (StringList, [], []),
+            (StringList, None, []),
         ],
     )
     def to_preserialization_data(

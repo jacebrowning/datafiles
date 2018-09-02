@@ -167,3 +167,17 @@ def describe_nesting():
         expect(sample.score) == 0.0
         expect(sample.nested.name) == 'bar'
         expect(sample.nested.score) == 0.0
+
+
+def describe_lists():
+    def with_conversion(write, SampleWithFloatList, expect):
+        write(
+            'tmp/sample.yml',
+            """
+            items: 1, 2.3
+            """,
+        )
+
+        sample = SampleWithFloatList(None)
+
+        expect(sample.items) == [1.0, 2.3]
