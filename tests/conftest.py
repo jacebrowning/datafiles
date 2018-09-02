@@ -11,7 +11,8 @@ from datafiles.fields import String
 @pytest.fixture(autouse=True)
 def create_tmp():
     path = Path('tmp')
-    shutil.rmtree(path)
+    if path.exists():
+        shutil.rmtree(path)
     path.mkdir(exist_ok=True)
 
 
