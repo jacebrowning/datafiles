@@ -29,11 +29,8 @@ class InstanceManager:
         self.fields = fields
 
     @property
-    def path(self) -> Optional[Path]:
-        return self.get_path()
-
     @cached
-    def get_path(self) -> Optional[Path]:
+    def path(self) -> Optional[Path]:
         if not self._pattern:
             log.debug(f'{self!r} has no path pattern')
             return None
@@ -42,10 +39,10 @@ class InstanceManager:
         relpath = self._pattern.format(self=self._instance)
 
         root = Path(inspect.getfile(self._instance.__class__)).parent
-        log.debug(f'Datafile root directory: {root}')
+        log.debug(f'Root directory: {root}')
 
         path = (root / relpath).resolve()
-        log.debug(f'Path: {path}')
+        log.info(f'Path: {path}')
         return path
 
     @property
@@ -59,9 +56,6 @@ class InstanceManager:
 
     @property
     def data(self) -> Dict:
-        return self.get_data()
-
-    def get_data(self) -> Dict:
         class_name = self._instance.__class__.__name__
         log.debug(f'Converting {class_name} to data')
         data: Dict = dataclasses.asdict(self._instance)
@@ -82,18 +76,16 @@ class InstanceManager:
                         log.debug(f'Added missing nested attribute: {f.name}')
                         value[f.name] = None
 
-                data[name] = field(**value).datafile.get_data()
+                data[name] = field(**value).datafile.data
             else:
                 data[name] = field.to_data(value)
 
-        log.debug(f'Data: {data}')
+        log.info(f'Data: {data}')
         return data
 
     @property
     def text(self) -> str:
-        return self.get_text()
-
-    def get_text(self, extension='.yml') -> str:
+        extension = self.path.suffix if self.path else '.yml'
         log.debug(f'Converting data to text ({extension}): {self.data}')
 
         text = None
@@ -105,10 +97,11 @@ class InstanceManager:
         if text is None:
             raise ValueError(f'Unsupported file extension: {extension!r}')
 
-        log.debug(f'Text ({extension}): {text!r}')
+        log.info(f'Text ({extension}): {text!r}')
         return text
 
     def load(self) -> None:
+        log.info(f'Loading values for {self._instance}')
         if not self.path:
             raise RuntimeError("'pattern' must be set to load the model")
 
@@ -155,6 +148,14 @@ class InstanceManager:
                 value = data.get(name, self._get_default_field_value(name))
                 setattr(self._instance, name, field.to_python(value))
 
+    def save(self) -> None:
+        log.info(f'Saving data for {self._instance}')
+        if not self.path:
+            raise RuntimeError(f"'pattern' must be set to save the model")
+
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+        self.path.write_text(self.text)
+
     def _get_default_field_value(self, name):
         for field in dataclasses.fields(self._instance):
             if field.name == name:
@@ -162,10 +163,3 @@ class InstanceManager:
                 if not isinstance(field.default, dataclasses._MISSING_TYPE):
                     return field.default
         return None
-
-    def save(self) -> None:
-        if not self.path:
-            raise RuntimeError(f"'pattern' must be set to save the model")
-
-        self.path.parent.mkdir(parents=True, exist_ok=True)
-        self.path.write_text(self.text)

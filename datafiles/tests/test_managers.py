@@ -44,12 +44,14 @@ def describe_instance_manager():
             expect(manager.text) == "foobar: 42\n"
 
         def with_custom_format(expect, manager):
+            manager._pattern = '_.json'
             manager.fields = {'foobar': MyField}
-            expect(manager.get_text('.json')) == '{"foobar": 42}'
+            expect(manager.text) == '{"foobar": 42}'
 
         def with_unknown_format(expect, manager):
+            manager._pattern = '_.xyz'
             with expect.raises(ValueError):
-                manager.get_text('xyz')
+                manager.text
 
     def describe_load():
         def it_requires_path(expect, manager):
