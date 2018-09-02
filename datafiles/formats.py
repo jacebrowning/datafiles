@@ -49,9 +49,9 @@ class JSON(Formatter):
 
 
 def deserialize(path: Path, extension: Text) -> Dict:
-    with path.open('r') as file_object:
-        for formatter in Formatter.__subclasses__():
-            if extension in formatter.extensions():
+    for formatter in Formatter.__subclasses__():
+        if extension in formatter.extensions():
+            with path.open('r') as file_object:
                 return formatter.deserialize(file_object)
 
     raise ValueError(f'Unsupported file extension: {extension}')
