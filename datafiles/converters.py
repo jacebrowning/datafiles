@@ -25,22 +25,26 @@ class Converter(metaclass=ABCMeta):
 class Boolean(Converter):
 
     TYPE = bool
+    DEFAULT = False
     FALSY = {'false', 'f', 'no', 'n', 'disabled', 'off', '0'}
 
     @classmethod
     def to_python_value(cls, deserialized_data):
         if isinstance(deserialized_data, str):
             return deserialized_data.lower() not in cls.FALSY
-        return bool(deserialized_data)
+        return cls.TYPE(deserialized_data)
 
     @classmethod
     def to_preserialization_data(cls, python_value):
-        return bool(python_value)
+        if python_value is None:
+            return cls.DEFAULT
+        return cls.TYPE(python_value)
 
 
 class Float(Converter):
 
     TYPE = float
+    DEFAULT = 0.0
 
     @classmethod
     def to_python_value(cls, deserialized_data):
@@ -49,13 +53,14 @@ class Float(Converter):
     @classmethod
     def to_preserialization_data(cls, python_value):
         if python_value is None:
-            return 0.0
-        return float(python_value)
+            return cls.DEFAULT
+        return cls.TYPE(python_value)
 
 
 class Integer(Converter):
 
     TYPE = int
+    DEFAULT = 0
 
     @classmethod
     def to_python_value(cls, deserialized_data):
@@ -64,12 +69,12 @@ class Integer(Converter):
     @classmethod
     def to_preserialization_data(cls, python_value):
         if python_value is None:
-            return 0
+            return cls.DEFAULT
         try:
-            return int(python_value)
+            return cls.TYPE(python_value)
         except ValueError as exc:
             try:
-                data = int(float(python_value))
+                data = cls.TYPE(float(python_value))
             except ValueError:
                 raise exc from None
             else:
@@ -81,6 +86,7 @@ class Integer(Converter):
 class String(Converter):
 
     TYPE = str
+    DEFAULT = ''
 
     @classmethod
     def to_python_value(cls, deserialized_data):
@@ -89,8 +95,8 @@ class String(Converter):
     @classmethod
     def to_preserialization_data(cls, python_value):
         if python_value is None:
-            return ''
-        return str(python_value)
+            return cls.DEFAULT
+        return cls.TYPE(python_value)
 
 
 class List:
