@@ -36,7 +36,7 @@ def describe_map_type():
 
 def describe_converter():
     @pytest.mark.parametrize(
-        'converter, preserialization_data, python_value',
+        'converter, data, value',
         [
             (converters.Boolean, '1', True),
             (converters.Boolean, '0', False),
@@ -67,19 +67,16 @@ def describe_converter():
             (IntegerList, None, []),
         ],
     )
-    def to_python_value(
-        converter, preserialization_data, python_value, expect
-    ):
-        expect(
-            converter.to_python_value(preserialization_data)
-        ) == python_value
+    def to_python_value(expect, converter, data, value):
+        expect(converter.to_python_value(data)) == value
 
     def to_python_value_when_invalid(expect):
-        with expect.raises(ValueError):
+        message = "invalid literal for int() with base 10: 'a'"
+        with expect.raises(ValueError, message):
             converters.Integer.to_python_value('a')
 
     @pytest.mark.parametrize(
-        'converter, python_value, preserialization_data',
+        'converter, value, data',
         [
             (converters.Boolean, None, False),
             (converters.Float, None, 0.0),
@@ -94,13 +91,10 @@ def describe_converter():
             (StringList, None, []),
         ],
     )
-    def to_preserialization_data(
-        converter, python_value, preserialization_data, expect
-    ):
-        expect(
-            converter.to_preserialization_data(python_value)
-        ) == preserialization_data
+    def to_preserialization_data(expect, converter, value, data):
+        expect(converter.to_preserialization_data(value)) == data
 
     def to_preserialization_data_when_invalid(expect):
-        with expect.raises(ValueError):
+        message = "invalid literal for int() with base 10: 'a'"
+        with expect.raises(ValueError, message):
             converters.Integer.to_preserialization_data('a')
