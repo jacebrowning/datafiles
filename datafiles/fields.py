@@ -43,9 +43,15 @@ class Integer(Field, int):
             return 0
         try:
             return int(python_value)
-        except ValueError:
-            log.warn(f'Precision lost in conversion to int: {python_value}')
-            return int(float(python_value))
+        except ValueError as exc:
+            try:
+                data = int(float(python_value))
+            except ValueError:
+                raise exc from None
+            else:
+                msg = f'Precision lost in conversion to int: {python_value}'
+                log.warn(msg)
+                return data
 
 
 class String(Field, str):

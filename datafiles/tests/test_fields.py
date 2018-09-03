@@ -70,6 +70,10 @@ def describe_field():
     def to_python_value(field, preserialization_data, python_value, expect):
         expect(field.to_python_value(preserialization_data)) == python_value
 
+    def to_python_value_when_invalid(expect):
+        with expect.raises(ValueError):
+            fields.Integer.to_python_value('a')
+
     @pytest.mark.parametrize(
         'field, python_value, preserialization_data',
         [
@@ -88,3 +92,7 @@ def describe_field():
         expect(
             field.to_preserialization_data(python_value)
         ) == preserialization_data
+
+    def to_preserialization_data_when_invalid(expect):
+        with expect.raises(ValueError):
+            fields.Integer.to_preserialization_data('a')
