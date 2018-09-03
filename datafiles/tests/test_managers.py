@@ -23,7 +23,7 @@ def describe_instance_manager():
     @pytest.fixture
     def manager():
         return managers.InstanceManager(
-            instance=MyModel(foobar=42), pattern=None, fields={}
+            instance=MyModel(foobar=42), pattern=None, attrs={}
         )
 
     def describe_path():
@@ -36,21 +36,21 @@ def describe_instance_manager():
             expect(manager.path) == root / 'tmp' / 'sample.yml'
 
     def describe_text():
-        def is_blank_when_no_fields(expect, manager):
+        def is_blank_when_no_attrs(expect, manager):
             expect(manager.text) == ""
 
         def is_yaml_by_default(expect, manager):
-            manager.fields = {'foobar': MyField}
+            manager.attrs = {'foobar': MyField}
             expect(manager.text) == "foobar: 42\n"
 
         def with_custom_format(expect, manager):
             manager._pattern = '_.json'
-            manager.fields = {'foobar': MyField}
+            manager.attrs = {'foobar': MyField}
             expect(manager.text) == '{"foobar": 42}'
 
         def with_unknown_format(expect, manager):
             manager._pattern = '_.xyz'
-            manager.fields = {'foobar': MyField}
+            manager.attrs = {'foobar': MyField}
             with expect.raises(ValueError):
                 print(manager.text)
 

@@ -6,7 +6,7 @@ from typing import List
 import pytest
 
 from datafiles import sync
-from datafiles.fields import String
+from datafiles.converters import String
 
 
 @pytest.fixture(autouse=True)
@@ -72,7 +72,7 @@ def SampleWithCustomFields():
         exluced: str
 
         class Meta:
-            datafile_fields = {'included': String}
+            datafile_attrs = {'included': String}
 
     return Sample
 

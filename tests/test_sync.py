@@ -25,10 +25,10 @@ def describe_automatic():
 
         return Sample(1, "a")
 
-    def it_inferrs_fields(expect, sample):
-        expect(sample.datafile.fields) == {
-            'name': datafiles.fields.String,
-            'score': datafiles.fields.Float,
+    def it_inferrs_attrs(expect, sample):
+        expect(sample.datafile.attrs) == {
+            'name': datafiles.converters.String,
+            'score': datafiles.converters.Float,
         }
 
     def it_formats_path_from_pattern(expect, sample):
@@ -61,11 +61,11 @@ def describe_manual():
 
         return Sample(2, "b")
 
-    def it_inferrs_fields(expect, sample):
-        expect(sample.datafile.fields) == {
-            'key': datafiles.fields.Integer,
-            'name': datafiles.fields.String,
-            'score': datafiles.fields.Float,
+    def it_inferrs_attrs(expect, sample):
+        expect(sample.datafile.attrs) == {
+            'key': datafiles.converters.Integer,
+            'name': datafiles.converters.String,
+            'score': datafiles.converters.Float,
         }
 
     def it_has_no_path(expect, sample):
@@ -75,8 +75,8 @@ def describe_manual():
         expect(sample.datafile.data) == {'key': 2, 'name': "b", 'score': 0.25}
 
 
-def describe_manual_with_fields():
-    """Tests to create a data file with explicit fields."""
+def describe_manual_with_attrs():
+    """Tests to create a data file with explicit attrs."""
 
     @pytest.fixture
     def sample():
@@ -87,12 +87,12 @@ def describe_manual_with_fields():
             score: float = 1 / 8
 
             class Meta:
-                datafile_fields = {'name': datafiles.fields.String}
+                datafile_attrs = {'name': datafiles.converters.String}
 
         return Sample(3, "c")
 
-    def it_uses_fields_from_meta(expect, sample):
-        expect(sample.datafile.fields) == {'name': datafiles.fields.String}
+    def it_uses_attrs_from_meta(expect, sample):
+        expect(sample.datafile.attrs) == {'name': datafiles.converters.String}
 
     def it_has_no_path(expect, sample):
         expect(sample.datafile.path) == None
@@ -101,8 +101,8 @@ def describe_manual_with_fields():
         expect(sample.datafile.data) == {'name': "c"}
 
 
-def describe_manual_with_fields_and_pattern():
-    """Tests to create a data file with explicit fields and pattern."""
+def describe_manual_with_attrs_and_pattern():
+    """Tests to create a data file with explicit attrs and pattern."""
 
     @pytest.fixture
     def sample():
@@ -113,13 +113,13 @@ def describe_manual_with_fields_and_pattern():
             score: float = 1 / 16
 
             class Meta:
-                datafile_fields = {'name': datafiles.fields.String}
+                datafile_attrs = {'name': datafiles.converters.String}
                 datafile_pattern = '../tmp/{self.key}.yml'
 
         return Sample(4, "d")
 
-    def it_uses_fields_from_meta(expect, sample):
-        expect(sample.datafile.fields) == {'name': datafiles.fields.String}
+    def it_uses_attrs_from_meta(expect, sample):
+        expect(sample.datafile.attrs) == {'name': datafiles.converters.String}
 
     def it_formats_path_from_pattern(expect, sample):
         root = Path(__file__).parents[1]

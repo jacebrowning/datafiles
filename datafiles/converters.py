@@ -1,20 +1,29 @@
 import dataclasses
+from abc import ABCMeta, abstractmethod
+from typing import Any
 
 import log
 
 
-class Field:
-    @classmethod
-    def to_python_value(cls, deserialized_data):
-        return cls.to_preserialization_data(deserialized_data)
+class Converter(metaclass=ABCMeta):
+    """Base class for attribute conversion."""
+
+    TYPE: Any = None
 
     @classmethod
+    @abstractmethod
+    def to_python_value(cls, deserialized_data):
+        raise NotImplementedError
+
+    @classmethod
+    @abstractmethod
     def to_preserialization_data(cls, python_value):
         raise NotImplementedError
 
 
-class Boolean(Field):
+class Boolean(Converter):
 
+    TYPE = bool
     FALSY = {'false', 'f', 'no', 'n', 'disabled', 'off', '0'}
 
     @classmethod
@@ -28,7 +37,14 @@ class Boolean(Field):
         return bool(python_value)
 
 
-class Float(Field, float):
+class Float(Converter):
+
+    TYPE = float
+
+    @classmethod
+    def to_python_value(cls, deserialized_data):
+        return cls.to_preserialization_data(deserialized_data)
+
     @classmethod
     def to_preserialization_data(cls, python_value):
         if python_value is None:
@@ -36,7 +52,14 @@ class Float(Field, float):
         return float(python_value)
 
 
-class Integer(Field, int):
+class Integer(Converter):
+
+    TYPE = int
+
+    @classmethod
+    def to_python_value(cls, deserialized_data):
+        return cls.to_preserialization_data(deserialized_data)
+
     @classmethod
     def to_preserialization_data(cls, python_value):
         if python_value is None:
@@ -54,7 +77,14 @@ class Integer(Field, int):
                 return data
 
 
-class String(Field, str):
+class String(Converter):
+
+    TYPE = str
+
+    @classmethod
+    def to_python_value(cls, deserialized_data):
+        return cls.to_preserialization_data(deserialized_data)
+
     @classmethod
     def to_preserialization_data(cls, python_value):
         if python_value is None:
@@ -62,20 +92,20 @@ class String(Field, str):
         return str(python_value)
 
 
-class List(Field, list):
+class List:
 
-    __field__ = None
+    ELEMENT_CONVERTER = None
 
     @classmethod
-    def of_field_type(cls, field: Field):
-        name = field.__name__ + cls.__name__  # type: ignore
-        new_class = type(name, (cls,), {'__field__': field})
+    def of_converters(cls, converter: Converter):
+        name = converter.__name__ + cls.__name__  # type: ignore
+        new_class = type(name, (cls,), {'ELEMENT_CONVERTER': converter})
         return new_class
 
     @classmethod
     def to_python_value(cls, deserialized_data):
         value = []
-        convert = cls.__field__.to_python_value
+        convert = cls.ELEMENT_CONVERTER.to_python_value
 
         if deserialized_data is None:
             pass
@@ -96,7 +126,7 @@ class List(Field, list):
     @classmethod
     def to_preserialization_data(cls, python_value):
         data = []
-        convert = cls.__field__.to_preserialization_data
+        convert = cls.ELEMENT_CONVERTER.to_preserialization_data
 
         if python_value is None:
             pass
@@ -110,7 +140,7 @@ class List(Field, list):
 
 
 def map_type(cls, patch_dataclass=None):
-    """Infer the field type from the type annotation."""
+    """Infer the converter type from the type annotation."""
 
     if dataclasses.is_dataclass(cls):
         assert patch_dataclass, "'patch_dataclass' required to map dataclass"
@@ -120,19 +150,16 @@ def map_type(cls, patch_dataclass=None):
         log.debug(f'Mapping container type annotation: {cls}')
         if cls.__origin__ == list:
             try:
-                field_class = map_type(cls.__args__[0])
+                converter = map_type(cls.__args__[0])
             except TypeError:
                 exc = TypeError(f"Type is required with 'List' annotation")
                 raise exc from None
             else:
-                return List.of_field_type(field_class)
+                return List.of_converters(converter)
         raise TypeError(f'Unsupported container type: {cls.__origin__}')
 
-    for field_class in Field.__subclasses__():
-        if issubclass(field_class, cls):
-            return field_class
-
-    if cls == bool:
-        return Boolean
+    for converter in Converter.__subclasses__():
+        if converter.TYPE == cls:
+            return converter
 
     raise TypeError(f'Could not map type: {cls}')

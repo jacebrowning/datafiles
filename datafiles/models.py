@@ -3,14 +3,14 @@ from typing import Dict, Optional
 
 from classproperties import classproperty
 
-from .fields import Field, map_type
+from .converters import Converter, map_type
 from .managers import InstanceManager, ModelManager
 
 
 @dataclasses.dataclass
 class ModelMeta:
     datafile_pattern: Optional[str] = None
-    datafile_fields: Optional[Dict[str, Field]] = None
+    datafile_attrs: Optional[Dict[str, Converter]] = None
 
 
 class Model:
@@ -32,19 +32,19 @@ class Model:
     def get_datafile(self) -> InstanceManager:
         m = getattr(self, 'Meta', None)
         pattern = getattr(m, 'datafile_pattern', None)
-        fields = getattr(m, 'datafile_fields', None)
+        attrs = getattr(m, 'datafile_attrs', None)
 
-        if fields is None:
-            fields = {}
-            for f in dataclasses.fields(self):
-                self_name = f'self.{f.name}'
+        if attrs is None:
+            attrs = {}
+            for field in dataclasses.fields(self):
+                self_name = f'self.{field.name}'
                 if pattern is None or self_name not in pattern:
-                    fields[f.name] = map_type(f.type, patch_dataclass)
+                    attrs[field.name] = map_type(field.type, patch_dataclass)
 
-        return InstanceManager(instance=self, pattern=pattern, fields=fields)
+        return InstanceManager(instance=self, pattern=pattern, attrs=attrs)
 
 
-def patch_dataclass(cls, pattern, fields):
+def patch_dataclass(cls, pattern, attrs):
     """Patch datafile attributes on to an existing dataclass."""
     if not dataclasses.is_dataclass(cls):
         raise ValueError(f'{cls} must be a dataclass')
@@ -53,7 +53,7 @@ def patch_dataclass(cls, pattern, fields):
 
     m = getattr(cls, 'Meta', ModelMeta())
     m.datafile_pattern = getattr(m, 'datafile_pattern', None) or pattern
-    m.datafile_fields = getattr(m, 'datafile_fields', None) or fields
+    m.datafile_attrs = getattr(m, 'datafile_attrs', None) or attrs
     cls.Meta = m
 
     # Patch datafile

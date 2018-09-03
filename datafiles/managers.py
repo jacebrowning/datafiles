@@ -22,11 +22,11 @@ class ModelManager:
 
 class InstanceManager:
     def __init__(
-        self, *, instance: Any, pattern: Optional[str], fields: Dict
+        self, *, instance: Any, pattern: Optional[str], attrs: Dict
     ) -> None:
         self._instance = instance
         self._pattern = pattern
-        self.fields = fields
+        self.attrs = attrs
 
     @property
     def path(self) -> Optional[Path]:
@@ -63,25 +63,27 @@ class InstanceManager:
         log.debug(f'Converting object ({class_name}) to data')
         data: Dict = dataclasses.asdict(self._instance)
 
-        for key in list(data.keys()):
-            if key not in self.fields:
-                log.debug(f'Removed unmapped field: {key}')
-                data.pop(key)
+        for name in list(data.keys()):
+            if name not in self.attrs:
+                log.debug(f'Removed unmapped attribute: {name}')
+                data.pop(name)
 
-        for name, field in self.fields.items():
+        for name, converter in self.attrs.items():
             value = data[name]
-            log.debug(f"Converting '{name}' as {field.__name__}: {value!r}")
-            if dataclasses.is_dataclass(field):
+            log.debug(f"Converting '{name}' as {converter}: {value!r}")
+            if dataclasses.is_dataclass(converter):
                 if value is None:
                     value = {}
-                for f in dataclasses.fields(field):
-                    if f.name not in value:
-                        log.debug(f'Added missing nested attribute: {f.name}')
-                        value[f.name] = None
+                for field in dataclasses.fields(converter):
+                    if field.name not in value:
+                        log.debug(
+                            f'Added missing nested attribute: {field.name}'
+                        )
+                        value[field.name] = None
 
-                data[name] = field(**value).datafile.data
+                data[name] = converter(**value).datafile.data
             else:
-                data[name] = field.to_preserialization_data(value)
+                data[name] = converter.to_preserialization_data(value)
 
         log.info(f'Data: {data}')
         return data
@@ -104,30 +106,30 @@ class InstanceManager:
         else:
             raise RuntimeError("'pattern' must be set to load the model")
 
-        for name, field in self.fields.items():
+        for name, converter in self.attrs.items():
 
-            if dataclasses.is_dataclass(field):
+            if dataclasses.is_dataclass(converter):
                 # TODO: Support nesting unlimited levels
                 data2 = data.get(name)
                 log.debug(f'Converting nested data to Python: {data2}')
 
                 value = getattr(self._instance, name)
                 if value is None:
-                    for f in dataclasses.fields(field):
-                        if f.name not in data2:  # type: ignore
-                            data2[f.name] = None  # type: ignore
-                    value = field(**data2)
+                    for field in dataclasses.fields(converter):
+                        if field.name not in data2:  # type: ignore
+                            data2[field.name] = None  # type: ignore
+                    value = converter(**data2)
                 elif initial:
                     continue  # TODO: Test this
 
                 manager2 = value.datafile
-                for name2, field2 in manager2.fields.items():
+                for name2, converter2 in manager2.attrs.items():
                     _value2 = data2.get(  # type: ignore
                         # pylint: disable=protected-access
                         name2,
                         manager2._get_default_field_value(name2),
                     )
-                    value2 = field2.to_python_value(_value2)
+                    value2 = converter2.to_python_value(_value2)
                     log.debug(f"'{name2}' as Python: {value2}")
                     setattr(value, name2, value2)
 
@@ -151,7 +153,7 @@ class InstanceManager:
                     )
                     continue
 
-                value = field.to_python_value(file_value)
+                value = converter.to_python_value(file_value)
                 log.debug(f"Setting '{name}' value: {file_value!r}")
                 setattr(self._instance, name, value)
 

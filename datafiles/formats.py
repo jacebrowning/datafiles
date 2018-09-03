@@ -1,25 +1,33 @@
 import json
+from abc import ABCMeta, abstractmethod
 from pathlib import Path
 from typing import IO, Any, Dict, List, Text
 
 from ruamel import yaml
 
 
-class Formatter:
+class Formatter(metaclass=ABCMeta):
+    """Base class for object serialization and text deserialization."""
+
     @classmethod
+    @abstractmethod
     def extensions(cls) -> List[Text]:
         raise NotImplementedError
 
     @classmethod
+    @abstractmethod
     def deserialize(cls, file_object: IO[Any]) -> Dict:
         raise NotImplementedError
 
     @classmethod
+    @abstractmethod
     def serialize(cls, data: Dict) -> Text:
         raise NotImplementedError
 
 
 class YAML(Formatter):
+    """Formatter for safe, round-trip YAML."""
+
     @classmethod
     def extensions(cls):
         return {'.yml', '.yaml'}
@@ -35,6 +43,8 @@ class YAML(Formatter):
 
 
 class JSON(Formatter):
+    """Formatter for JSON."""
+
     @classmethod
     def extensions(cls):
         return {'.json'}

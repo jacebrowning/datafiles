@@ -1,13 +1,13 @@
 from typing import Dict, Optional
 
-from .fields import Field
+from .converters import Converter
 from .models import patch_dataclass
 
 
-def sync(pattern: str, fields: Optional[Dict[str, Field]] = None):
+def sync(pattern: str, attrs: Optional[Dict[str, Converter]] = None):
     """Decorator to synchronize a data class to the specified path."""
 
     def decorator(cls):
-        return patch_dataclass(cls, pattern, fields)
+        return patch_dataclass(cls, pattern, attrs)
 
     return decorator
