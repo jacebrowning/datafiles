@@ -24,7 +24,7 @@ def describe_existing_file():
             'tmp/sample.yml',
             """
             foo: 2
-            bar: 'b'
+            bar: b
             """,
         )
 
@@ -38,7 +38,7 @@ def describe_existing_file():
             'tmp/sample.yml',
             """
             foo: 3
-            bar: 'c'
+            bar: c
             """,
         )
 
@@ -46,3 +46,16 @@ def describe_existing_file():
 
         expect(sample.foo) == 4
         expect(sample.bar) == 'd'
+
+    def it_wins_against_default_init_values(write, SampleWithDefaults, expect):
+        write(
+            'tmp/sample.yml',
+            """
+            bar: e
+            """,
+        )
+
+        sample = SampleWithDefaults(foo=5)
+
+        expect(sample.foo) == 5
+        expect(sample.bar) == 'e'
