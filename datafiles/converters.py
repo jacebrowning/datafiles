@@ -1,5 +1,6 @@
 import dataclasses
 from abc import ABCMeta, abstractmethod
+from collections import Iterable  # pylint: disable=no-name-in-module
 from typing import Any
 
 import log
@@ -130,9 +131,18 @@ class List:
 
         if python_value is None:
             pass
-        elif isinstance(python_value, list):
-            for item in python_value:
-                data.append(convert(item))
+
+        elif isinstance(python_value, Iterable):
+
+            if isinstance(python_value, str):
+                data.append(convert(python_value))
+
+            elif isinstance(python_value, set):
+                data.extend(sorted(convert(item) for item in python_value))
+
+            else:
+                for item in python_value:
+                    data.append(convert(item))
         else:
             data.append(convert(python_value))
 
