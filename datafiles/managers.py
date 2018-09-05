@@ -12,6 +12,14 @@ from . import formats
 cached = lru_cache()
 
 
+# TODO: Set to dataclasses._MISSING_TYPE?
+class Missing:
+    """Sentinel for missing values."""
+
+    def __bool__(self):
+        return False
+
+
 class ModelManager:
     def __init__(self, cls):
         self.model = cls
@@ -38,14 +46,10 @@ class InstanceManager:
             log.debug(f'{self!r} has no path pattern')
             return None
 
-        log.debug(f'Formatting pattern: {self._pattern}')
         relpath = self._pattern.format(self=self._instance)
-
         root = Path(inspect.getfile(self._instance.__class__)).parent
-        log.debug(f'Root directory: {root}')
-
         path = (root / relpath).resolve()
-        log.info(f'Path: {path}')
+        log.info(f'Datafile path: {path}')
         return path
 
     @property
@@ -54,13 +58,14 @@ class InstanceManager:
             log.debug("'pattern' not set so datafile will never exist")
             return False
 
-        log.debug(f'{self.path} exists: {self.path.exists()}')
-        return self.path.exists()
+        result = self.path.exists()
+        log.debug(f'Datafile exists: {result}')
+        return result
 
     @property
     def data(self) -> Dict:
-        class_name = self._instance.__class__.__name__
-        log.debug(f'Converting object ({class_name}) to data')
+        log.info(f'Preserializing object {self._instance!r} to data')
+
         data: Dict = dataclasses.asdict(self._instance)
 
         for name in list(data.keys()):
@@ -70,7 +75,9 @@ class InstanceManager:
 
         for name, converter in self.attrs.items():
             value = data[name]
-            log.debug(f"Converting '{name}' as {converter}: {value!r}")
+            log.debug(
+                f"Converting '{name}' value as {converter.__name__}: {value!r}"
+            )
             if dataclasses.is_dataclass(converter):
                 if value is None:
                     value = {}
@@ -85,31 +92,34 @@ class InstanceManager:
             else:
                 data[name] = converter.to_preserialization_data(value)
 
-        log.info(f'Data: {data}')
+        log.info(f'Preserialized object data: {data}')
         return data
 
     @property
     def text(self) -> str:
         extension = self.path.suffix if self.path else '.yml'
-        log.debug(f'Converting data to text ({extension}): {self.data}')
+        log.info(f'Serializing data to text ({extension}): {self.data}')
 
         text = formats.serialize(self.data, extension)
-        log.info(f'Text ({extension}): {text!r}')
+        log.info(f'Serialized text ({extension}): {text!r}')
 
         return text
 
-    def load(self, *, initial=False) -> None:
+    def load(self, *, first_load=False) -> None:
         log.info(f'Loading values for {self._instance}')
 
-        if self.path:
-            data = formats.deserialize(self.path, self.path.suffix)
-        else:
+        if not self.path:
             raise RuntimeError("'pattern' must be set to load the model")
 
+        data = formats.deserialize(self.path, self.path.suffix)
+        log.debug(f'Deserialized file data: {data}')
+
         for name, converter in self.attrs.items():
+            log.debug(f"Converting '{name}' data to value")
 
             if dataclasses.is_dataclass(converter):
                 # TODO: Support nesting unlimited levels
+                # https://github.com/jacebrowning/datafiles/issues/22
                 data2 = data.get(name)
                 log.debug(f'Converting nested data to Python: {data2}')
 
@@ -119,7 +129,7 @@ class InstanceManager:
                         if field.name not in data2:  # type: ignore
                             data2[field.name] = None  # type: ignore
                     value = converter(**data2)
-                elif initial:
+                elif first_load:
                     continue  # TODO: Test this
 
                 manager2 = value.datafile
@@ -137,24 +147,34 @@ class InstanceManager:
                 setattr(self._instance, name, value)
 
             else:
+                file_value = data.get(name, Missing)
+                init_value = getattr(self._instance, name)
                 default_value = self._get_default_field_value(name)
-                initial_value = getattr(self._instance, name)
-                file_value = data.get(name, default_value)
 
-                if initial and file_value == default_value:
+                if first_load:
                     log.debug(
-                        f"Ignoring default '{name}' value: {default_value!r}"
+                        'First load values: file=%r, init=%r, default=%r',
+                        file_value,
+                        init_value,
+                        default_value,
                     )
-                    continue
 
-                if initial and initial_value != default_value:
-                    log.debug(
-                        f"Ignoring default '{name}' value: {default_value!r}"
-                    )
-                    continue
+                    if file_value == default_value:
+                        log.debug(
+                            f"Ignored default '{name}' file value: {default_value!r}"
+                        )
+                        continue
 
-                value = converter.to_python_value(file_value)
-                log.debug(f"Setting '{name}' value: {file_value!r}")
+                    if init_value != default_value:
+                        log.debug(
+                            f"Ignored default '{name}' init value: {default_value!r}"
+                        )
+                        continue
+
+                value = converter.to_python_value(
+                    default_value if file_value is Missing else file_value
+                )
+                log.info(f"Setting '{name}' value: {value!r}")
                 setattr(self._instance, name, value)
 
     def _get_default_field_value(self, name):
@@ -163,13 +183,32 @@ class InstanceManager:
                 # pylint: disable=protected-access
                 if not isinstance(field.default, dataclasses._MISSING_TYPE):
                     return field.default
-        return None
+                if not isinstance(
+                    field.default_factory,  # type: ignore
+                    dataclasses._MISSING_TYPE,
+                ):
+                    return field.default_factory()  # type: ignore
+
+        # TODO: Handle both defaults and '__post_init__'
+        if hasattr(self._instance, '__post_init__'):
+            value1 = getattr(self._instance, name)
+            self._instance.__post_init__()
+            value2 = getattr(self._instance, name)
+            log.debug(
+                "Comparing '__post_init__' before: %s, after %r",
+                value1,
+                value2,
+            )
+            if value1 == value2:
+                return value2
+
+        return None  # TODO: Should be missing?
 
     def save(self) -> None:
         log.info(f'Saving data for {self._instance}')
 
-        if self.path:
-            self.path.parent.mkdir(parents=True, exist_ok=True)
-            self.path.write_text(self.text)
-        else:
+        if not self.path:
             raise RuntimeError(f"'pattern' must be set to save the model")
+
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+        self.path.write_text(self.text)

@@ -4,6 +4,10 @@ import pytest
 
 
 def describe_nominal():
+    @pytest.fixture
+    def sample(Sample):
+        return Sample(None, None, None, None)
+
     def with_matching_types(write, sample, expect):
         write(
             'tmp/sample.yml',
@@ -59,7 +63,11 @@ def describe_nominal():
 
 
 def describe_alternate_formats():
-    def with_json(write, sample_json, expect):
+    @pytest.fixture
+    def sample(SampleAsJSON):
+        return SampleAsJSON(None, None, None, None)
+
+    def with_json(write, sample, expect):
         write(
             'tmp/sample.json',
             """
@@ -72,7 +80,6 @@ def describe_alternate_formats():
             """,
         )
 
-        sample = sample_json
         sample.datafile.load()
 
         expect(sample.bool_) == True
@@ -84,11 +91,10 @@ def describe_alternate_formats():
 def describe_default_values():
     @pytest.fixture
     def sample(SampleWithDefaultValues):
-        return SampleWithDefaultValues(None, None)
+        return SampleWithDefaultValues(None)
 
-    def with_empty_file(sample, expect):
-        with open('tmp/sample.yml', 'w') as f:
-            f.write("")
+    def with_empty_file(write, sample, expect):
+        write('tmp/sample.yml', "")
 
         sample.datafile.load()
 
@@ -110,7 +116,11 @@ def describe_default_values():
 
 
 def describe_nesting():
-    def with_defaults(write, sample_nesting, expect):
+    @pytest.fixture
+    def sample(SampleWithNesting):
+        return SampleWithNesting(None, None, None)
+
+    def with_defaults(write, sample, expect):
         write(
             'tmp/sample.yml',
             """
@@ -122,7 +132,6 @@ def describe_nesting():
             """,
         )
 
-        sample = sample_nesting
         sample.datafile.load()
 
         expect(sample.name) == ''
@@ -130,7 +139,7 @@ def describe_nesting():
         expect(sample.nested.name) == ''
         expect(sample.nested.score) == 0.0
 
-    def with_convertable_types(write, sample_nesting, expect):
+    def with_convertable_types(write, sample, expect):
         write(
             'tmp/sample.yml',
             """
@@ -142,7 +151,6 @@ def describe_nesting():
             """,
         )
 
-        sample = sample_nesting
         sample.datafile.load()
 
         expect(sample.name) == '1'
@@ -150,7 +158,7 @@ def describe_nesting():
         expect(sample.nested.name) == '4'
         expect(sample.nested.score) == 5.6
 
-    def with_missing_keys(write, sample_nesting, expect):
+    def with_missing_keys(write, sample, expect):
         write(
             'tmp/sample.yml',
             """
@@ -160,7 +168,6 @@ def describe_nesting():
             """,
         )
 
-        sample = sample_nesting
         sample.datafile.load()
 
         expect(sample.name) == 'foo'

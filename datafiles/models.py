@@ -19,7 +19,7 @@ class Model:
 
     def __init__(self, *args, **kwargs):  # pylint: disable=unused-argument
         if self.datafile.exists:
-            self.datafile.load(initial=True)
+            self.datafile.load(first_load=True)
 
     @classproperty
     def datafiles(cls) -> ModelManager:  # pylint: disable=no-self-argument

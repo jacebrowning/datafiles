@@ -1,7 +1,12 @@
 # pylint: disable=unused-variable
+import pytest
 
 
 def describe_nominal():
+    @pytest.fixture
+    def sample(Sample):
+        return Sample(None, None, None, None)
+
     def without_initial_values(sample, expect, dedent):
         sample.datafile.save()
 
