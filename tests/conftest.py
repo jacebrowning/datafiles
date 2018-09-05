@@ -3,6 +3,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import List
 
+import log
 import pytest
 
 from datafiles import sync
@@ -24,7 +25,18 @@ def dedent():
 
 @pytest.fixture(scope='session')
 def write(dedent):
-    return lambda path, text: Path(path).write_text(dedent(text))
+    def _(path, text):
+        _path = Path(path).resolve()
+        message = f'Writing: {_path}'
+        log.info('=' * len(message))
+        log.info(message)
+        _text = dedent(text)
+        for index, line in enumerate(_text.splitlines()):
+            log.info(f'Line {index+1}: {line}')
+        _path.write_text(_text)
+        log.info('=' * len(message))
+
+    return _
 
 
 @pytest.fixture
@@ -41,11 +53,6 @@ def Sample():
 
 
 @pytest.fixture
-def sample(Sample):
-    return Sample(None, None, None, None)
-
-
-@pytest.fixture
 def SampleAsJSON():
     @sync('../tmp/sample.json')
     @dataclass
@@ -56,11 +63,6 @@ def SampleAsJSON():
         str_: str
 
     return Sample
-
-
-@pytest.fixture
-def sample_json(SampleAsJSON):
-    return SampleAsJSON(None, None, None, None)
 
 
 @pytest.fixture
@@ -103,11 +105,6 @@ def SampleWithNesting():
         nested: Sample2
 
     return Sample
-
-
-@pytest.fixture
-def sample_nesting(SampleWithNesting):
-    return SampleWithNesting(None, None, None)
 
 
 @pytest.fixture

@@ -1,6 +1,6 @@
 # pylint: disable=unused-variable
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 import pytest
 
@@ -14,6 +14,33 @@ def SampleWithDefaults():
     class Sample:
         foo: int = 1
         bar: str = 'a'
+
+    return Sample
+
+
+@pytest.fixture
+def SampleWithFactoryDefaults():
+    @sync('../tmp/sample.yml')
+    @dataclass
+    class Sample:
+        a: float
+        b: float
+        c: float = field(default_factory=lambda: 42)
+
+    return Sample
+
+
+@pytest.fixture
+def SampleWithComputedDefaults():
+    @sync('../tmp/sample.yml')
+    @dataclass
+    class Sample:
+        a: float
+        b: float
+        c: float = field(init=False)
+
+        def __post_init__(self):
+            self.c = self.a + self.b
 
     return Sample
 
@@ -59,3 +86,46 @@ def describe_existing_file():
 
         expect(sample.foo) == 5
         expect(sample.bar) == 'e'
+
+
+def describe_factory_defaults():
+    def when_no_file(SampleWithFactoryDefaults, expect):
+        sample = SampleWithFactoryDefaults(1.2, 3.4)
+
+        expect(sample.datafile.data) == {'a': 1.2, 'b': 3.4, 'c': 42.0}
+
+    def when_file_exists(write, SampleWithFactoryDefaults, expect):
+        write(
+            'tmp/sample.yml',
+            """
+            a: 1.0
+            b: 2.0
+            c: 9.9
+            """,
+        )
+
+        sample = SampleWithFactoryDefaults(1.2, 3.4)
+
+        expect(sample.datafile.data) == {'a': 1.2, 'b': 3.4, 'c': 9.9}
+
+
+def describe_computed_defaults():
+    def when_no_file(SampleWithComputedDefaults, expect):
+        sample = SampleWithComputedDefaults(1.2, 3.4)
+
+        expect(sample.datafile.data) == {'a': 1.2, 'b': 3.4, 'c': 4.6}
+
+    @pytest.mark.xfail
+    def when_file_exists(write, SampleWithComputedDefaults, expect):
+        write(
+            'tmp/sample.yml',
+            """
+            a: 1.0
+            b: 2.0
+            c: 9.9
+            """,
+        )
+
+        sample = SampleWithComputedDefaults(1.2, 3.4)
+
+        expect(sample.datafile.data) == {'a': 1.2, 'b': 3.4, 'c': 9.9}
