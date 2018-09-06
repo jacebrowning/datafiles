@@ -36,7 +36,10 @@ def describe_automatic():
         expect(sample.datafile.path) == root / 'tmp' / '1.yml'
 
     def it_converts_attributes(expect, sample):
-        expect(sample.datafile.data) == {'name': "a", 'score': 0.5}
+        expect(sample.key) == 1
+        expect(sample.name) == "a"
+        expect(sample.score) == 0.5
+        expect(sample.datafile.data) == {'name': "a"}
 
     def it_requires_dataclasses(expect):
         with expect.raises(ValueError):
@@ -72,7 +75,10 @@ def describe_manual():
         expect(sample.datafile.path) == None
 
     def it_converts_attributes(expect, sample):
-        expect(sample.datafile.data) == {'key': 2, 'name': "b", 'score': 0.25}
+        expect(sample.key) == 2
+        expect(sample.name) == "b"
+        expect(sample.score) == 0.25
+        expect(sample.datafile.data) == {'key': 2, 'name': "b"}
 
 
 def describe_manual_with_attrs():
@@ -85,6 +91,7 @@ def describe_manual_with_attrs():
             key: int
             name: str
             score: float = 1 / 8
+            extra: bool = True
 
             class Meta:
                 datafile_attrs = {'name': datafiles.converters.String}

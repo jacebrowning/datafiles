@@ -57,8 +57,8 @@ def describe_nominal():
 
 
 def describe_lists():
-    def with_conversion(SampleWithFloatList, expect, dedent):
-        sample = SampleWithFloatList([1, 2.3, '4.5'])
+    def with_conversion(SampleWithList, expect, dedent):
+        sample = SampleWithList([1, 2.3, '4.5'])
 
         sample.datafile.save()
 
@@ -106,8 +106,8 @@ def describe_nesting():
                 """
             )
 
-    def with_default_values(SampleWithNestingAndDefaultValues, expect, dedent):
-        sample = SampleWithNestingAndDefaultValues('a')
+    def with_default_values(SampleWithNestingAndDefaults, expect, dedent):
+        sample = SampleWithNestingAndDefaults('a')
 
         sample.datafile.save()
 
@@ -115,10 +115,7 @@ def describe_nesting():
             expect(f.read()) == dedent(
                 """
                 name: a
-                score: 1.2
-                nested:
-                  name: b
-                  score: 3.4
+                nested: {}
                 """
             )
 
@@ -183,8 +180,8 @@ def describe_optionals():
 
 
 def describe_defaults():
-    def with_custom_values(SampleWithDefaultValues, expect, read, dedent):
-        sample = SampleWithDefaultValues('a', 'b')
+    def with_custom_values(SampleWithDefaults, expect, read, dedent):
+        sample = SampleWithDefaults('a', 'b')
 
         sample.datafile.save()
 
@@ -195,9 +192,8 @@ def describe_defaults():
             """
         )
 
-    @pytest.mark.xfail
-    def with_default_values(SampleWithDefaultValues, expect, read, dedent):
-        sample = SampleWithDefaultValues('a')
+    def with_default_values(SampleWithDefaults, expect, read, dedent):
+        sample = SampleWithDefaults('a')
 
         sample.datafile.save()
 
@@ -207,10 +203,11 @@ def describe_defaults():
             """
         )
 
+    @pytest.mark.xfail(reason='This behavior might not be desired.')
     def with_custom_value_that_matches_the_default(
-        SampleWithDefaultValues, expect, read, dedent
+        SampleWithDefaults, expect, read, dedent
     ):
-        sample = SampleWithDefaultValues('a', 'foo')
+        sample = SampleWithDefaults('a', 'foo')
 
         sample.datafile.save()
 

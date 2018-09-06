@@ -18,7 +18,6 @@ class Converter(metaclass=ABCMeta):
     def as_optional(cls):
         name = 'Optional' + cls.__name__
         new_class = type(name, (cls,), {'DEFAULT': None})
-        log.debug(f'Created converter: {new_class}')
         return new_class
 
     @classmethod
@@ -177,6 +176,7 @@ def map_type(cls, patch_dataclass=None):
 
     if hasattr(cls, '__origin__'):
         log.debug(f'Mapping container type annotation: {cls}')
+        converter = None
 
         if cls.__origin__ == list:
             try:
@@ -185,13 +185,17 @@ def map_type(cls, patch_dataclass=None):
                 exc = TypeError(f"Type is required with 'List' annotation")
                 raise exc from None
             else:
-                return List.of_converters(converter)
+                converter = List.of_converters(converter)
 
-        if cls.__origin__ == Union:
+        elif cls.__origin__ == Union:
             converter = map_type(cls.__args__[0])
             assert len(cls.__args__) == 2
             assert cls.__args__[1] == type(None)
-            return converter.as_optional()
+            converter = converter.as_optional()
+
+        if converter:
+            log.debug(f'Created new converter: {converter}')
+            return converter
 
         raise TypeError(f'Unsupported container type: {cls.__origin__}')
 

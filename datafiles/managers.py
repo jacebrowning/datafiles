@@ -6,6 +6,7 @@ from typing import Any, Dict, Optional
 import log
 
 from . import formats
+from .converters import List
 from .utils import cached
 
 
@@ -89,6 +90,10 @@ class InstanceManager:
 
                 data[name] = converter(**value).datafile.data
 
+            elif value == self._get_default_field_value(name):
+                log.debug(f"Skipped default value for '{name}' attribute")
+                data.pop(name)
+
             else:
                 data[name] = converter.to_preserialization_data(value)
 
@@ -165,15 +170,22 @@ class InstanceManager:
                         )
                         continue
 
-                    if init_value != default_value:
+                    if init_value != default_value and not issubclass(
+                        converter, List
+                    ):
                         log.debug(
-                            f"Ignored default '{name}' init value: {default_value!r}"
+                            f"Keeping non-default '{name}' init value: {init_value!r}"
                         )
                         continue
 
-                value = converter.to_python_value(
-                    default_value if file_value is Missing else file_value
-                )
+                if file_value is Missing:
+                    if default_value is Missing:
+                        value = converter.to_python_value(None)
+                    else:
+                        value = converter.to_python_value(default_value)
+                else:
+                    value = converter.to_python_value(file_value)
+
                 log.info(f"Setting '{name}' value: {value!r}")
                 setattr(self._instance, name, value)
 
@@ -202,7 +214,7 @@ class InstanceManager:
             if value1 == value2:
                 return value2
 
-        return None  # TODO: Should be missing?
+        return Missing
 
     def save(self) -> None:
         log.info(f'Saving data for {self._instance}')

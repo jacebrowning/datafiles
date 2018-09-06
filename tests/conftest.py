@@ -68,8 +68,8 @@ def SampleWithCustomFields():
 
 
 @pytest.fixture
-def SampleWithDefaultValues():
-    return samples.SampleWithDefaultValues
+def SampleWithDefaults():
+    return samples.SampleWithDefaults
 
 
 @pytest.fixture
@@ -78,13 +78,18 @@ def SampleWithNesting():
 
 
 @pytest.fixture
-def SampleWithNestingAndDefaultValues():
-    return samples.SampleWithNestingAndDefaultValues
+def SampleWithNestingAndDefaults():
+    return samples.SampleWithNestingAndDefaults
 
 
 @pytest.fixture
-def SampleWithFloatList():
-    return samples.SampleWithFloatList
+def SampleWithList():
+    return samples.SampleWithList
+
+
+@pytest.fixture
+def SampleWithListAndDefaults():
+    return samples.SampleWithListAndDefaults
 
 
 @pytest.fixture

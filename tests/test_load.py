@@ -90,8 +90,8 @@ def describe_alternate_formats():
 
 def describe_default_values():
     @pytest.fixture
-    def sample(SampleWithDefaultValues):
-        return SampleWithDefaultValues(None)
+    def sample(SampleWithDefaults):
+        return SampleWithDefaults(None)
 
     def with_empty_file(write, sample, expect):
         write('tmp/sample.yml', "")
@@ -177,7 +177,8 @@ def describe_nesting():
 
 
 def describe_lists():
-    def with_conversion(write, SampleWithFloatList, expect):
+    # @pytest.mark.xfail
+    def with_conversion(write, SampleWithList, expect):
         write(
             'tmp/sample.yml',
             """
@@ -185,6 +186,18 @@ def describe_lists():
             """,
         )
 
-        sample = SampleWithFloatList(None)
+        sample = SampleWithList(None)
+
+        expect(sample.items) == [1.0, 2.3]
+
+    def with_conversion_and_defaults(write, SampleWithListAndDefaults, expect):
+        write(
+            'tmp/sample.yml',
+            """
+            items: 1, 2.3
+            """,
+        )
+
+        sample = SampleWithListAndDefaults()
 
         expect(sample.items) == [1.0, 2.3]
