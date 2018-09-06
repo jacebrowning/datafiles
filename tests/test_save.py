@@ -180,3 +180,43 @@ def describe_optionals():
             optional:
             """
         )
+
+
+def describe_defaults():
+    def with_custom_values(SampleWithDefaultValues, expect, read, dedent):
+        sample = SampleWithDefaultValues('a', 'b')
+
+        sample.datafile.save()
+
+        expect(read('tmp/sample.yml')) == dedent(
+            """
+            without_default: a
+            with_default: b
+            """
+        )
+
+    @pytest.mark.xfail
+    def with_default_values(SampleWithDefaultValues, expect, read, dedent):
+        sample = SampleWithDefaultValues('a')
+
+        sample.datafile.save()
+
+        expect(read('tmp/sample.yml')) == dedent(
+            """
+            without_default: a
+            """
+        )
+
+    def with_custom_value_that_matches_the_default(
+        SampleWithDefaultValues, expect, read, dedent
+    ):
+        sample = SampleWithDefaultValues('a', 'foo')
+
+        sample.datafile.save()
+
+        expect(read('tmp/sample.yml')) == dedent(
+            """
+            without_default: a
+            with_default: foo
+            """
+        )

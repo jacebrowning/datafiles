@@ -98,21 +98,21 @@ def describe_default_values():
 
         sample.datafile.load()
 
-        expect(sample.str_with_default) == 'foo'
-        expect(sample.str_without_default) == ''
+        expect(sample.with_default) == 'foo'
+        expect(sample.without_default) == ''
 
     def with_partial_file(write, sample, expect):
         write(
             'tmp/sample.yml',
             """
-            str_without_default: bar
+            without_default: bar
             """,
         )
 
         sample.datafile.load()
 
-        expect(sample.str_with_default) == 'foo'
-        expect(sample.str_without_default) == 'bar'
+        expect(sample.with_default) == 'foo'
+        expect(sample.without_default) == 'bar'
 
 
 def describe_nesting():

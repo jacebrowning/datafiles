@@ -1,13 +1,10 @@
 import shutil
-from dataclasses import dataclass
 from pathlib import Path
-from typing import List, Optional
 
 import log
 import pytest
 
-from datafiles import sync
-from datafiles.converters import String
+from . import samples
 
 
 @pytest.fixture(autouse=True)
@@ -57,105 +54,39 @@ def read():
 
 @pytest.fixture
 def Sample():
-    @sync('../tmp/sample.yml')
-    @dataclass
-    class Sample:
-        bool_: bool
-        int_: int
-        float_: float
-        str_: str
-
-    return Sample
+    return samples.Sample
 
 
 @pytest.fixture
 def SampleAsJSON():
-    @sync('../tmp/sample.json')
-    @dataclass
-    class Sample:
-        bool_: bool
-        int_: int
-        float_: float
-        str_: str
-
-    return Sample
+    return samples.SampleAsJSON
 
 
 @pytest.fixture
 def SampleWithCustomFields():
-    @sync('../tmp/sample.yml')
-    @dataclass
-    class Sample:
-        included: str
-        exluced: str
-
-        class Meta:
-            datafile_attrs = {'included': String}
-
-    return Sample
+    return samples.SampleWithCustomFields
 
 
 @pytest.fixture
 def SampleWithDefaultValues():
-    @sync('../tmp/sample.yml')
-    @dataclass
-    class Sample:
-        str_without_default: str
-        str_with_default: str = 'foo'
-
-    return Sample
+    return samples.SampleWithDefaultValues
 
 
 @pytest.fixture
 def SampleWithNesting():
-    @dataclass
-    class Sample2:
-        name: str
-        score: float
-
-    @sync('../tmp/sample.yml')
-    @dataclass
-    class Sample:
-        name: str
-        score: float
-        nested: Sample2
-
-    return Sample
+    return samples.SampleWithNesting
 
 
 @pytest.fixture
 def SampleWithNestingAndDefaultValues():
-    @dataclass
-    class Sample2:
-        name: str = 'b'
-        score: float = 3.4
-
-    @sync('../tmp/sample.yml')
-    @dataclass
-    class Sample:
-        name: str
-        score: float = 1.2
-        nested: Sample2 = Sample2()
-
-    return Sample
+    return samples.SampleWithNestingAndDefaultValues
 
 
 @pytest.fixture
 def SampleWithFloatList():
-    @sync('../tmp/sample.yml')
-    @dataclass
-    class Sample:
-        items: List[float]
-
-    return Sample
+    return samples.SampleWithFloatList
 
 
 @pytest.fixture
 def SampleWithOptionals():
-    @sync('../tmp/sample.yml')
-    @dataclass
-    class Sample:
-        required: float
-        optional: Optional[float]
-
-    return Sample
+    return samples.SampleWithOptionals
