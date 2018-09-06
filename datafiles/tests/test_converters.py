@@ -1,6 +1,6 @@
 # pylint: disable=unused-variable
 
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 import pytest
 
@@ -24,6 +24,12 @@ def describe_map_type():
     def it_requires_list_annotations_to_have_a_type(expect):
         with expect.raises(TypeError):
             converters.map_type(List)
+
+    def it_handles_optionals(expect):
+        converter = converters.map_type(Optional[str])
+        expect(converter.__name__) == 'OptionalString'
+        expect(converter.TYPE) == str
+        expect(converter.DEFAULT) == None
 
     def it_rejects_unknown_types(expect):
         with expect.raises(TypeError):
@@ -65,6 +71,7 @@ def describe_converter():
             (IntegerList, '42', [42]),
             (IntegerList, 42, [42]),
             (IntegerList, None, []),
+            (IntegerList, [42], [42]),
         ],
     )
     def to_python_value(expect, converter, data, value):

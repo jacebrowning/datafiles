@@ -1,15 +1,12 @@
 import dataclasses
 import inspect
-from functools import lru_cache
 from pathlib import Path
 from typing import Any, Dict, Optional
 
 import log
 
 from . import formats
-
-
-cached = lru_cache()
+from .utils import cached
 
 
 # TODO: Set to dataclasses._MISSING_TYPE?
@@ -78,9 +75,11 @@ class InstanceManager:
             log.debug(
                 f"Converting '{name}' value as {converter.__name__}: {value!r}"
             )
+
             if dataclasses.is_dataclass(converter):
                 if value is None:
                     value = {}
+
                 for field in dataclasses.fields(converter):
                     if field.name not in value:
                         log.debug(
@@ -89,6 +88,7 @@ class InstanceManager:
                         value[field.name] = None
 
                 data[name] = converter(**value).datafile.data
+
             else:
                 data[name] = converter.to_preserialization_data(value)
 

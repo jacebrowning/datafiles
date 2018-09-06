@@ -56,6 +56,23 @@ def describe_nominal():
             )
 
 
+def describe_lists():
+    def with_conversion(SampleWithFloatList, expect, dedent):
+        sample = SampleWithFloatList([1, 2.3, '4.5'])
+
+        sample.datafile.save()
+
+        with open('tmp/sample.yml') as f:
+            expect(f.read()) == dedent(
+                """
+                items:
+                - 1.0
+                - 2.3
+                - 4.5
+                """
+            )
+
+
 def describe_nesting():
     def without_initial_values(SampleWithNesting, expect, dedent):
         sample = SampleWithNesting(None, None, None)
@@ -139,18 +156,27 @@ def describe_nesting():
             )
 
 
-def describe_lists():
-    def with_conversion(SampleWithFloatList, expect, dedent):
-        sample = SampleWithFloatList([1, 2.3, '4.5'])
+def describe_optionals():
+    def with_values(SampleWithOptionals, expect, read, dedent):
+        sample = SampleWithOptionals(1, 2)
 
         sample.datafile.save()
 
-        with open('tmp/sample.yml') as f:
-            expect(f.read()) == dedent(
-                """
-                items:
-                - 1.0
-                - 2.3
-                - 4.5
-                """
-            )
+        expect(read('tmp/sample.yml')) == dedent(
+            """
+            required: 1.0
+            optional: 2.0
+            """
+        )
+
+    def with_nones(SampleWithOptionals, expect, read, dedent):
+        sample = SampleWithOptionals(None, None)
+
+        sample.datafile.save()
+
+        expect(read('tmp/sample.yml')) == dedent(
+            """
+            required: 0.0
+            optional:
+            """
+        )
