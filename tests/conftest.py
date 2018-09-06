@@ -1,7 +1,7 @@
 import shutil
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List
+from typing import List, Optional
 
 import log
 import pytest
@@ -25,7 +25,7 @@ def dedent():
 
 @pytest.fixture(scope='session')
 def write(dedent):
-    def _(path, text):
+    def _(path: str, text: str) -> None:
         _path = Path(path).resolve()
         message = f'Writing: {_path}'
         log.info('=' * len(message))
@@ -35,6 +35,22 @@ def write(dedent):
             log.info(f'Line {index+1}: {line}')
         _path.write_text(_text)
         log.info('=' * len(message))
+
+    return _
+
+
+@pytest.fixture(scope='session')
+def read():
+    def _(path: str) -> str:
+        _path = Path(path).resolve()
+        message = f'Reading: {_path}'
+        log.info('=' * len(message))
+        log.info(message)
+        text = _path.read_text()
+        for index, line in enumerate(text.splitlines()):
+            log.info(f'Line {index+1}: {line}')
+        log.info('=' * len(message))
+        return text
 
     return _
 
@@ -130,5 +146,16 @@ def SampleWithFloatList():
     @dataclass
     class Sample:
         items: List[float]
+
+    return Sample
+
+
+@pytest.fixture
+def SampleWithOptionals():
+    @sync('../tmp/sample.yml')
+    @dataclass
+    class Sample:
+        required: float
+        optional: Optional[float]
 
     return Sample

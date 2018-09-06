@@ -1,15 +1,25 @@
 import dataclasses
 from abc import ABCMeta, abstractmethod
 from collections import Iterable  # pylint: disable=no-name-in-module
-from typing import Any
+from typing import Any, Union
 
 import log
+
+from .utils import cached
 
 
 class Converter(metaclass=ABCMeta):
     """Base class for attribute conversion."""
 
     TYPE: Any = None
+    DEFAULT: Any = None
+
+    @classmethod
+    def as_optional(cls):
+        name = 'Optional' + cls.__name__
+        new_class = type(name, (cls,), {'DEFAULT': None})
+        log.debug(f'Created converter: {new_class}')
+        return new_class
 
     @classmethod
     @abstractmethod
@@ -26,12 +36,12 @@ class Boolean(Converter):
 
     TYPE = bool
     DEFAULT = False
-    FALSY = {'false', 'f', 'no', 'n', 'disabled', 'off', '0'}
+    _FALSY = {'false', 'f', 'no', 'n', 'disabled', 'off', '0'}
 
     @classmethod
     def to_python_value(cls, deserialized_data):
         if isinstance(deserialized_data, str):
-            return deserialized_data.lower() not in cls.FALSY
+            return deserialized_data.lower() not in cls._FALSY
         return cls.TYPE(deserialized_data)
 
     @classmethod
@@ -107,6 +117,8 @@ class List:
     def of_converters(cls, converter: Converter):
         name = converter.__name__ + cls.__name__  # type: ignore
         new_class = type(name, (cls,), {'ELEMENT_CONVERTER': converter})
+        # TODO: Enabling this line breaks pytest's log capture???
+        # log.debug(f'Created converter: {new_class}')
         return new_class
 
     @classmethod
@@ -155,6 +167,7 @@ class List:
         return data
 
 
+@cached
 def map_type(cls, patch_dataclass=None):
     """Infer the converter type from the type annotation."""
 
@@ -164,6 +177,7 @@ def map_type(cls, patch_dataclass=None):
 
     if hasattr(cls, '__origin__'):
         log.debug(f'Mapping container type annotation: {cls}')
+
         if cls.__origin__ == list:
             try:
                 converter = map_type(cls.__args__[0])
@@ -172,6 +186,13 @@ def map_type(cls, patch_dataclass=None):
                 raise exc from None
             else:
                 return List.of_converters(converter)
+
+        if cls.__origin__ == Union:
+            converter = map_type(cls.__args__[0])
+            assert len(cls.__args__) == 2
+            assert cls.__args__[1] == type(None)
+            return converter.as_optional()
+
         raise TypeError(f'Unsupported container type: {cls.__origin__}')
 
     for converter in Converter.__subclasses__():
