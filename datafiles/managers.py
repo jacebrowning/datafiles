@@ -10,12 +10,7 @@ from .converters import List
 from .utils import cached
 
 
-# TODO: Set to dataclasses._MISSING_TYPE?
-class Missing:
-    """Sentinel for missing values."""
-
-    def __bool__(self):
-        return False
+Missing = dataclasses._MISSING_TYPE  # pylint: disable=protected-access
 
 
 class ModelManager:
@@ -192,12 +187,10 @@ class InstanceManager:
     def _get_default_field_value(self, name):
         for field in dataclasses.fields(self._instance):
             if field.name == name:
-                # pylint: disable=protected-access
-                if not isinstance(field.default, dataclasses._MISSING_TYPE):
+                if not isinstance(field.default, Missing):
                     return field.default
                 if not isinstance(
-                    field.default_factory,  # type: ignore
-                    dataclasses._MISSING_TYPE,
+                    field.default_factory, Missing  # type: ignore
                 ):
                     return field.default_factory()  # type: ignore
 

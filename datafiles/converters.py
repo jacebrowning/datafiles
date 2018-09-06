@@ -17,8 +17,7 @@ class Converter(metaclass=ABCMeta):
     @classmethod
     def as_optional(cls):
         name = 'Optional' + cls.__name__
-        new_class = type(name, (cls,), {'DEFAULT': None})
-        return new_class
+        return type(name, (cls,), {'DEFAULT': None})
 
     @classmethod
     @abstractmethod
@@ -115,10 +114,7 @@ class List:
     @classmethod
     def of_converters(cls, converter: Converter):
         name = converter.__name__ + cls.__name__  # type: ignore
-        new_class = type(name, (cls,), {'ELEMENT_CONVERTER': converter})
-        # TODO: Enabling this line breaks pytest's log capture???
-        # log.debug(f'Created converter: {new_class}')
-        return new_class
+        return type(name, (cls,), {'ELEMENT_CONVERTER': converter})
 
     @classmethod
     def to_python_value(cls, deserialized_data):
