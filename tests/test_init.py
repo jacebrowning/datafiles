@@ -92,7 +92,9 @@ def describe_factory_defaults():
     def when_no_file(SampleWithFactoryDefaults, expect):
         sample = SampleWithFactoryDefaults(1.2, 3.4)
 
-        expect(sample.datafile.data) == {'a': 1.2, 'b': 3.4, 'c': 42.0}
+        expect(sample.a) == 1.2
+        expect(sample.b) == 3.4
+        expect(sample.c) == 42.0
 
     def when_file_exists(write, SampleWithFactoryDefaults, expect):
         write(
@@ -106,16 +108,20 @@ def describe_factory_defaults():
 
         sample = SampleWithFactoryDefaults(1.2, 3.4)
 
-        expect(sample.datafile.data) == {'a': 1.2, 'b': 3.4, 'c': 9.9}
+        expect(sample.a) == 1.2
+        expect(sample.b) == 3.4
+        expect(sample.c) == 9.9
 
 
 def describe_computed_defaults():
     def when_no_file(SampleWithComputedDefaults, expect):
         sample = SampleWithComputedDefaults(1.2, 3.4)
 
-        expect(sample.datafile.data) == {'a': 1.2, 'b': 3.4, 'c': 4.6}
+        expect(sample.a) == 1.2
+        expect(sample.b) == 3.4
+        expect(sample.c) == 4.6
 
-    @pytest.mark.xfail
+    @pytest.mark.xfail(reason='This might not be possible.')
     def when_file_exists(write, SampleWithComputedDefaults, expect):
         write(
             'tmp/sample.yml',
@@ -128,4 +134,6 @@ def describe_computed_defaults():
 
         sample = SampleWithComputedDefaults(1.2, 3.4)
 
-        expect(sample.datafile.data) == {'a': 1.2, 'b': 3.4, 'c': 9.9}
+        expect(sample.a) == 1.2
+        expect(sample.b) == 3.4
+        expect(sample.c) == 9.9

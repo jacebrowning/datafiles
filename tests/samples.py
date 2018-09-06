@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import List, Optional
 
 from datafiles import sync
@@ -35,7 +35,7 @@ class SampleWithCustomFields:
 
 @sync('../tmp/sample.yml')
 @dataclass
-class SampleWithDefaultValues:
+class SampleWithDefaults:
     without_default: str
     with_default: str = 'foo'
 
@@ -62,7 +62,7 @@ class _Sample2:
 
 @sync('../tmp/sample.yml')
 @dataclass
-class SampleWithNestingAndDefaultValues:
+class SampleWithNestingAndDefaults:
     name: str
     score: float = 1.2
     nested: _Sample2 = _Sample2()
@@ -70,8 +70,14 @@ class SampleWithNestingAndDefaultValues:
 
 @sync('../tmp/sample.yml')
 @dataclass
-class SampleWithFloatList:
+class SampleWithList:
     items: List[float]
+
+
+@sync('../tmp/sample.yml')
+@dataclass
+class SampleWithListAndDefaults:
+    items: List[float] = field(default_factory=list)
 
 
 @sync('../tmp/sample.yml')
