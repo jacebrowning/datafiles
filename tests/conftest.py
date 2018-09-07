@@ -24,12 +24,10 @@ def dedent():
 def write(dedent):
     def _(path: str, text: str) -> None:
         _path = Path(path).resolve()
+        _text = dedent(text)
         message = f'Writing: {_path}'
         log.info('=' * len(message))
-        log.info(message)
-        _text = dedent(text)
-        for index, line in enumerate(_text.splitlines()):
-            log.info(f'Line {index+1}: {line}')
+        log.info(message + '\n' + _text.strip())
         _path.write_text(_text)
         log.info('=' * len(message))
 
@@ -42,10 +40,8 @@ def read():
         _path = Path(path).resolve()
         message = f'Reading: {_path}'
         log.info('=' * len(message))
-        log.info(message)
         text = _path.read_text()
-        for index, line in enumerate(text.splitlines()):
-            log.info(f'Line {index+1}: {line}')
+        log.info(message + '\n' + text.strip())
         log.info('=' * len(message))
         return text
 

@@ -189,23 +189,14 @@ class InstanceManager:
             if field.name == name:
                 if not isinstance(field.default, Missing):
                     return field.default
+
                 if not isinstance(
                     field.default_factory, Missing  # type: ignore
                 ):
                     return field.default_factory()  # type: ignore
 
-        # TODO: Handle both defaults and '__post_init__'
-        if hasattr(self._instance, '__post_init__'):
-            value1 = getattr(self._instance, name)
-            self._instance.__post_init__()
-            value2 = getattr(self._instance, name)
-            log.debug(
-                "Comparing '__post_init__' before: %s, after %r",
-                value1,
-                value2,
-            )
-            if value1 == value2:
-                return value2
+                if not field.init and hasattr(self._instance, '__post_init__'):
+                    return getattr(self._instance, name)
 
         return Missing
 

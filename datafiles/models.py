@@ -46,6 +46,7 @@ class Model:
 
 def patch_dataclass(cls, pattern, attrs):
     """Patch datafile attributes on to an existing dataclass."""
+
     if not dataclasses.is_dataclass(cls):
         raise ValueError(f'{cls} must be a dataclass')
 

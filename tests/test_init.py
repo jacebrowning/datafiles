@@ -121,7 +121,6 @@ def describe_computed_defaults():
         expect(sample.b) == 3.4
         expect(sample.c) == 4.6
 
-    @pytest.mark.xfail(reason='This might not be possible.')
     def when_file_exists(write, SampleWithComputedDefaults, expect):
         write(
             'tmp/sample.yml',
