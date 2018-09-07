@@ -40,7 +40,7 @@ endif
 .PHONY: test
 test: install
 	@ mkdir -p .cache
-	poetry run pytest --disable-warnings
+	poetry run pytest
 
 .PHONY: watch
 watch: install
