@@ -203,13 +203,12 @@ def describe_defaults():
             """
         )
 
-    @pytest.mark.xfail(reason='This behavior might not be desired.')
-    def with_custom_value_that_matches_the_default(
+    def with_default_values_and_full_save(
         SampleWithDefaults, expect, read, dedent
     ):
         sample = SampleWithDefaults('a', 'foo')
 
-        sample.datafile.save()
+        sample.datafile.save(include_default_values=True)
 
         expect(read('tmp/sample.yml')) == dedent(
             """

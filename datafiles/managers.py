@@ -57,6 +57,9 @@ class InstanceManager:
 
     @property
     def data(self) -> Dict:
+        return self._get_data()
+
+    def _get_data(self, include_default_values=False) -> Dict:
         log.info(f'Preserializing object {self._instance!r} to data')
 
         data: Dict = dataclasses.asdict(self._instance)
@@ -85,7 +88,10 @@ class InstanceManager:
 
                 data[name] = converter(**value).datafile.data
 
-            elif value == self._get_default_field_value(name):
+            elif (
+                value == self._get_default_field_value(name)
+                and not include_default_values
+            ):
                 log.debug(f"Skipped default value for '{name}' attribute")
                 data.pop(name)
 
@@ -97,10 +103,14 @@ class InstanceManager:
 
     @property
     def text(self) -> str:
+        return self._get_text()
+
+    def _get_text(self, include_default_values=False):
         extension = self.path.suffix if self.path else '.yml'
         log.info(f'Serializing data to text ({extension}): {self.data}')
 
-        text = formats.serialize(self.data, extension)
+        data = self._get_data(include_default_values=include_default_values)
+        text = formats.serialize(data, extension)
         log.info(f'Serialized text ({extension}): {text!r}')
 
         return text
@@ -200,11 +210,13 @@ class InstanceManager:
 
         return Missing
 
-    def save(self) -> None:
+    def save(self, include_default_values: bool = False) -> None:
         log.info(f'Saving data for {self._instance}')
 
         if not self.path:
             raise RuntimeError(f"'pattern' must be set to save the model")
 
+        text = self._get_text(include_default_values=include_default_values)
+
         self.path.parent.mkdir(parents=True, exist_ok=True)
-        self.path.write_text(self.text)
+        self.path.write_text(text)
