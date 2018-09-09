@@ -41,6 +41,7 @@ endif
 test: install
 	@ mkdir -p .cache
 	poetry run pytest
+	poetry run coveragespace jacebrowning/datafiles overall
 
 .PHONY: watch
 watch: install
