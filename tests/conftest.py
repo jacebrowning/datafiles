@@ -42,7 +42,7 @@ def write(dedent):
         _text = dedent(text)
         message = f'Writing: {_path}'
         log.info('=' * len(message))
-        log.info(message + '\n' + _text.strip())
+        log.info(message + '\n\n' + _text)
         _path.write_text(_text)
         log.info('=' * len(message))
 
@@ -56,7 +56,7 @@ def read():
         message = f'Reading: {_path}'
         log.info('=' * len(message))
         text = _path.read_text()
-        log.info(message + '\n' + text.strip())
+        log.info(message + '\n\n' + text)
         log.info('=' * len(message))
         return text
 

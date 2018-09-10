@@ -34,7 +34,7 @@ class YAML(Formatter):
 
     @classmethod
     def deserialize(cls, file_object):
-        return yaml.YAML(typ='safe').load(file_object) or {}
+        return yaml.YAML(typ='rt').load(file_object) or {}
 
     @classmethod
     def serialize(cls, data):

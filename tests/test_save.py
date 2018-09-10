@@ -216,3 +216,128 @@ def describe_defaults():
             with_default: foo
             """
         )
+
+
+def describe_preservation():
+    def with_extra_lines(SampleWithOptionals, write, expect, read, dedent):
+        sample = SampleWithOptionals(1, 2)
+
+        write(
+            'tmp/sample.yml',
+            """
+            required: 1.0
+
+            optional: 2.0
+            """,
+        )
+
+        sample.datafile.load()
+        sample.optional = 3
+        sample.datafile.save()
+
+        expect(read('tmp/sample.yml')) == dedent(
+            """
+            required: 1.0
+
+            optional: 3.0
+            """
+        )
+
+    def with_comments(SampleWithOptionals, write, expect, read, dedent):
+        sample = SampleWithOptionals(1, 2)
+
+        write(
+            'tmp/sample.yml',
+            """
+            # Heading
+            required: 1.0  # Line
+            optional: 2.0
+            """,
+        )
+
+        sample.datafile.load()
+        sample.required = 3
+        sample.datafile.save()
+
+        expect(read('tmp/sample.yml')) == dedent(
+            """
+            # Heading
+            required: 3.0  # Line
+            optional: 2.0
+            """
+        )
+
+    def with_comments_in_nested_objects(
+        SampleWithNestingAndDefaults, write, expect, read, dedent
+    ):
+        sample = SampleWithNestingAndDefaults(None)
+
+        write(
+            'tmp/sample.yml',
+            """
+            # Heading
+            name: a
+            score: 1.0  # Line
+
+            nested:
+              # Nested heading
+              name: n
+              score: 2
+            """,
+        )
+
+        sample.datafile.load()
+        sample.score = 3
+        sample.nested.score = 4
+        sample.datafile.save()
+
+        expect(read('tmp/sample.yml')) == dedent(
+            """
+            # Heading
+            name: a
+            score: 3.0  # Line
+
+            nested:
+              # Nested heading
+              name: n
+              score: 4.0
+            """
+        )
+
+    @pytest.mark.xfail
+    def with_comments_on_nested_lines(
+        SampleWithNestingAndDefaults, write, expect, read, dedent
+    ):
+        sample = SampleWithNestingAndDefaults(None)
+
+        write(
+            'tmp/sample.yml',
+            """
+            # Heading
+            name: a
+            score: 1  # Line
+
+            nested:
+              # Nested heading
+              name: n
+              score: 2  # Nested line
+            """,
+        )
+
+        sample.datafile.load()
+        sample.score = 3
+        sample.nested.score = 4
+        sample.datafile.save()
+
+        expect(read('tmp/sample.yml')) == dedent(
+            """
+            # Heading
+            name: a
+            score: 3.0  # Line
+
+            nested:
+              # Nested heading
+              name: n
+              score: 4.0  # Nested line
+            """
+        )

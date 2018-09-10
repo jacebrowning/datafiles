@@ -1,4 +1,7 @@
+# pylint: disable=no-self-argument,protected-access,attribute-defined-outside-init
+
 import dataclasses
+from contextlib import suppress
 from typing import Dict, Optional
 
 from classproperties import classproperty
@@ -17,19 +20,22 @@ class Model:
 
     Meta: ModelMeta
 
-    def __init__(self, *args, **kwargs):  # pylint: disable=unused-argument
+    def __post_init__(self):
         if self.datafile.exists:
             self.datafile.load(first_load=True)
 
     @classproperty
-    def datafiles(cls) -> ModelManager:  # pylint: disable=no-self-argument
+    def datafiles(cls) -> ModelManager:
         return ModelManager(cls)
 
     @property
     def datafile(self) -> InstanceManager:
-        return self.get_datafile()
+        return self._get_datafile()
 
-    def get_datafile(self) -> InstanceManager:
+    def _get_datafile(self) -> InstanceManager:
+        with suppress(AttributeError):
+            return getattr(self, '_datafile')
+
         m = getattr(self, 'Meta', None)
         pattern = getattr(m, 'datafile_pattern', None)
         attrs = getattr(m, 'datafile_attrs', None)
@@ -41,7 +47,9 @@ class Model:
                 if pattern is None or self_name not in pattern:
                     attrs[field.name] = map_type(field.type, patch_dataclass)
 
-        return InstanceManager(instance=self, pattern=pattern, attrs=attrs)
+        manager = InstanceManager(instance=self, pattern=pattern, attrs=attrs)
+        self._datafile = manager
+        return manager
 
 
 def patch_dataclass(cls, pattern, attrs):
@@ -59,7 +67,7 @@ def patch_dataclass(cls, pattern, attrs):
 
     # Patch datafile
 
-    cls.datafile = property(Model.get_datafile)
+    cls.datafile = property(Model._get_datafile)
 
     # Patch __init__
 
@@ -67,7 +75,8 @@ def patch_dataclass(cls, pattern, attrs):
 
     def modified_init(self, *args, **kwargs):
         init(self, *args, **kwargs)
-        Model.__init__(self, *args, **kwargs)
+        if self.datafile.exists:
+            self.datafile.load(first_load=True)
 
     cls.__init__ = modified_init
     cls.__init__.__doc__ = init.__doc__

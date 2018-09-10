@@ -7,7 +7,7 @@ import log
 
 from . import formats
 from .converters import List
-from .utils import cached
+from .utils import cached, prettify
 
 
 Missing = dataclasses._MISSING_TYPE  # pylint: disable=protected-access
@@ -28,6 +28,7 @@ class InstanceManager:
         self._instance = instance
         self._pattern = pattern
         self.attrs = attrs
+        self._last_data: Dict = {}
 
     @property
     def path(self) -> Optional[Path]:
@@ -62,7 +63,8 @@ class InstanceManager:
     def _get_data(self, include_default_values=False) -> Dict:
         log.info(f'Preserializing object {self._instance!r} to data')
 
-        data: Dict = dataclasses.asdict(self._instance)
+        self._last_data.update(dataclasses.asdict(self._instance))
+        data = self._last_data
 
         for name in list(data.keys()):
             if name not in self.attrs:
@@ -121,8 +123,12 @@ class InstanceManager:
         if not self.path:
             raise RuntimeError("'pattern' must be set to load the model")
 
+        message = f'Deserializing: {self.path}'
+        log.info('=' * len(message))
         data = formats.deserialize(self.path, self.path.suffix)
-        log.debug(f'Deserialized file data: {data}')
+        self._last_data = data
+        log.info(message + '\n\n' + prettify(data) + '\n')
+        log.info('=' * len(message))
 
         for name, converter in self.attrs.items():
             log.debug(f"Converting '{name}' data to value")
@@ -219,4 +225,9 @@ class InstanceManager:
         text = self._get_text(include_default_values=include_default_values)
 
         self.path.parent.mkdir(parents=True, exist_ok=True)
+
+        message = f'Writing: {self.path}'
+        log.info('=' * len(message))
+        log.info(message + '\n\n' + text)
         self.path.write_text(text)
+        log.info('=' * len(message))
