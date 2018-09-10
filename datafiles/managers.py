@@ -128,71 +128,77 @@ class InstanceManager:
             log.debug(f"Converting '{name}' data to value")
 
             if dataclasses.is_dataclass(converter):
-                # TODO: Support nesting unlimited levels
-                # https://github.com/jacebrowning/datafiles/issues/22
-                data2 = data.get(name)
-                log.debug(f'Converting nested data to Python: {data2}')
-
-                value = getattr(self._instance, name)
-                if value is None:
-                    for field in dataclasses.fields(converter):
-                        if field.name not in data2:  # type: ignore
-                            data2[field.name] = None  # type: ignore
-                    value = converter(**data2)
-                elif first_load:
-                    continue  # TODO: Test this
-
-                manager2 = value.datafile
-                for name2, converter2 in manager2.attrs.items():
-                    _value2 = data2.get(  # type: ignore
-                        # pylint: disable=protected-access
-                        name2,
-                        manager2._get_default_field_value(name2),
-                    )
-                    value2 = converter2.to_python_value(_value2)
-                    log.debug(f"'{name2}' as Python: {value2}")
-                    setattr(value, name2, value2)
-
-                log.debug(f"Setting '{name}' value: {value!r}")
-                setattr(self._instance, name, value)
-
+                self._set_container_value(data, name, converter, first_load)
             else:
-                file_value = data.get(name, Missing)
-                init_value = getattr(self._instance, name)
-                default_value = self._get_default_field_value(name)
+                self._set_attribute_value(data, name, converter, first_load)
 
-                if first_load:
-                    log.debug(
-                        'First load values: file=%r, init=%r, default=%r',
-                        file_value,
-                        init_value,
-                        default_value,
-                    )
+    def _set_container_value(self, data, name, converter, first_load):
+        # TODO: Support nesting unlimited levels
+        # https://github.com/jacebrowning/datafiles/issues/22
+        data2 = data.get(name)
+        if data2 is None:
+            return
 
-                    if file_value == default_value:
-                        log.debug(
-                            f"Ignored default '{name}' file value: {default_value!r}"
-                        )
-                        continue
+        log.debug(f'Converting nested data to Python: {data2}')
 
-                    if init_value != default_value and not issubclass(
-                        converter, List
-                    ):
-                        log.debug(
-                            f"Keeping non-default '{name}' init value: {init_value!r}"
-                        )
-                        continue
+        value = getattr(self._instance, name)
+        if value is None:
+            for field in dataclasses.fields(converter):
+                if field.name not in data2:  # type: ignore
+                    data2[field.name] = None  # type: ignore
+            value = converter(**data2)
+        elif first_load:
+            return
 
-                if file_value is Missing:
-                    if default_value is Missing:
-                        value = converter.to_python_value(None)
-                    else:
-                        value = converter.to_python_value(default_value)
-                else:
-                    value = converter.to_python_value(file_value)
+        manager2 = value.datafile
+        for name2, converter2 in manager2.attrs.items():
+            _value2 = data2.get(  # type: ignore
+                # pylint: disable=protected-access
+                name2,
+                manager2._get_default_field_value(name2),
+            )
+            value2 = converter2.to_python_value(_value2)
+            log.debug(f"'{name2}' as Python: {value2}")
+            setattr(value, name2, value2)
 
-                log.info(f"Setting '{name}' value: {value!r}")
-                setattr(self._instance, name, value)
+        log.debug(f"Setting '{name}' value: {value!r}")
+        setattr(self._instance, name, value)
+
+    def _set_attribute_value(self, data, name, converter, first_load):
+        file_value = data.get(name, Missing)
+        init_value = getattr(self._instance, name)
+        default_value = self._get_default_field_value(name)
+
+        if first_load:
+            log.debug(
+                'First load values: file=%r, init=%r, default=%r',
+                file_value,
+                init_value,
+                default_value,
+            )
+
+            if file_value == default_value:
+                log.debug(
+                    f"Ignored default '{name}' file value: {default_value!r}"
+                )
+                return
+
+            if init_value != default_value and not issubclass(converter, List):
+                log.debug(
+                    f"Keeping non-default '{name}' init value: {init_value!r}"
+                )
+                return
+
+        if file_value is Missing:
+            if default_value is Missing:
+                value = converter.to_python_value(None)
+            else:
+                value = converter.to_python_value(default_value)
+        else:
+            value = converter.to_python_value(file_value)
+
+        log.info(f"Setting '{name}' value: {value!r}")
+        setattr(self._instance, name, value)
 
     def _get_default_field_value(self, name):
         for field in dataclasses.fields(self._instance):

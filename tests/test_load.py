@@ -2,6 +2,8 @@
 
 import pytest
 
+from .samples import _Sample1
+
 
 def describe_nominal():
     @pytest.fixture
@@ -175,9 +177,26 @@ def describe_nesting():
         expect(sample.nested.name) == 'bar'
         expect(sample.nested.score) == 0.0
 
+    def with_missing_nested_object(write, sample, expect):
+        sample.nested = _Sample1(name='bar', score=8)
+
+        write(
+            'tmp/sample.yml',
+            """
+            name: foo
+            score: 7
+            """,
+        )
+
+        sample.datafile.load()
+
+        expect(sample.name) == 'foo'
+        expect(sample.score) == 7.0
+        expect(sample.nested.name) == 'bar'
+        expect(sample.nested.score) == 8.0
+
 
 def describe_lists():
-    # @pytest.mark.xfail
     def with_conversion(write, SampleWithList, expect):
         write(
             'tmp/sample.yml',

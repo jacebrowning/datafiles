@@ -6,6 +6,8 @@ import pytest
 
 from datafiles import sync
 
+from .samples import _Sample1
+
 
 @pytest.fixture
 def SampleWithDefaults():
@@ -16,6 +18,14 @@ def SampleWithDefaults():
         bar: str = 'a'
 
     return Sample
+
+
+@sync('../tmp/sample.yml')
+@dataclass
+class SampleWithDefaultsAndNesting:
+    nested: _Sample1
+    name: str = ''
+    score: float = 0.0
 
 
 @pytest.fixture
@@ -86,6 +96,24 @@ def describe_existing_file():
 
         expect(sample.foo) == 5
         expect(sample.bar) == 'e'
+
+    def it_merges_with_nested_value(write, expect):
+        write(
+            'tmp/sample.yml',
+            """
+            name: foo
+            score: 7
+            """,
+        )
+
+        sample = SampleWithDefaultsAndNesting(
+            name='', score=0.0, nested=_Sample1(name='bar', score=8)
+        )
+
+        expect(sample.name) == 'foo'
+        expect(sample.score) == 7.0
+        expect(sample.nested.name) == 'bar'
+        expect(sample.nested.score) == 8.0
 
 
 def describe_factory_defaults():
