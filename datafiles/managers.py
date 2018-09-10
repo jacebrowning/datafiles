@@ -177,12 +177,6 @@ class InstanceManager:
                 default_value,
             )
 
-            if file_value == default_value:
-                log.debug(
-                    f"Ignored default '{name}' file value: {default_value!r}"
-                )
-                return
-
             if init_value != default_value and not issubclass(converter, List):
                 log.debug(
                     f"Keeping non-default '{name}' init value: {init_value!r}"
