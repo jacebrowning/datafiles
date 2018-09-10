@@ -65,7 +65,7 @@ class _Sample2:
 class SampleWithNestingAndDefaults:
     name: str
     score: float = 1.2
-    nested: _Sample2 = _Sample2()
+    nested: _Sample2 = field(default_factory=_Sample2)
 
 
 @sync('../tmp/sample.yml')
