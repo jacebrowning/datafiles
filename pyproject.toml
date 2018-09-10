@@ -21,10 +21,11 @@ pylint = "^2.1"
 mypy = "*"
 
 pytest = "~3.8.0"
-pytest-cov = "*"
 pytest-describe = "*"
-pytest-mock = "*"
 pytest-expecter = "*"
+pytest-mock = "*"
+pytest-random = "*"
 pytest-watch = "*"
+pytest-cov = "*"
 
 coveragespace = "2.1.0b1"
