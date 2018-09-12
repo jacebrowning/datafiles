@@ -40,8 +40,13 @@ class InstanceManager:
             log.debug(f'{self!r} has no path pattern')
             return None
 
+        try:
+            root = Path(inspect.getfile(self._instance.__class__)).parent
+        except TypeError:
+            log.warn(f'Unable to determine module for {self._instance}')
+            root = Path.cwd()
+
         relpath = self._pattern.format(self=self._instance)
-        root = Path(inspect.getfile(self._instance.__class__)).parent
         path = (root / relpath).resolve()
         log.info(f'Datafile path: {path}')
         return path

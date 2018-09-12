@@ -49,6 +49,12 @@ watch: install
 
 ###############################################################################
 
+.PHONY: demo
+demo: install
+	poetry run jupyter notebook --notebook-dir=notebooks
+
+###############################################################################
+
 .PHONY: clean
 clean:
 	rm -rf .venv

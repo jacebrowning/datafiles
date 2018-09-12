@@ -29,3 +29,5 @@ pytest-watch = "*"
 pytest-cov = "*"
 
 coveragespace = "2.1.0b1"
+
+jupyter = "^1.0"
