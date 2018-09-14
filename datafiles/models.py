@@ -23,6 +23,8 @@ class Model:
     def __post_init__(self):
         if self.datafile.exists:
             self.datafile.load(first_load=True)
+        elif self.datafile.path:
+            self.datafile.save()
 
     @classproperty
     def datafiles(cls) -> ModelManager:
@@ -77,6 +79,8 @@ def patch_dataclass(cls, pattern, attrs):
         init(self, *args, **kwargs)
         if self.datafile.exists:
             self.datafile.load(first_load=True)
+        elif self.datafile.path:
+            self.datafile.save()
 
     cls.__init__ = modified_init
     cls.__init__.__doc__ = init.__doc__

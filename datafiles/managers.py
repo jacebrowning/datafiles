@@ -7,6 +7,7 @@ import log
 
 from . import formats
 from .converters import List
+from .patches import patch_load
 from .utils import cached, prettify
 
 
@@ -143,6 +144,9 @@ class InstanceManager:
             else:
                 self._set_attribute_value(data, name, converter, first_load)
 
+        # patch_load(self._instance, self.load)
+        # patch_save(self._instance, self.save)
+
     def _set_container_value(self, data, name, converter, first_load):
         # TODO: Support nesting unlimited levels
         # https://github.com/jacebrowning/datafiles/issues/22
@@ -236,3 +240,5 @@ class InstanceManager:
         log.info(message + '\n\n' + text)
         self.path.write_text(text)
         log.info('=' * len(message))
+
+        patch_load(self._instance, self.load)
