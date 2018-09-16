@@ -5,8 +5,8 @@ import log
 
 LOAD_BEFORE_METHODS = [
     # '__getattribute__',
-    '__iter__',
     '__getitem__',
+    '__iter__',
 ]
 
 SAVE_AFTER_METHODS = [
