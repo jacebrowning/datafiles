@@ -141,6 +141,9 @@ class InstanceManager:
 
             if dataclasses.is_dataclass(converter):
                 self._set_container_value(data, name, converter, first_load)
+            # TODO: Handle this case
+            # elif issubclass(converter, List):
+            #     pass
             else:
                 self._set_attribute_value(data, name, converter, first_load)
 
@@ -237,8 +240,8 @@ class InstanceManager:
 
         message = f'Writing: {self.path}'
         log.info('=' * len(message))
-        log.info(message + '\n\n' + text)
+        log.info(message + '\n\n' + (text or '<nothing>\n'))
         self.path.write_text(text)
         log.info('=' * len(message))
 
-        patch_load(self._instance, self.load)
+        patch_load(self._instance)

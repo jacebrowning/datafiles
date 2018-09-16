@@ -3,7 +3,11 @@ from functools import wraps
 import log
 
 
-LOAD_BEFORE_METHODS = ['__getattribute__', '__iter__', '__getitem__']
+LOAD_BEFORE_METHODS = [
+    # '__getattribute__',
+    '__iter__',
+    '__getitem__',
+]
 
 SAVE_AFTER_METHODS = [
     '__setattr__',
@@ -22,10 +26,11 @@ SAVE_AFTER_METHODS = [
 ]
 
 
-def patch_load(obj, load):
+def patch_load(obj):
+    cls = obj.__class__
     for name in LOAD_BEFORE_METHODS:
         try:
-            method = getattr(obj, name)
+            method = getattr(cls, name)
         except AttributeError:
             continue
 
@@ -36,11 +41,13 @@ def patch_load(obj, load):
 
         @wraps(method)
         def patched_method(self, *args, **kwargs):
-            __tracebackhide__ = True  # pylint: disable=unused-variable
-            assert 0
-            method(self, *args, **kwargs)  # pylint: disable=cell-var-from-loop
-            load()
+            # pylint: disable=unused-variable,cell-var-from-loop
+            # __tracebackhide__ = True
+            # object.__getattribute__(self, 'datafile').load()
+            log.debug(f"Loading automatically before '{method.__name__}' call")
+            self.datafile.load()
+            return method(self, *args, **kwargs)
 
         setattr(patched_method, '_patched', True)
 
-        setattr(obj, name, patched_method)
+        setattr(cls, name, patched_method)
