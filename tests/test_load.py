@@ -205,7 +205,6 @@ def describe_nesting():
 
 
 def describe_lists():
-    @pytest.mark.xfail
     def with_matching_types(write, expect):
         write(
             'tmp/sample.yml',

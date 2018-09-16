@@ -136,7 +136,7 @@ class InstanceManager:
         log.info('=' * len(message))
 
         for name, converter in self.attrs.items():
-            log.debug(f"Converting '{name}' data to value")
+            log.debug(f"Converting '{name}' data to value as {converter}")
 
             if dataclasses.is_dataclass(converter):
                 self._set_container_value(data, name, converter, first_load)
