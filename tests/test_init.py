@@ -2,22 +2,16 @@
 
 from dataclasses import dataclass, field
 
-import pytest
-
 from datafiles import sync
 
 from .samples import _Sample1
 
 
-@pytest.fixture
-def SampleWithDefaults():
-    @sync('../tmp/sample.yml')
-    @dataclass
-    class Sample:
-        foo: int = 1
-        bar: str = 'a'
-
-    return Sample
+@sync('../tmp/sample.yml')
+@dataclass
+class SampleWithDefaults:
+    foo: int = 1
+    bar: str = 'a'
 
 
 @sync('../tmp/sample.yml')
@@ -28,35 +22,27 @@ class SampleWithDefaultsAndNesting:
     score: float = 0.0
 
 
-@pytest.fixture
-def SampleWithFactoryDefaults():
-    @sync('../tmp/sample.yml')
-    @dataclass
-    class Sample:
-        a: float
-        b: float
-        c: float = field(default_factory=lambda: 42)
-
-    return Sample
+@sync('../tmp/sample.yml')
+@dataclass
+class SampleWithFactoryDefaults:
+    a: float
+    b: float
+    c: float = field(default_factory=lambda: 42)
 
 
-@pytest.fixture
-def SampleWithComputedDefaults():
-    @sync('../tmp/sample.yml')
-    @dataclass
-    class Sample:
-        a: float
-        b: float
-        c: float = field(init=False)
+@sync('../tmp/sample.yml')
+@dataclass
+class SampleWithComputedDefaults:
+    a: float
+    b: float
+    c: float = field(init=False)
 
-        def __post_init__(self):
-            self.c = self.a + self.b
-
-    return Sample
+    def __post_init__(self):
+        self.c = self.a + self.b
 
 
 def describe_existing_file():
-    def it_wins_when_no_init_values(write, SampleWithDefaults, expect):
+    def it_wins_when_no_init_values(write, expect):
         write(
             'tmp/sample.yml',
             """
@@ -70,7 +56,7 @@ def describe_existing_file():
         expect(sample.foo) == 2
         expect(sample.bar) == 'b'
 
-    def it_loses_against_init_values(write, SampleWithDefaults, expect):
+    def it_loses_against_init_values(write, expect):
         write(
             'tmp/sample.yml',
             """
@@ -84,7 +70,7 @@ def describe_existing_file():
         expect(sample.foo) == 4
         expect(sample.bar) == 'd'
 
-    def it_wins_against_default_init_values(write, SampleWithDefaults, expect):
+    def it_wins_against_default_init_values(write, expect):
         write(
             'tmp/sample.yml',
             """
@@ -117,14 +103,14 @@ def describe_existing_file():
 
 
 def describe_factory_defaults():
-    def when_no_file(SampleWithFactoryDefaults, expect):
+    def when_no_file(expect):
         sample = SampleWithFactoryDefaults(1.2, 3.4)
 
         expect(sample.a) == 1.2
         expect(sample.b) == 3.4
         expect(sample.c) == 42.0
 
-    def when_file_exists(write, SampleWithFactoryDefaults, expect):
+    def when_file_exists(write, expect):
         write(
             'tmp/sample.yml',
             """
@@ -142,14 +128,14 @@ def describe_factory_defaults():
 
 
 def describe_computed_defaults():
-    def when_no_file(SampleWithComputedDefaults, expect):
+    def when_no_file(expect):
         sample = SampleWithComputedDefaults(1.2, 3.4)
 
         expect(sample.a) == 1.2
         expect(sample.b) == 3.4
         expect(sample.c) == 4.6
 
-    def when_file_exists(write, SampleWithComputedDefaults, expect):
+    def when_file_exists(write, expect):
         write(
             'tmp/sample.yml',
             """

@@ -4,8 +4,6 @@ from pathlib import Path
 import log
 import pytest
 
-from . import samples
-
 
 def pytest_configure(config):
     terminal = config.pluginmanager.getplugin('terminal')
@@ -61,48 +59,3 @@ def read():
         return text
 
     return _
-
-
-@pytest.fixture
-def Sample():
-    return samples.Sample
-
-
-@pytest.fixture
-def SampleAsJSON():
-    return samples.SampleAsJSON
-
-
-@pytest.fixture
-def SampleWithCustomFields():
-    return samples.SampleWithCustomFields
-
-
-@pytest.fixture
-def SampleWithDefaults():
-    return samples.SampleWithDefaults
-
-
-@pytest.fixture
-def SampleWithNesting():
-    return samples.SampleWithNesting
-
-
-@pytest.fixture
-def SampleWithNestingAndDefaults():
-    return samples.SampleWithNestingAndDefaults
-
-
-@pytest.fixture
-def SampleWithList():
-    return samples.SampleWithList
-
-
-@pytest.fixture
-def SampleWithListAndDefaults():
-    return samples.SampleWithListAndDefaults
-
-
-@pytest.fixture
-def SampleWithOptionals():
-    return samples.SampleWithOptionals

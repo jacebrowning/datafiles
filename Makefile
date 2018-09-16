@@ -40,7 +40,7 @@ endif
 .PHONY: test
 test: install
 	@ mkdir -p .cache
-	poetry run pytest
+	poetry run pytest --random
 	poetry run coveragespace jacebrowning/datafiles overall
 
 .PHONY: watch
