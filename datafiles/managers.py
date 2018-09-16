@@ -1,5 +1,6 @@
 import dataclasses
 import inspect
+from functools import wraps
 from pathlib import Path
 from typing import Any, Dict, Optional
 
@@ -7,11 +8,31 @@ import log
 
 from . import formats
 from .converters import List
-from .patches import patch_load
+from .hooks import patch_methods
 from .utils import cached, prettify
 
 
 Missing = dataclasses._MISSING_TYPE  # pylint: disable=protected-access
+
+
+def prevent_recursion(method):
+    """Decorate methods to prevent indirect recursive calls."""
+
+    @wraps(method)
+    def wrapped(self, *args, **kwargs):
+
+        if getattr(self, '_activity', False):
+            return None
+
+        setattr(self, '_activity', True)
+
+        result = method(self, *args, **kwargs)
+
+        delattr(self, '_activity')
+
+        return result
+
+    return wrapped
 
 
 class ModelManager:
@@ -24,11 +45,17 @@ class ModelManager:
 
 class InstanceManager:
     def __init__(
-        self, *, instance: Any, pattern: Optional[str], attrs: Dict
+        self,
+        instance: Any,
+        pattern: Optional[str],
+        attrs: Dict,
+        manual: bool = False,
     ) -> None:
         self._instance = instance
         self._pattern = pattern
         self.attrs = attrs
+        self.manual = manual
+        self.modified = True
         self._last_data: Dict = {}
 
     @property
@@ -123,6 +150,7 @@ class InstanceManager:
 
         return text
 
+    @prevent_recursion
     def load(self, *, first_load=False) -> None:
         log.info(f'Loading values for {self._instance}')
 
@@ -238,4 +266,7 @@ class InstanceManager:
         self.path.write_text(text)
         log.info('=' * len(message))
 
-        patch_load(self._instance)
+        if self.manual:
+            log.info(f'Manually loading and saving {self._instance!r}')
+        else:
+            patch_methods(self._instance)

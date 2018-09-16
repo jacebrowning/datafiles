@@ -41,6 +41,7 @@ class Model:
         m = getattr(self, 'Meta', None)
         pattern = getattr(m, 'datafile_pattern', None)
         attrs = getattr(m, 'datafile_attrs', None)
+        manual = getattr(m, 'datafile_manual', False)
 
         if attrs is None:
             attrs = {}
@@ -49,12 +50,12 @@ class Model:
                 if pattern is None or self_name not in pattern:
                     attrs[field.name] = map_type(field.type, patch_dataclass)
 
-        manager = InstanceManager(instance=self, pattern=pattern, attrs=attrs)
+        manager = InstanceManager(self, pattern, attrs, manual)
         self._datafile = manager
         return manager
 
 
-def patch_dataclass(cls, pattern, attrs):
+def patch_dataclass(cls, pattern, attrs, manual=False):
     """Patch datafile attributes on to an existing dataclass."""
 
     if not dataclasses.is_dataclass(cls):
@@ -65,6 +66,7 @@ def patch_dataclass(cls, pattern, attrs):
     m = getattr(cls, 'Meta', ModelMeta())
     m.datafile_pattern = getattr(m, 'datafile_pattern', None) or pattern
     m.datafile_attrs = getattr(m, 'datafile_attrs', None) or attrs
+    m.datafile_manual = getattr(m, 'datafile_manual', manual)
     cls.Meta = m
 
     # Patch datafile

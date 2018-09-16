@@ -7,14 +7,14 @@ from datafiles import sync
 from .samples import _Sample1
 
 
-@sync('../tmp/sample.yml')
+@sync('../tmp/sample.yml', manual=True)
 @dataclass
 class SampleWithDefaults:
     foo: int = 1
     bar: str = 'a'
 
 
-@sync('../tmp/sample.yml')
+@sync('../tmp/sample.yml', manual=True)
 @dataclass
 class SampleWithDefaultsAndNesting:
     nested: _Sample1
@@ -22,7 +22,7 @@ class SampleWithDefaultsAndNesting:
     score: float = 0.0
 
 
-@sync('../tmp/sample.yml')
+@sync('../tmp/sample.yml', manual=True)
 @dataclass
 class SampleWithFactoryDefaults:
     a: float
@@ -30,7 +30,7 @@ class SampleWithFactoryDefaults:
     c: float = field(default_factory=lambda: 42)
 
 
-@sync('../tmp/sample.yml')
+@sync('../tmp/sample.yml', manual=True)
 @dataclass
 class SampleWithComputedDefaults:
     a: float
