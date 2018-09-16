@@ -1,11 +1,21 @@
-# pylint: disable=unused-variable
+# pylint: disable=unused-variable,no-member,no-member,assigning-non-slot
 
 import pytest
+
+from .samples import (
+    Sample,
+    SampleWithCustomFields,
+    SampleWithDefaults,
+    SampleWithList,
+    SampleWithNesting,
+    SampleWithNestingAndDefaults,
+    SampleWithOptionals,
+)
 
 
 def describe_nominal():
     @pytest.fixture
-    def sample(Sample):
+    def sample():
         return Sample(None, None, None, None)
 
     def without_initial_values(sample, expect, dedent):
@@ -21,7 +31,7 @@ def describe_nominal():
                 """
             )
 
-    def with_convertable_initial_values(Sample, expect, dedent):
+    def with_convertable_initial_values(expect, dedent):
         sample = Sample(1, 2, 3, 4)
 
         sample.datafile.save()
@@ -44,7 +54,7 @@ def describe_nominal():
         with open('tmp/sample.yml') as f:
             expect(f.read()).excludes('extra')
 
-    def with_custom_fields(SampleWithCustomFields, expect, dedent):
+    def with_custom_fields(expect, dedent):
         sample = SampleWithCustomFields('foo', 'bar')
 
         sample.datafile.save()
@@ -58,7 +68,7 @@ def describe_nominal():
 
 
 def describe_lists():
-    def with_conversion(SampleWithList, expect, dedent):
+    def with_conversion(expect, dedent):
         sample = SampleWithList([1, 2.3, '4.5'])
 
         sample.datafile.save()
@@ -75,7 +85,7 @@ def describe_lists():
 
 
 def describe_nesting():
-    def without_initial_values(SampleWithNesting, expect, dedent):
+    def without_initial_values(expect, dedent):
         sample = SampleWithNesting(None, None, None)
 
         sample.datafile.save()
@@ -91,7 +101,7 @@ def describe_nesting():
                 """
             )
 
-    def with_initial_values(SampleWithNesting, expect, dedent):
+    def with_initial_values(expect, dedent):
         sample = SampleWithNesting('foo', 1.2, {'name': 'bar', 'score': 3.4})
 
         sample.datafile.save()
@@ -107,7 +117,7 @@ def describe_nesting():
                 """
             )
 
-    def with_default_values(SampleWithNestingAndDefaults, expect, dedent):
+    def with_default_values(expect, dedent):
         sample = SampleWithNestingAndDefaults('a')
 
         sample.datafile.save()
@@ -120,7 +130,7 @@ def describe_nesting():
                 """
             )
 
-    def with_missing_keys(SampleWithNesting, expect, dedent):
+    def with_missing_keys(expect, dedent):
         sample = SampleWithNesting('foo', 1.2, {'name': 'bar'})
 
         sample.datafile.save()
@@ -136,7 +146,7 @@ def describe_nesting():
                 """
             )
 
-    def when_manually_setting_none(SampleWithNesting, expect, dedent):
+    def when_manually_setting_none(expect, dedent):
         sample = SampleWithNesting('foo', 1.2, {'name': 'bar', 'score': 3.4})
         sample.nested = None
 
@@ -155,7 +165,7 @@ def describe_nesting():
 
 
 def describe_optionals():
-    def with_values(SampleWithOptionals, expect, read, dedent):
+    def with_values(expect, read, dedent):
         sample = SampleWithOptionals(1, 2)
 
         sample.datafile.save()
@@ -167,7 +177,7 @@ def describe_optionals():
             """
         )
 
-    def with_nones(SampleWithOptionals, expect, read, dedent):
+    def with_nones(expect, read, dedent):
         sample = SampleWithOptionals(None, None)
 
         sample.datafile.save()
@@ -181,7 +191,7 @@ def describe_optionals():
 
 
 def describe_defaults():
-    def with_custom_values(SampleWithDefaults, expect, read, dedent):
+    def with_custom_values(expect, read, dedent):
         sample = SampleWithDefaults('a', 'b')
 
         sample.datafile.save()
@@ -193,7 +203,7 @@ def describe_defaults():
             """
         )
 
-    def with_default_values(SampleWithDefaults, expect, read, dedent):
+    def with_default_values(expect, read, dedent):
         sample = SampleWithDefaults('a')
 
         sample.datafile.save()
@@ -204,9 +214,7 @@ def describe_defaults():
             """
         )
 
-    def with_default_values_and_full_save(
-        SampleWithDefaults, expect, read, dedent
-    ):
+    def with_default_values_and_full_save(expect, read, dedent):
         sample = SampleWithDefaults('a', 'foo')
 
         sample.datafile.save(include_default_values=True)
@@ -220,7 +228,7 @@ def describe_defaults():
 
 
 def describe_preservation():
-    def with_extra_lines(SampleWithOptionals, write, expect, read, dedent):
+    def with_extra_lines(write, expect, read, dedent):
         sample = SampleWithOptionals(1, 2)
 
         write(
@@ -244,7 +252,7 @@ def describe_preservation():
             """
         )
 
-    def with_comments(SampleWithOptionals, write, expect, read, dedent):
+    def with_comments(write, expect, read, dedent):
         sample = SampleWithOptionals(1, 2)
 
         write(
@@ -268,9 +276,7 @@ def describe_preservation():
             """
         )
 
-    def with_comments_in_nested_objects(
-        SampleWithNestingAndDefaults, write, expect, read, dedent
-    ):
+    def with_comments_in_nested_objects(write, expect, read, dedent):
         sample = SampleWithNestingAndDefaults(None)
 
         write(
@@ -306,9 +312,7 @@ def describe_preservation():
         )
 
     @pytest.mark.xfail
-    def with_comments_on_nested_lines(
-        SampleWithNestingAndDefaults, write, expect, read, dedent
-    ):
+    def with_comments_on_nested_lines(write, expect, read, dedent):
         sample = SampleWithNestingAndDefaults(None)
 
         write(

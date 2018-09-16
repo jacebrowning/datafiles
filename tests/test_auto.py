@@ -15,7 +15,6 @@ class Sample:
     items: List[int] = field(default_factory=lambda: [1])
 
     def __getitem__(self, key):
-        print('__getitem__')
         return self.items[key]  # pylint: disable=unsubscriptable-object
 
 
@@ -34,7 +33,6 @@ def describe_automatic_load():
 
         expect(sample.item) == 'b'
 
-    @pytest.mark.xfail
     def with_getitem(write, expect):
         sample = Sample()
         assert hasattr(sample.__getitem__, '_patched')

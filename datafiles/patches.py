@@ -41,9 +41,7 @@ def patch_load(obj):
 
         @wraps(method)
         def patched_method(self, *args, **kwargs):
-            # pylint: disable=unused-variable,cell-var-from-loop
-            # __tracebackhide__ = True
-            # object.__getattribute__(self, 'datafile').load()
+            __tracebackhide__ = True  # pylint: disable=unused-variable
             log.debug(f"Loading automatically before '{method.__name__}' call")
             self.datafile.load()
             return method(self, *args, **kwargs)

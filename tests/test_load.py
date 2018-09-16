@@ -2,12 +2,20 @@
 
 import pytest
 
-from .samples import _Sample1
+from .samples import (
+    Sample,
+    SampleAsJSON,
+    SampleWithDefaults,
+    SampleWithList,
+    SampleWithListAndDefaults,
+    SampleWithNesting,
+    _Sample1,
+)
 
 
 def describe_nominal():
     @pytest.fixture
-    def sample(Sample):
+    def sample():
         return Sample(None, None, None, None)
 
     def with_matching_types(write, sample, expect):
@@ -66,7 +74,7 @@ def describe_nominal():
 
 def describe_alternate_formats():
     @pytest.fixture
-    def sample(SampleAsJSON):
+    def sample():
         return SampleAsJSON(None, None, None, None)
 
     def with_json(write, sample, expect):
@@ -92,7 +100,7 @@ def describe_alternate_formats():
 
 def describe_default_values():
     @pytest.fixture
-    def sample(SampleWithDefaults):
+    def sample():
         return SampleWithDefaults(None)
 
     def with_empty_file(write, sample, expect):
@@ -119,7 +127,7 @@ def describe_default_values():
 
 def describe_nesting():
     @pytest.fixture
-    def sample(SampleWithNesting):
+    def sample():
         return SampleWithNesting(None, None, None)
 
     def with_defaults(write, sample, expect):
@@ -197,7 +205,21 @@ def describe_nesting():
 
 
 def describe_lists():
-    def with_conversion(write, SampleWithList, expect):
+    def with_matching_types(write, expect):
+        write(
+            'tmp/sample.yml',
+            """
+            items:
+            - 1.2
+            - 3.4
+            """,
+        )
+
+        sample = SampleWithList(None)
+
+        expect(sample.items) == [1.2, 3.4]
+
+    def with_conversion(write, expect):
         write(
             'tmp/sample.yml',
             """
@@ -209,7 +231,7 @@ def describe_lists():
 
         expect(sample.items) == [1.0, 2.3]
 
-    def with_conversion_and_defaults(write, SampleWithListAndDefaults, expect):
+    def with_conversion_and_defaults(write, expect):
         write(
             'tmp/sample.yml',
             """

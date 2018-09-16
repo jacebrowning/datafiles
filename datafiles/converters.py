@@ -127,13 +127,14 @@ class List:
         elif isinstance(deserialized_data, str):
             for item in deserialized_data.split(','):
                 value.append(convert(item))
-
-        elif isinstance(deserialized_data, list):
-            for item in deserialized_data:
-                value.append(convert(item))
-
         else:
-            value.append(convert(deserialized_data))
+            try:
+                items = iter(deserialized_data)
+            except TypeError:
+                value.append(convert(deserialized_data))
+            else:
+                for item in items:
+                    value.append(convert(item))
 
         return value
 
