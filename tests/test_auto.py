@@ -28,7 +28,7 @@ class SampleWithIter:
 
 
 def describe_automatic_load():
-    @pytest.mark.this
+
     def with_getattribute(write, expect):
         sample = Sample()
 
@@ -41,26 +41,26 @@ def describe_automatic_load():
 
         expect(sample.item) == 'b'
 
-    # def with_getitem(write, expect):
-    #     sample = Sample()
+    def with_getitem(write, expect):
+        sample = Sample()
 
-    #     write(
-    #         'tmp/sample.yml',
-    #         """
-    #         items: [2]
-    #         """,
-    #     )
+        write(
+            'tmp/sample.yml',
+            """
+            items: [2]
+            """,
+        )
 
-    #     expect(sample[0]) == 2
+        expect(sample[0]) == 2
 
-    # def with_iter(write, expect):
-    #     sample = SampleWithIter()
+    def with_iter(write, expect):
+        sample = SampleWithIter()
 
-    #     write(
-    #         'tmp/sample.yml',
-    #         """
-    #         items: [2]
-    #         """,
-    #     )
+        write(
+            'tmp/sample.yml',
+            """
+            items: [2]
+            """,
+        )
 
-    #     expect([x for x in sample]) == [2]
+        expect([x for x in sample]) == [2]

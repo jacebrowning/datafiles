@@ -3,7 +3,9 @@ from functools import wraps
 import log
 
 
-LOAD_BEFORE_METHODS = ['__getattribute__', '__getitem__', '__iter__']
+LOAD_BEFORE_METHODS = [
+'__getattribute__',
+'__getitem__', '__iter__']
 
 SAVE_AFTER_METHODS = [
     '__setattr__',
@@ -34,7 +36,6 @@ def patch_methods(instance):
         else:
             modified_method = load_before(method)
             setattr(cls, name, modified_method)
-            log.debug("Patched to load before call: %s", name)
 
     # for name in SAVE_AFTER_METHODS:
     #     try:
@@ -49,11 +50,13 @@ def patch_methods(instance):
 
 def load_before(method):
     """Decorate methods that should load before call."""
+    name = method.__name__
 
     if getattr(method, '_patched', False):
+        log.debug(f'Already patched method to load before call: {name}')
         return method
 
-    log.debug(f"Patching '{method.__name__}' to load automatically")
+    log.debug(f'Patching method to load before call: {name}')
 
     @wraps(method)
     def wrapped(self, *args, **kwargs):
@@ -63,7 +66,7 @@ def load_before(method):
             datafile = object.__getattribute__(self, 'datafile')
             if datafile.exists and datafile.modified:
                 log.debug(
-                    f"Loading automatically before '{method.__name__}' call"
+                    f"Loading automatically before '{name}' call"
                 )
                 datafile.load()
                 datafile.modified = False
