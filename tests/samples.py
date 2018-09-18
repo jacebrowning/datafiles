@@ -5,7 +5,7 @@ from datafiles import sync
 from datafiles.converters import String
 
 
-@sync('../tmp/sample.yml')
+@sync('../tmp/sample.yml', manual=True)
 @dataclass
 class Sample:
     bool_: bool
@@ -14,7 +14,7 @@ class Sample:
     str_: str
 
 
-@sync('../tmp/sample.json')
+@sync('../tmp/sample.json', manual=True)
 @dataclass
 class SampleAsJSON:
     bool_: bool
@@ -23,7 +23,7 @@ class SampleAsJSON:
     str_: str
 
 
-@sync('../tmp/sample.yml')
+@sync('../tmp/sample.yml', manual=True)
 @dataclass
 class SampleWithCustomFields:
     included: str
@@ -33,7 +33,7 @@ class SampleWithCustomFields:
         datafile_attrs = {'included': String}
 
 
-@sync('../tmp/sample.yml')
+@sync('../tmp/sample.yml', manual=True)
 @dataclass
 class SampleWithDefaults:
     without_default: str
@@ -46,7 +46,7 @@ class _Sample1:
     score: float
 
 
-@sync('../tmp/sample.yml')
+@sync('../tmp/sample.yml', manual=True)
 @dataclass
 class SampleWithNesting:
     name: str
@@ -60,7 +60,7 @@ class _Sample2:
     score: float = 3.4
 
 
-@sync('../tmp/sample.yml')
+@sync('../tmp/sample.yml', manual=True)
 @dataclass
 class SampleWithNestingAndDefaults:
     name: str
@@ -68,19 +68,19 @@ class SampleWithNestingAndDefaults:
     nested: _Sample2 = field(default_factory=_Sample2)
 
 
-@sync('../tmp/sample.yml')
+@sync('../tmp/sample.yml', manual=True)
 @dataclass
 class SampleWithList:
     items: List[float]
 
 
-@sync('../tmp/sample.yml')
+@sync('../tmp/sample.yml', manual=True)
 @dataclass
 class SampleWithListAndDefaults:
     items: List[float] = field(default_factory=list)
 
 
-@sync('../tmp/sample.yml')
+@sync('../tmp/sample.yml', manual=True)
 @dataclass
 class SampleWithOptionals:
     required: float

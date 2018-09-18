@@ -1,5 +1,6 @@
 import dataclasses
 import inspect
+from functools import wraps
 from pathlib import Path
 from typing import Any, Dict, Optional
 
@@ -7,10 +8,31 @@ import log
 
 from . import formats
 from .converters import List
+from .hooks import patch_methods
 from .utils import cached, prettify
 
 
 Missing = dataclasses._MISSING_TYPE  # pylint: disable=protected-access
+
+
+def prevent_recursion(method):
+    """Decorate methods to prevent indirect recursive calls."""
+
+    @wraps(method)
+    def wrapped(self, *args, **kwargs):
+
+        if getattr(self, '_activity', False):
+            return None
+
+        setattr(self, '_activity', True)
+
+        result = method(self, *args, **kwargs)
+
+        delattr(self, '_activity')
+
+        return result
+
+    return wrapped
 
 
 class ModelManager:
@@ -23,11 +45,17 @@ class ModelManager:
 
 class InstanceManager:
     def __init__(
-        self, *, instance: Any, pattern: Optional[str], attrs: Dict
+        self,
+        instance: Any,
+        pattern: Optional[str],
+        attrs: Dict,
+        manual: bool = False,
     ) -> None:
         self._instance = instance
         self._pattern = pattern
         self.attrs = attrs
+        self.manual = manual
+        self._last_load = 0.0
         self._last_data: Dict = {}
 
     @property
@@ -60,6 +88,23 @@ class InstanceManager:
         result = self.path.exists()
         log.debug(f'Datafile exists: {result}')
         return result
+
+    @property
+    def modified(self) -> bool:
+        if not self.path:
+            return True
+
+        changes = self._last_load != self.path.stat().st_mtime
+        log.debug(f'Datafile modified: {changes}')
+        return changes
+
+    @modified.setter
+    def modified(self, changes: bool):
+        if changes:
+            self._last_load = 0.0
+        else:
+            assert self.path, 'Cannot mark a missing file as unmodified'
+            self._last_load = self.path.stat().st_mtime
 
     @property
     def data(self) -> Dict:
@@ -122,6 +167,7 @@ class InstanceManager:
 
         return text
 
+    @prevent_recursion
     def load(self, *, first_load=False) -> None:
         log.info(f'Loading values for {self._instance}')
 
@@ -233,6 +279,11 @@ class InstanceManager:
 
         message = f'Writing: {self.path}'
         log.info('=' * len(message))
-        log.info(message + '\n\n' + text)
+        log.info(message + '\n\n' + (text or '<nothing>\n'))
         self.path.write_text(text)
         log.info('=' * len(message))
+
+        if self.manual:
+            log.info(f'Manually loading and saving {self._instance!r}')
+        else:
+            patch_methods(self._instance)
