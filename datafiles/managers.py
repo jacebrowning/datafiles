@@ -55,7 +55,7 @@ class InstanceManager:
         self._pattern = pattern
         self.attrs = attrs
         self.manual = manual
-        self.modified = True
+        self._last_load = 0.0
         self._last_data: Dict = {}
 
     @property
@@ -88,6 +88,23 @@ class InstanceManager:
         result = self.path.exists()
         log.debug(f'Datafile exists: {result}')
         return result
+
+    @property
+    def modified(self) -> bool:
+        if not self.path:
+            return True
+
+        changes = self._last_load != self.path.stat().st_mtime
+        log.debug(f'Datafile modified: {changes}')
+        return changes
+
+    @modified.setter
+    def modified(self, changes: bool):
+        if changes:
+            self._last_load = 0.0
+        else:
+            assert self.path, 'Cannot mark a missing file as unmodified'
+            self._last_load = self.path.stat().st_mtime
 
     @property
     def data(self) -> Dict:

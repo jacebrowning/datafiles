@@ -3,9 +3,7 @@ from functools import wraps
 import log
 
 
-LOAD_BEFORE_METHODS = [
-'__getattribute__',
-'__getitem__', '__iter__']
+LOAD_BEFORE_METHODS = ['__getattribute__', '__getitem__', '__iter__']
 
 SAVE_AFTER_METHODS = [
     '__setattr__',
@@ -65,9 +63,7 @@ def load_before(method):
         if not private_call(method, args):
             datafile = object.__getattribute__(self, 'datafile')
             if datafile.exists and datafile.modified:
-                log.debug(
-                    f"Loading automatically before '{name}' call"
-                )
+                log.debug(f"Loading automatically before '{name}' call")
                 datafile.load()
                 datafile.modified = False
                 # if mapper.auto_save_after_load:

@@ -1,9 +1,7 @@
-# pylint: disable=unused-variable
+# pylint: disable=unused-variable,unsubscriptable-object
 
 from dataclasses import dataclass, field
 from typing import List
-
-import pytest
 
 from datafiles import sync
 
@@ -15,7 +13,7 @@ class Sample:
     items: List[int] = field(default_factory=lambda: [1])
 
     def __getitem__(self, key):
-        return self.items[key]  # pylint: disable=unsubscriptable-object
+        return self.items[key]
 
 
 @sync('../tmp/sample.yml')
@@ -28,7 +26,6 @@ class SampleWithIter:
 
 
 def describe_automatic_load():
-
     def with_getattribute(write, expect):
         sample = Sample()
 
@@ -59,8 +56,8 @@ def describe_automatic_load():
         write(
             'tmp/sample.yml',
             """
-            items: [2]
+            items: [3]
             """,
         )
 
-        expect([x for x in sample]) == [2]
+        expect([x for x in sample]) == [3]
