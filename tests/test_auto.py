@@ -1,7 +1,9 @@
-# pylint: disable=unused-variable,unsubscriptable-object
+# pylint: disable=unused-variable,unsubscriptable-object,no-member
 
 from dataclasses import dataclass, field
 from typing import List
+
+import pytest
 
 from datafiles import sync
 
@@ -61,3 +63,38 @@ def describe_automatic_load():
         )
 
         expect([x for x in sample]) == [3]
+
+
+def describe_automatic_save():
+    @pytest.mark.xfail
+    def with_setattr(expect, read, dedent):
+        sample = Sample()
+
+        sample.item = 'b'
+
+        expect(read('tmp/sample.yml')) == dedent(
+            """
+            item: b
+            """
+        )
+
+
+def describe_automatic_load_before_save():
+    @pytest.mark.xfail
+    def with_setattr(write, expect, dedent):
+        sample = Sample()
+
+        write(
+            'tmp/sample.yml',
+            """
+            item: b  # Comment
+            """,
+        )
+
+        sample.item = 'c'
+
+        expect(sample.datafile.text) == dedent(
+            """
+        item: c  # Comment
+        """
+        )

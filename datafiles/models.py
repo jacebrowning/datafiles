@@ -4,6 +4,7 @@ import dataclasses
 from contextlib import suppress
 from typing import Dict, Optional
 
+import log
 from classproperties import classproperty
 
 from .converters import Converter, map_type
@@ -21,9 +22,13 @@ class Model:
     Meta: ModelMeta
 
     def __post_init__(self):
-        if self.datafile.exists:
+        path = self.datafile.path
+        exists = self.datafile.exists
+        log.debug(f'Datafile path: {path}')
+        log.debug(f'Datafile exists: {exists}')
+        if exists:
             self.datafile.load(first_load=True)
-        elif self.datafile.path:
+        elif path:
             self.datafile.save()
 
     @classproperty
@@ -79,10 +84,7 @@ def patch_dataclass(cls, pattern, attrs, manual=False):
 
     def modified_init(self, *args, **kwargs):
         init(self, *args, **kwargs)
-        if self.datafile.exists:
-            self.datafile.load(first_load=True)
-        elif self.datafile.path:
-            self.datafile.save()
+        Model.__post_init__(self)
 
     cls.__init__ = modified_init
     cls.__init__.__doc__ = init.__doc__
