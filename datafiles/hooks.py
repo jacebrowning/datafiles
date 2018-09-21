@@ -7,18 +7,18 @@ LOAD_BEFORE_METHODS = ['__getattribute__', '__getitem__', '__iter__']
 
 SAVE_AFTER_METHODS = [
     # '__setattr__',
-    # '__setitem__',
-    # '__delitem__',
-    # 'append',
-    # 'extend',
-    # 'insert',
-    # 'remove',
-    # 'pop',
-    # 'clear',
-    # 'sort',
-    # 'reverse',
-    # 'popitem',
-    # 'update',
+    '__setitem__',
+    '__delitem__',
+    'append',
+    'extend',
+    'insert',
+    'remove',
+    'pop',
+    'clear',
+    'sort',
+    'reverse',
+    'popitem',
+    'update',
 ]
 
 
