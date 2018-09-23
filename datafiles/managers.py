@@ -8,7 +8,6 @@ import log
 
 from . import formats
 from .converters import List
-from .hooks import patch_methods
 from .utils import cached, prettify
 
 
@@ -22,6 +21,7 @@ def prevent_recursion(method):
     def wrapped(self, *args, **kwargs):
 
         if getattr(self, '_activity', False):
+            log.debug(f"Skipped recursive '{method.__name__}' method call")
             return None
 
         setattr(self, '_activity', True)
@@ -209,7 +209,7 @@ class InstanceManager:
                 manager2._get_default_field_value(name2),
             )
             value2 = converter2.to_python_value(_value2)
-            log.debug(f"'{name2}' as Python: {value2}")
+            log.debug(f"'{name2}' as Python: {value2!r}")
             setattr(value, name2, value2)
 
         log.debug(f"Setting '{name}' value: {value!r}")
@@ -261,6 +261,7 @@ class InstanceManager:
 
         return Missing
 
+    @prevent_recursion
     def save(self, include_default_values: bool = False) -> None:
         log.info(f'Saving data for {self._instance}')
 
@@ -276,8 +277,3 @@ class InstanceManager:
         log.info(message + '\n\n' + (text or '<nothing>\n'))
         self.path.write_text(text)
         log.info('=' * len(message))
-
-        if self.manual:
-            log.info(f'Manually loading and saving {self._instance!r}')
-        else:
-            patch_methods(self._instance)

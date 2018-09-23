@@ -9,6 +9,7 @@ from classproperties import classproperty
 
 from .converters import Converter, map_type
 from .managers import InstanceManager, ModelManager
+from .patches import patch_methods
 
 
 @dataclasses.dataclass
@@ -30,6 +31,11 @@ class Model:
             self.datafile.load(first_load=True)
         elif path:
             self.datafile.save()
+
+        if self.datafile.manual:
+            log.info(f'Manually loading and saving {self!r}')
+        else:
+            patch_methods(self)
 
     @classproperty
     def datafiles(cls) -> ModelManager:
@@ -53,7 +59,9 @@ class Model:
             for field in dataclasses.fields(self):
                 self_name = f'self.{field.name}'
                 if pattern is None or self_name not in pattern:
-                    attrs[field.name] = map_type(field.type, patch_dataclass)
+                    attrs[field.name] = map_type(
+                        field.type, patch_dataclass, manual
+                    )
 
         manager = InstanceManager(self, pattern, attrs, manual)
         self._datafile = manager
@@ -83,7 +91,10 @@ def patch_dataclass(cls, pattern, attrs, manual=False):
     init = cls.__init__
 
     def modified_init(self, *args, **kwargs):
+        backup = self.datafile.manual
+        self.datafile.manual = True
         init(self, *args, **kwargs)
+        self.datafile.manual = backup
         Model.__post_init__(self)
 
     cls.__init__ = modified_init
