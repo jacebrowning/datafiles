@@ -93,6 +93,12 @@ def save_after(method):
     def wrapped(self, *args, **kwargs):
         __tracebackhide__ = True  # pylint: disable=unused-variable
 
+        if external_method_call(method.__name__, args):
+            datafile = object.__getattribute__(self, 'datafile')
+            if datafile.exists and datafile.modified:
+                log.debug(f"Loading modified datafile before '{name}' call")
+                datafile.load()
+
         result = method(self, *args, **kwargs)
 
         if external_method_call(method.__name__, args):

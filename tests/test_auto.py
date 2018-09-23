@@ -4,7 +4,6 @@ from dataclasses import dataclass, field
 from typing import List
 
 import log
-import pytest
 
 from datafiles import sync
 
@@ -115,7 +114,6 @@ def describe_automatic_save():
 
 
 def describe_automatic_load_before_save():
-    @pytest.mark.xfail
     def with_setattr(write, expect, dedent):
         sample = Sample()
 
