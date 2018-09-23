@@ -54,7 +54,7 @@ def read():
         message = f'Reading: {_path}'
         log.info('=' * len(message))
         text = _path.read_text()
-        log.info(message + '\n\n' + text)
+        log.info(message + '\n\n' + (text or '<nothing>\n'))
         log.info('=' * len(message))
         return text
 

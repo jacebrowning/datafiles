@@ -8,7 +8,6 @@ import log
 
 from . import formats
 from .converters import List
-from .hooks import patch_methods
 from .utils import cached, prettify
 
 
@@ -22,6 +21,7 @@ def prevent_recursion(method):
     def wrapped(self, *args, **kwargs):
 
         if getattr(self, '_activity', False):
+            log.debug(f"Skipped recursive '{method.__name__}' method call")
             return None
 
         setattr(self, '_activity', True)
@@ -75,9 +75,7 @@ class InstanceManager:
             root = Path.cwd()
 
         relpath = self._pattern.format(self=self._instance)
-        path = (root / relpath).resolve()
-        log.info(f'Datafile path: {path}')
-        return path
+        return (root / relpath).resolve()
 
     @property
     def exists(self) -> bool:
@@ -85,9 +83,7 @@ class InstanceManager:
             log.debug("'pattern' not set so datafile will never exist")
             return False
 
-        result = self.path.exists()
-        log.debug(f'Datafile exists: {result}')
-        return result
+        return self.path.exists()
 
     @property
     def modified(self) -> bool:
@@ -159,12 +155,10 @@ class InstanceManager:
 
     def _get_text(self, include_default_values=False):
         extension = self.path.suffix if self.path else '.yml'
-        log.info(f'Serializing data to text ({extension}): {self.data}')
-
         data = self._get_data(include_default_values=include_default_values)
+        log.info(f'Serializing data to text ({extension})')
         text = formats.serialize(data, extension)
         log.info(f'Serialized text ({extension}): {text!r}')
-
         return text
 
     @prevent_recursion
@@ -215,7 +209,7 @@ class InstanceManager:
                 manager2._get_default_field_value(name2),
             )
             value2 = converter2.to_python_value(_value2)
-            log.debug(f"'{name2}' as Python: {value2}")
+            log.debug(f"'{name2}' as Python: {value2!r}")
             setattr(value, name2, value2)
 
         log.debug(f"Setting '{name}' value: {value!r}")
@@ -267,6 +261,7 @@ class InstanceManager:
 
         return Missing
 
+    @prevent_recursion
     def save(self, include_default_values: bool = False) -> None:
         log.info(f'Saving data for {self._instance}')
 
@@ -282,8 +277,3 @@ class InstanceManager:
         log.info(message + '\n\n' + (text or '<nothing>\n'))
         self.path.write_text(text)
         log.info('=' * len(message))
-
-        if self.manual:
-            log.info(f'Manually loading and saving {self._instance!r}')
-        else:
-            patch_methods(self._instance)

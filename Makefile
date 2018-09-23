@@ -6,7 +6,7 @@ all: install
 VIRTUAL_ENV ?= .venv
 
 .PHONY: install
-install: $(VIRTUAL_ENV)/flag
+install: $(VIRTUAL_ENV)/flag .cache
 $(VIRTUAL_ENV)/flag: pyproject.lock
 	@ poetry config settings.virtualenvs.in-project true
 	poetry develop
@@ -14,6 +14,9 @@ $(VIRTUAL_ENV)/flag: pyproject.lock
 
 pyproject.lock: pyproject.toml
 	poetry lock
+
+.cache:
+	@ mkdir -p .cache
 
 ###############################################################################
 
@@ -28,6 +31,7 @@ ci: format check test
 format: install
 	poetry run isort $(PACKAGES) --recursive --apply
 	poetry run black $(PACKAGES) $(BLACK_OPTIONS)
+	@ echo
 
 .PHONY: check
 check: install format
@@ -39,7 +43,6 @@ endif
 
 .PHONY: test
 test: install
-	@ mkdir -p .cache
 	poetry run pytest --random
 	poetry run coveragespace jacebrowning/datafiles overall
 
