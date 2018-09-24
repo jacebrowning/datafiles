@@ -7,6 +7,8 @@ import log
 
 from datafiles import sync
 
+from .samples import _Sample2
+
 
 @sync('../tmp/sample.yml')
 @dataclass
@@ -37,6 +39,13 @@ class SampleWithIter:
 
     def __iter__(self):
         return iter(self.items)
+
+
+@sync('../tmp/sample.yml')
+@dataclass
+class SampleWithNesting:
+    item: int
+    nested: _Sample2 = field(default_factory=_Sample2)
 
 
 def describe_automatic_load():
@@ -109,6 +118,22 @@ def describe_automatic_save():
         expect(read('tmp/sample.yml')) == dedent(
             """
             items: []
+            """
+        )
+
+
+def describe_automatic_save_with_nesting():
+    def with_setattr(expect, read, dedent):
+        sample = SampleWithNesting(1)
+
+        sample.nested.name = 'c'
+
+        expect(read('tmp/sample.yml')) == dedent(
+            """
+            item = 1
+            nested:
+              name: c
+              score: 3.4
             """
         )
 
