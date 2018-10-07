@@ -14,6 +14,7 @@ $(VIRTUAL_ENV)/flag: pyproject.lock
 
 pyproject.lock: pyproject.toml
 	poetry lock
+	@ touch $@
 
 .cache:
 	@ mkdir -p .cache
