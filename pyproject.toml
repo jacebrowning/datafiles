@@ -28,6 +28,6 @@ pytest-random = "*"
 pytest-watch = "*"
 pytest-cov = "*"
 
-coveragespace = "=2.1.0b1"
+coveragespace = "^2.1"
 
 jupyter = "^1.0"
