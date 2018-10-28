@@ -11,9 +11,10 @@ cache:
     - ${VIRTUAL_ENV}
 
 before_install:
-  - pip install poetry
+  - curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py | python
 
 install:
+  - source $HOME/.poetry/env
   - make install
 
 script:
