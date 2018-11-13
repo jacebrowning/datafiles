@@ -163,14 +163,18 @@ class List:
         return data
 
 
-@cached
-def map_type(cls, patch_dataclass=None, manual=False):
+def map_type(cls, *, patch_dataclass=None, manual=False, root=None):
     """Infer the converter type from the type annotation."""
 
     if dataclasses.is_dataclass(cls):
         assert patch_dataclass, "'patch_dataclass' required to map dataclass"
-        return patch_dataclass(cls, None, None, manual)
+        return patch_dataclass(cls, None, None, manual=manual, root=root)
 
+    return _map_type(cls)
+
+
+@cached
+def _map_type(cls):
     if hasattr(cls, '__origin__'):
         log.debug(f'Mapping container type annotation: {cls}')
         converter = None

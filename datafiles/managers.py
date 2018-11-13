@@ -49,14 +49,24 @@ class InstanceManager:
         instance: Any,
         pattern: Optional[str],
         attrs: Dict,
+        *,
         manual: bool = False,
+        root=None,
     ) -> None:
         self._instance = instance
         self._pattern = pattern
         self.attrs = attrs
         self.manual = manual
+        self._root_instance = root
         self._last_load = 0.0
         self._last_data: Dict = {}
+
+    def __repr__(self):
+        cls = self._instance.__class__.__name__
+        mode = 'manually' if self.manual else 'automatically'
+        attrs = ', '.join(self.attrs.keys())
+        location = self.path if self._pattern else '(nothing)'
+        return f'<manager: {cls} (attrs: {attrs}) {mode} sync to {location}>'
 
     @property
     def path(self) -> Optional[Path]:
@@ -165,6 +175,11 @@ class InstanceManager:
     def load(self, *, first_load=False) -> None:
         log.info(f'Loading values for {self._instance}')
 
+        if self._root_instance:
+            log.debug("Calling 'load' for root object")
+            self._root_instance.datafile.load()
+            return
+
         if not self.path:
             raise RuntimeError("'pattern' must be set to load the model")
 
@@ -264,6 +279,12 @@ class InstanceManager:
     @prevent_recursion
     def save(self, include_default_values: bool = False) -> None:
         log.info(f'Saving data for {self._instance}')
+
+        if self._root_instance:
+            log.debug("Calling 'save' for root object")
+            assert not self.path
+            self._root_instance.datafile.save()
+            return
 
         if not self.path:
             raise RuntimeError(f"'pattern' must be set to save the model")

@@ -126,14 +126,14 @@ def describe_automatic_save_with_nesting():
     def with_setattr(expect, read, dedent):
         sample = SampleWithNesting(1)
 
+        log.info("Modifying nested object")
         sample.nested.name = 'c'
 
         expect(read('tmp/sample.yml')) == dedent(
             """
-            item = 1
+            item: 1
             nested:
               name: c
-              score: 3.4
             """
         )
 
