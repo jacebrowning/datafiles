@@ -177,6 +177,7 @@ class InstanceManager:
 
         if self._root_instance:
             log.debug("Calling 'load' for root object")
+            assert not self.path
             self._root_instance.datafile.load()
             return
 

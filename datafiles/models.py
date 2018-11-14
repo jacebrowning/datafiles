@@ -60,13 +60,12 @@ class Model:
             for field in dataclasses.fields(self):
                 self_name = f'self.{field.name}'
                 if pattern is None or self_name not in pattern:
-
-                    converter = map_type(
-                        field.type,
-                        patch_dataclass=patch_dataclass,
-                        manual=manual,
-                        root=self,
-                    )
+                    if dataclasses.is_dataclass(field.type):
+                        converter = patch_dataclass(
+                            field.type, manual=manual, root=self
+                        )
+                    else:
+                        converter = map_type(field.type)
                     attrs[field.name] = converter
 
         manager = InstanceManager(
@@ -76,7 +75,7 @@ class Model:
         return manager
 
 
-def patch_dataclass(cls, pattern, attrs, *, manual=False, root=None):
+def patch_dataclass(cls, *, pattern=None, attrs=None, manual=False, root=None):
     """Patch datafile attributes on to an existing dataclass."""
 
     if not dataclasses.is_dataclass(cls):

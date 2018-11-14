@@ -12,6 +12,8 @@ def sync(
     """Decorator to synchronize a data class to the specified path."""
 
     def decorator(cls):
-        return patch_dataclass(cls, pattern, attrs, manual=manual)
+        return patch_dataclass(
+            cls, pattern=pattern, attrs=attrs, manual=manual
+        )
 
     return decorator
