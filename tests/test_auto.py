@@ -126,18 +126,36 @@ def describe_automatic_save():
         )
 
 
-def describe_automatic_save_with_nesting():
-    def with_setattr(expect, read, dedent):
+def describe_automatic_load_with_nesting():
+    def with_getattr(write, expect):
         sample = SampleWithNesting(1)
 
-        log.info("Modifying nested object")
-        sample.nested.name = 'c'
-
-        expect(read('tmp/sample.yml')) == dedent(
+        log.info("Modifying nested file")
+        write(
+            'tmp/sample.yml',
             """
             item: 1
             nested:
               name: c
+            """,
+        )
+
+        expect(sample.nested.name) == 'c'
+        expect(sample.nested.score) == 3.4
+
+
+def describe_automatic_save_with_nesting():
+    def with_setattr(expect, read, dedent):
+        sample = SampleWithNesting(2)
+
+        log.info("Modifying nested object")
+        sample.nested.name = 'd'
+
+        expect(read('tmp/sample.yml')) == dedent(
+            """
+            item: 2
+            nested:
+              name: d
             """
         )
 
