@@ -9,7 +9,7 @@ from .samples import (
     SampleWithList,
     SampleWithListAndDefaults,
     SampleWithNesting,
-    _Sample1,
+    _NestedSample1,
 )
 
 
@@ -186,7 +186,7 @@ def describe_nesting():
         expect(sample.nested.score) == 0.0
 
     def with_missing_nested_object(write, sample, expect):
-        sample.nested = _Sample1(name='bar', score=8)
+        sample.nested = _NestedSample1(name='bar', score=8)
 
         write(
             'tmp/sample.yml',

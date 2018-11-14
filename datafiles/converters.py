@@ -1,4 +1,3 @@
-import dataclasses
 from abc import ABCMeta, abstractmethod
 from collections import Iterable  # pylint: disable=no-name-in-module
 from typing import Any, Union
@@ -164,13 +163,8 @@ class List:
 
 
 @cached
-def map_type(cls, patch_dataclass=None, manual=False):
+def map_type(cls):
     """Infer the converter type from the type annotation."""
-
-    if dataclasses.is_dataclass(cls):
-        assert patch_dataclass, "'patch_dataclass' required to map dataclass"
-        return patch_dataclass(cls, None, None, manual)
-
     if hasattr(cls, '__origin__'):
         log.debug(f'Mapping container type annotation: {cls}')
         converter = None

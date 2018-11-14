@@ -4,8 +4,6 @@ from dataclasses import dataclass, field
 
 from datafiles import sync
 
-from .samples import _Sample1
-
 
 @sync('../tmp/sample.yml', manual=True)
 @dataclass
@@ -14,10 +12,16 @@ class SampleWithDefaults:
     bar: str = 'a'
 
 
+@dataclass
+class NestedSample:
+    name: str
+    score: float
+
+
 @sync('../tmp/sample.yml', manual=True)
 @dataclass
 class SampleWithDefaultsAndNesting:
-    nested: _Sample1
+    nested: NestedSample
     name: str = ''
     score: float = 0.0
 
@@ -93,7 +97,7 @@ def describe_existing_file():
         )
 
         sample = SampleWithDefaultsAndNesting(
-            name='', score=0.0, nested=_Sample1(name='bar', score=8)
+            name='', score=0.0, nested=NestedSample(name='bar', score=8)
         )
 
         expect(sample.name) == 'foo'

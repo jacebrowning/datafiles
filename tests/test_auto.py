@@ -39,6 +39,19 @@ class SampleWithIter:
         return iter(self.items)
 
 
+@dataclass
+class NestedSample:
+    name: str = 'b'
+    score: float = 3.4
+
+
+@sync('../tmp/sample.yml')
+@dataclass
+class SampleWithNesting:
+    item: int
+    nested: NestedSample = field(default_factory=NestedSample)
+
+
 def describe_automatic_load():
     def with_getattribute(write, expect):
         sample = Sample()
@@ -109,6 +122,22 @@ def describe_automatic_save():
         expect(read('tmp/sample.yml')) == dedent(
             """
             items: []
+            """
+        )
+
+
+def describe_automatic_save_with_nesting():
+    def with_setattr(expect, read, dedent):
+        sample = SampleWithNesting(1)
+
+        log.info("Modifying nested object")
+        sample.nested.name = 'c'
+
+        expect(read('tmp/sample.yml')) == dedent(
+            """
+            item: 1
+            nested:
+              name: c
             """
         )
 
