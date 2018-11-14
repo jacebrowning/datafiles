@@ -7,8 +7,6 @@ import log
 
 from datafiles import sync
 
-from .samples import _Sample2
-
 
 @sync('../tmp/sample.yml')
 @dataclass
@@ -41,11 +39,17 @@ class SampleWithIter:
         return iter(self.items)
 
 
+@dataclass
+class NestedSample:
+    name: str = 'b'
+    score: float = 3.4
+
+
 @sync('../tmp/sample.yml')
 @dataclass
 class SampleWithNesting:
     item: int
-    nested: _Sample2 = field(default_factory=_Sample2)
+    nested: NestedSample = field(default_factory=NestedSample)
 
 
 def describe_automatic_load():

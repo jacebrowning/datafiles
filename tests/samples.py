@@ -41,7 +41,7 @@ class SampleWithDefaults:
 
 
 @dataclass
-class _Sample1:
+class _NestedSample1:
     name: str
     score: float
 
@@ -51,11 +51,11 @@ class _Sample1:
 class SampleWithNesting:
     name: str
     score: float
-    nested: _Sample1
+    nested: _NestedSample1
 
 
 @dataclass
-class _Sample2:
+class _NestedSample2:
     name: str = 'b'
     score: float = 3.4
 
@@ -65,7 +65,7 @@ class _Sample2:
 class SampleWithNestingAndDefaults:
     name: str
     score: float = 1.2
-    nested: _Sample2 = field(default_factory=_Sample2)
+    nested: _NestedSample2 = field(default_factory=_NestedSample2)
 
 
 @sync('../tmp/sample.yml', manual=True)
