@@ -1,10 +1,12 @@
+# pylint: disable=no-name-in-module
+# https://github.com/PyCQA/pylint/issues/2597
+
 from abc import ABCMeta, abstractmethod
-from collections import Iterable  # pylint: disable=no-name-in-module
+from collections import Iterable
+from dataclasses import is_dataclass
 from typing import Any, Union
 
 import log
-
-from .utils import cached
 
 
 class Converter(metaclass=ABCMeta):
@@ -118,7 +120,12 @@ class List:
     @classmethod
     def to_python_value(cls, deserialized_data):
         value = []
-        convert = cls.ELEMENT_CONVERTER.to_python_value
+
+        if is_dataclass(cls.ELEMENT_CONVERTER):
+            # pylint: disable=not-callable
+            convert = lambda data: cls.ELEMENT_CONVERTER(**data)
+        else:
+            convert = cls.ELEMENT_CONVERTER.to_python_value
 
         if deserialized_data is None:
             pass
@@ -140,7 +147,15 @@ class List:
     @classmethod
     def to_preserialization_data(cls, python_value):
         data = []
-        convert = cls.ELEMENT_CONVERTER.to_preserialization_data
+
+        if is_dataclass(cls.ELEMENT_CONVERTER):
+            convert = (
+                lambda value: value.datafile.data
+                if hasattr(value, 'datafile')
+                else value
+            )
+        else:
+            convert = cls.ELEMENT_CONVERTER.to_preserialization_data
 
         if python_value is None:
             pass
@@ -162,16 +177,19 @@ class List:
         return data
 
 
-@cached
-def map_type(cls):
-    """Infer the converter type from the type annotation."""
+def map_type(cls, **kwargs):
+    """Infer the converter type from a dataclass, type, or annotation."""
+    if is_dataclass(cls):
+        patch_dataclass = kwargs.pop('patch_dataclass')
+        return patch_dataclass(cls, **kwargs)
+
     if hasattr(cls, '__origin__'):
-        log.debug(f'Mapping container type annotation: {cls}')
+        log.debug(f'Mapping container type: {cls}')
         converter = None
 
         if cls.__origin__ == list:
             try:
-                converter = map_type(cls.__args__[0])
+                converter = map_type(cls.__args__[0], **kwargs)
             except TypeError:
                 exc = TypeError(f"Type is required with 'List' annotation")
                 raise exc from None
@@ -179,7 +197,7 @@ def map_type(cls):
                 converter = List.of_converters(converter)
 
         elif cls.__origin__ == Union:
-            converter = map_type(cls.__args__[0])
+            converter = map_type(cls.__args__[0], **kwargs)
             assert len(cls.__args__) == 2
             assert cls.__args__[1] == type(None)
             converter = converter.as_optional()
@@ -190,8 +208,12 @@ def map_type(cls):
 
         raise TypeError(f'Unsupported container type: {cls.__origin__}')
 
-    for converter in Converter.__subclasses__():
-        if converter.TYPE == cls:
-            return converter
+    else:
+        log.debug(f'Mapping builtin type: {cls}')
+
+        for converter in Converter.__subclasses__():
+            if converter.TYPE == cls:
+                log.debug(f'Using existing converter: {converter}')
+                return converter
 
     raise TypeError(f'Could not map type: {cls}')

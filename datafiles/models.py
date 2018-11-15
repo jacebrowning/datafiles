@@ -60,13 +60,12 @@ class Model:
             for field in dataclasses.fields(self):
                 self_name = f'self.{field.name}'
                 if pattern is None or self_name not in pattern:
-                    if dataclasses.is_dataclass(field.type):
-                        converter = patch_dataclass(
-                            field.type, manual=manual, root=self
-                        )
-                    else:
-                        converter = map_type(field.type)
-                    attrs[field.name] = converter
+                    attrs[field.name] = map_type(
+                        field.type,
+                        patch_dataclass=patch_dataclass,
+                        manual=manual,
+                        root=self,
+                    )
 
         manager = InstanceManager(
             self, pattern, attrs, manual=manual, root=root

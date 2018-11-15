@@ -1,10 +1,17 @@
 # pylint: disable=unused-variable
 
+from dataclasses import dataclass
 from typing import Dict, List, Optional
 
 import pytest
 
 from datafiles import converters
+from datafiles.models import patch_dataclass
+
+
+@dataclass
+class MyCustomDataclass:
+    foobar: int
 
 
 class MyCustomNonDataclass:
@@ -20,6 +27,13 @@ def describe_map_type():
         converter = converters.map_type(List[str])
         expect(converter.__name__) == 'StringList'
         expect(converter.ELEMENT_CONVERTER) == converters.String
+
+    def it_handles_list_annotations_of_dataclasses(expect):
+        converter = converters.map_type(
+            List[MyCustomDataclass], patch_dataclass=patch_dataclass
+        )
+        expect(converter.__name__) == 'MyCustomDataclassList'
+        expect(converter.ELEMENT_CONVERTER) == MyCustomDataclass
 
     def it_requires_list_annotations_to_have_a_type(expect):
         with expect.raises(TypeError):
@@ -82,6 +96,20 @@ def describe_converter():
         with expect.raises(ValueError, message):
             converters.Integer.to_python_value('a')
 
+    def to_python_value_when_list_of_dataclasses(expect):
+        converter = converters.map_type(
+            List[MyCustomDataclass], patch_dataclass=patch_dataclass
+        )
+
+        data = [{'foobar': 1}, {'foobar': 2}, {'foobar': 3}]
+        value = [
+            MyCustomDataclass(1),
+            MyCustomDataclass(2),
+            MyCustomDataclass(3),
+        ]
+
+        expect(converter.to_python_value(data)) == value
+
     @pytest.mark.parametrize(
         'converter, value, data',
         [
@@ -105,3 +133,18 @@ def describe_converter():
         message = "invalid literal for int() with base 10: 'a'"
         with expect.raises(ValueError, message):
             converters.Integer.to_preserialization_data('a')
+
+    def to_preserialization_data_when_list_of_dataclasses(expect):
+        converter = converters.map_type(
+            List[MyCustomDataclass], patch_dataclass=patch_dataclass
+        )
+
+        value = [
+            MyCustomDataclass(1),
+            MyCustomDataclass(2),
+            MyCustomDataclass(3),
+        ]
+        data = [{'foobar': 1}, {'foobar': 2}, {'foobar': 3}]
+
+        expect(converter.to_preserialization_data(value)) == data
+        expect(converter.to_preserialization_data(data)) == data
