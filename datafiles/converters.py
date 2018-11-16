@@ -7,6 +7,7 @@ from dataclasses import is_dataclass
 from typing import Any, Union
 
 import log
+from cachetools import cached
 
 
 class Converter(metaclass=ABCMeta):
@@ -177,6 +178,7 @@ class List:
         return data
 
 
+@cached(cache={}, key=lambda cls, **kwargs: cls)
 def map_type(cls, **kwargs):
     """Infer the converter type from a dataclass, type, or annotation."""
     if is_dataclass(cls):

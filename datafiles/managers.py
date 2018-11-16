@@ -4,10 +4,11 @@ from pathlib import Path
 from typing import Any, Dict, Optional
 
 import log
+from cachetools import cached
 
 from . import formats
 from .converters import List
-from .utils import Missing, cached, prettify, prevent_recursion
+from .utils import Missing, prettify, prevent_recursion
 
 
 class ModelManager:
@@ -49,7 +50,7 @@ class InstanceManager:
     def path(self) -> Optional[Path]:
         return self._get_path()
 
-    @cached
+    @cached(cache={})
     @prevent_recursion
     def _get_path(self) -> Optional[Path]:
         if not self._pattern:
