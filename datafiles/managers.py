@@ -26,12 +26,14 @@ class InstanceManager:
         attrs: Dict,
         *,
         manual: bool = False,
+        defaults: bool = False,
         root=None,
     ) -> None:
         self._instance = instance
         self._pattern = pattern
         self.attrs = attrs
         self.manual = manual
+        self.defaults = defaults
         self._root_instance = root
         self._last_load = 0.0
         self._last_data: Dict = {}
@@ -92,8 +94,10 @@ class InstanceManager:
     def data(self) -> Dict:
         return self._get_data()
 
-    def _get_data(self, include_default_values=False) -> Dict:
+    def _get_data(self, include_default_values=None) -> Dict:
         log.info(f'Preserializing object {self._instance!r} to data')
+        if include_default_values is None:
+            include_default_values = self.defaults
 
         self._last_data.update(dataclasses.asdict(self._instance))
         data = self._last_data
@@ -139,9 +143,9 @@ class InstanceManager:
     def text(self) -> str:
         return self._get_text()
 
-    def _get_text(self, include_default_values=False):
+    def _get_text(self, **kwargs):
         extension = self.path.suffix if self.path else '.yml'
-        data = self._get_data(include_default_values=include_default_values)
+        data = self._get_data(**kwargs)
         log.info(f'Serializing data to text ({extension})')
         text = formats.serialize(data, extension)
         log.info(f'Serialized text ({extension}): {text!r}')
@@ -254,7 +258,7 @@ class InstanceManager:
         return Missing
 
     @prevent_recursion
-    def save(self, include_default_values: bool = False) -> None:
+    def save(self, include_default_values=None) -> None:
         log.info(f'Saving data for {self._instance}')
 
         if self._root_instance:

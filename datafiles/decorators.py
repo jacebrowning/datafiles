@@ -8,10 +8,13 @@ def sync(
     pattern: str,
     attrs: Optional[Dict[str, Converter]] = None,
     manual: bool = False,
+    defaults: bool = False,
 ):
     """Decorator to synchronize a data class to the specified path."""
 
     def decorator(cls):
-        return create_model(cls, pattern=pattern, attrs=attrs, manual=manual)
+        return create_model(
+            cls, pattern=pattern, attrs=attrs, manual=manual, defaults=defaults
+        )
 
     return decorator

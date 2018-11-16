@@ -10,12 +10,10 @@ from datafiles import sync
 
 
 def describe_automatic():
-    """Tests to create a data file using the decorator."""
+    """Tests to create a datafile using the decorator."""
 
     @pytest.fixture
     def sample():
-        """A decorated data class with a single key."""
-
         @sync('../tmp/{self.key}.yml')
         @dataclass
         class Sample:
@@ -51,8 +49,29 @@ def describe_automatic():
                 name: str
 
 
+def describe_automatic_with_defaults():
+    """Tests to create a datafile using the decorator with defaults."""
+
+    @pytest.fixture
+    def sample():
+        @sync('../tmp/{self.key}.yml', defaults=True)
+        @dataclass
+        class Sample:
+            key: int
+            name: str
+            score: float = 1 / 2
+
+        return Sample(1, "a")
+
+    def it_converts_attributes(expect, sample):
+        expect(sample.key) == 1
+        expect(sample.name) == "a"
+        expect(sample.score) == 0.5
+        expect(sample.datafile.data) == {'name': "a", 'score': 0.5}
+
+
 def describe_manual():
-    """Tests to create a data file using the model class."""
+    """Tests to create a datafile using the model class."""
 
     @pytest.fixture
     def sample():
@@ -82,7 +101,7 @@ def describe_manual():
 
 
 def describe_manual_with_attrs():
-    """Tests to create a data file with explicit attrs."""
+    """Tests to create a datafile with explicit attrs."""
 
     @pytest.fixture
     def sample():
@@ -109,7 +128,7 @@ def describe_manual_with_attrs():
 
 
 def describe_manual_with_attrs_and_pattern():
-    """Tests to create a data file with explicit attrs and pattern."""
+    """Tests to create a datafile with explicit attrs and pattern."""
 
     @pytest.fixture
     def sample():

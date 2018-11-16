@@ -53,6 +53,7 @@ class Model:
         pattern = getattr(m, 'datafile_pattern', None)
         attrs = getattr(m, 'datafile_attrs', None)
         manual = getattr(m, 'datafile_manual', False)
+        defaults = getattr(m, 'datafile_defaults', False)
         root = getattr(m, 'datafile_root', None)
 
         if attrs is None:
@@ -64,17 +65,20 @@ class Model:
                         field.type,
                         create_model=create_model,
                         manual=manual,
+                        defaults=defaults,
                         root=self,
                     )
 
         manager = InstanceManager(
-            self, pattern, attrs, manual=manual, root=root
+            self, pattern, attrs, manual=manual, defaults=defaults, root=root
         )
         self._datafile = manager
         return manager
 
 
-def create_model(cls, *, pattern=None, attrs=None, manual=False, root=None):
+def create_model(
+    cls, *, pattern=None, attrs=None, manual=False, defaults=False, root=None
+):
     """Patch datafile attributes on to an existing dataclass."""
 
     if not dataclasses.is_dataclass(cls):
@@ -86,6 +90,7 @@ def create_model(cls, *, pattern=None, attrs=None, manual=False, root=None):
     m.datafile_pattern = getattr(m, 'datafile_pattern', None) or pattern
     m.datafile_attrs = getattr(m, 'datafile_attrs', None) or attrs
     m.datafile_manual = getattr(m, 'datafile_manual', manual)
+    m.datafile_defaults = getattr(m, 'datafile_defaults', defaults)
     m.datafile_root = root
     cls.Meta = m
 

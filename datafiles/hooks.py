@@ -123,7 +123,7 @@ def external_method_call(name, args):
     if name in {'__init__', '__post_init__'}:
         return False
 
-    if args and args[0] in {'Meta', '_datafile'}:
+    if args and args[0] in {'Meta', 'datafile', '_datafile'}:
         return False
 
     if name in {'__getattribute__', '__setattr__'}:
