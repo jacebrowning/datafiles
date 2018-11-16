@@ -1,7 +1,7 @@
 from typing import Dict, Optional
 
 from .converters import Converter
-from .models import patch_dataclass
+from .models import create_model
 
 
 def sync(
@@ -12,8 +12,6 @@ def sync(
     """Decorator to synchronize a data class to the specified path."""
 
     def decorator(cls):
-        return patch_dataclass(
-            cls, pattern=pattern, attrs=attrs, manual=manual
-        )
+        return create_model(cls, pattern=pattern, attrs=attrs, manual=manual)
 
     return decorator

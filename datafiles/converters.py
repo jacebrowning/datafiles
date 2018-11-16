@@ -180,8 +180,8 @@ class List:
 def map_type(cls, **kwargs):
     """Infer the converter type from a dataclass, type, or annotation."""
     if is_dataclass(cls):
-        patch_dataclass = kwargs.pop('patch_dataclass')
-        return patch_dataclass(cls, **kwargs)
+        create_model = kwargs.pop('create_model')
+        return create_model(cls, **kwargs)
 
     if hasattr(cls, '__origin__'):
         log.debug(f'Mapping container type: {cls}')

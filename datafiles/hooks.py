@@ -23,6 +23,7 @@ SAVE_AFTER_METHODS = [
 
 
 def patch_methods(instance):
+    """Hook into methods that get or set attributes."""
     cls = instance.__class__
     log.debug(f'Patching methods on {cls}')
 

@@ -1,6 +1,5 @@
 import dataclasses
 import inspect
-from functools import wraps
 from pathlib import Path
 from typing import Any, Dict, Optional
 
@@ -8,31 +7,7 @@ import log
 
 from . import formats
 from .converters import List
-from .utils import cached, prettify
-
-
-Missing = dataclasses._MISSING_TYPE  # pylint: disable=protected-access
-
-
-def prevent_recursion(method):
-    """Decorate methods to prevent indirect recursive calls."""
-
-    @wraps(method)
-    def wrapped(self, *args, **kwargs):
-
-        if getattr(self, '_activity', False):
-            log.debug(f"Skipped recursive '{method.__name__}' method call")
-            return None
-
-        setattr(self, '_activity', True)
-
-        result = method(self, *args, **kwargs)
-
-        delattr(self, '_activity')
-
-        return result
-
-    return wrapped
+from .utils import Missing, cached, prettify, prevent_recursion
 
 
 class ModelManager:
@@ -73,6 +48,7 @@ class InstanceManager:
         return self._get_path()
 
     @cached
+    @prevent_recursion
     def _get_path(self) -> Optional[Path]:
         if not self._pattern:
             log.debug(f'{self!r} has no path pattern')

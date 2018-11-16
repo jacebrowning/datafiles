@@ -8,8 +8,8 @@ import log
 from classproperties import classproperty
 
 from .converters import Converter, map_type
+from .hooks import patch_methods
 from .managers import InstanceManager, ModelManager
-from .patches import patch_methods
 
 
 @dataclasses.dataclass
@@ -62,7 +62,7 @@ class Model:
                 if pattern is None or self_name not in pattern:
                     attrs[field.name] = map_type(
                         field.type,
-                        patch_dataclass=patch_dataclass,
+                        create_model=create_model,
                         manual=manual,
                         root=self,
                     )
@@ -74,7 +74,7 @@ class Model:
         return manager
 
 
-def patch_dataclass(cls, *, pattern=None, attrs=None, manual=False, root=None):
+def create_model(cls, *, pattern=None, attrs=None, manual=False, root=None):
     """Patch datafile attributes on to an existing dataclass."""
 
     if not dataclasses.is_dataclass(cls):
