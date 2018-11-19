@@ -1,10 +1,10 @@
 # pylint: disable=no-self-argument,protected-access,attribute-defined-outside-init
 
 import dataclasses
-from contextlib import suppress
 from typing import Dict, Optional
 
 import log
+from cachetools import cached
 from classproperties import classproperty
 
 from .converters import Converter, map_type
@@ -45,10 +45,8 @@ class Model:
     def datafile(self) -> InstanceManager:
         return self._get_datafile()
 
+    @cached(cache={}, key=id)
     def _get_datafile(self) -> InstanceManager:
-        with suppress(AttributeError):
-            return getattr(self, '_datafile')
-
         m = getattr(self, 'Meta', None)
         pattern = getattr(m, 'datafile_pattern', None)
         attrs = getattr(m, 'datafile_attrs', None)
@@ -69,11 +67,9 @@ class Model:
                         root=self,
                     )
 
-        manager = InstanceManager(
+        return InstanceManager(
             self, pattern, attrs, manual=manual, defaults=defaults, root=root
         )
-        self._datafile = manager
-        return manager
 
 
 def create_model(
