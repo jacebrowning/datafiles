@@ -40,11 +40,9 @@ class InstanceManager:
         self._last_data: Dict = {}
 
     def __repr__(self):
-        cls = self._instance.__class__.__name__
-        mode = 'manually' if self.manual else 'automatically'
-        attrs = ', '.join(self.attrs.keys())
-        location = self.path if self._pattern else '(nothing)'
-        return f'<manager: {cls} (attrs: {attrs}) {mode} sync to {location}>'
+        obj = object.__repr__(self._instance)
+        location = f"'{self.path}'" if self._pattern else '(nowhere)'
+        return f'{obj} => {location}'
 
     @property
     def path(self) -> Optional[Path]:
@@ -172,13 +170,13 @@ class InstanceManager:
             log.debug(f"Converting '{name}' data with {converter}")
 
             if dataclasses.is_dataclass(converter):
-                self._set_container_value(data, name, converter, first_load)
+                self._set_container_value(data, name, converter)
             else:
                 self._set_attribute_value(data, name, converter, first_load)
 
         log.info(f'Loaded values for object: {self._instance}')
 
-    def _set_container_value(self, data, name, converter, first_load):
+    def _set_container_value(self, data, name, converter):
         # TODO: Support nesting unlimited levels
         # https://github.com/jacebrowning/datafiles/issues/22
         data2 = data.get(name)
@@ -193,8 +191,6 @@ class InstanceManager:
                 if field.name not in data2:  # type: ignore
                     data2[field.name] = None  # type: ignore
             value = converter(**data2)
-        elif first_load:
-            return
 
         manager2 = value.datafile
         for name2, converter2 in manager2.attrs.items():
@@ -203,7 +199,11 @@ class InstanceManager:
                 name2,
                 manager2._get_default_field_value(name2),
             )
-            value2 = converter2.to_python_value(_value2)
+            if dataclasses.is_dataclass(converter2):
+                value2 = converter2(**_value2)
+            else:
+                # TODO: Consider patching this method onto dataclasses
+                value2 = converter2.to_python_value(_value2)
             log.debug(f"'{name2}' as Python: {value2!r}")
             setattr(value, name2, value2)
 
@@ -271,11 +271,10 @@ class InstanceManager:
 
         text = self._get_text(include_default_values=include_default_values)
 
-        self.path.parent.mkdir(parents=True, exist_ok=True)
-
         message = f'Writing: {self.path}'
         frame = '=' * (len(message) - 1)  # "DEBUG" has an extra letter
         log.info(message)
         log.debug(frame + '\n\n' + (text or '<nothing>\n'))
+        self.path.parent.mkdir(parents=True, exist_ok=True)
         self.path.write_text(text)
         log.debug(frame)

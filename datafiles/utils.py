@@ -32,16 +32,12 @@ def prevent_recursion(method):
 
     @wraps(method)
     def wrapped(self, *args, **kwargs):
-
         if getattr(self, FLAG, False):
             return None
-
         setattr(self, FLAG, True)
-
-        result = method(self, *args, **kwargs)
-
-        delattr(self, FLAG)
-
-        return result
+        try:
+            return method(self, *args, **kwargs)
+        finally:
+            delattr(self, FLAG)
 
     return wrapped

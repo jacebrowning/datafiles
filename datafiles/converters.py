@@ -181,7 +181,9 @@ def map_type(cls, **kwargs):
     """Infer the converter type from a dataclass, type, or annotation."""
     if is_dataclass(cls):
         create_model = kwargs.pop('create_model')
-        return create_model(cls, **kwargs)
+        converter = create_model(cls, **kwargs)
+        log.debug(f'Mapped {cls} into a converter')
+        return converter
 
     if hasattr(cls, '__origin__'):
         converter = None
