@@ -39,10 +39,11 @@ def write(dedent):
         _path = Path(path).resolve()
         _text = dedent(text)
         message = f'Writing: {_path}'
-        log.info('=' * len(message))
-        log.info(message + '\n\n' + _text)
+        frame = '=' * (len(message) - 1)  # "DEBUG" has an extra letter
+        log.info(message)
+        log.debug(frame + '\n\n' + (text or '<nothing>\n'))
         _path.write_text(_text)
-        log.info('=' * len(message))
+        log.debug(frame)
 
     return _
 
@@ -52,10 +53,11 @@ def read():
     def _(path: str) -> str:
         _path = Path(path).resolve()
         message = f'Reading: {_path}'
-        log.info('=' * len(message))
+        frame = '=' * (len(message) - 1)  # "DEBUG" has an extra letter
+        log.info(message)
         text = _path.read_text()
-        log.info(message + '\n\n' + (text or '<nothing>\n'))
-        log.info('=' * len(message))
+        log.debug(frame + '\n\n' + (text or '<nothing>\n'))
+        log.debug(frame)
         return text
 
     return _

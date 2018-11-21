@@ -25,17 +25,28 @@ class Model:
     def __post_init__(self):
         path = self.datafile.path
         exists = self.datafile.exists
-        log.debug(f'Datafile path: {path}')
-        log.debug(f'Datafile exists: {exists}')
-        if exists:
-            self.datafile.load(first_load=True)
-        elif path:
-            self.datafile.save()
+        nested = bool(self.datafile._root_instance)
+        automatic = not self.datafile.manual
 
-        if self.datafile.manual:
-            log.info(f'Manually loading and saving {self!r}')
+        if nested:
+            log.debug(f'Initializing nested {self.__class__} instance')
         else:
+            log.debug(f'Initializing {self.__class__} instance')
+            log.debug(f'Datafile path: {path}')
+            log.debug(f'Datafile exists: {exists}')
+
+            if exists:
+                self.datafile.load(first_load=True)
+            elif path:
+                self.datafile.save()
+
+        if automatic:
             patch_methods(self)
+
+        if nested:
+            log.debug(f'Initialized nested {self.__class__} instance')
+        else:
+            log.debug(f'Initialized {self.__class__} instance')
 
     @classproperty
     def datafiles(cls) -> ModelManager:
@@ -47,6 +58,7 @@ class Model:
 
     @cached(cache={}, key=id)
     def _get_datafile(self) -> InstanceManager:
+        # TODO: Maybe these attributes should be enforced?
         m = getattr(self, 'Meta', None)
         pattern = getattr(m, 'datafile_pattern', None)
         attrs = getattr(m, 'datafile_attrs', None)

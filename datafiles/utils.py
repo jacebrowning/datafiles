@@ -4,8 +4,6 @@ from functools import wraps
 from pprint import pformat
 from typing import Any, Dict
 
-import log
-
 
 Missing = dataclasses._MISSING_TYPE  # pylint: disable=protected-access
 
@@ -30,18 +28,19 @@ def dictify(value: Any) -> Dict:
 def prevent_recursion(method):
     """Decorate methods to prevent indirect recursive calls."""
 
+    FLAG = '_activity'
+
     @wraps(method)
     def wrapped(self, *args, **kwargs):
 
-        if getattr(self, '_activity', False):
-            log.debug(f"Skipped recursive '{method.__name__}' method call")
+        if getattr(self, FLAG, False):
             return None
 
-        setattr(self, '_activity', True)
+        setattr(self, FLAG, True)
 
         result = method(self, *args, **kwargs)
 
-        delattr(self, '_activity')
+        delattr(self, FLAG)
 
         return result
 

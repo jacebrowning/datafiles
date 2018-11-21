@@ -184,7 +184,6 @@ def map_type(cls, **kwargs):
         return create_model(cls, **kwargs)
 
     if hasattr(cls, '__origin__'):
-        log.debug(f'Mapping container type: {cls}')
         converter = None
 
         if cls.__origin__ == list:
@@ -203,17 +202,15 @@ def map_type(cls, **kwargs):
             converter = converter.as_optional()
 
         if converter:
-            log.debug(f'Created new converter: {converter}')
+            log.debug(f'Mapped {cls} to new converter: {converter}')
             return converter
 
         raise TypeError(f'Unsupported container type: {cls.__origin__}')
 
     else:
-        log.debug(f'Mapping builtin type: {cls}')
-
         for converter in Converter.__subclasses__():
             if converter.TYPE == cls:
-                log.debug(f'Using existing converter: {converter}')
+                log.debug(f'Mapped {cls} to existing converter: {converter}')
                 return converter
 
     raise TypeError(f'Could not map type: {cls}')

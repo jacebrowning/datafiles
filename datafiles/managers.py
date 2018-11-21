@@ -54,7 +54,6 @@ class InstanceManager:
     @prevent_recursion
     def _get_path(self) -> Optional[Path]:
         if not self._pattern:
-            log.debug(f'{self!r} has no path pattern')
             return None
 
         try:
@@ -68,24 +67,19 @@ class InstanceManager:
 
     @property
     def exists(self) -> bool:
-        if not self.path:
-            log.debug("'pattern' not set so datafile will never exist")
-            return False
-
-        return self.path.exists()
+        if self.path:
+            return self.path.exists()
+        return False
 
     @property
     def modified(self) -> bool:
-        if not self.path:
-            return True
-
-        changes = self._last_load != self.path.stat().st_mtime
-        log.debug(f'Datafile modified: {changes}')
-        return changes
+        if self.path:
+            return self._last_load != self.path.stat().st_mtime
+        return True
 
     @modified.setter
-    def modified(self, changes: bool):
-        if changes:
+    def modified(self, modified: bool):
+        if modified:
             self._last_load = 0.0
         else:
             assert self.path, 'Cannot mark a missing file as unmodified'
@@ -96,7 +90,8 @@ class InstanceManager:
         return self._get_data()
 
     def _get_data(self, include_default_values=None) -> Dict:
-        log.info(f'Preserializing object {self._instance!r} to data')
+        kind = "nested object" if self._root_instance else "object"
+        log.debug(f'Preserializing {kind} to data: {self._instance!r}')
         if include_default_values is None:
             include_default_values = self.defaults
 
@@ -110,11 +105,9 @@ class InstanceManager:
 
         for name, converter in self.attrs.items():
             value = data[name]
-            log.debug(
-                f"Converting '{name}' value as {converter.__name__}: {value!r}"
-            )
 
             if dataclasses.is_dataclass(converter):
+                log.debug(f"Converting '{name}' dataclass with {converter}")
                 if value is None:
                     value = {}
 
@@ -135,9 +128,12 @@ class InstanceManager:
                 data.pop(name)
 
             else:
+                log.debug(
+                    f"Converting '{name}' value with {converter}: {value!r}"
+                )
                 data[name] = converter.to_preserialization_data(value)
 
-        log.info(f'Preserialized object data: {data}')
+        log.debug(f'Preserialized {kind} data: {data}')
         return data
 
     @property
@@ -147,14 +143,13 @@ class InstanceManager:
     def _get_text(self, **kwargs):
         extension = self.path.suffix if self.path else '.yml'
         data = self._get_data(**kwargs)
-        log.info(f'Serializing data to text ({extension})')
         text = formats.serialize(data, extension)
-        log.info(f'Serialized text ({extension}): {text!r}')
+        log.info(f'Serialized data to text ({extension}): {text!r}')
         return text
 
     @prevent_recursion
     def load(self, *, first_load=False) -> None:
-        log.info(f'Loading values for {self._instance}')
+        log.info(f'Loading values for {self._instance.__class__} instance')
 
         if self._root_instance:
             log.debug("Calling 'load' for root object")
@@ -166,19 +161,22 @@ class InstanceManager:
             raise RuntimeError("'pattern' must be set to load the model")
 
         message = f'Deserializing: {self.path}'
-        log.info('=' * len(message))
+        frame = '=' * (len(message) - 1)  # "DEBUG" has an extra letter
+        log.info(message)
         data = formats.deserialize(self.path, self.path.suffix)
         self._last_data = data
-        log.info(message + '\n\n' + prettify(data) + '\n')
-        log.info('=' * len(message))
+        log.debug(frame + '\n\n' + prettify(data) + '\n')
+        log.debug(frame)
 
         for name, converter in self.attrs.items():
-            log.debug(f"Converting '{name}' data to value as {converter}")
+            log.debug(f"Converting '{name}' data with {converter}")
 
             if dataclasses.is_dataclass(converter):
                 self._set_container_value(data, name, converter, first_load)
             else:
                 self._set_attribute_value(data, name, converter, first_load)
+
+        log.info(f'Loaded values for object: {self._instance}')
 
     def _set_container_value(self, data, name, converter, first_load):
         # TODO: Support nesting unlimited levels
@@ -260,7 +258,7 @@ class InstanceManager:
 
     @prevent_recursion
     def save(self, include_default_values=None) -> None:
-        log.info(f'Saving data for {self._instance}')
+        log.info(f'Saving data for object: {self._instance}')
 
         if self._root_instance:
             log.debug("Calling 'save' for root object")
@@ -276,7 +274,8 @@ class InstanceManager:
         self.path.parent.mkdir(parents=True, exist_ok=True)
 
         message = f'Writing: {self.path}'
-        log.info('=' * len(message))
-        log.info(message + '\n\n' + (text or '<nothing>\n'))
+        frame = '=' * (len(message) - 1)  # "DEBUG" has an extra letter
+        log.info(message)
+        log.debug(frame + '\n\n' + (text or '<nothing>\n'))
         self.path.write_text(text)
-        log.info('=' * len(message))
+        log.debug(frame)
