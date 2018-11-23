@@ -1,5 +1,6 @@
 import dataclasses
 import inspect
+from abc import ABCMeta, abstractmethod
 from pathlib import Path
 from typing import Any, Dict, Optional
 
@@ -19,23 +20,105 @@ class ModelManager:
         raise NotImplementedError
 
 
-class InstanceManager:
+class BaseInstanceManager(metaclass=ABCMeta):
+
+    _kind: str
+    _instance: Any
+    _last_data: Dict[str, Any]
+
+    attrs: Dict[str, Any]
+    defaults: bool
+
+    @abstractmethod
+    def load(self, *, first_load=False) -> None:
+        raise NotImplementedError
+
+    @abstractmethod
+    def save(self, include_default_values=None) -> None:
+        raise NotImplementedError
+
+    def _get_data(self, include_default_values=None) -> Dict:
+        log.debug(f'Preserializing {self._kind} to data: {self._instance!r}')
+        if include_default_values is None:
+            include_default_values = self.defaults
+
+        self._last_data.update(dataclasses.asdict(self._instance))
+        data = self._last_data
+
+        for name in list(data.keys()):
+            if name not in self.attrs:
+                log.debug(f'Removed unmapped attribute: {name}')
+                data.pop(name)
+
+        for name, converter in self.attrs.items():
+            value = data[name]
+
+            if dataclasses.is_dataclass(converter):
+                log.debug(f"Converting '{name}' dataclass with {converter}")
+                if value is None:
+                    value = {}
+
+                for field in dataclasses.fields(converter):
+                    if field.name not in value:
+                        log.debug(
+                            f'Added missing nested attribute: {field.name}'
+                        )
+                        value[field.name] = None
+
+                data[name] = converter(**value).datafile.data
+
+            elif (
+                value == self._get_default_field_value(name)
+                and not include_default_values
+            ):
+                log.debug(f"Skipped default value for '{name}' attribute")
+                data.pop(name)
+
+            else:
+                log.debug(
+                    f"Converting '{name}' value with {converter}: {value!r}"
+                )
+                data[name] = converter.to_preserialization_data(value)
+
+        log.debug(f'Preserialized {self._kind} data: {data}')
+        return data
+
+    def _get_default_field_value(self, name):
+        for field in dataclasses.fields(self._instance):
+            if field.name == name:
+                if not isinstance(field.default, Missing):
+                    return field.default
+
+                if not isinstance(
+                    field.default_factory, Missing  # type: ignore
+                ):
+                    return field.default_factory()  # type: ignore
+
+                if not field.init and hasattr(self._instance, '__post_init__'):
+                    return getattr(self._instance, name)
+
+        return Missing
+
+
+class InstanceManager(BaseInstanceManager):
+
+    _kind = "object"
+
     def __init__(
         self,
         instance: Any,
-        pattern: Optional[str],
-        attrs: Dict,
         *,
+        attrs: Dict,
+        pattern: Optional[str],
+        # TODO: Should these be required?
         manual: bool = False,
         defaults: bool = False,
-        root=None,
     ) -> None:
         self._instance = instance
         self._pattern = pattern
         self.attrs = attrs
         self.manual = manual
         self.defaults = defaults
-        self._root_instance = root
         self._last_load = 0.0
         self._last_data: Dict = {}
 
@@ -87,53 +170,6 @@ class InstanceManager:
     def data(self) -> Dict:
         return self._get_data()
 
-    def _get_data(self, include_default_values=None) -> Dict:
-        kind = "nested object" if self._root_instance else "object"
-        log.debug(f'Preserializing {kind} to data: {self._instance!r}')
-        if include_default_values is None:
-            include_default_values = self.defaults
-
-        self._last_data.update(dataclasses.asdict(self._instance))
-        data = self._last_data
-
-        for name in list(data.keys()):
-            if name not in self.attrs:
-                log.debug(f'Removed unmapped attribute: {name}')
-                data.pop(name)
-
-        for name, converter in self.attrs.items():
-            value = data[name]
-
-            if dataclasses.is_dataclass(converter):
-                log.debug(f"Converting '{name}' dataclass with {converter}")
-                if value is None:
-                    value = {}
-
-                for field in dataclasses.fields(converter):
-                    if field.name not in value:
-                        log.debug(
-                            f'Added missing nested attribute: {field.name}'
-                        )
-                        value[field.name] = None
-
-                data[name] = converter(**value).datafile.data
-
-            elif (
-                value == self._get_default_field_value(name)
-                and not include_default_values
-            ):
-                log.debug(f"Skipped default value for '{name}' attribute")
-                data.pop(name)
-
-            else:
-                log.debug(
-                    f"Converting '{name}' value with {converter}: {value!r}"
-                )
-                data[name] = converter.to_preserialization_data(value)
-
-        log.debug(f'Preserialized {kind} data: {data}')
-        return data
-
     @property
     def text(self) -> str:
         return self._get_text()
@@ -148,12 +184,6 @@ class InstanceManager:
     @prevent_recursion
     def load(self, *, first_load=False) -> None:
         log.info(f'Loading values for {self._instance.__class__} instance')
-
-        if self._root_instance:
-            log.debug("Calling 'load' for root object")
-            assert not self.path
-            self._root_instance.datafile.load()
-            return
 
         if not self.path:
             raise RuntimeError("'pattern' must be set to load the model")
@@ -175,6 +205,8 @@ class InstanceManager:
                 self._set_attribute_value(data, name, converter, first_load)
 
         log.info(f'Loaded values for object: {self._instance}')
+
+        self.modified = False
 
     def _set_container_value(self, data, name, converter):
         # TODO: Support nesting unlimited levels
@@ -240,31 +272,9 @@ class InstanceManager:
         log.info(f"Setting '{name}' value: {value!r}")
         setattr(self._instance, name, value)
 
-    def _get_default_field_value(self, name):
-        for field in dataclasses.fields(self._instance):
-            if field.name == name:
-                if not isinstance(field.default, Missing):
-                    return field.default
-
-                if not isinstance(
-                    field.default_factory, Missing  # type: ignore
-                ):
-                    return field.default_factory()  # type: ignore
-
-                if not field.init and hasattr(self._instance, '__post_init__'):
-                    return getattr(self._instance, name)
-
-        return Missing
-
     @prevent_recursion
     def save(self, include_default_values=None) -> None:
         log.info(f'Saving data for object: {self._instance}')
-
-        if self._root_instance:
-            log.debug("Calling 'save' for root object")
-            assert not self.path
-            self._root_instance.datafile.save()
-            return
 
         if not self.path:
             raise RuntimeError(f"'pattern' must be set to save the model")
@@ -278,3 +288,41 @@ class InstanceManager:
         self.path.parent.mkdir(parents=True, exist_ok=True)
         self.path.write_text(text)
         log.debug(frame)
+
+        self.modified = False
+
+
+class NestedInstanceManager(BaseInstanceManager):
+
+    _kind = "nested object"
+
+    def __init__(
+        self,
+        instance: Any,
+        *,
+        root: InstanceManager,
+        attrs: Dict,
+        # TODO: Should these be required?
+        manual: bool = False,
+        defaults: bool = False,
+    ) -> None:
+        self._instance = instance
+        self.attrs = attrs
+        self.manual = manual
+        self.defaults = defaults
+        self._root = root
+
+    def load(self, *, first_load=False) -> None:
+        self._root.load(first_load=first_load)
+
+    def save(self, include_default_values=None) -> None:
+        self._root.save(include_default_values=include_default_values)
+
+    # TODO: should this have data? text?
+
+    # TODO: Leave default repr?
+    # def __repr__(self):
+    #     obj = object.__repr__(self._instance)
+    #     root = object.__repr__(self._root)
+    #     location = f"'{self._root.path}'" if self._root._pattern else '(nowhere)'
+    #     return f'{obj} => {location}'

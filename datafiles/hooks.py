@@ -1,7 +1,10 @@
+from contextlib import contextmanager
 from functools import wraps
 
 import log
 
+
+ENABLED = True
 
 LOAD_BEFORE_METHODS = ['__getattribute__', '__getitem__', '__iter__']
 
@@ -46,6 +49,15 @@ def patch_methods(instance):
             setattr(cls, name, modified_method)
 
 
+@contextmanager
+def disabled():
+    global ENABLED
+    backup = ENABLED
+    ENABLED = False
+    yield
+    ENABLED = backup
+
+
 def load_before(method):
     """Decorate methods that should load before call."""
     name = method.__name__
@@ -60,14 +72,13 @@ def load_before(method):
     def wrapped(self, *args, **kwargs):
         __tracebackhide__ = True  # pylint: disable=unused-variable
 
-        if external_method_call(method.__name__, args):
+        if ENABLED and external_method_call(method.__name__, args):
             datafile = object.__getattribute__(self, 'datafile')
             if datafile.manual:
                 log.debug('Automatic loading is disabled')
             elif datafile.exists and datafile.modified:
                 log.debug(f"Loading automatically before '{name}' call")
                 datafile.load()
-                datafile.modified = False
                 # TODO: Implement this?
                 # if mapper.auto_save_after_load:
                 #     mapper.save()
@@ -94,7 +105,7 @@ def save_after(method):
     def wrapped(self, *args, **kwargs):
         __tracebackhide__ = True  # pylint: disable=unused-variable
 
-        if external_method_call(method.__name__, args):
+        if ENABLED and external_method_call(method.__name__, args):
             datafile = object.__getattribute__(self, 'datafile')
             if datafile.exists and datafile.modified:
                 log.debug(f"Loading modified datafile before '{name}' call")
@@ -102,7 +113,7 @@ def save_after(method):
 
         result = method(self, *args, **kwargs)
 
-        if external_method_call(method.__name__, args):
+        if ENABLED and external_method_call(method.__name__, args):
             datafile = object.__getattribute__(self, 'datafile')
             if datafile.manual:
                 log.debug(f'Automatic saving is disabled')

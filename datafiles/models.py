@@ -1,15 +1,15 @@
 # pylint: disable=no-self-argument,protected-access,attribute-defined-outside-init
 
 import dataclasses
-from typing import Dict, Optional
+from typing import Dict, Optional, Union
 
 import log
 from cachetools import cached
 from classproperties import classproperty
 
+from . import hooks
 from .converters import Converter, map_type
-from .hooks import patch_methods
-from .managers import InstanceManager, ModelManager
+from .managers import InstanceManager, ModelManager, NestedInstanceManager
 
 
 @dataclasses.dataclass
@@ -23,14 +23,14 @@ class Model:
     Meta: ModelMeta
 
     def __post_init__(self):
-        path = self.datafile.path
-        exists = self.datafile.exists
-        nested = bool(self.datafile._root_instance)
+        nested = isinstance(self.datafile, NestedInstanceManager)
         automatic = not self.datafile.manual
 
         if nested:
             log.debug(f'Initializing nested {self.__class__} instance')
         else:
+            path = self.datafile.path
+            exists = self.datafile.exists
             log.debug(f'Initializing {self.__class__} instance')
             log.debug(f'Datafile path: {path}')
             log.debug(f'Datafile exists: {exists}')
@@ -41,7 +41,7 @@ class Model:
                 self.datafile.save()
 
         if automatic:
-            patch_methods(self)
+            hooks.patch_methods(self)
 
         if nested:
             log.debug(f'Initialized nested {self.__class__} instance')
@@ -53,11 +53,11 @@ class Model:
         return ModelManager(cls)
 
     @property
-    def datafile(self) -> InstanceManager:
+    def datafile(self) -> Union[InstanceManager, NestedInstanceManager]:
         return self._get_datafile()
 
     @cached(cache={}, key=id)
-    def _get_datafile(self) -> InstanceManager:
+    def _get_datafile(self) -> Union[InstanceManager, NestedInstanceManager]:
         # TODO: Maybe these attributes should be enforced?
         m = getattr(self, 'Meta', None)
         pattern = getattr(m, 'datafile_pattern', None)
@@ -79,8 +79,17 @@ class Model:
                         root=self,
                     )
 
+        if root:
+            return NestedInstanceManager(
+                self, root=root, attrs=attrs, manual=manual, defaults=defaults
+            )
+
         return InstanceManager(
-            self, pattern, attrs, manual=manual, defaults=defaults, root=root
+            self,
+            attrs=attrs,
+            pattern=pattern,
+            manual=manual,
+            defaults=defaults,
         )
 
 
@@ -111,10 +120,8 @@ def create_model(
     init = cls.__init__
 
     def modified_init(self, *args, **kwargs):
-        backup = self.datafile.manual
-        self.datafile.manual = True
-        init(self, *args, **kwargs)
-        self.datafile.manual = backup
+        with hooks.disabled():
+            init(self, *args, **kwargs)
         Model.__post_init__(self)
 
     cls.__init__ = modified_init
