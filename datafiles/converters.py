@@ -1,8 +1,5 @@
-# pylint: disable=no-name-in-module
-# https://github.com/PyCQA/pylint/issues/2597
-
 from abc import ABCMeta, abstractmethod
-from collections import Iterable
+from collections.abc import Iterable
 from dataclasses import is_dataclass
 from typing import Any, Union
 
