@@ -7,8 +7,8 @@ import log
 from cachetools import cached
 from classproperties import classproperty
 
+from . import hooks
 from .converters import Converter, map_type
-from .hooks import patch_methods
 from .managers import InstanceManager, ModelManager
 
 
@@ -41,7 +41,7 @@ class Model:
                 self.datafile.save()
 
         if automatic:
-            patch_methods(self)
+            hooks.patch(self)
 
         if nested:
             log.debug(f'Initialized nested {self.__class__} instance')
@@ -111,11 +111,9 @@ def create_model(
     init = cls.__init__
 
     def modified_init(self, *args, **kwargs):
-        backup = self.datafile.manual
-        self.datafile.manual = True
-        init(self, *args, **kwargs)
-        self.datafile.manual = backup
-        Model.__post_init__(self)
+        with hooks.disabled():
+            init(self, *args, **kwargs)
+            Model.__post_init__(self)
 
     cls.__init__ = modified_init
     cls.__init__.__doc__ = init.__doc__
