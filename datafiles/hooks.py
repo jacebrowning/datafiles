@@ -1,4 +1,4 @@
-from contextlib import contextmanager
+from contextlib import contextmanager, suppress
 from functools import wraps
 
 import log
@@ -24,6 +24,8 @@ SAVE_AFTER_METHODS = [
     'update',
 ]
 
+FLAG = '_patched'
+
 
 def patch(instance):
     """Hook into methods that get or set attributes."""
@@ -31,20 +33,14 @@ def patch(instance):
     log.debug(f'Patching methods on {cls}')
 
     for name in LOAD_BEFORE_METHODS:
-        try:
+        with suppress(AttributeError):
             method = getattr(cls, name)
-        except AttributeError:
-            log.debug(f'No method: {name}')
-        else:
             modified_method = load_before(method)
             setattr(cls, name, modified_method)
 
     for name in SAVE_AFTER_METHODS:
-        try:
+        with suppress(AttributeError):
             method = getattr(cls, name)
-        except AttributeError:
-            log.debug(f'No method: {name}')
-        else:
             modified_method = save_after(method)
             setattr(cls, name, modified_method)
 
@@ -59,7 +55,6 @@ def disabled():
 
 def load_before(method):
     """Decorate methods that should load before call."""
-    FLAG = '_patched_to_load_before'
 
     if getattr(method, FLAG, False):
         return method
@@ -93,7 +88,6 @@ def load_before(method):
 
 def save_after(method):
     """Decorate methods that should save after call."""
-    FLAG = '_patched_to_save_after'
 
     if getattr(method, FLAG, False):
         return method
