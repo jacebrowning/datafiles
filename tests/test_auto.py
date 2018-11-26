@@ -8,6 +8,11 @@ import log
 from datafiles import sync
 
 
+def show(message):
+    accent = '#' * 15
+    log.info(f'{accent} {message} {accent}')
+
+
 @sync('../tmp/sample.yml')
 @dataclass
 class Sample:
@@ -130,7 +135,7 @@ def describe_automatic_load_with_nesting():
     def with_getattr(write, expect):
         sample = SampleWithNesting(1)
 
-        log.info("Modifying nested file")
+        show("Modifying nested file")
         write(
             'tmp/sample.yml',
             """
@@ -148,7 +153,7 @@ def describe_automatic_save_with_nesting():
     def with_setattr(expect, read, dedent):
         sample = SampleWithNesting(2)
 
-        log.info("Modifying nested object")
+        show("Modifying nested object")
         sample.nested.name = 'd'
 
         expect(read('tmp/sample.yml')) == dedent(
