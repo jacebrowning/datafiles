@@ -4,11 +4,14 @@ from pathlib import Path
 from typing import Any, Dict, Optional
 
 import log
-from cachetools import cached
+from cached_property import cached_property
 
 from . import formats
 from .converters import List
 from .utils import Missing, prettify, prevent_recursion
+
+
+Trilean = Optional[bool]
 
 
 class ModelManager:
@@ -46,13 +49,8 @@ class InstanceManager:
         location = self.path if self._pattern else '(nothing)'
         return f'<manager: {cls} (attrs: {attrs}) {mode} sync to {location}>'
 
-    @property
+    @cached_property
     def path(self) -> Optional[Path]:
-        return self._get_path()
-
-    @cached(cache={})
-    @prevent_recursion
-    def _get_path(self) -> Optional[Path]:
         if not self._pattern:
             return None
 
@@ -89,7 +87,7 @@ class InstanceManager:
     def data(self) -> Dict:
         return self._get_data()
 
-    def _get_data(self, include_default_values=None) -> Dict:
+    def _get_data(self, include_default_values: Trilean = None) -> Dict:
         kind = "nested object" if self._root_instance else "object"
         log.debug(f'Preserializing {kind} to data: {self._instance!r}')
         if include_default_values is None:
@@ -257,7 +255,7 @@ class InstanceManager:
         return Missing
 
     @prevent_recursion
-    def save(self, include_default_values=None) -> None:
+    def save(self, include_default_values: Trilean = None) -> None:
         log.info(f'Saving data for object: {self._instance}')
 
         if self._root_instance:
