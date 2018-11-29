@@ -13,8 +13,10 @@ def sync(
     """Decorator to synchronize a data class to the specified path."""
 
     def decorator(cls):
+
+
         return create_model(
-            cls, pattern=pattern, attrs=attrs, manual=manual, defaults=defaults
-        )
+                cls, pattern=pattern, attrs=attrs, manual=manual, defaults=defaults
+            )
 
     return decorator

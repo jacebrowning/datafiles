@@ -196,6 +196,11 @@ class InstanceManager:
         elif first_load:
             return
 
+        if not hasattr(value, 'datafile'):
+            log.critical("TODO: datafile should already be set")
+            from .models import Model
+            value.datafile = Model._get_datafile(value)
+
         manager2 = value.datafile
         for name2, converter2 in manager2.attrs.items():
             _value2 = data2.get(  # type: ignore

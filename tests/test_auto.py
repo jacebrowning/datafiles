@@ -50,6 +50,9 @@ class NestedSample:
     score: float = 3.4
 
 
+# TODO: Use class from samples
+
+
 @sync('../tmp/sample.yml')
 @dataclass
 class SampleWithNesting:
@@ -133,6 +136,7 @@ def describe_automatic_save():
 
 def describe_automatic_load_with_nesting():
     def with_getattr(write, expect):
+        show("Initializing instance")
         sample = SampleWithNesting(1)
 
         show("Modifying nested file")
@@ -151,7 +155,17 @@ def describe_automatic_load_with_nesting():
 
 def describe_automatic_save_with_nesting():
     def with_setattr(expect, read, dedent):
+        show("Initializing instance")
         sample = SampleWithNesting(2)
+
+        show("Checking instance IDs")
+        expect(id(sample.datafile._instance)) == id(sample)
+        expect(id(sample.datafile._instance.nested)) == id(sample.nested)
+        expect(id(sample.nested.datafile._instance)) == id(sample.nested)
+        expect(id(sample.nested.datafile._root_instance)) == id(sample)
+        expect(id(sample.nested.datafile._root_instance.nested)) == id(
+            sample.nested
+        )
 
         show("Modifying nested object")
         sample.nested.name = 'd'

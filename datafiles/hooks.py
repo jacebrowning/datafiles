@@ -1,10 +1,12 @@
 from contextlib import contextmanager, suppress
 from functools import wraps
+import threading
 
 import log
 
 
 ENABLED = True
+# HIDE = True
 
 LOAD_BEFORE_METHODS = ['__getattribute__', '__getitem__', '__iter__']
 
@@ -25,6 +27,8 @@ SAVE_AFTER_METHODS = [
 ]
 
 FLAG = '_patched'
+
+lock = threading.RLock()
 
 
 def patch(instance):
@@ -47,10 +51,13 @@ def patch(instance):
 
 @contextmanager
 def disabled():
+    # with lock:
     global ENABLED
     ENABLED = False
+    log.e(ENABLED)
     yield
     ENABLED = True
+    log.e(ENABLED)
 
 
 def load_before(method):
@@ -64,7 +71,7 @@ def load_before(method):
 
     @wraps(method)
     def wrapped(self, *args, **kwargs):
-        __tracebackhide__ = True  # pylint: disable=unused-variable
+        # __tracebackhide__ = True  # pylint: disable=unused-variable
 
         if ENABLED and external_method_call(method.__name__, args):
             datafile = object.__getattribute__(self, 'datafile')
@@ -97,9 +104,10 @@ def save_after(method):
 
     @wraps(method)
     def wrapped(self, *args, **kwargs):
-        __tracebackhide__ = True  # pylint: disable=unused-variable
+        #__tracebackhide__ = True  # pylint: disable=unused-variable
 
         if ENABLED and external_method_call(method.__name__, args):
+            log.c(ENABLED)
             datafile = object.__getattribute__(self, 'datafile')
             if datafile.exists and datafile.modified:
                 log.debug(f"Loading modified datafile before '{name}' call")

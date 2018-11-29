@@ -4,7 +4,6 @@ import dataclasses
 from typing import Dict, Optional
 
 import log
-from cachetools import cached
 from classproperties import classproperty
 
 from . import hooks
@@ -16,6 +15,7 @@ from .managers import InstanceManager, ModelManager
 class ModelMeta:
     datafile_pattern: Optional[str] = None
     datafile_attrs: Optional[Dict[str, Converter]] = None
+    # TODO: add more types
 
 
 class Model:
@@ -23,15 +23,14 @@ class Model:
     Meta: ModelMeta
 
     def __post_init__(self):
+        log.debug(f'Initializing {self.__class__} instance')
+
+        self.datafile = self._get_datafile()
+
         path = self.datafile.path
         exists = self.datafile.exists
-        nested = bool(self.datafile._root_instance)
-        automatic = not self.datafile.manual
 
-        if nested:
-            log.debug(f'Initializing nested {self.__class__} instance')
-        else:
-            log.debug(f'Initializing {self.__class__} instance')
+        if not self.datafile._root_instance:
             log.debug(f'Datafile path: {path}')
             log.debug(f'Datafile exists: {exists}')
 
@@ -40,26 +39,18 @@ class Model:
             elif path:
                 self.datafile.save()
 
-        if automatic:
+        if not self.datafile.manual:
             hooks.patch(self)
 
-        if nested:
-            log.debug(f'Initialized nested {self.__class__} instance')
-        else:
-            log.debug(f'Initialized {self.__class__} instance')
+        log.debug(f'Initialized {self.__class__} instance')
 
     @classproperty
     def datafiles(cls) -> ModelManager:
         return ModelManager(cls)
 
-    @property
-    def datafile(self) -> InstanceManager:
-        return self._get_datafile()
-
-    @cached(cache={}, key=id)
-    def _get_datafile(self) -> InstanceManager:
+    def _get_datafile(self):
         # TODO: Maybe these attributes should be enforced?
-        m = getattr(self, 'Meta', None)
+        m = getattr(self.__class__, 'Meta', None)
         pattern = getattr(m, 'datafile_pattern', None)
         attrs = getattr(m, 'datafile_attrs', None)
         manual = getattr(m, 'datafile_manual', False)
@@ -68,6 +59,7 @@ class Model:
 
         if attrs is None:
             attrs = {}
+            log.debug(f'Mapping attributes for {self.__class__} instance')
             for field in dataclasses.fields(self):
                 self_name = f'self.{field.name}'
                 if pattern is None or self_name not in pattern:
@@ -104,16 +96,19 @@ def create_model(
 
     # Patch datafile
 
-    cls.datafile = property(Model._get_datafile)
+    # TODO: Set datafile directly
+    if hasattr(cls, '_get_datafile'):
+        return cls
+    cls._get_datafile = Model._get_datafile
 
     # Patch __init__
 
     init = cls.__init__
 
     def modified_init(self, *args, **kwargs):
-        with hooks.disabled():
-            init(self, *args, **kwargs)
-            Model.__post_init__(self)
+        # with hooks.disabled():
+        init(self, *args, **kwargs)
+        Model.__post_init__(self)
 
     cls.__init__ = modified_init
     cls.__init__.__doc__ = init.__doc__
