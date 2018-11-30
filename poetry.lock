@@ -103,14 +103,6 @@ python-versions = "*"
 version = "1.5.1"
 
 [[package]]
-category = "main"
-description = "Extensible memoizing collections and decorators"
-name = "cachetools"
-optional = false
-python-versions = "*"
-version = "3.0.0"
-
-[[package]]
 category = "dev"
 description = "Python package for providing Mozilla's CA Bundle."
 name = "certifi"
@@ -899,7 +891,7 @@ python-versions = "*"
 version = "1.10.11"
 
 [metadata]
-content-hash = "980e475a5c564aaf4aebc14df7cf00161fce35484a67a6b66a289bde94a23684"
+content-hash = "da9c86f9f67d46cadd8a4f777ce3f6aa69a1683c52f6b06e7d17b3f67815a51f"
 python-versions = "^3.7"
 
 [metadata.hashes]
@@ -914,7 +906,6 @@ backcall = ["38ecd85be2c1e78f77fd91700c76e14667dc21e2713b63876c0eb901196e01e4", 
 black = ["817243426042db1d36617910df579a54f1afd659adb96fc5032fcf4b36209739", "e030a9a28f542debc08acceb273f228ac422798e5215ba2a791a6ddeaaca22a5"]
 bleach = ["48d39675b80a75f6d1c3bdbffec791cf0bbbab665cf01e20da701c77de278718", "73d26f018af5d5adcdabf5c1c974add4361a9c76af215fe32fdec8a6fc5fb9b9"]
 cached-property = ["3a026f1a54135677e7da5ce819b0c690f156f37976f3e30c5430740725203d7f", "9217a59f14a5682da7c4b8829deadbfc194ac22e9908ccf7c8820234e80a1504"]
-cachetools = ["0a258d82933a1dd18cb540aca4ac5d5690731e24d1239a08577b814998f49785", "4621965b0d9d4c82a79a29edbad19946f5e7702df4afae7d1ed2df951559a8cc"]
 certifi = ["339dc09518b07e2fa7eda5450740925974815557727d6bd35d319c1524a04a4c", "6d58c986d22b038c8c0df30d639f23a3e6d172a05c3583e766f4c0b785c0986a"]
 chardet = ["84ab92ed1c4d4f16916e05906b6b75a6c0fb5db821cc65e70cbd64a3e2a5eaae", "fc323ffcaeaed0e0a02bf4d117757b98aed530d9ed4531e3e15460124c106691"]
 classproperties = ["97d627d11df056838a9426ff15be71a5a365bca456afba8122740c39c527d5b4"]

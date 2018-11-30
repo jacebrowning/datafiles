@@ -1,10 +1,10 @@
 # pylint: disable=no-self-argument,protected-access,attribute-defined-outside-init
 
 import dataclasses
+from dataclasses import dataclass
 from typing import Dict, Optional
 
 import log
-from cachetools import cached
 from classproperties import classproperty
 
 from .converters import Converter, map_type
@@ -12,10 +12,15 @@ from .hooks import patch_methods
 from .managers import InstanceManager, ModelManager
 
 
-@dataclasses.dataclass
+@dataclass
 class ModelMeta:
-    datafile_pattern: Optional[str] = None
     datafile_attrs: Optional[Dict[str, Converter]] = None
+    datafile_pattern: Optional[str] = None
+
+    datafile_manual: bool = False
+    datafile_defaults: bool = False
+
+    datafile_root: Optional[InstanceManager] = None
 
 
 class Model:
@@ -23,12 +28,16 @@ class Model:
     Meta: ModelMeta
 
     def __post_init__(self):
+        log.debug(f'Initializing {self.__class__} instance')
+
+
+        self.datafile = get_datafile(self)
+
         path = self.datafile.path
         exists = self.datafile.exists
-        nested = bool(self.datafile._root_instance)
         automatic = not self.datafile.manual
 
-        if nested:
+        if self.datafile.nested:
             log.debug(f'Initializing nested {self.__class__} instance')
         else:
             log.debug(f'Initializing {self.__class__} instance')
@@ -43,7 +52,7 @@ class Model:
         if automatic:
             patch_methods(self)
 
-        if nested:
+        if self.datafile.nested:
             log.debug(f'Initialized nested {self.__class__} instance')
         else:
             log.debug(f'Initialized {self.__class__} instance')
@@ -52,40 +61,39 @@ class Model:
     def datafiles(cls) -> ModelManager:
         return ModelManager(cls)
 
-    @property
-    def datafile(self) -> InstanceManager:
-        return self._get_datafile()
 
-    @cached(cache={}, key=id)
-    def _get_datafile(self) -> InstanceManager:
-        # TODO: Maybe these attributes should be enforced?
-        m = getattr(self, 'Meta', None)
-        pattern = getattr(m, 'datafile_pattern', None)
-        attrs = getattr(m, 'datafile_attrs', None)
-        manual = getattr(m, 'datafile_manual', False)
-        defaults = getattr(m, 'datafile_defaults', False)
-        root = getattr(m, 'datafile_root', None)
+def get_datafile(obj, root=None) -> InstanceManager:
+    m = getattr(obj, 'Meta', None)
+    pattern = getattr(m, 'datafile_pattern', None)
+    attrs = getattr(m, 'datafile_attrs', None)
+    manual = getattr(m, 'datafile_manual', False)
+    defaults = getattr(m, 'datafile_defaults', False)
 
-        if attrs is None:
-            attrs = {}
-            for field in dataclasses.fields(self):
-                self_name = f'self.{field.name}'
-                if pattern is None or self_name not in pattern:
-                    attrs[field.name] = map_type(
-                        field.type,
-                        create_model=create_model,
-                        manual=manual,
-                        defaults=defaults,
-                        root=self,
-                    )
+    if attrs is None:
+        attrs = {}
+        log.debug(f'Mapping attributes for {obj.__class__} instance')
+        for field in dataclasses.fields(obj):
+            self_name = f'self.{field.name}'
+            if pattern is None or self_name not in pattern:
+                attrs[field.name] = map_type(
+                    field.type,
+                    create_model=create_model,
+                    manual=manual,
+                    defaults=defaults,
+                )
 
-        return InstanceManager(
-            self, pattern, attrs, manual=manual, defaults=defaults, root=root
-        )
+    return InstanceManager(
+        self,
+        attrs=attrs,
+        pattern=pattern,
+        manual=manual,
+        defaults=defaults,
+        root=root,
+    )
 
 
 def create_model(
-    cls, *, pattern=None, attrs=None, manual=False, defaults=False, root=None
+    cls, *, attrs=None, pattern=None, manual=False, defaults=False
 ):
     """Patch datafile attributes on to an existing dataclass."""
 
@@ -95,16 +103,16 @@ def create_model(
     # Patch Meta
 
     m = getattr(cls, 'Meta', ModelMeta())
-    m.datafile_pattern = getattr(m, 'datafile_pattern', None) or pattern
-    m.datafile_attrs = getattr(m, 'datafile_attrs', None) or attrs
-    m.datafile_manual = getattr(m, 'datafile_manual', manual)
-    m.datafile_defaults = getattr(m, 'datafile_defaults', defaults)
-    m.datafile_root = root
+    if attrs is not None:
+        m.datafile_attrs = attrs
+    if pattern is not None:
+        m.datafile_pattern = pattern
+    if manual is not None:
+        m.datafile_manual = manual
+    if defaults is not None:
+        m.datafile_defaults = defaults
     cls.Meta = m
 
-    # Patch datafile
-
-    cls.datafile = property(Model._get_datafile)
 
     # Patch __init__
 

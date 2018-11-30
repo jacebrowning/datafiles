@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import dataclasses
 import inspect
 from pathlib import Path
@@ -26,19 +28,19 @@ class InstanceManager:
     def __init__(
         self,
         instance: Any,
-        pattern: Optional[str],
-        attrs: Dict,
         *,
-        manual: bool = False,
-        defaults: bool = False,
-        root=None,
+        attrs: Dict,
+        pattern: Optional[str],
+        manual: bool,
+        defaults: bool,
+        root: Any,
     ) -> None:
         self._instance = instance
-        self._pattern = pattern
         self.attrs = attrs
+        self._pattern = pattern
         self.manual = manual
         self.defaults = defaults
-        self._root_instance = root
+        self._root = root
         self._last_load = 0.0
         self._last_data: Dict = {}
 
@@ -48,6 +50,14 @@ class InstanceManager:
         attrs = ', '.join(self.attrs.keys())
         location = self.path if self._pattern else '(nothing)'
         return f'<manager: {cls} (attrs: {attrs}) {mode} sync to {location}>'
+
+    @property
+    def nested(self) -> bool:
+        return bool(self._root)
+
+    @cached_property
+    def _kind(self) -> str:
+        return "nested object" if self.nested else "object"
 
     @cached_property
     def path(self) -> Optional[Path]:
@@ -88,8 +98,7 @@ class InstanceManager:
         return self._get_data()
 
     def _get_data(self, include_default_values: Trilean = None) -> Dict:
-        kind = "nested object" if self._root_instance else "object"
-        log.debug(f'Preserializing {kind} to data: {self._instance!r}')
+        log.debug(f'Preserializing {self._kind} to data: {self._instance!r}')
         if include_default_values is None:
             include_default_values = self.defaults
 
@@ -131,7 +140,7 @@ class InstanceManager:
                 )
                 data[name] = converter.to_preserialization_data(value)
 
-        log.debug(f'Preserialized {kind} data: {data}')
+        log.debug(f'Preserialized {self._kind} data: {data}')
         return data
 
     @property
@@ -149,10 +158,10 @@ class InstanceManager:
     def load(self, *, first_load=False) -> None:
         log.info(f'Loading values for {self._instance.__class__} instance')
 
-        if self._root_instance:
-            log.debug("Calling 'load' for root object")
+        if self._root:
+            log.debug("Calling 'load' for root model manager")
             assert not self.path
-            self._root_instance.datafile.load()
+            self._root.datafile.load()
             return
 
         if not self.path:
@@ -258,10 +267,10 @@ class InstanceManager:
     def save(self, include_default_values: Trilean = None) -> None:
         log.info(f'Saving data for object: {self._instance}')
 
-        if self._root_instance:
-            log.debug("Calling 'save' for root object")
+        if self._root:
+            log.debug("Calling 'save' for root model manager")
             assert not self.path
-            self._root_instance.datafile.save()
+            self._root.datafile.save()
             return
 
         if not self.path:
