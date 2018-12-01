@@ -1,13 +1,10 @@
-from contextlib import suppress
+from contextlib import contextmanager, suppress
 from functools import wraps
 
 import log
 
 
-ENABLED = True
-
 LOAD_BEFORE_METHODS = ['__getattribute__', '__getitem__', '__iter__']
-
 SAVE_AFTER_METHODS = [
     '__setattr__',
     '__setitem__',
@@ -25,6 +22,7 @@ SAVE_AFTER_METHODS = [
 ]
 
 FLAG = '_patched'
+ENABLED = True
 
 
 def enable(instance):
@@ -51,6 +49,14 @@ def enable(instance):
     setattr(cls, FLAG, True)
 
 
+@contextmanager
+def disabled():
+    global ENABLED
+    ENABLED = False
+    yield
+    ENABLED = True
+
+
 def load_before(method):
     """Decorate methods that should load before call."""
     name = method.__name__
@@ -60,7 +66,6 @@ def load_before(method):
     def wrapped(self, *args, **kwargs):
         __tracebackhide__ = True  # pylint: disable=unused-variable
 
-        global ENABLED
         if ENABLED and external_method_call(method.__name__, args):
             datafile = object.__getattribute__(self, 'datafile')
             if datafile.manual:
@@ -68,14 +73,13 @@ def load_before(method):
             elif datafile.exists and datafile.modified:
                 log.debug(f"Loading automatically before '{name}' call")
 
-                ENABLED = False
-                datafile.load()
-                datafile.modified = False
-                # TODO: Implement this?
-                # if mapper.auto_save_after_load:
-                #     mapper.save()
-                #     mapper.modified = False
-                ENABLED = True
+                with disabled():
+                    datafile.load()
+                    datafile.modified = False
+                    # TODO: Implement this?
+                    # if mapper.auto_save_after_load:
+                    #     mapper.save()
+                    #     mapper.modified = False
 
         return method(self, *args, **kwargs)
 

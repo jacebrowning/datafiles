@@ -25,29 +25,29 @@ class Model:
     Meta: ModelMeta
 
     def __post_init__(self):
-        hooks.ENABLED = False
         log.debug(f'Initializing {self.__class__} instance')
 
-        self.datafile = get_datafile(self)
+        with hooks.disabled():
 
-        path = self.datafile.path
-        exists = self.datafile.exists
-        automatic = not self.datafile.manual
+            self.datafile = get_datafile(self)
 
-        if path:
-            log.debug(f'Datafile path: {path}')
-            log.debug(f'Datafile exists: {exists}')
+            path = self.datafile.path
+            exists = self.datafile.exists
+            automatic = not self.datafile.manual
 
-            if exists:
-                self.datafile.load(first_load=True)
-            elif path:
-                self.datafile.save()
+            if path:
+                log.debug(f'Datafile path: {path}')
+                log.debug(f'Datafile exists: {exists}')
 
-            if automatic:
-                hooks.enable(self)
+                if exists:
+                    self.datafile.load(first_load=True)
+                elif path:
+                    self.datafile.save()
+
+                if automatic:
+                    hooks.enable(self)
 
         log.debug(f'Initialized {self.__class__} instance')
-        hooks.ENABLED = True
 
     @classproperty
     def datafiles(cls) -> ModelManager:
@@ -55,7 +55,6 @@ class Model:
 
 
 def get_datafile(obj) -> InstanceManager:
-    hooks.ENABLED = False
     log.debug(f"Getting 'datafile' for {obj.__class__} instance")
 
     m = getattr(obj, 'Meta', None)
@@ -104,12 +103,8 @@ def create_model(cls, *, attrs=None, pattern=None, manual=None, defaults=None):
     init = cls.__init__
 
     def modified_init(self, *args, **kwargs):
-        # backup = self.datafile.manual
-        # self.datafile.manual = True
-        hooks.ENABLED = False
-        init(self, *args, **kwargs)
-        hooks.ENABLED = True
-        # self.datafile.manual = backup
+        with hooks.disabled():
+            init(self, *args, **kwargs)
         Model.__post_init__(self)
 
     cls.__init__ = modified_init
