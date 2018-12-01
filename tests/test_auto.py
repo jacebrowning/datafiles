@@ -54,7 +54,6 @@ class SampleWithNesting:
 
 
 def describe_automatic_load():
-    @pytest.mark.skip
     def with_getattribute(write, expect):
         sample = Sample()
 
@@ -67,10 +66,10 @@ def describe_automatic_load():
 
         expect(sample.item) == 'b'
 
-    @pytest.mark.skip
-    def with_getitem(write, expect):
+    def with_getitem(logbreak, write, expect):
         sample = Sample()
 
+        logbreak()
         write(
             'tmp/sample.yml',
             """
@@ -80,7 +79,6 @@ def describe_automatic_load():
 
         expect(sample[0]) == 2
 
-    @pytest.mark.skip
     def with_iter(write, expect):
         sample = SampleWithIter()
 
@@ -95,7 +93,6 @@ def describe_automatic_load():
 
 
 def describe_automatic_save():
-    @pytest.mark.skip
     def with_setattr(expect, read, dedent):
         sample = Sample()
 
@@ -107,7 +104,6 @@ def describe_automatic_save():
             """
         )
 
-    @pytest.mark.skip
     def with_setitem(expect, read, dedent):
         sample = Sample()
 
@@ -120,7 +116,6 @@ def describe_automatic_save():
             """
         )
 
-    @pytest.mark.skip
     def with_delitem(expect, read, dedent):
         sample = Sample()
 
@@ -170,7 +165,6 @@ def describe_automatic_save_with_nesting():
 
 
 def describe_automatic_load_before_save():
-    @pytest.mark.skip
     def with_setattr(write, expect, dedent):
         sample = Sample()
 

@@ -4,11 +4,10 @@ import dataclasses
 from typing import Dict, Optional
 
 import log
-from cachetools import cached
 from classproperties import classproperty
 
+from . import hooks
 from .converters import Converter, map_type
-from .hooks import patch_methods
 from .managers import InstanceManager, ModelManager
 
 
@@ -26,12 +25,14 @@ class Model:
     Meta: ModelMeta
 
     def __post_init__(self):
+        hooks.ENABLED = False
         log.debug(f'Initializing {self.__class__} instance')
+
+        self.datafile = get_datafile(self)
 
         path = self.datafile.path
         exists = self.datafile.exists
         automatic = not self.datafile.manual
-        log.c(f'manual={self.datafile.manual}')
 
         if path:
             log.debug(f'Datafile path: {path}')
@@ -43,43 +44,39 @@ class Model:
                 self.datafile.save()
 
             if automatic:
-                patch_methods(self, self.datafile)
+                hooks.enable(self)
 
         log.debug(f'Initialized {self.__class__} instance')
+        hooks.ENABLED = True
 
     @classproperty
     def datafiles(cls) -> ModelManager:
         return ModelManager(cls)
 
-    @property
-    def datafile(self) -> InstanceManager:
-        return self._get_datafile()
 
-    @cached(cache={}, key=id)
-    def _get_datafile(self) -> InstanceManager:
-        m = getattr(self, 'Meta', None)
-        pattern = getattr(m, 'datafile_pattern', None)
-        attrs = getattr(m, 'datafile_attrs', None)
-        manual = getattr(m, 'datafile_manual', False)
-        defaults = getattr(m, 'datafile_defaults', False)
+def get_datafile(obj) -> InstanceManager:
+    hooks.ENABLED = False
+    log.debug(f"Getting 'datafile' for {obj.__class__} instance")
 
-        if attrs is None:
-            attrs = {}
-            log.debug(f'Mapping attributes for {self.__class__} instance')
-            for field in dataclasses.fields(self):
-                self_name = f'self.{field.name}'
-                if pattern is None or self_name not in pattern:
-                    attrs[field.name] = map_type(
-                        field.type, create_model=create_model, manual=True
-                    )
+    m = getattr(obj, 'Meta', None)
+    pattern = getattr(m, 'datafile_pattern', None)
+    attrs = getattr(m, 'datafile_attrs', None)
+    manual = getattr(m, 'datafile_manual', False)
+    defaults = getattr(m, 'datafile_defaults', False)
 
-        return InstanceManager(
-            self,
-            attrs=attrs,
-            pattern=pattern,
-            manual=manual,
-            defaults=defaults,
-        )
+    if attrs is None:
+        attrs = {}
+        log.debug(f'Mapping attributes for {obj.__class__} instance')
+        for field in dataclasses.fields(obj):
+            self_name = f'self.{field.name}'
+            if pattern is None or self_name not in pattern:
+                attrs[field.name] = map_type(
+                    field.type, create_model=create_model, manual=True
+                )
+
+    return InstanceManager(
+        obj, attrs=attrs, pattern=pattern, manual=manual, defaults=defaults
+    )
 
 
 def create_model(cls, *, attrs=None, pattern=None, manual=None, defaults=None):
@@ -102,19 +99,17 @@ def create_model(cls, *, attrs=None, pattern=None, manual=None, defaults=None):
         m.datafile_defaults = defaults
     cls.Meta = m
 
-    # Patch datafile
-
-    cls.datafile = property(Model._get_datafile)
-
     # Patch __init__
 
     init = cls.__init__
 
     def modified_init(self, *args, **kwargs):
-        backup = self.datafile.manual
-        self.datafile.manual = True
+        # backup = self.datafile.manual
+        # self.datafile.manual = True
+        hooks.ENABLED = False
         init(self, *args, **kwargs)
-        self.datafile.manual = backup
+        hooks.ENABLED = True
+        # self.datafile.manual = backup
         Model.__post_init__(self)
 
     cls.__init__ = modified_init
