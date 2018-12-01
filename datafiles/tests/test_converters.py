@@ -30,7 +30,7 @@ def describe_map_type():
 
     def it_handles_list_annotations_of_dataclasses(expect):
         converter = converters.map_type(
-            List[MyCustomDataclass], create_model=create_model
+            List[MyCustomDataclass], create_model=create_model, manual=True
         )
         expect(converter.__name__) == 'MyCustomDataclassList'
         expect(converter.ELEMENT_CONVERTER) == MyCustomDataclass
@@ -96,11 +96,12 @@ def describe_converter():
         with expect.raises(ValueError, message):
             converters.Integer.to_python_value('a')
 
-    def to_python_value_when_list_of_dataclasses(expect):
+    def to_python_value_when_list_of_dataclasses(logbreak, expect):
         converter = converters.map_type(
-            List[MyCustomDataclass], create_model=create_model
+            List[MyCustomDataclass], create_model=create_model, manual=True
         )
 
+        logbreak()
         data = [{'foobar': 1}, {'foobar': 2}, {'foobar': 3}]
         value = [
             MyCustomDataclass(1),
@@ -134,11 +135,12 @@ def describe_converter():
         with expect.raises(ValueError, message):
             converters.Integer.to_preserialization_data('a')
 
-    def to_preserialization_data_when_list_of_dataclasses(expect):
+    def to_preserialization_data_when_list_of_dataclasses(logbreak, expect):
         converter = converters.map_type(
-            List[MyCustomDataclass], create_model=create_model
+            List[MyCustomDataclass], create_model=create_model, manual=True
         )
 
+        logbreak()
         value = [
             MyCustomDataclass(1),
             MyCustomDataclass(2),

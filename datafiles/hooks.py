@@ -22,7 +22,7 @@ SAVE_AFTER_METHODS = [
 ]
 
 
-def patch_methods(instance):
+def patch_methods(instance, datafile):
     """Hook into methods that get or set attributes."""
     cls = instance.__class__
     log.debug(f'Patching methods on {cls}')
@@ -33,7 +33,7 @@ def patch_methods(instance):
         except AttributeError:
             log.debug(f'No method: {name}')
         else:
-            modified_method = load_before(method)
+            modified_method = load_before(method, datafile)
             setattr(cls, name, modified_method)
 
     for name in SAVE_AFTER_METHODS:
@@ -42,11 +42,11 @@ def patch_methods(instance):
         except AttributeError:
             log.debug(f'No method: {name}')
         else:
-            modified_method = save_after(method)
+            modified_method = save_after(method, datafile)
             setattr(cls, name, modified_method)
 
 
-def load_before(method):
+def load_before(method, datafile):
     """Decorate methods that should load before call."""
     name = method.__name__
 
@@ -61,7 +61,6 @@ def load_before(method):
         __tracebackhide__ = True  # pylint: disable=unused-variable
 
         if external_method_call(method.__name__, args):
-            datafile = object.__getattribute__(self, 'datafile')
             if datafile.manual:
                 log.debug('Automatic loading is disabled')
             elif datafile.exists and datafile.modified:
@@ -80,7 +79,7 @@ def load_before(method):
     return wrapped
 
 
-def save_after(method):
+def save_after(method, datafile):
     """Decorate methods that should save after call."""
     name = method.__name__
 
@@ -95,7 +94,6 @@ def save_after(method):
         __tracebackhide__ = True  # pylint: disable=unused-variable
 
         if external_method_call(method.__name__, args):
-            datafile = object.__getattribute__(self, 'datafile')
             if datafile.exists and datafile.modified:
                 log.debug(f"Loading modified datafile before '{name}' call")
                 datafile.load()
@@ -103,7 +101,6 @@ def save_after(method):
         result = method(self, *args, **kwargs)
 
         if external_method_call(method.__name__, args):
-            datafile = object.__getattribute__(self, 'datafile')
             if datafile.manual:
                 log.debug(f'Automatic saving is disabled')
             else:

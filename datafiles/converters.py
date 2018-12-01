@@ -176,6 +176,8 @@ class List:
 
 def map_type(cls, **kwargs):
     """Infer the converter type from a dataclass, type, or annotation."""
+    log.debug(f'Mapping {cls} to converter')
+
     if is_dataclass(cls):
         create_model = kwargs.pop('create_model')
         return create_model(cls, **kwargs)
@@ -186,7 +188,8 @@ def map_type(cls, **kwargs):
         if cls.__origin__ == list:
             try:
                 converter = map_type(cls.__args__[0], **kwargs)
-            except TypeError:
+            except TypeError as exc:
+                log.debug(exc)
                 exc = TypeError(f"Type is required with 'List' annotation")
                 raise exc from None
             else:

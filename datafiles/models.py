@@ -40,8 +40,8 @@ class Model:
             elif path:
                 self.datafile.save()
 
-        if automatic:
-            patch_methods(self)
+            if automatic:
+                patch_methods(self, self.datafile)
 
         if nested:
             log.debug(f'Initialized nested {self.__class__} instance')
@@ -64,30 +64,28 @@ class Model:
         attrs = getattr(m, 'datafile_attrs', None)
         manual = getattr(m, 'datafile_manual', False)
         defaults = getattr(m, 'datafile_defaults', False)
-        root = getattr(m, 'datafile_root', None)
 
         if attrs is None:
             attrs = {}
+            log.debug(f'Mapping attributes for {self.__class__} instance')
             for field in dataclasses.fields(self):
                 self_name = f'self.{field.name}'
                 if pattern is None or self_name not in pattern:
                     attrs[field.name] = map_type(
                         field.type,
                         create_model=create_model,
-                        manual=manual,
+                        manual=True,
                         defaults=defaults,
-                        root=self,
                     )
 
         return InstanceManager(
-            self, pattern, attrs, manual=manual, defaults=defaults, root=root
+            self, pattern, attrs, manual=manual, defaults=defaults
         )
 
 
-def create_model(
-    cls, *, pattern=None, attrs=None, manual=False, defaults=False, root=None
-):
+def create_model(cls, *, attrs=None, pattern=None, manual=None, defaults=None):
     """Patch datafile attributes on to an existing dataclass."""
+    log.debug(f'Converting {cls} to a datafile model')
 
     if not dataclasses.is_dataclass(cls):
         raise ValueError(f'{cls} must be a dataclass')
@@ -99,7 +97,6 @@ def create_model(
     m.datafile_attrs = getattr(m, 'datafile_attrs', None) or attrs
     m.datafile_manual = getattr(m, 'datafile_manual', manual)
     m.datafile_defaults = getattr(m, 'datafile_defaults', defaults)
-    m.datafile_root = root
     cls.Meta = m
 
     # Patch datafile
