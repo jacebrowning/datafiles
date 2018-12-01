@@ -1,5 +1,5 @@
-import shutil
 from pathlib import Path
+from shutil import get_terminal_size, rmtree
 
 import log
 import pytest
@@ -24,8 +24,18 @@ def pytest_configure(config):
 def create_tmp():
     path = Path('tmp')
     if path.exists():
-        shutil.rmtree(path)
+        rmtree(path)
     path.mkdir(exist_ok=True)
+
+
+@pytest.fixture
+def logbreak():
+    def _():
+        width = get_terminal_size().columns - 30
+        line = '-' * width
+        log.info(line)
+
+    return _
 
 
 @pytest.fixture(scope='session')

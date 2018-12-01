@@ -26,28 +26,21 @@ class InstanceManager:
     def __init__(
         self,
         instance: Any,
-        pattern: Optional[str],
-        attrs: Dict,
         *,
-        manual: bool = False,
-        defaults: bool = False,
-        root=None,
+        attrs: Dict,
+        pattern: Optional[str],
+        manual: bool,
+        defaults: bool,
     ) -> None:
+        assert manual is not None
+        assert defaults is not None
         self._instance = instance
-        self._pattern = pattern
         self.attrs = attrs
+        self._pattern = pattern
         self.manual = manual
         self.defaults = defaults
-        self._root_instance = root
         self._last_load = 0.0
         self._last_data: Dict = {}
-
-    def __repr__(self):
-        cls = self._instance.__class__.__name__
-        mode = 'manually' if self.manual else 'automatically'
-        attrs = ', '.join(self.attrs.keys())
-        location = self.path if self._pattern else '(nothing)'
-        return f'<manager: {cls} (attrs: {attrs}) {mode} sync to {location}>'
 
     @cached_property
     def path(self) -> Optional[Path]:
@@ -88,8 +81,7 @@ class InstanceManager:
         return self._get_data()
 
     def _get_data(self, include_default_values: Trilean = None) -> Dict:
-        kind = "nested object" if self._root_instance else "object"
-        log.debug(f'Preserializing {kind} to data: {self._instance!r}')
+        log.debug(f'Preserializing object to data: {self._instance!r}')
         if include_default_values is None:
             include_default_values = self.defaults
 
@@ -131,7 +123,7 @@ class InstanceManager:
                 )
                 data[name] = converter.to_preserialization_data(value)
 
-        log.debug(f'Preserialized {kind} data: {data}')
+        log.debug(f'Preserialized object data: {data}')
         return data
 
     @property
@@ -148,12 +140,6 @@ class InstanceManager:
     @prevent_recursion
     def load(self, *, first_load=False) -> None:
         log.info(f'Loading values for {self._instance.__class__} instance')
-
-        if self._root_instance:
-            log.debug("Calling 'load' for root object")
-            assert not self.path
-            self._root_instance.datafile.load()
-            return
 
         if not self.path:
             raise RuntimeError("'pattern' must be set to load the model")
@@ -194,7 +180,14 @@ class InstanceManager:
         elif first_load:
             return
 
-        manager2 = value.datafile
+        try:
+            manager2 = value.datafile
+        except AttributeError:
+            # TODO: Figure out why datafile wasn't set
+            from .models import get_datafile
+
+            manager2 = get_datafile(value)
+
         for name2, converter2 in manager2.attrs.items():
             _value2 = data2.get(  # type: ignore
                 # pylint: disable=protected-access
@@ -257,12 +250,6 @@ class InstanceManager:
     @prevent_recursion
     def save(self, include_default_values: Trilean = None) -> None:
         log.info(f'Saving data for object: {self._instance}')
-
-        if self._root_instance:
-            log.debug("Calling 'save' for root object")
-            assert not self.path
-            self._root_instance.datafile.save()
-            return
 
         if not self.path:
             raise RuntimeError(f"'pattern' must be set to save the model")

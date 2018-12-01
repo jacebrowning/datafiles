@@ -14,7 +14,7 @@ def sync(
 
     def decorator(cls):
         return create_model(
-            cls, pattern=pattern, attrs=attrs, manual=manual, defaults=defaults
+            cls, attrs=attrs, pattern=pattern, manual=manual, defaults=defaults
         )
 
     return decorator

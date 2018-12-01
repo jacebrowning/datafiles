@@ -1,10 +1,10 @@
+from contextlib import contextmanager, suppress
 from functools import wraps
 
 import log
 
 
 LOAD_BEFORE_METHODS = ['__getattribute__', '__getitem__', '__iter__']
-
 SAVE_AFTER_METHODS = [
     '__setattr__',
     '__setitem__',
@@ -21,61 +21,67 @@ SAVE_AFTER_METHODS = [
     'update',
 ]
 
+FLAG = '_patched'
+ENABLED = True
 
-def patch_methods(instance):
-    """Hook into methods that get or set attributes."""
+
+def enable(instance):
+    """Path methods that get or set attributes."""
     cls = instance.__class__
+
+    if getattr(cls, FLAG, False):
+        return
+
     log.debug(f'Patching methods on {cls}')
 
     for name in LOAD_BEFORE_METHODS:
-        try:
+        with suppress(AttributeError):
             method = getattr(cls, name)
-        except AttributeError:
-            log.debug(f'No method: {name}')
-        else:
             modified_method = load_before(method)
             setattr(cls, name, modified_method)
 
     for name in SAVE_AFTER_METHODS:
-        try:
+        with suppress(AttributeError):
             method = getattr(cls, name)
-        except AttributeError:
-            log.debug(f'No method: {name}')
-        else:
             modified_method = save_after(method)
             setattr(cls, name, modified_method)
+
+    setattr(cls, FLAG, True)
+
+
+@contextmanager
+def disabled():
+    global ENABLED
+    ENABLED = False
+    yield
+    ENABLED = True
 
 
 def load_before(method):
     """Decorate methods that should load before call."""
     name = method.__name__
-
-    if getattr(method, '_patched_to_load_before', False):
-        log.debug(f'Already patched method to load before call: {name}')
-        return method
-
     log.debug(f'Patching method to load before call: {name}')
 
     @wraps(method)
     def wrapped(self, *args, **kwargs):
         __tracebackhide__ = True  # pylint: disable=unused-variable
 
-        if external_method_call(method.__name__, args):
+        if ENABLED and external_method_call(method.__name__, args):
             datafile = object.__getattribute__(self, 'datafile')
             if datafile.manual:
                 log.debug('Automatic loading is disabled')
             elif datafile.exists and datafile.modified:
                 log.debug(f"Loading automatically before '{name}' call")
-                datafile.load()
-                datafile.modified = False
-                # TODO: Implement this?
-                # if mapper.auto_save_after_load:
-                #     mapper.save()
-                #     mapper.modified = False
+
+                with disabled():
+                    datafile.load()
+                    datafile.modified = False
+                    # TODO: Implement this?
+                    # if mapper.auto_save_after_load:
+                    #     mapper.save()
+                    #     mapper.modified = False
 
         return method(self, *args, **kwargs)
-
-    setattr(wrapped, '_patched_to_load_before', True)
 
     return wrapped
 
@@ -83,18 +89,13 @@ def load_before(method):
 def save_after(method):
     """Decorate methods that should save after call."""
     name = method.__name__
-
-    if getattr(method, '_patched_to_save_after', False):
-        log.debug(f'Already patched method to save after call: {name}')
-        return method
-
     log.debug(f'Patching method to save after call: {name}')
 
     @wraps(method)
     def wrapped(self, *args, **kwargs):
         __tracebackhide__ = True  # pylint: disable=unused-variable
 
-        if external_method_call(method.__name__, args):
+        if ENABLED and external_method_call(method.__name__, args):
             datafile = object.__getattribute__(self, 'datafile')
             if datafile.exists and datafile.modified:
                 log.debug(f"Loading modified datafile before '{name}' call")
@@ -102,7 +103,7 @@ def save_after(method):
 
         result = method(self, *args, **kwargs)
 
-        if external_method_call(method.__name__, args):
+        if ENABLED and external_method_call(method.__name__, args):
             datafile = object.__getattribute__(self, 'datafile')
             if datafile.manual:
                 log.debug(f'Automatic saving is disabled')
@@ -111,8 +112,6 @@ def save_after(method):
                 datafile.save()
 
         return result
-
-    setattr(wrapped, '_patched_to_save_after', True)
 
     return wrapped
 

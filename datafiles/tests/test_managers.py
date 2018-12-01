@@ -23,7 +23,11 @@ def describe_instance_manager():
     @pytest.fixture
     def manager():
         return managers.InstanceManager(
-            instance=MyModel(foobar=42), pattern=None, attrs={}
+            instance=MyModel(foobar=42),
+            attrs={},
+            pattern=None,
+            manual=False,
+            defaults=False,
         )
 
     def describe_path():
