@@ -180,7 +180,14 @@ class InstanceManager:
         elif first_load:
             return
 
-        manager2 = value.datafile
+        try:
+            manager2 = value.datafile
+        except AttributeError:
+            # TODO: Figure out why datafile wasn't set
+            from .models import get_datafile
+
+            manager2 = get_datafile(value)
+
         for name2, converter2 in manager2.attrs.items():
             _value2 = data2.get(  # type: ignore
                 # pylint: disable=protected-access
