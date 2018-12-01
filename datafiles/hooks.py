@@ -1,3 +1,4 @@
+from contextlib import suppress
 from functools import wraps
 
 import log
@@ -21,6 +22,8 @@ SAVE_AFTER_METHODS = [
     'update',
 ]
 
+FLAG = '_patched'
+
 
 def patch_methods(instance, datafile):
     """Hook into methods that get or set attributes."""
@@ -28,32 +31,24 @@ def patch_methods(instance, datafile):
     log.debug(f'Patching methods on {cls}')
 
     for name in LOAD_BEFORE_METHODS:
-        try:
+        with suppress(AttributeError):
             method = getattr(cls, name)
-        except AttributeError:
-            log.debug(f'No method: {name}')
-        else:
             modified_method = load_before(method, datafile)
             setattr(cls, name, modified_method)
 
     for name in SAVE_AFTER_METHODS:
-        try:
+        with suppress(AttributeError):
             method = getattr(cls, name)
-        except AttributeError:
-            log.debug(f'No method: {name}')
-        else:
             modified_method = save_after(method, datafile)
             setattr(cls, name, modified_method)
 
 
 def load_before(method, datafile):
     """Decorate methods that should load before call."""
-    name = method.__name__
-
-    if getattr(method, '_patched_to_load_before', False):
-        log.debug(f'Already patched method to load before call: {name}')
+    if getattr(method, FLAG, False):
         return method
 
+    name = method.__name__
     log.debug(f'Patching method to load before call: {name}')
 
     @wraps(method)
@@ -74,19 +69,17 @@ def load_before(method, datafile):
 
         return method(self, *args, **kwargs)
 
-    setattr(wrapped, '_patched_to_load_before', True)
+    setattr(wrapped, FLAG, True)
 
     return wrapped
 
 
 def save_after(method, datafile):
     """Decorate methods that should save after call."""
-    name = method.__name__
-
-    if getattr(method, '_patched_to_save_after', False):
-        log.debug(f'Already patched method to save after call: {name}')
+    if getattr(method, FLAG, False):
         return method
 
+    name = method.__name__
     log.debug(f'Patching method to save after call: {name}')
 
     @wraps(method)
@@ -109,7 +102,7 @@ def save_after(method, datafile):
 
         return result
 
-    setattr(wrapped, '_patched_to_save_after', True)
+    setattr(wrapped, FLAG, True)
 
     return wrapped
 
