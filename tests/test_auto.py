@@ -54,7 +54,7 @@ class SampleWithNesting:
 
 
 def describe_automatic_load():
-    def with_getattribute(write, expect):
+    def with_getattribute(logbreak, write, expect):
         sample = Sample()
 
         write(
@@ -63,6 +63,7 @@ def describe_automatic_load():
             item: b
             """,
         )
+        logbreak()
 
         expect(sample.item) == 'b'
 
@@ -149,11 +150,12 @@ def describe_automatic_load_with_nesting():
 
 def describe_automatic_save_with_nesting():
     @pytest.mark.skip
-    def with_setattr(expect, read, dedent):
+    def with_setattr(logbreak, expect, read, dedent):
         sample = SampleWithNesting(2)
 
-        log.info("Modifying nested object")
+        logbreak()
         sample.nested.name = 'd'
+        logbreak()
 
         expect(read('tmp/sample.yml')) == dedent(
             """
