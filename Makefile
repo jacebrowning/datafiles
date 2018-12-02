@@ -42,8 +42,12 @@ endif
 
 .PHONY: test
 test: install
-	poetry run pytest --random $(PYTEST_OPTIONS)
+	poetry run pytest --random
 	poetry run coveragespace jacebrowning/datafiles overall
+
+.PHONY: test-repeat
+test-repeat: install
+	poetry run pytest --count=5 --random --exitfirst
 
 .PHONY: watch
 watch: install
