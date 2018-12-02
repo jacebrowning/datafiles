@@ -27,9 +27,16 @@ pytest-describe = "*"
 pytest-expecter = "*"
 pytest-mock = "*"
 pytest-random = "*"
+pytest-repeat = "*"
 pytest-watch = "*"
 pytest-cov = "*"
 
 coveragespace = "^2.1"
 
 jupyter = "^1.0"
+
+[tool.black]
+
+line-length = 79
+py36 = true
+skip-string-normalization = true

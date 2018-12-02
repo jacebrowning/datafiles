@@ -18,7 +18,7 @@ install:
   - make install
 
 script:
-  - make test
+  - make test-repeat
   - make check
 
 notifications:
