@@ -7,12 +7,12 @@ VIRTUAL_ENV ?= .venv
 
 .PHONY: install
 install: $(VIRTUAL_ENV)/flag .cache
-$(VIRTUAL_ENV)/flag: pyproject.lock
+$(VIRTUAL_ENV)/flag: poetry.lock
 	@ poetry config settings.virtualenvs.in-project true
 	poetry install
 	@ touch $@
 
-pyproject.lock: pyproject.toml
+poetry.lock: pyproject.toml
 	poetry lock
 	@ touch $@
 
