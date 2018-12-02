@@ -23,15 +23,13 @@ pyproject.lock: pyproject.toml
 
 PACKAGES :=  datafiles tests
 
-BLACK_OPTIONS := --line-length=79 --py36 --skip-string-normalization
-
 .PHONY: ci
 ci: format check test
 
 .PHONY: format
 format: install
 	poetry run isort $(PACKAGES) --recursive --apply
-	poetry run black $(PACKAGES) $(BLACK_OPTIONS)
+	poetry run black $(PACKAGES)
 	@ echo
 
 .PHONY: check
@@ -44,7 +42,7 @@ endif
 
 .PHONY: test
 test: install
-	poetry run pytest --random
+	poetry run pytest --random $(PYTEST_OPTIONS)
 	poetry run coveragespace jacebrowning/datafiles overall
 
 .PHONY: watch

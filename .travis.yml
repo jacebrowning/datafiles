@@ -5,6 +5,10 @@ matrix:
       dist: xenial
       sudo: true
 
+env:
+  global:
+    - PYTEST_OPTIONS="--count=5 --exitfirst"
+
 cache:
   pip: true
   directories:

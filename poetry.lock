@@ -116,7 +116,7 @@ description = "Python package for providing Mozilla's CA Bundle."
 name = "certifi"
 optional = false
 python-versions = "*"
-version = "2018.10.15"
+version = "2018.11.29"
 
 [[package]]
 category = "dev"
@@ -233,7 +233,7 @@ description = "IPython: Productive Interactive Computing"
 name = "ipython"
 optional = false
 python-versions = ">=3.5"
-version = "7.1.1"
+version = "7.2.0"
 
 [package.dependencies]
 appnope = "*"
@@ -682,6 +682,17 @@ pytest = ">=2.2.3"
 
 [[package]]
 category = "dev"
+description = "pytest plugin for repeating tests"
+name = "pytest-repeat"
+optional = false
+python-versions = "*"
+version = "0.7.0"
+
+[package.dependencies]
+pytest = ">=2.8.7"
+
+[[package]]
+category = "dev"
 description = "Local continuous test runner with pytest and watchdog."
 name = "pytest-watch"
 optional = false
@@ -899,7 +910,7 @@ python-versions = "*"
 version = "1.10.11"
 
 [metadata]
-content-hash = "980e475a5c564aaf4aebc14df7cf00161fce35484a67a6b66a289bde94a23684"
+content-hash = "acc366b083e41ece6da3fa61f7e2a98ec4b9d315d91098e8f40e73ce7b62c4d1"
 python-versions = "^3.7"
 
 [metadata.hashes]
@@ -915,7 +926,7 @@ black = ["817243426042db1d36617910df579a54f1afd659adb96fc5032fcf4b36209739", "e0
 bleach = ["48d39675b80a75f6d1c3bdbffec791cf0bbbab665cf01e20da701c77de278718", "73d26f018af5d5adcdabf5c1c974add4361a9c76af215fe32fdec8a6fc5fb9b9"]
 cached-property = ["3a026f1a54135677e7da5ce819b0c690f156f37976f3e30c5430740725203d7f", "9217a59f14a5682da7c4b8829deadbfc194ac22e9908ccf7c8820234e80a1504"]
 cachetools = ["0a258d82933a1dd18cb540aca4ac5d5690731e24d1239a08577b814998f49785", "4621965b0d9d4c82a79a29edbad19946f5e7702df4afae7d1ed2df951559a8cc"]
-certifi = ["339dc09518b07e2fa7eda5450740925974815557727d6bd35d319c1524a04a4c", "6d58c986d22b038c8c0df30d639f23a3e6d172a05c3583e766f4c0b785c0986a"]
+certifi = ["47f9c83ef4c0c621eaef743f133f09fa8a74a9b75f037e8624f83bd1b6626cb7", "993f830721089fef441cdfeb4b2c8c9df86f0c63239f06bd025a76a7daddb033"]
 chardet = ["84ab92ed1c4d4f16916e05906b6b75a6c0fb5db821cc65e70cbd64a3e2a5eaae", "fc323ffcaeaed0e0a02bf4d117757b98aed530d9ed4531e3e15460124c106691"]
 classproperties = ["97d627d11df056838a9426ff15be71a5a365bca456afba8122740c39c527d5b4"]
 click = ["2335065e6395b9e67ca716de5f7526736bfa6ceead690adf616d925bdc622b13", "5b94b49521f6456670fdb30cd82a4eca9412788a93fa6dd6df72c94d5a8ff2d7"]
@@ -928,7 +939,7 @@ docopt = ["49b3a825280bd66b3aa83585ef59c4a8c82f2c8a522dbe754a8bc8d08c85c491"]
 entrypoints = ["10ad569bb245e7e2ba425285b9fa3e8178a0dc92fc53b1e1c553805e15a8825b", "d2d587dde06f99545fb13a383d2cd336a8ff1f359c5839ce3a64c917d10c029f"]
 idna = ["156a6814fb5ac1fc6850fb002e0852d56c0c8d2531923a51032d1b70760e186e", "684a38a6f903c1d71d6d5fac066b58d7768af4de2b832e426ec79c30daa94a16"]
 ipykernel = ["0aeb7ec277ac42cc2b59ae3d08b10909b2ec161dc6908096210527162b53675d", "0fc0bf97920d454102168ec2008620066878848fcfca06c22b669696212e292f"]
-ipython = ["a5781d6934a3341a1f9acb4ea5acdc7ea0a0855e689dbe755d070ca51e995435", "b10a7ddd03657c761fc503495bc36471c8158e3fc948573fb9fe82a7029d8efd"]
+ipython = ["6a9496209b76463f1dec126ab928919aaf1f55b38beb9219af3fe202f6bbdd12", "f69932b1e806b38a7818d9a1e918e5821b685715040b48e59c657b3c7961b742"]
 ipython-genutils = ["72dd37233799e619666c9f639a9da83c34013a73e8bbc79a7a6348d93c61fab8", "eb2e116e75ecef9d4d228fdc66af54269afa26ab4463042e33785b887c628ba8"]
 ipywidgets = ["0f2b5cde9f272cb49d52f3f0889fdd1a7ae1e74f37b48dac35a83152780d2b7b", "a3e224f430163f767047ab9a042fc55adbcab0c24bbe6cf9f306c4f89fdf0ba3"]
 isort = ["1153601da39a25b14ddc54955dbbacbb6b2d19135386699e2ad58517953b34af", "b9c40e9750f3d77e6e4d441d8b0266cf555e7cdabdcff33c4fd06366ca761ef8", "ec9ef8f4a9bc6f71eec99e1806bfa2de401650d996c59330782b89a5555c1497"]
@@ -968,6 +979,7 @@ pytest-describe = ["bd6be131452b7822c872735ffe53ce3931b3b80cbbad1647c2b482cc9ef3
 pytest-expecter = ["1c8e9ab98ddd576436b61a7ba61ea11cfa5a3fc6b00288ce9e91e9dd770daf19", "27c93dfe87e2f4d28c525031be68d3f89457e3315241d97ee15f7689544e0e37"]
 pytest-mock = ["53801e621223d34724926a5c98bd90e8e417ce35264365d39d6c896388dcc928", "d89a8209d722b8307b5e351496830d5cc5e192336003a485443ae9adeb7dd4c0"]
 pytest-random = ["92f25db8c5d9ffc20d90b51997b914372d6955cb9cf1f6ead45b90514fc0eddd"]
+pytest-repeat = ["637e68dd615e850b47b2dee0edf72bcede44de6a5335837fe2980daaf0cdab2b", "c51e166d652cf779588801f8b57594a46e62f05877d3929b10aadb874a9faf04"]
 pytest-watch = ["06136f03d5b361718b8d0d234042f7b2f203910d8568f63df2f866b547b3d4b9"]
 python-dateutil = ["063df5763652e21de43de7d9e00ccf239f953a832941e37be541614732cdfc93", "88f9287c0174266bb0d8cedd395cfba9c58e87e5ad86b2ce58859bc11be3cf02"]
 pywinpty = ["349eef36414b038426e65d96ecccfa581c437562cc164fb4faffe6f46963bc80", "4617637c38ae9099a99f73d8dbeb9c752743693bd1dca6ea3b1d520a7248ebf3", "4ee8193b19d77ab59097a000a2c52b36e768e92263812e0c0b40306be8927fb4", "4f6c850db79dd19b1d842d81a8c08fd7efad5e160a1effbba10ba738a5a35cb2", "4fd720b20bb69f1b7ca2060e84503ae843972fcb006ae6e8ddd6ab212fe8911c", "79f2b4584111e36826e587d33eb4e7416a12ae1d6c094cb554e873c5c162fa5f", "87ae1a2301fbce7a3005dac7cdf8ce8a4162f05130348234b87caef260771e96"]
