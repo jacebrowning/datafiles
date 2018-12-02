@@ -21,7 +21,7 @@ SAVE_AFTER_METHODS = [
     'update',
 ]
 
-FLAG = '_patched'
+FLAG = '_patched_method'
 ENABLED = True
 HIDE = True
 
