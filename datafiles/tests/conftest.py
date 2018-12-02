@@ -3,6 +3,11 @@ from shutil import get_terminal_size
 import log
 import pytest
 
+from datafiles import hooks
+
+
+hooks.HIDE = False
+
 
 @pytest.fixture
 def logbreak():

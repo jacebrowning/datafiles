@@ -23,6 +23,7 @@ SAVE_AFTER_METHODS = [
 
 FLAG = '_patched'
 ENABLED = True
+HIDE = True
 
 
 def enable(instance):
@@ -64,7 +65,7 @@ def load_before(method):
 
     @wraps(method)
     def wrapped(self, *args, **kwargs):
-        __tracebackhide__ = True  # pylint: disable=unused-variable
+        __tracebackhide__ = HIDE  # pylint: disable=unused-variable
 
         if ENABLED and external_method_call(method.__name__, args):
             datafile = object.__getattribute__(self, 'datafile')
@@ -93,7 +94,7 @@ def save_after(method):
 
     @wraps(method)
     def wrapped(self, *args, **kwargs):
-        __tracebackhide__ = True  # pylint: disable=unused-variable
+        __tracebackhide__ = HIDE  # pylint: disable=unused-variable
 
         if ENABLED and external_method_call(method.__name__, args):
             datafile = object.__getattribute__(self, 'datafile')
