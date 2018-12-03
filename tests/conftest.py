@@ -4,6 +4,11 @@ from shutil import get_terminal_size, rmtree
 import log
 import pytest
 
+from datafiles import hooks
+
+
+hooks.HIDE = False
+
 
 def pytest_configure(config):
     terminal = config.pluginmanager.getplugin('terminal')
