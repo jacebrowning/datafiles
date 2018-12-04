@@ -264,3 +264,5 @@ class InstanceManager:
         log.debug(frame + '\n\n' + (text or '<nothing>\n'))
         self.path.write_text(text)
         log.debug(frame)
+
+        self.modified = False

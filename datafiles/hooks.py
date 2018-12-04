@@ -1,3 +1,4 @@
+import dataclasses
 from contextlib import contextmanager, suppress
 from functools import wraps
 
@@ -21,45 +22,50 @@ SAVE_AFTER_METHODS = [
     'update',
 ]
 
-FLAG = '_patched_method'
+
 ENABLED = True
 HIDE = True
 
+FLAG = '_patched_method'
 
-def enable(instance):
+
+def enable(instance, *, datafile=None):
     """Path methods that get or set attributes."""
     cls = instance.__class__
-
-    if getattr(cls, FLAG, False):
-        return
-
-    log.debug(f'Patching methods on {cls}')
 
     for name in LOAD_BEFORE_METHODS:
         with suppress(AttributeError):
             method = getattr(cls, name)
-            modified_method = load_before(method)
+            modified_method = load_before(method, root=datafile)
             setattr(cls, name, modified_method)
 
     for name in SAVE_AFTER_METHODS:
         with suppress(AttributeError):
             method = getattr(cls, name)
-            modified_method = save_after(method)
+            modified_method = save_after(method, root=datafile)
             setattr(cls, name, modified_method)
 
-    setattr(cls, FLAG, True)
+    if hasattr(instance, 'datafile'):
+        for name in instance.datafile.attrs:
+            attr = getattr(instance, name)
+            if dataclasses.is_dataclass(attr):
+                enable(attr, datafile=instance.datafile)
 
 
 @contextmanager
 def disabled():
     global ENABLED
-    ENABLED = False
-    yield
-    ENABLED = True
+    if ENABLED:
+        ENABLED = False
+        yield
+        ENABLED = True
+    else:
+        yield
 
 
-def load_before(method):
+def load_before(method, *, root=None):
     """Decorate methods that should load before call."""
+
     name = method.__name__
     log.debug(f'Patching method to load before call: {name}')
 
@@ -68,7 +74,7 @@ def load_before(method):
         __tracebackhide__ = HIDE  # pylint: disable=unused-variable
 
         if ENABLED and external_method_call(method.__name__, args):
-            datafile = object.__getattribute__(self, 'datafile')
+            datafile = root or object.__getattribute__(self, 'datafile')
             if datafile.manual:
                 log.debug('Automatic loading is disabled')
             elif datafile.exists and datafile.modified:
@@ -87,8 +93,9 @@ def load_before(method):
     return wrapped
 
 
-def save_after(method):
+def save_after(method, *, root=None):
     """Decorate methods that should save after call."""
+
     name = method.__name__
     log.debug(f'Patching method to save after call: {name}')
 
@@ -97,20 +104,22 @@ def save_after(method):
         __tracebackhide__ = HIDE  # pylint: disable=unused-variable
 
         if ENABLED and external_method_call(method.__name__, args):
-            datafile = object.__getattribute__(self, 'datafile')
+            datafile = root or object.__getattribute__(self, 'datafile')
             if datafile.exists and datafile.modified:
                 log.debug(f"Loading modified datafile before '{name}' call")
-                datafile.load()
+                with disabled():
+                    datafile.load()
 
         result = method(self, *args, **kwargs)
 
         if ENABLED and external_method_call(method.__name__, args):
-            datafile = object.__getattribute__(self, 'datafile')
+            datafile = root or object.__getattribute__(self, 'datafile')
             if datafile.manual:
                 log.debug(f'Automatic saving is disabled')
             else:
                 log.debug(f"Saving automatically after '{name}' call")
-                datafile.save()
+                with disabled():
+                    datafile.save()
 
         return result
 
