@@ -4,7 +4,6 @@ from dataclasses import dataclass, field
 from typing import List
 
 import log
-import pytest
 
 from datafiles import sync
 
@@ -94,9 +93,10 @@ def describe_automatic_load():
 
 
 def describe_automatic_save():
-    def with_setattr(expect, read, dedent):
+    def with_setattr(logbreak, expect, read, dedent):
         sample = Sample()
 
+        logbreak()
         sample.item = 'b'
 
         expect(read('tmp/sample.yml')) == dedent(
@@ -130,7 +130,6 @@ def describe_automatic_save():
 
 
 def describe_automatic_load_with_nesting():
-    @pytest.mark.skip
     def with_getattr(write, expect):
         sample = SampleWithNesting(1)
 
@@ -149,7 +148,6 @@ def describe_automatic_load_with_nesting():
 
 
 def describe_automatic_save_with_nesting():
-    @pytest.mark.skip
     def with_setattr(logbreak, expect, read, dedent):
         sample = SampleWithNesting(2)
 
