@@ -107,7 +107,8 @@ def save_after(method, *, root=None):
             datafile = root or object.__getattribute__(self, 'datafile')
             if datafile.exists and datafile.modified:
                 log.debug(f"Loading modified datafile before '{name}' call")
-                datafile.load()
+                with disabled():
+                    datafile.load()
 
         result = method(self, *args, **kwargs)
 
@@ -117,7 +118,8 @@ def save_after(method, *, root=None):
                 log.debug(f'Automatic saving is disabled')
             else:
                 log.debug(f"Saving automatically after '{name}' call")
-                datafile.save()
+                with disabled():
+                    datafile.save()
 
         return result
 
