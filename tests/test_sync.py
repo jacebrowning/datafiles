@@ -52,22 +52,73 @@ def describe_automatic():
 def describe_automatic_with_defaults():
     """Tests to create a datafile using the decorator with defaults."""
 
-    @pytest.fixture
-    def sample():
-        @sync('../tmp/{self.key}.yml', defaults=True)
-        @dataclass
-        class Sample:
-            key: int
-            name: str
-            score: float = 1 / 2
+    def describe_flat():
+        @pytest.fixture
+        def sample():
+            @sync('../tmp/{self.key}.yml', defaults=True)
+            @dataclass
+            class Sample:
+                key: int
+                name: str
+                score: float = 1 / 2
 
-        return Sample(1, "a")
+            return Sample(1, "a")
 
-    def it_converts_attributes(expect, sample):
-        expect(sample.key) == 1
-        expect(sample.name) == "a"
-        expect(sample.score) == 0.5
-        expect(sample.datafile.data) == {'name': "a", 'score': 0.5}
+        def it_converts_attributes(expect, sample):
+            expect(sample.datafile.data) == {'name': "a", 'score': 0.5}
+
+    def describe_nested():
+        @pytest.fixture
+        def sample():
+            @dataclass
+            class Nested:
+                name: str
+                score: float = 1 / 4
+
+            @sync('../tmp/{self.key}.yml', defaults=True)
+            @dataclass
+            class Sample:
+                key: int
+                nested: Nested
+                name: str
+                score: float = 1 / 2
+
+            return Sample(1, Nested(name="b"), "a")
+
+        def it_converts_attributes(expect, sample):
+            expect(sample.datafile.data) == {
+                'name': "a",
+                'score': 0.5,
+                'nested': {'name': "b", 'score': 0.25},
+            }
+
+    def describe_nested_override():
+        @pytest.fixture
+        def sample():
+            @dataclass
+            class Nested:
+                name: str
+                score: float = 1 / 4
+
+                class Meta:
+                    datafile_defaults = False
+
+            @sync('../tmp/{self.key}.yml', defaults=True)
+            @dataclass
+            class Sample:
+                key: int
+                nested: Nested
+                name: str
+                score: float = 1 / 2
+
+            return Sample(1, Nested(name="b"), "a")
+
+        def it_converts_attributes(expect, sample):
+            expect(sample.datafile.data) == {
+                'name': "a",
+                'score': 0.5,
+                'nested': {'name': "b"},
+            }
 
 
 def describe_manual():

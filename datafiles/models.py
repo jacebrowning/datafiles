@@ -25,7 +25,7 @@ class ModelMeta:
 
 class Model:
 
-    Meta: ModelMeta
+    Meta: ModelMeta = ModelMeta()
 
     def __post_init__(self):
         log.debug(f'Initializing {self.__class__} instance')
@@ -73,7 +73,10 @@ def get_datafile(obj) -> InstanceManager:
             self_name = f'self.{field.name}'
             if pattern is None or self_name not in pattern:
                 attrs[field.name] = map_type(
-                    field.type, create_model=create_model, manual=True
+                    field.type,
+                    create_model=create_model,
+                    manual=True,
+                    defaults=defaults,
                 )
 
     return InstanceManager(
@@ -95,14 +98,17 @@ def create_model(cls, *, attrs=None, pattern=None, manual=None, defaults=None):
     # Patch Meta
 
     m = getattr(cls, 'Meta', ModelMeta())
+
     if attrs is not None:
         m.datafile_attrs = attrs
     if pattern is not None:
         m.datafile_pattern = pattern
-    if manual is not None:
+
+    if not hasattr(cls, 'Meta') and manual is not None:
         m.datafile_manual = manual
-    if defaults is not None:
+    if not hasattr(cls, 'Meta') and defaults is not None:
         m.datafile_defaults = defaults
+
     cls.Meta = m
 
     # Patch __init__
