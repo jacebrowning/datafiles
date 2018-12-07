@@ -1,7 +1,7 @@
+import dataclasses
 from abc import ABCMeta, abstractmethod
 from collections.abc import Iterable
-from dataclasses import is_dataclass
-from typing import Any, Union
+from typing import Any, Dict, Union
 
 import log
 from cachetools import cached
@@ -108,22 +108,24 @@ class String(Converter):
 
 class List:
 
-    ELEMENT_CONVERTER = None
+    CONVERTER = None
 
     @classmethod
-    def of_converters(cls, converter: Converter):
-        name = converter.__name__ + cls.__name__  # type: ignore
-        return type(name, (cls,), {'ELEMENT_CONVERTER': converter})
+    def subclass(cls, converter: Converter):
+        name = f'{converter.__name__}List'  # type: ignore
+        bases = (cls,)
+        attributes = {'CONVERTER': converter}
+        return type(name, bases, attributes)
 
     @classmethod
     def to_python_value(cls, deserialized_data):
         value = []
 
-        if is_dataclass(cls.ELEMENT_CONVERTER):
+        if dataclasses.is_dataclass(cls.CONVERTER):
             # pylint: disable=not-callable
-            convert = lambda data: cls.ELEMENT_CONVERTER(**data)
+            convert = lambda data: cls.CONVERTER(**data)
         else:
-            convert = cls.ELEMENT_CONVERTER.to_python_value
+            convert = cls.CONVERTER.to_python_value
 
         if deserialized_data is None:
             pass
@@ -146,14 +148,14 @@ class List:
     def to_preserialization_data(cls, python_value):
         data = []
 
-        if is_dataclass(cls.ELEMENT_CONVERTER):
+        if dataclasses.is_dataclass(cls.CONVERTER):
             convert = (
                 lambda value: value.datafile.data
                 if hasattr(value, 'datafile')
                 else value
             )
         else:
-            convert = cls.ELEMENT_CONVERTER.to_preserialization_data
+            convert = cls.CONVERTER.to_preserialization_data
 
         if python_value is None:
             pass
@@ -175,12 +177,55 @@ class List:
         return data
 
 
+class Dictionary:
+
+    DATACLASS = None
+    CONVERTERS = None
+
+    @classmethod
+    def subclass(cls, dataclass, converters: Dict[str, Converter]):
+        name = f'{dataclass.__name__}Converter'
+        bases = (cls,)
+        attributes = {'DATACLASS': dataclass, 'CONVERTERS': converters}
+        return type(name, bases, attributes)
+
+    @classmethod
+    def to_python_value(cls, deserialized_data):
+        return cls.DATACLASS(  # pylint: disable=not-callable
+            **deserialized_data
+        )
+
+    @classmethod
+    def to_preserialization_data(cls, python_value):
+        data = {}
+
+        for name, converter in cls.CONVERTERS.items():
+
+            if isinstance(python_value, dict):
+                value = python_value.get(name)
+            else:
+                value = getattr(python_value, name)
+
+            data[name] = converter.to_preserialization_data(value)
+
+        return data
+
+
 @cached(cache={}, key=lambda cls, **kwargs: cls)
 def map_type(cls, **kwargs):
     """Infer the converter type from a dataclass, type, or annotation."""
     log.debug(f'Mapping {cls} to converter')
 
-    if is_dataclass(cls):
+    if dataclasses.is_dataclass(cls):
+
+        if cls.__name__ == 'MyDataclass':
+            converters = {}
+            for field in dataclasses.fields(cls):
+                converters[field.name] = map_type(field.type, **kwargs)
+            converter = Dictionary.subclass(cls, converters)
+            log.debug(f'Mapped {cls} to new converter: {converter}')
+            return converter
+
         create_model = kwargs.pop('create_model')
         return create_model(cls, **kwargs)
 
@@ -195,7 +240,7 @@ def map_type(cls, **kwargs):
                 exc = TypeError(f"Type is required with 'List' annotation")
                 raise exc from None
             else:
-                converter = List.of_converters(converter)
+                converter = List.subclass(converter)
 
         elif cls.__origin__ == Union:
             converter = map_type(cls.__args__[0], **kwargs)

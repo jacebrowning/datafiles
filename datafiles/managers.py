@@ -108,6 +108,8 @@ class InstanceManager:
                         )
                         value[field.name] = None
 
+                # TODO: Replace this line
+                # data[name] = converter.to_preserialization_data(value)
                 data[name] = converter(**value).datafile.data
 
             elif (
