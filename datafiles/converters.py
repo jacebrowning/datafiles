@@ -4,9 +4,8 @@ from collections.abc import Iterable
 from typing import Any, Dict, Union
 
 import log
-from cachetools import cached
 
-from .utils import Missing
+from .utils import Missing, cached
 
 
 class Converter(metaclass=ABCMeta):
@@ -215,15 +214,15 @@ class Dictionary:
         return data
 
 
-@cached(cache={}, key=lambda cls, **kwargs: cls)
-def map_type(cls, **kwargs):
+@cached
+def map_type(cls):
     """Infer the converter type from a dataclass, type, or annotation."""
     log.debug(f'Mapping {cls} to converter')
 
     if dataclasses.is_dataclass(cls):
         converters = {}
         for field in dataclasses.fields(cls):
-            converters[field.name] = map_type(field.type, **kwargs)
+            converters[field.name] = map_type(field.type)
         converter = Dictionary.subclass(cls, converters)
         log.debug(f'Mapped {cls} to new converter: {converter}')
         return converter
@@ -233,7 +232,7 @@ def map_type(cls, **kwargs):
 
         if cls.__origin__ == list:
             try:
-                converter = map_type(cls.__args__[0], **kwargs)
+                converter = map_type(cls.__args__[0])
             except TypeError as exc:
                 log.debug(exc)
                 exc = TypeError(f"Type is required with 'List' annotation")
@@ -242,7 +241,7 @@ def map_type(cls, **kwargs):
                 converter = List.subclass(converter)
 
         elif cls.__origin__ == Union:
-            converter = map_type(cls.__args__[0], **kwargs)
+            converter = map_type(cls.__args__[0])
             assert len(cls.__args__) == 2
             assert cls.__args__[1] == type(None)
             converter = converter.as_optional()

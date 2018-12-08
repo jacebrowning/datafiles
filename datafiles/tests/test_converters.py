@@ -6,7 +6,6 @@ from typing import Dict, List, Optional
 import pytest
 
 from datafiles import converters
-from datafiles.models import create_model
 
 
 @dataclass
@@ -29,9 +28,7 @@ def describe_map_type():
         expect(converter.CONVERTER) == converters.String
 
     def it_handles_list_annotations_of_dataclasses(expect):
-        converter = converters.map_type(
-            List[MyDataclass], create_model=create_model, manual=True
-        )
+        converter = converters.map_type(List[MyDataclass])
         expect(converter.__name__) == 'MyDataclassConverterList'
         expect(converter.CONVERTER.__name__) == 'MyDataclassConverter'
 
@@ -102,9 +99,7 @@ def describe_converter():
             converters.Integer.to_python_value('a')
 
     def to_python_value_when_list_of_dataclasses(logbreak, expect):
-        converter = converters.map_type(
-            List[MyDataclass], create_model=create_model, manual=True
-        )
+        converter = converters.map_type(List[MyDataclass])
 
         logbreak()
         data = [{'foobar': 1}, {'foobar': 2}, {'foobar': 3}]
@@ -137,9 +132,7 @@ def describe_converter():
             converters.Integer.to_preserialization_data('a')
 
     def to_preserialization_data_when_list_of_dataclasses(logbreak, expect):
-        converter = converters.map_type(
-            List[MyDataclass], create_model=create_model, manual=True
-        )
+        converter = converters.map_type(List[MyDataclass])
 
         logbreak()
         value = [MyDataclass(1), MyDataclass(2), MyDataclass(3)]

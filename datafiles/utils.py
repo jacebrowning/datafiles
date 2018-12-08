@@ -1,11 +1,13 @@
 import dataclasses
 from contextlib import suppress
-from functools import wraps
+from functools import lru_cache, wraps
 from pprint import pformat
 from typing import Any, Dict
 
 
 Missing = dataclasses._MISSING_TYPE  # pylint: disable=protected-access
+
+cached = lru_cache()
 
 
 def prettify(data: Dict) -> str:
