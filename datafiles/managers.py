@@ -147,7 +147,7 @@ class InstanceManager:
             raise RuntimeError("'pattern' must be set to load the model")
 
         message = f'Deserializing: {self.path}'
-        frame = '=' * (len(message) - 1)  # "DEBUG" has an extra letter
+        frame = '=' * len(message)
         log.info(message)
         data = formats.deserialize(self.path, self.path.suffix)
         self._last_data = data
@@ -261,7 +261,7 @@ class InstanceManager:
         self.path.parent.mkdir(parents=True, exist_ok=True)
 
         message = f'Writing: {self.path}'
-        frame = '=' * (len(message) - 1)  # "DEBUG" has an extra letter
+        frame = '=' * len(message)
         log.info(message)
         log.debug(frame + '\n\n' + (text or '<nothing>\n'))
         self.path.write_text(text)
