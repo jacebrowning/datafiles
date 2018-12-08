@@ -29,27 +29,30 @@ HIDE = True
 FLAG = '_patched_method'
 
 
-def enable(instance, *, datafile=None):
+def enable(instance, datafile=None):
     """Path methods that get or set attributes."""
     cls = instance.__class__
+
+    if datafile is None:
+        datafile = instance.datafile
 
     for name in LOAD_BEFORE_METHODS:
         with suppress(AttributeError):
             method = getattr(cls, name)
-            modified_method = load_before(method, root=datafile)
+            modified_method = load_before(cls, method, datafile)
             setattr(cls, name, modified_method)
 
     for name in SAVE_AFTER_METHODS:
         with suppress(AttributeError):
             method = getattr(cls, name)
-            modified_method = save_after(method, root=datafile)
+            modified_method = save_after(cls, method, datafile)
             setattr(cls, name, modified_method)
 
     if hasattr(instance, 'datafile'):
         for name in instance.datafile.attrs:
             attr = getattr(instance, name)
             if dataclasses.is_dataclass(attr):
-                enable(attr, datafile=instance.datafile)
+                enable(attr, datafile)
 
 
 @contextmanager
@@ -63,18 +66,17 @@ def disabled():
         yield
 
 
-def load_before(method, *, root=None):
+def load_before(cls, method, datafile):
     """Decorate methods that should load before call."""
 
     name = method.__name__
-    log.debug(f'Patching method to load before call: {name}')
+    log.debug(f'Patching method to load before call: {cls.__name__}.{name}')
 
     @wraps(method)
     def wrapped(self, *args, **kwargs):
         __tracebackhide__ = HIDE  # pylint: disable=unused-variable
 
         if ENABLED and external_method_call(method.__name__, args):
-            datafile = root or object.__getattribute__(self, 'datafile')
             if datafile.manual:
                 log.debug('Automatic loading is disabled')
             elif datafile.exists and datafile.modified:
@@ -93,18 +95,17 @@ def load_before(method, *, root=None):
     return wrapped
 
 
-def save_after(method, *, root=None):
+def save_after(cls, method, datafile):
     """Decorate methods that should save after call."""
 
     name = method.__name__
-    log.debug(f'Patching method to save after call: {name}')
+    log.debug(f'Patching method to save after call: {cls.__name__}.{name}')
 
     @wraps(method)
     def wrapped(self, *args, **kwargs):
         __tracebackhide__ = HIDE  # pylint: disable=unused-variable
 
         if ENABLED and external_method_call(method.__name__, args):
-            datafile = root or object.__getattribute__(self, 'datafile')
             if datafile.exists and datafile.modified:
                 log.debug(f"Loading modified datafile before '{name}' call")
                 with disabled():
@@ -113,7 +114,6 @@ def save_after(method, *, root=None):
         result = method(self, *args, **kwargs)
 
         if ENABLED and external_method_call(method.__name__, args):
-            datafile = root or object.__getattribute__(self, 'datafile')
             if datafile.manual:
                 log.debug(f'Automatic saving is disabled')
             else:
