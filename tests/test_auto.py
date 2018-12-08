@@ -179,6 +179,6 @@ def describe_automatic_load_before_save():
 
         expect(sample.datafile.text) == dedent(
             """
-        item: c  # Comment
-        """
+            item: c  # Comment
+            """
         )

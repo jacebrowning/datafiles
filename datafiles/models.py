@@ -48,7 +48,7 @@ class Model:
                     self.datafile.save()
 
                 if automatic:
-                    hooks.enable(self)
+                    hooks.enable(self, self.datafile, get_datafile)
 
         log.debug(f'Initialized {self.__class__} instance')
 
@@ -72,12 +72,7 @@ def get_datafile(obj) -> InstanceManager:
         for field in dataclasses.fields(obj):
             self_name = f'self.{field.name}'
             if pattern is None or self_name not in pattern:
-                attrs[field.name] = map_type(
-                    field.type,
-                    create_model=create_model,
-                    manual=True,
-                    defaults=defaults,
-                )
+                attrs[field.name] = map_type(field.type)
 
     return InstanceManager(
         obj, attrs=attrs, pattern=pattern, manual=manual, defaults=defaults

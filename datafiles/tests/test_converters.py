@@ -6,38 +6,40 @@ from typing import Dict, List, Optional
 import pytest
 
 from datafiles import converters
-from datafiles.models import create_model
 
 
 @dataclass
-class MyCustomDataclass:
+class MyDataclass:
     foobar: int
 
 
-class MyCustomNonDataclass:
+class MyNonDataclass:
     pass
 
 
-IntegerList = converters.List.of_converters(converters.Integer)  # type: ignore
-StringList = converters.List.of_converters(converters.String)  # type: ignore
+IntegerList = converters.List.subclass(converters.Integer)  # type: ignore
+StringList = converters.List.subclass(converters.String)  # type: ignore
 
 
 def describe_map_type():
     def it_handles_list_annotations(expect):
         converter = converters.map_type(List[str])
         expect(converter.__name__) == 'StringList'
-        expect(converter.ELEMENT_CONVERTER) == converters.String
+        expect(converter.CONVERTER) == converters.String
 
     def it_handles_list_annotations_of_dataclasses(expect):
-        converter = converters.map_type(
-            List[MyCustomDataclass], create_model=create_model, manual=True
-        )
-        expect(converter.__name__) == 'MyCustomDataclassList'
-        expect(converter.ELEMENT_CONVERTER) == MyCustomDataclass
+        converter = converters.map_type(List[MyDataclass])
+        expect(converter.__name__) == 'MyDataclassConverterList'
+        expect(converter.CONVERTER.__name__) == 'MyDataclassConverter'
 
     def it_requires_list_annotations_to_have_a_type(expect):
         with expect.raises(TypeError):
             converters.map_type(List)
+
+    def it_handles_dataclasses(expect):
+        converter = converters.map_type(MyDataclass)
+        expect(converter.__name__) == 'MyDataclassConverter'
+        expect(converter.CONVERTERS) == {'foobar': converters.Integer}
 
     def it_handles_optionals(expect):
         converter = converters.map_type(Optional[str])
@@ -47,7 +49,7 @@ def describe_map_type():
 
     def it_rejects_unknown_types(expect):
         with expect.raises(TypeError):
-            converters.map_type(MyCustomNonDataclass)
+            converters.map_type(MyNonDataclass)
 
     def it_rejects_unhandled_type_annotations(expect):
         with expect.raises(TypeError):
@@ -97,17 +99,11 @@ def describe_converter():
             converters.Integer.to_python_value('a')
 
     def to_python_value_when_list_of_dataclasses(logbreak, expect):
-        converter = converters.map_type(
-            List[MyCustomDataclass], create_model=create_model, manual=True
-        )
+        converter = converters.map_type(List[MyDataclass])
 
         logbreak()
         data = [{'foobar': 1}, {'foobar': 2}, {'foobar': 3}]
-        value = [
-            MyCustomDataclass(1),
-            MyCustomDataclass(2),
-            MyCustomDataclass(3),
-        ]
+        value = [MyDataclass(1), MyDataclass(2), MyDataclass(3)]
 
         expect(converter.to_python_value(data)) == value
 
@@ -136,16 +132,10 @@ def describe_converter():
             converters.Integer.to_preserialization_data('a')
 
     def to_preserialization_data_when_list_of_dataclasses(logbreak, expect):
-        converter = converters.map_type(
-            List[MyCustomDataclass], create_model=create_model, manual=True
-        )
+        converter = converters.map_type(List[MyDataclass])
 
         logbreak()
-        value = [
-            MyCustomDataclass(1),
-            MyCustomDataclass(2),
-            MyCustomDataclass(3),
-        ]
+        value = [MyDataclass(1), MyDataclass(2), MyDataclass(3)]
         data = [{'foobar': 1}, {'foobar': 2}, {'foobar': 3}]
 
         expect(converter.to_preserialization_data(value)) == data

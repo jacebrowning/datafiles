@@ -48,15 +48,18 @@ def dedent():
     return lambda text: text.replace(' ' * 4, '').strip() + '\n'
 
 
+# TODO: Move these utilities into the library
+
+
 @pytest.fixture(scope='session')
 def write(dedent):
     def _(path: str, text: str) -> None:
         _path = Path(path).resolve()
         _text = dedent(text)
         message = f'Writing: {_path}'
-        frame = '=' * (len(message) - 1)  # "DEBUG" has an extra letter
+        frame = '=' * len(message)
         log.info(message)
-        log.debug(frame + '\n\n' + (text or '<nothing>\n'))
+        log.debug(frame + '\n\n' + (_text or '<nothing>\n'))
         _path.write_text(_text)
         log.debug(frame)
 
@@ -68,7 +71,7 @@ def read():
     def _(path: str) -> str:
         _path = Path(path).resolve()
         message = f'Reading: {_path}'
-        frame = '=' * (len(message) - 1)  # "DEBUG" has an extra letter
+        frame = '=' * len(message)
         log.info(message)
         text = _path.read_text()
         log.debug(frame + '\n\n' + (text or '<nothing>\n'))
