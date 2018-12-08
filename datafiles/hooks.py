@@ -29,12 +29,9 @@ HIDE = True
 FLAG = '_patched_method'
 
 
-def enable(instance, datafile=None):
+def enable(instance, datafile, get_datafile):
     """Path methods that get or set attributes."""
     cls = instance.__class__
-
-    if datafile is None:
-        datafile = instance.datafile
 
     for name in LOAD_BEFORE_METHODS:
         with suppress(AttributeError):
@@ -48,11 +45,12 @@ def enable(instance, datafile=None):
             modified_method = save_after(cls, method, datafile)
             setattr(cls, name, modified_method)
 
-    if hasattr(instance, 'datafile'):
-        for name in instance.datafile.attrs:
-            attr = getattr(instance, name)
-            if dataclasses.is_dataclass(attr):
-                enable(attr, datafile)
+    for name in instance.datafile.attrs:
+        attr = getattr(instance, name)
+        if dataclasses.is_dataclass(attr):
+            if not hasattr(attr, 'datafile'):
+                attr.datafile = get_datafile(attr)
+            enable(attr, datafile, get_datafile)
 
 
 @contextmanager

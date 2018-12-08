@@ -48,7 +48,7 @@ class Model:
                     self.datafile.save()
 
                 if automatic:
-                    hooks.enable(self)
+                    hooks.enable(self, self.datafile, get_datafile)
 
         log.debug(f'Initialized {self.__class__} instance')
 
