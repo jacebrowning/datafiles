@@ -123,11 +123,7 @@ class List:
     def to_python_value(cls, deserialized_data):
         value = []
 
-        if dataclasses.is_dataclass(cls.CONVERTER):
-            # pylint: disable=not-callable
-            convert = lambda data: cls.CONVERTER(**data)
-        else:
-            convert = cls.CONVERTER.to_python_value
+        convert = cls.CONVERTER.to_python_value
 
         if deserialized_data is None:
             pass
@@ -150,14 +146,7 @@ class List:
     def to_preserialization_data(cls, python_value):
         data = []
 
-        if dataclasses.is_dataclass(cls.CONVERTER):
-            convert = (
-                lambda value: value.datafile.data
-                if hasattr(value, 'datafile')
-                else value
-            )
-        else:
-            convert = cls.CONVERTER.to_preserialization_data
+        convert = cls.CONVERTER.to_preserialization_data
 
         if python_value is None:
             pass
