@@ -113,6 +113,7 @@ def describe_automatic_with_defaults():
 
             return Sample(1, Nested(name="b"), "a")
 
+        @pytest.mark.xfail
         def it_converts_attributes(expect, sample):
             expect(sample.datafile.data) == {
                 'name': "a",

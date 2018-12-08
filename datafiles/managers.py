@@ -96,21 +96,24 @@ class InstanceManager:
         for name, converter in self.attrs.items():
             value = data[name]
 
-            if dataclasses.is_dataclass(converter):
+            if hasattr(converter, 'DATACLASS'):
                 log.debug(f"Converting '{name}' dataclass with {converter}")
                 if value is None:
                     value = {}
 
-                for field in dataclasses.fields(converter):
+                for field in dataclasses.fields(converter.DATACLASS):
                     if field.name not in value:
                         log.debug(
                             f'Added missing nested attribute: {field.name}'
                         )
                         value[field.name] = None
 
-                # TODO: Replace this line
-                # data[name] = converter.to_preserialization_data(value)
-                data[name] = converter(**value).datafile.data
+                data[name] = converter.to_preserialization_data(
+                    value,
+                    default=Missing
+                    if include_default_values
+                    else self._get_default_field_value(name),
+                )
 
             elif (
                 value == self._get_default_field_value(name)
@@ -157,7 +160,7 @@ class InstanceManager:
         for name, converter in self.attrs.items():
             log.debug(f"Converting '{name}' data with {converter}")
 
-            if dataclasses.is_dataclass(converter):
+            if hasattr(converter, 'DATACLASS'):
                 self._set_container_value(data, name, converter, first_load)
             else:
                 self._set_attribute_value(data, name, converter, first_load)
@@ -175,10 +178,10 @@ class InstanceManager:
 
         value = getattr(self._instance, name)
         if value is None:
-            for field in dataclasses.fields(converter):
+            for field in dataclasses.fields(converter.DATACLASS):
                 if field.name not in data2:  # type: ignore
                     data2[field.name] = None  # type: ignore
-            value = converter(**data2)
+            value = converter.to_python_value(data2)
         elif first_load:
             return
 

@@ -6,6 +6,8 @@ from typing import Any, Dict, Union
 import log
 from cachetools import cached
 
+from .utils import Missing
+
 
 class Converter(metaclass=ABCMeta):
     """Base class for attribute conversion."""
@@ -191,20 +193,33 @@ class Dictionary:
 
     @classmethod
     def to_python_value(cls, deserialized_data):
-        return cls.DATACLASS(  # pylint: disable=not-callable
-            **deserialized_data
-        )
+        data = deserialized_data if deserialized_data else {}
+        value = cls.DATACLASS(**data)  # pylint: disable=not-callable
+        return value
 
     @classmethod
-    def to_preserialization_data(cls, python_value):
+    def to_preserialization_data(cls, python_value, *, default=Missing):
         data = {}
 
         for name, converter in cls.CONVERTERS.items():
 
             if isinstance(python_value, dict):
-                value = python_value.get(name)
+                try:
+                    value = python_value[name]
+                except KeyError as e:
+                    log.debug(e)
+                    continue
             else:
-                value = getattr(python_value, name)
+                try:
+                    value = getattr(python_value, name)
+                except AttributeError as e:
+                    log.debug(e)
+                    continue
+
+            if default is not Missing:
+                if value == getattr(default, name):
+                    log.debug(f"Skipped default value for '{name}' attribute")
+                    continue
 
             data[name] = converter.to_preserialization_data(value)
 
@@ -217,17 +232,12 @@ def map_type(cls, **kwargs):
     log.debug(f'Mapping {cls} to converter')
 
     if dataclasses.is_dataclass(cls):
-
-        if cls.__name__ == 'MyDataclass':
-            converters = {}
-            for field in dataclasses.fields(cls):
-                converters[field.name] = map_type(field.type, **kwargs)
-            converter = Dictionary.subclass(cls, converters)
-            log.debug(f'Mapped {cls} to new converter: {converter}')
-            return converter
-
-        create_model = kwargs.pop('create_model')
-        return create_model(cls, **kwargs)
+        converters = {}
+        for field in dataclasses.fields(cls):
+            converters[field.name] = map_type(field.type, **kwargs)
+        converter = Dictionary.subclass(cls, converters)
+        log.debug(f'Mapped {cls} to new converter: {converter}')
+        return converter
 
     if hasattr(cls, '__origin__'):
         converter = None
