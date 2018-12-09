@@ -82,6 +82,12 @@ class SampleWithListAndDefaults:
 
 @sync('../tmp/sample.yml', manual=True)
 @dataclass
+class SampleWithListOfDataclasses:
+    items: List[_NestedSample1] = field(default_factory=list)
+
+
+@sync('../tmp/sample.yml', manual=True)
+@dataclass
 class SampleWithOptionals:
     required: float
     optional: Optional[float]

@@ -88,6 +88,8 @@ def describe_converter():
             (IntegerList, 42, [42]),
             (IntegerList, None, []),
             (IntegerList, [42], [42]),
+            (IntegerList, [None], []),
+            (IntegerList, [None, None], []),
         ],
     )
     def to_python_value(expect, converter, data, value):

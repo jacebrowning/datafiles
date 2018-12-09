@@ -127,6 +127,11 @@ class List:
         if deserialized_data is None:
             pass
 
+        elif isinstance(deserialized_data, Iterable) and all(
+            (item is None for item in deserialized_data)
+        ):
+            pass
+
         elif isinstance(deserialized_data, str):
             for item in deserialized_data.split(','):
                 value.append(convert(item))
@@ -182,7 +187,13 @@ class Dictionary:
     @classmethod
     def to_python_value(cls, deserialized_data):
         data = deserialized_data if deserialized_data else {}
+
+        for name, converter in cls.CONVERTERS.items():
+            if name not in data:
+                data[name] = converter.to_python_value(None)
+
         value = cls.DATACLASS(**data)  # pylint: disable=not-callable
+
         return value
 
     @classmethod

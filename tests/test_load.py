@@ -8,6 +8,7 @@ from .samples import (
     SampleWithDefaults,
     SampleWithList,
     SampleWithListAndDefaults,
+    SampleWithListOfDataclasses,
     SampleWithNesting,
     _NestedSample1,
 )
@@ -242,3 +243,29 @@ def describe_lists():
         sample = SampleWithListAndDefaults()
 
         expect(sample.items) == [1.0, 2.3]
+
+    def with_null_list_value(write, expect):
+        write(
+            'tmp/sample.yml',
+            """
+            items:
+            -
+            """,
+        )
+
+        sample = SampleWithListOfDataclasses()
+
+        expect(sample.items) == []
+
+    def with_partial_list_value(write, expect):
+        write(
+            'tmp/sample.yml',
+            """
+            items:
+            - name: abc
+            """,
+        )
+
+        sample = SampleWithListOfDataclasses()
+
+        expect(sample.items) == [_NestedSample1(name='abc', score=0.0)]
