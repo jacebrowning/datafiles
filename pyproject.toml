@@ -1,9 +1,29 @@
 [tool.poetry]
 
 name = "datafiles"
-version = "0.0.0"
+version = "0.1a1"
 description = "File-based ORM for dataclasses."
 authors = ["Jace Browning <jacebrowning@gmail.com>"]
+license = "MIT"
+
+homepage = "https://pypi.org/project/datafiles"
+documentation = "https://datafiles.readthedocs.io"
+repository = "https://github.com/jacebrowning/datafiles"
+
+readme = "README.md"
+keywords = ["YAML", "JSON", "ORM", "serialization"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python",
+    "Topic :: Software Development",
+    "Topic :: Utilities",
+]
 
 [tool.poetry.dependencies]
 
@@ -39,3 +59,9 @@ jupyter = "^1.0"
 line-length = 79
 py36 = true
 skip-string-normalization = true
+
+
+[build-system]
+
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
