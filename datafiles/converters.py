@@ -112,7 +112,7 @@ class List:
     CONVERTER = None
 
     @classmethod
-    def subclass(cls, converter: Converter):
+    def subclass(cls, converter: type):
         name = f'{converter.__name__}List'  # type: ignore
         bases = (cls,)
         attributes = {'CONVERTER': converter}
@@ -178,7 +178,7 @@ class Dictionary:
     CONVERTERS = None
 
     @classmethod
-    def subclass(cls, dataclass, converters: Dict[str, Converter]):
+    def subclass(cls, dataclass, converters: Dict[str, type]):
         name = f'{dataclass.__name__}Converter'
         bases = (cls,)
         attributes = {'DATACLASS': dataclass, 'CONVERTERS': converters}
@@ -186,7 +186,10 @@ class Dictionary:
 
     @classmethod
     def to_python_value(cls, deserialized_data):
-        data = deserialized_data if deserialized_data else {}
+        if isinstance(deserialized_data, dict):
+            data = deserialized_data.copy()
+        else:
+            data = {}
 
         for name, converter in cls.CONVERTERS.items():
             if name not in data:
@@ -207,13 +210,13 @@ class Dictionary:
                     value = python_value[name]
                 except KeyError as e:
                     log.debug(e)
-                    continue
+                    value = None
             else:
                 try:
                     value = getattr(python_value, name)
                 except AttributeError as e:
                     log.debug(e)
-                    continue
+                    value = None
 
             if default is not Missing:
                 if value == getattr(default, name):

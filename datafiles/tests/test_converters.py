@@ -17,8 +17,10 @@ class MyNonDataclass:
     pass
 
 
-IntegerList = converters.List.subclass(converters.Integer)  # type: ignore
-StringList = converters.List.subclass(converters.String)  # type: ignore
+IntegerList = converters.List.subclass(converters.Integer)
+StringList = converters.List.subclass(converters.String)
+MyDataclassConverter = converters.map_type(MyDataclass)
+MyDataclassConverterList = converters.map_type(List[MyDataclass])
 
 
 def describe_map_type():
@@ -90,6 +92,9 @@ def describe_converter():
             (IntegerList, [42], [42]),
             (IntegerList, [None], []),
             (IntegerList, [None, None], []),
+            (MyDataclassConverter, None, MyDataclass(foobar=0)),
+            (MyDataclassConverterList, None, []),
+            (MyDataclassConverterList, 42, [MyDataclass(foobar=0)]),
         ],
     )
     def to_python_value(expect, converter, data, value):
@@ -123,6 +128,9 @@ def describe_converter():
             (StringList, [123, True, False], ['123', 'True', 'False']),
             (StringList, [], []),
             (StringList, None, []),
+            (MyDataclassConverter, None, {'foobar': 0}),
+            (MyDataclassConverterList, None, []),
+            (MyDataclassConverterList, 42, [{'foobar': 0}]),
         ],
     )
     def to_preserialization_data(expect, converter, value, data):
