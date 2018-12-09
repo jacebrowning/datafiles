@@ -47,10 +47,12 @@ class InstanceManager:
         if not self._pattern:
             return None
 
+        cls = self._instance.__class__
         try:
-            root = Path(inspect.getfile(self._instance.__class__)).parent
+            root = Path(inspect.getfile(cls)).parent
         except TypeError:
-            log.warn(f'Unable to determine module for {self._instance}')
+            level = log.DEBUG if '__main__' in str(cls) else log.WARNING
+            log.log(level, f'Unable to determine module for {cls}')
             root = Path.cwd()
 
         relpath = self._pattern.format(self=self._instance)
