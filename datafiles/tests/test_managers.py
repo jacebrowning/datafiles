@@ -47,10 +47,10 @@ def describe_instance_manager():
             manager.attrs = {'foobar': MyField}
             expect(manager.text) == "foobar: 42\n"
 
-        def with_custom_format(expect, manager):
+        def with_json_format(expect, manager):
             manager._pattern = '_.json'
             manager.attrs = {'foobar': MyField}
-            expect(manager.text) == '{"foobar": 42}'
+            expect(manager.text) == '{\n  "foobar": 42\n}'
 
         def with_unknown_format(expect, manager):
             manager._pattern = '_.xyz'

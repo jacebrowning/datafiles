@@ -62,6 +62,7 @@ def describe_converter():
     @pytest.mark.parametrize(
         'converter, data, value',
         [
+            # Builtins
             (converters.Boolean, '1', True),
             (converters.Boolean, '0', False),
             (converters.Boolean, 'enabled', True),
@@ -84,6 +85,7 @@ def describe_converter():
             (converters.String, 42, '42'),
             (converters.String, True, 'True'),
             (converters.String, False, 'False'),
+            # Containers
             (IntegerList, [], []),
             (IntegerList, '1, 2.3', [1, 2]),
             (IntegerList, '42', [42]),
@@ -117,10 +119,12 @@ def describe_converter():
     @pytest.mark.parametrize(
         'converter, value, data',
         [
+            # Builtins
             (converters.Boolean, None, False),
             (converters.Float, None, 0.0),
             (converters.Integer, None, 0),
             (converters.String, None, ''),
+            # Containers
             (StringList, 'ab', ['ab']),
             (StringList, ('b', 1, 'A'), ['b', '1', 'A']),
             (StringList, {'b', 1, 'A'}, ['1', 'A', 'b']),
