@@ -55,7 +55,7 @@ class JSON(Formatter):
 
     @classmethod
     def serialize(cls, data):
-        return json.dumps(data)
+        return json.dumps(data, indent=2)
 
 
 def deserialize(path: Path, extension: Text) -> Dict:

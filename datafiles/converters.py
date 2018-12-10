@@ -4,6 +4,7 @@ from collections.abc import Iterable
 from typing import Any, Dict, Union
 
 import log
+from ruamel.yaml.scalarstring import LiteralScalarString
 
 from .utils import Missing, cached
 
@@ -91,10 +92,21 @@ class Integer(Converter):
                 return data
 
 
+class Number(Float):
+    DEFAULT = 0
+
+    @classmethod
+    def to_preserialization_data(cls, python_value):
+        data = super().to_preserialization_data(python_value)
+        if int(data) == data:
+            return int(data)
+        return data
+
+
 class String(Converter):
 
     TYPE = str
-    DEFAULT = ''
+    DEFAULT = ""
 
     @classmethod
     def to_python_value(cls, deserialized_data):
@@ -105,6 +117,22 @@ class String(Converter):
         if python_value is None:
             return cls.DEFAULT
         return cls.TYPE(python_value)
+
+
+class Text(String):
+    DEFAULT = ""
+
+    @classmethod
+    def to_python_value(cls, deserialized_data):
+        value = cls.to_preserialization_data(deserialized_data)
+        if value.endswith('\n\n'):
+            return value[:-1]
+        return value
+
+    @classmethod
+    def to_preserialization_data(cls, python_value):
+        data = super().to_preserialization_data(python_value)
+        return LiteralScalarString(data + '\n')
 
 
 class List:
@@ -271,5 +299,9 @@ def map_type(cls):
             if converter.TYPE == cls:
                 log.debug(f'Mapped {cls} to existing converter: {converter}')
                 return converter
+
+    if issubclass(cls, Converter):
+        log.debug(f'Mapped {cls} to existing converter (itself)')
+        return cls
 
     raise TypeError(f'Could not map type: {cls}')

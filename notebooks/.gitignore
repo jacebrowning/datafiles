@@ -1,3 +1,7 @@
 .ipynb_checkpoints/
 
+*.ini
+*.json
+*.toml
+*.xml
 *.yml
