@@ -21,7 +21,7 @@ def sample():
 
 
 def describe_number():
-    def when_float_to_integer(sample, expect, read, dedent):
+    def with_float_to_integer(sample, expect, read, dedent):
         sample.number = 1.23
 
         expect(read('tmp/sample.yml')) == dedent(
@@ -38,7 +38,7 @@ def describe_number():
             """
         )
 
-    def when_integer_to_float(sample, write, expect):
+    def with_integer_to_float(sample, write, expect):
         write(
             'tmp/sample.yml',
             """
@@ -59,7 +59,16 @@ def describe_number():
 
 
 def describe_text():
-    def when_multiple_lines(sample, expect, read, dedent, write):
+    def with_single_line(sample, expect, read, dedent):
+        sample.text = "Hello, world!"
+
+        expect(read('tmp/sample.yml')) == dedent(
+            """
+            text: Hello, world!
+            """
+        )
+
+    def with_multiple_lines(sample, expect, read, dedent, write):
         sample.text = '\n'.join(f'Line {i+1}' for i in range(3))
 
         expect(read('tmp/sample.yml')) == dedent(

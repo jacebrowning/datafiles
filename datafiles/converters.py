@@ -132,7 +132,9 @@ class Text(String):
     @classmethod
     def to_preserialization_data(cls, python_value):
         data = super().to_preserialization_data(python_value)
-        return LiteralScalarString(data + '\n')
+        if '\n' in data:
+            return LiteralScalarString(data + '\n')
+        return data
 
 
 class List:
