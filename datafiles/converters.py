@@ -124,14 +124,14 @@ class Text(String):
 
     @classmethod
     def to_python_value(cls, deserialized_data):
-        value = cls.to_preserialization_data(deserialized_data)
-        if value.endswith('\n\n'):
-            return value[:-1]
+        value = cls.to_preserialization_data(deserialized_data).strip()
+        if '\n' in value:
+            return value + '\n'
         return value
 
     @classmethod
     def to_preserialization_data(cls, python_value):
-        data = super().to_preserialization_data(python_value)
+        data = super().to_preserialization_data(python_value).strip()
         if '\n' in data:
             return LiteralScalarString(data + '\n')
         return data

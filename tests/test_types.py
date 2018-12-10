@@ -91,3 +91,19 @@ def describe_text():
         )
 
         expect(sample.text) == "Line 4\nLine 5\nLine 6\n"
+
+    def with_extra_newlines(sample, expect, read, dedent):
+        sample.text = "\nabc\ndef\n\n"
+
+        expect(read('tmp/sample.yml')) == dedent(
+            """
+            text: |
+              abc
+              def
+            """
+        )
+
+        sample.datafile.load()
+        sample.datafile.save()
+
+        expect(sample.text) == "abc\ndef\n"
