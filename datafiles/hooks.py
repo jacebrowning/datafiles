@@ -24,8 +24,6 @@ SAVE_AFTER_METHODS = [
     'update',
 ]
 
-FLAG = '_patched_method'
-
 
 def apply(instance, datafile, get_datafile):
     """Path methods that get or set attributes."""

@@ -9,9 +9,6 @@ from .converters import Converter, map_type
 from .managers import InstanceManager, ModelManager
 
 
-FLAG = '_patched_init'
-
-
 @dataclasses.dataclass
 class ModelMeta:
     datafile_attrs: Optional[Dict[str, Converter]] = None
@@ -78,10 +75,6 @@ def get_datafile(obj) -> InstanceManager:
 
 def create_model(cls, *, attrs=None, pattern=None, manual=None, defaults=None):
     """Patch datafile attributes on to an existing dataclass."""
-
-    if getattr(cls, FLAG, False):
-        return cls
-
     log.debug(f'Converting {cls} to a datafile model')
 
     if not dataclasses.is_dataclass(cls):
@@ -114,7 +107,5 @@ def create_model(cls, *, attrs=None, pattern=None, manual=None, defaults=None):
 
     cls.__init__ = modified_init
     cls.__init__.__doc__ = init.__doc__
-
-    setattr(cls, FLAG, True)
 
     return cls
