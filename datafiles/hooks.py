@@ -4,6 +4,8 @@ from functools import wraps
 
 import log
 
+from . import settings
+
 
 LOAD_BEFORE_METHODS = ['__getattribute__', '__getitem__', '__iter__']
 SAVE_AFTER_METHODS = [
@@ -23,13 +25,7 @@ SAVE_AFTER_METHODS = [
 ]
 
 
-ENABLED = True
-HIDE = True
-
-FLAG = '_patched_method'
-
-
-def enable(instance, datafile, get_datafile):
+def apply(instance, datafile, get_datafile):
     """Path methods that get or set attributes."""
     cls = instance.__class__
 
@@ -50,18 +46,10 @@ def enable(instance, datafile, get_datafile):
         if dataclasses.is_dataclass(attr):
             if not hasattr(attr, 'datafile'):
                 attr.datafile = get_datafile(attr)
-            enable(attr, datafile, get_datafile)
-
-
-@contextmanager
-def disabled():
-    global ENABLED
-    if ENABLED:
-        ENABLED = False
-        yield
-        ENABLED = True
-    else:
-        yield
+            apply(attr, datafile, get_datafile)
+        # TODO: Patch all containers
+        # elif isinstance(attr, (list, dict)):
+        #     apply(attr, datafile, get_datafile)
 
 
 def load_before(cls, method, datafile):
@@ -72,12 +60,10 @@ def load_before(cls, method, datafile):
 
     @wraps(method)
     def wrapped(self, *args, **kwargs):
-        __tracebackhide__ = HIDE  # pylint: disable=unused-variable
+        __tracebackhide__ = settings.HIDE_TRACEBACK_IN_HOOKS
 
-        if ENABLED and external_method_call(method.__name__, args):
-            if datafile.manual:
-                log.debug('Automatic loading is disabled')
-            elif datafile.exists and datafile.modified:
+        if enabled(datafile, args):
+            if datafile.exists and datafile.modified:
                 log.debug(f"Loading automatically before '{name}' call")
 
                 with disabled():
@@ -101,9 +87,9 @@ def save_after(cls, method, datafile):
 
     @wraps(method)
     def wrapped(self, *args, **kwargs):
-        __tracebackhide__ = HIDE  # pylint: disable=unused-variable
+        __tracebackhide__ = settings.HIDE_TRACEBACK_IN_HOOKS
 
-        if ENABLED and external_method_call(method.__name__, args):
+        if enabled(datafile, args):
             if datafile.exists and datafile.modified:
                 log.debug(f"Loading modified datafile before '{name}' call")
                 with disabled():
@@ -111,29 +97,39 @@ def save_after(cls, method, datafile):
 
         result = method(self, *args, **kwargs)
 
-        if ENABLED and external_method_call(method.__name__, args):
-            if datafile.manual:
-                log.debug(f'Automatic saving is disabled')
-            else:
-                log.debug(f"Saving automatically after '{name}' call")
-                with disabled():
-                    datafile.save()
+        if enabled(datafile, args):
+            log.debug(f"Saving automatically after '{name}' call")
+            with disabled():
+                datafile.save()
 
         return result
 
     return wrapped
 
 
-def external_method_call(name, args):
-    """Determine if a call accesses private attributes or variables."""
-
-    if name in {'__init__', '__post_init__'}:
+def enabled(datafile, args) -> bool:
+    """Determine if hooks are enabled for the current method."""
+    if not settings.HOOKS_ENABLED:
         return False
 
-    if args and args[0] in {'Meta', 'datafile', '_datafile'}:
+    if datafile.manual:
         return False
 
-    if name in {'__getattribute__', '__setattr__'}:
-        return not args[0].startswith('_')
+    if args and args[0] in {'Meta', 'datafile'}:
+        return False
+
+    if args and isinstance(args[0], str) and args[0].startswith('_'):
+        return False
 
     return True
+
+
+@contextmanager
+def disabled():
+    """Globally disable method hooks, temporarily."""
+    if settings.HOOKS_ENABLED:
+        settings.HOOKS_ENABLED = False
+        yield
+        settings.HOOKS_ENABLED = True
+    else:
+        yield

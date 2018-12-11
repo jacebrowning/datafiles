@@ -1,5 +1,3 @@
-# pylint: disable=no-self-argument,protected-access,attribute-defined-outside-init
-
 import dataclasses
 from typing import Dict, Optional
 
@@ -9,9 +7,6 @@ from classproperties import classproperty
 from . import hooks
 from .converters import Converter, map_type
 from .managers import InstanceManager, ModelManager
-
-
-FLAG = '_patched_init'
 
 
 @dataclasses.dataclass
@@ -28,6 +23,7 @@ class Model:
     Meta: ModelMeta = ModelMeta()
 
     def __post_init__(self):
+        # pylint: disable=attribute-defined-outside-init
         log.debug(f'Initializing {self.__class__} instance')
 
         with hooks.disabled():
@@ -36,7 +32,6 @@ class Model:
 
             path = self.datafile.path
             exists = self.datafile.exists
-            automatic = not self.datafile.manual
 
             if path:
                 log.debug(f'Datafile path: {path}')
@@ -47,13 +42,12 @@ class Model:
                 elif path:
                     self.datafile.save()
 
-                if automatic:
-                    hooks.enable(self, self.datafile, get_datafile)
+                hooks.apply(self, self.datafile, get_datafile)
 
         log.debug(f'Initialized {self.__class__} instance')
 
     @classproperty
-    def datafiles(cls) -> ModelManager:
+    def datafiles(cls) -> ModelManager:  # pylint: disable=no-self-argument
         return ModelManager(cls)
 
 
@@ -81,10 +75,6 @@ def get_datafile(obj) -> InstanceManager:
 
 def create_model(cls, *, attrs=None, pattern=None, manual=None, defaults=None):
     """Patch datafile attributes on to an existing dataclass."""
-
-    if getattr(cls, FLAG, False):
-        return cls
-
     log.debug(f'Converting {cls} to a datafile model')
 
     if not dataclasses.is_dataclass(cls):
@@ -117,7 +107,5 @@ def create_model(cls, *, attrs=None, pattern=None, manual=None, defaults=None):
 
     cls.__init__ = modified_init
     cls.__init__.__doc__ = init.__doc__
-
-    setattr(cls, FLAG, True)
 
     return cls

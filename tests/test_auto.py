@@ -4,6 +4,7 @@ from dataclasses import dataclass, field
 from typing import List
 
 import log
+import pytest
 
 from datafiles import sync
 
@@ -127,6 +128,22 @@ def describe_automatic_save():
             items: []
             """
         )
+
+    def describe_non_dataclasses():
+        @pytest.mark.xfail
+        def with_append(logbreak, expect, read, dedent):
+            sample = Sample()
+
+            logbreak()
+            sample.items.append(2)
+
+            expect(read('tmp/sample.yml')) == dedent(
+                """
+                items:
+                - 1
+                - 2
+                """
+            )
 
 
 def describe_automatic_load_with_nesting():
