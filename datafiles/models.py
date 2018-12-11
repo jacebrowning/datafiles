@@ -1,5 +1,3 @@
-# pylint: disable=no-self-argument,protected-access,attribute-defined-outside-init
-
 import dataclasses
 from typing import Dict, Optional
 
@@ -28,6 +26,7 @@ class Model:
     Meta: ModelMeta = ModelMeta()
 
     def __post_init__(self):
+        # pylint: disable=attribute-defined-outside-init
         log.debug(f'Initializing {self.__class__} instance')
 
         with hooks.disabled():
@@ -36,7 +35,6 @@ class Model:
 
             path = self.datafile.path
             exists = self.datafile.exists
-            automatic = not self.datafile.manual
 
             if path:
                 log.debug(f'Datafile path: {path}')
@@ -47,13 +45,12 @@ class Model:
                 elif path:
                     self.datafile.save()
 
-                if automatic:
-                    hooks.enable(self, self.datafile, get_datafile)
+                hooks.apply(self, self.datafile, get_datafile)
 
         log.debug(f'Initialized {self.__class__} instance')
 
     @classproperty
-    def datafiles(cls) -> ModelManager:
+    def datafiles(cls) -> ModelManager:  # pylint: disable=no-self-argument
         return ModelManager(cls)
 
 

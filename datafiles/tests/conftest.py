@@ -3,10 +3,10 @@ from shutil import get_terminal_size
 import log
 import pytest
 
-from datafiles import hooks
+from datafiles import settings
 
 
-hooks.HIDE = False
+settings.HIDE_TRACEBACK_IN_HOOKS = False
 
 
 @pytest.fixture

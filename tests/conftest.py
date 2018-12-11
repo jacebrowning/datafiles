@@ -4,10 +4,10 @@ from shutil import get_terminal_size, rmtree
 import log
 import pytest
 
-from datafiles import hooks
+from datafiles import settings
 
 
-hooks.HIDE = False
+settings.HIDE_TRACEBACK_IN_HOOKS = False
 
 
 def pytest_configure(config):
