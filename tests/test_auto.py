@@ -92,6 +92,23 @@ def describe_automatic_load():
 
         expect([x for x in sample]) == [3]
 
+    def describe_nesting():
+        def with_getattr(write, expect):
+            sample = SampleWithNesting(1)
+
+            log.info("Modifying nested file")
+            write(
+                'tmp/sample.yml',
+                """
+                item: 1
+                nested:
+                  name: c
+                """,
+            )
+
+            expect(sample.nested.name) == 'c'
+            expect(sample.nested.score) == 3.4
+
 
 def describe_automatic_save():
     def with_setattr(logbreak, expect, read, dedent):
@@ -129,7 +146,22 @@ def describe_automatic_save():
             """
         )
 
-    def describe_non_dataclasses():
+    def describe_nesting():
+        def with_setattr(logbreak, expect, read, dedent):
+            sample = SampleWithNesting(2)
+
+            logbreak()
+            sample.nested.name = 'd'
+            logbreak()
+
+            expect(read('tmp/sample.yml')) == dedent(
+                """
+                item: 2
+                nested:
+                  name: d
+                """
+            )
+
         @pytest.mark.xfail
         def with_append(logbreak, expect, read, dedent):
             sample = Sample()
@@ -144,41 +176,6 @@ def describe_automatic_save():
                 - 2
                 """
             )
-
-
-def describe_automatic_load_with_nesting():
-    def with_getattr(write, expect):
-        sample = SampleWithNesting(1)
-
-        log.info("Modifying nested file")
-        write(
-            'tmp/sample.yml',
-            """
-            item: 1
-            nested:
-              name: c
-            """,
-        )
-
-        expect(sample.nested.name) == 'c'
-        expect(sample.nested.score) == 3.4
-
-
-def describe_automatic_save_with_nesting():
-    def with_setattr(logbreak, expect, read, dedent):
-        sample = SampleWithNesting(2)
-
-        logbreak()
-        sample.nested.name = 'd'
-        logbreak()
-
-        expect(read('tmp/sample.yml')) == dedent(
-            """
-            item: 2
-            nested:
-              name: d
-            """
-        )
 
 
 def describe_automatic_load_before_save():
