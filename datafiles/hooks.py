@@ -49,6 +49,9 @@ def apply(instance, datafile, get_datafile):
             if not hasattr(attr, 'datafile'):
                 attr.datafile = get_datafile(attr)
             apply(attr, datafile, get_datafile)
+        # TODO: Patch all containers
+        # elif isinstance(attr, (list, dict)):
+        #     apply(attr, datafile, get_datafile)
 
 
 def load_before(cls, method, datafile):
@@ -61,7 +64,7 @@ def load_before(cls, method, datafile):
     def wrapped(self, *args, **kwargs):
         __tracebackhide__ = settings.HIDE_TRACEBACK_IN_HOOKS
 
-        if enabled(datafile, name, args):
+        if enabled(datafile, args):
             if datafile.exists and datafile.modified:
                 log.debug(f"Loading automatically before '{name}' call")
 
@@ -88,7 +91,7 @@ def save_after(cls, method, datafile):
     def wrapped(self, *args, **kwargs):
         __tracebackhide__ = settings.HIDE_TRACEBACK_IN_HOOKS
 
-        if enabled(datafile, name, args):
+        if enabled(datafile, args):
             if datafile.exists and datafile.modified:
                 log.debug(f"Loading modified datafile before '{name}' call")
                 with disabled():
@@ -96,7 +99,7 @@ def save_after(cls, method, datafile):
 
         result = method(self, *args, **kwargs)
 
-        if enabled(datafile, name, args):
+        if enabled(datafile, args):
             log.debug(f"Saving automatically after '{name}' call")
             with disabled():
                 datafile.save()
@@ -106,13 +109,21 @@ def save_after(cls, method, datafile):
     return wrapped
 
 
-def enabled(datafile, name, args) -> bool:
+def enabled(datafile, args) -> bool:
     """Determine if hooks are enabled for the current method."""
     if not settings.HOOKS_ENABLED:
         return False
+
     if datafile.manual:
         return False
-    return external_method_call(name, args)
+
+    if args and args[0] in {'Meta', 'datafile'}:
+        return False
+
+    if args and isinstance(args[0], str) and args[0].startswith('_'):
+        return False
+
+    return True
 
 
 @contextmanager
@@ -124,18 +135,3 @@ def disabled():
         settings.HOOKS_ENABLED = True
     else:
         yield
-
-
-def external_method_call(name, args):
-    """Determine if a call accesses private attributes or variables."""
-
-    if name in {'__init__', '__post_init__'}:
-        return False
-
-    if args and args[0] in {'Meta', 'datafile', '_datafile'}:
-        return False
-
-    if name in {'__getattribute__', '__setattr__'}:
-        return not args[0].startswith('_')
-
-    return True
