@@ -25,6 +25,10 @@ SAVE_AFTER_METHODS = [
 ]
 
 
+class List(list):
+    """List wrapper to enable patching."""
+
+
 def apply(instance, datafile, get_datafile):
     """Path methods that get or set attributes."""
     cls = instance.__class__
@@ -41,15 +45,15 @@ def apply(instance, datafile, get_datafile):
             modified_method = save_after(cls, method, datafile)
             setattr(cls, name, modified_method)
 
-    for name in instance.datafile.attrs:
-        attr = getattr(instance, name)
-        if dataclasses.is_dataclass(attr):
-            if not hasattr(attr, 'datafile'):
-                attr.datafile = get_datafile(attr)
-            apply(attr, datafile, get_datafile)
-        # TODO: Patch all containers
-        # elif isinstance(attr, (list, dict)):
-        #     apply(attr, datafile, get_datafile)
+    if hasattr(instance, 'datafile'):
+        for name in instance.datafile.attrs:
+            attr = getattr(instance, name)
+            if dataclasses.is_dataclass(attr):
+                apply(attr, datafile, get_datafile)
+            elif isinstance(attr, list):
+                attr = List(attr)
+                setattr(instance, name, attr)
+                apply(attr, datafile, get_datafile)
 
 
 def load_before(cls, method, datafile):

@@ -4,7 +4,6 @@ from dataclasses import dataclass, field
 from typing import List
 
 import log
-import pytest
 
 from datafiles import sync
 
@@ -162,7 +161,6 @@ def describe_automatic_save():
                 """
             )
 
-        @pytest.mark.xfail
         def with_append(logbreak, expect, read, dedent):
             sample = Sample()
 
