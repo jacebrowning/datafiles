@@ -59,6 +59,10 @@ class InstanceManager:
         return (root / relpath).resolve()
 
     @property
+    def relpath(self) -> Path:
+        return self.path.relative_to(Path.cwd())
+
+    @property
     def exists(self) -> bool:
         if self.path:
             return self.path.exists()
@@ -151,7 +155,7 @@ class InstanceManager:
         if not self.path:
             raise RuntimeError("'pattern' must be set to load the model")
 
-        message = f'Deserializing: {self.path}'
+        message = f'Deserializing: {self.relpath}'
         frame = '=' * len(message)
         log.info(message)
         data = formats.deserialize(self.path, self.path.suffix)
@@ -268,7 +272,7 @@ class InstanceManager:
 
         self.path.parent.mkdir(parents=True, exist_ok=True)
 
-        message = f'Writing: {self.path}'
+        message = f'Writing: {self.relpath}'
         frame = '=' * len(message)
         log.info(message)
         log.debug(frame + '\n\n' + (text or '<nothing>\n'))
