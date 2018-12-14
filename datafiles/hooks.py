@@ -1,6 +1,7 @@
 import dataclasses
 from contextlib import contextmanager, suppress
 from functools import wraps
+from types import new_class
 
 import log
 
@@ -25,10 +26,6 @@ SAVE_AFTER_METHODS = [
 ]
 
 
-class List(list):
-    """List wrapper to enable patching."""
-
-
 def apply(instance, datafile, get_datafile):
     """Path methods that get or set attributes."""
     cls = instance.__class__
@@ -50,8 +47,8 @@ def apply(instance, datafile, get_datafile):
             attr = getattr(instance, name)
             if dataclasses.is_dataclass(attr):
                 apply(attr, datafile, get_datafile)
-            elif isinstance(attr, list):
-                attr = List(attr)
+            elif type(attr) == list:  # pylint: disable=unidiomatic-typecheck
+                attr = new_class('List', (list,))(attr)
                 setattr(instance, name, attr)
                 apply(attr, datafile, get_datafile)
 
