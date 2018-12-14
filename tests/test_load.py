@@ -257,7 +257,7 @@ def describe_lists():
 
         expect(sample.items) == []
 
-    def with_partial_list_value(write, expect):
+    def with_partial_list_value(logbreak, write, expect):
         write(
             'tmp/sample.yml',
             """
@@ -266,6 +266,8 @@ def describe_lists():
             """,
         )
 
+        logbreak()
         sample = SampleWithListOfDataclasses()
+        logbreak()
 
         expect(sample.items) == [_NestedSample1(name='abc', score=0.0)]

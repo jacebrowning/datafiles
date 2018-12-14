@@ -1,6 +1,7 @@
 import dataclasses
 from contextlib import contextmanager, suppress
 from functools import wraps
+from types import new_class
 
 import log
 
@@ -41,15 +42,15 @@ def apply(instance, datafile, get_datafile):
             modified_method = save_after(cls, method, datafile)
             setattr(cls, name, modified_method)
 
-    for name in instance.datafile.attrs:
-        attr = getattr(instance, name)
-        if dataclasses.is_dataclass(attr):
-            if not hasattr(attr, 'datafile'):
-                attr.datafile = get_datafile(attr)
-            apply(attr, datafile, get_datafile)
-        # TODO: Patch all containers
-        # elif isinstance(attr, (list, dict)):
-        #     apply(attr, datafile, get_datafile)
+    if hasattr(instance, 'datafile'):
+        for name in instance.datafile.attrs:
+            attr = getattr(instance, name)
+            if dataclasses.is_dataclass(attr):
+                apply(attr, datafile, get_datafile)
+            elif type(attr) == list:  # pylint: disable=unidiomatic-typecheck
+                attr = new_class('List', (list,))(attr)
+                setattr(instance, name, attr)
+                apply(attr, datafile, get_datafile)
 
 
 def load_before(cls, method, datafile):
