@@ -59,98 +59,118 @@ def describe_map_type():
 
 
 def describe_converter():
-    @pytest.mark.parametrize(
-        'converter, data, value',
-        [
-            # Builtins
-            (converters.Boolean, '1', True),
-            (converters.Boolean, '0', False),
-            (converters.Boolean, 'enabled', True),
-            (converters.Boolean, 'disabled', False),
-            (converters.Boolean, 'T', True),
-            (converters.Boolean, 'F', False),
-            (converters.Boolean, 'true', True),
-            (converters.Boolean, 'false', False),
-            (converters.Boolean, 'Y', True),
-            (converters.Boolean, 'N', False),
-            (converters.Boolean, 'yes', True),
-            (converters.Boolean, 'no', False),
-            (converters.Boolean, 'on', True),
-            (converters.Boolean, 'off', False),
-            (converters.Boolean, 0, False),
-            (converters.Boolean, 1, True),
-            (converters.Float, 4, 4.0),
-            (converters.Integer, 4.2, 4),
-            (converters.String, 4.2, '4.2'),
-            (converters.String, 42, '42'),
-            (converters.String, True, 'True'),
-            (converters.String, False, 'False'),
-            # Containers
-            (IntegerList, [], []),
-            (IntegerList, '1, 2.3', [1, 2]),
-            (IntegerList, '42', [42]),
-            (IntegerList, 42, [42]),
-            (IntegerList, None, []),
-            (IntegerList, [42], [42]),
-            (IntegerList, [None], []),
-            (IntegerList, [None, None], []),
-            (MyDataclassConverter, None, MyDataclass(foobar=0)),
-            (MyDataclassConverterList, None, []),
-            (MyDataclassConverterList, 42, [MyDataclass(foobar=0)]),
-        ],
-    )
-    def to_python_value(expect, converter, data, value):
-        expect(converter.to_python_value(data)) == value
+    def describe_to_python_value():
+        @pytest.mark.parametrize(
+            'converter, data, value',
+            [
+                # Builtins
+                (converters.Boolean, '1', True),
+                (converters.Boolean, '0', False),
+                (converters.Boolean, 'enabled', True),
+                (converters.Boolean, 'disabled', False),
+                (converters.Boolean, 'T', True),
+                (converters.Boolean, 'F', False),
+                (converters.Boolean, 'true', True),
+                (converters.Boolean, 'false', False),
+                (converters.Boolean, 'Y', True),
+                (converters.Boolean, 'N', False),
+                (converters.Boolean, 'yes', True),
+                (converters.Boolean, 'no', False),
+                (converters.Boolean, 'on', True),
+                (converters.Boolean, 'off', False),
+                (converters.Boolean, 0, False),
+                (converters.Boolean, 1, True),
+                (converters.Float, 4, 4.0),
+                (converters.Integer, 4.2, 4),
+                (converters.String, 4.2, '4.2'),
+                (converters.String, 42, '42'),
+                (converters.String, True, 'True'),
+                (converters.String, False, 'False'),
+                # Containers
+                (IntegerList, [], []),
+                (IntegerList, '1, 2.3', [1, 2]),
+                (IntegerList, '42', [42]),
+                (IntegerList, 42, [42]),
+                (IntegerList, None, []),
+                (IntegerList, [42], [42]),
+                (IntegerList, [None], []),
+                (IntegerList, [None, None], []),
+                (MyDataclassConverter, None, MyDataclass(foobar=0)),
+                (MyDataclassConverterList, None, []),
+                (MyDataclassConverterList, 42, [MyDataclass(foobar=0)]),
+            ],
+        )
+        def when_nominal(expect, converter, data, value):
+            expect(converter.to_python_value(data, value=None)) == value
 
-    def to_python_value_when_invalid(expect):
-        message = "invalid literal for int() with base 10: 'a'"
-        with expect.raises(ValueError, message):
-            converters.Integer.to_python_value('a')
+        def when_invalid(expect):
+            message = "invalid literal for int() with base 10: 'a'"
+            with expect.raises(ValueError, message):
+                converters.Integer.to_python_value('a')
 
-    def to_python_value_when_list_of_dataclasses(logbreak, expect):
-        converter = converters.map_type(List[MyDataclass])
+        def when_list_of_dataclasses(logbreak, expect):
+            converter = converters.map_type(List[MyDataclass])
 
-        logbreak()
-        data = [{'foobar': 1}, {'foobar': 2}, {'foobar': 3}]
-        value = [MyDataclass(1), MyDataclass(2), MyDataclass(3)]
+            logbreak()
+            data = [{'foobar': 1}, {'foobar': 2}, {'foobar': 3}]
+            value = [MyDataclass(1), MyDataclass(2), MyDataclass(3)]
 
-        expect(converter.to_python_value(data)) == value
+            expect(converter.to_python_value(data, value=None)) == value
 
-    @pytest.mark.parametrize(
-        'converter, value, data',
-        [
-            # Builtins
-            (converters.Boolean, None, False),
-            (converters.Float, None, 0.0),
-            (converters.Integer, None, 0),
-            (converters.String, None, ''),
-            # Containers
-            (StringList, 'ab', ['ab']),
-            (StringList, ('b', 1, 'A'), ['b', '1', 'A']),
-            (StringList, {'b', 1, 'A'}, ['1', 'A', 'b']),
-            (StringList, 42, ['42']),
-            (StringList, [123, True, False], ['123', 'True', 'False']),
-            (StringList, [], []),
-            (StringList, None, []),
-            (MyDataclassConverter, None, {'foobar': 0}),
-            (MyDataclassConverterList, None, []),
-            (MyDataclassConverterList, 42, [{'foobar': 0}]),
-        ],
-    )
-    def to_preserialization_data(expect, converter, value, data):
-        expect(converter.to_preserialization_data(value)) == data
+        def with_existing_list(expect):
+            value = [1, 2]
 
-    def to_preserialization_data_when_invalid(expect):
-        message = "invalid literal for int() with base 10: 'a'"
-        with expect.raises(ValueError, message):
-            converters.Integer.to_preserialization_data('a')
+            value2 = IntegerList.to_python_value("3, 4", value=value)
 
-    def to_preserialization_data_when_list_of_dataclasses(logbreak, expect):
-        converter = converters.map_type(List[MyDataclass])
+            expect(value2) == [3, 4]
+            expect(id(value2)) == id(value)
 
-        logbreak()
-        value = [MyDataclass(1), MyDataclass(2), MyDataclass(3)]
-        data = [{'foobar': 1}, {'foobar': 2}, {'foobar': 3}]
+        def with_existing_dataclass(expect):
+            value = MyDataclass(foobar=1)
 
-        expect(converter.to_preserialization_data(value)) == data
-        expect(converter.to_preserialization_data(data)) == data
+            value2 = MyDataclassConverter.to_python_value(
+                {'foobar': 2}, value=value
+            )
+
+            expect(value2) == MyDataclass(foobar=2)
+            expect(id(value2)) == id(value)
+
+    def describe_to_preserialization_data():
+        @pytest.mark.parametrize(
+            'converter, value, data',
+            [
+                # Builtins
+                (converters.Boolean, None, False),
+                (converters.Float, None, 0.0),
+                (converters.Integer, None, 0),
+                (converters.String, None, ''),
+                # Containers
+                (StringList, 'ab', ['ab']),
+                (StringList, ('b', 1, 'A'), ['b', '1', 'A']),
+                (StringList, {'b', 1, 'A'}, ['1', 'A', 'b']),
+                (StringList, 42, ['42']),
+                (StringList, [123, True, False], ['123', 'True', 'False']),
+                (StringList, [], []),
+                (StringList, None, []),
+                (MyDataclassConverter, None, {'foobar': 0}),
+                (MyDataclassConverterList, None, []),
+                (MyDataclassConverterList, 42, [{'foobar': 0}]),
+            ],
+        )
+        def when_nominal(expect, converter, value, data):
+            expect(converter.to_preserialization_data(value)) == data
+
+        def when_invalid(expect):
+            message = "invalid literal for int() with base 10: 'a'"
+            with expect.raises(ValueError, message):
+                converters.Integer.to_preserialization_data('a')
+
+        def when_list_of_dataclasses(logbreak, expect):
+            converter = converters.map_type(List[MyDataclass])
+
+            logbreak()
+            value = [MyDataclass(1), MyDataclass(2), MyDataclass(3)]
+            data = [{'foobar': 1}, {'foobar': 2}, {'foobar': 3}]
+
+            expect(converter.to_preserialization_data(value)) == data
+            expect(converter.to_preserialization_data(data)) == data
