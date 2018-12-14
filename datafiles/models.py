@@ -52,8 +52,10 @@ class Model:
 
 
 def get_datafile(obj) -> InstanceManager:
-    log.debug(f"Getting 'datafile' for {obj.__class__} instance")
-    assert not hasattr(obj, 'datafile')
+    try:
+        return obj.datafile
+    except AttributeError:
+        log.debug(f"Getting 'datafile' for {obj.__class__} instance")
 
     m = getattr(obj, 'Meta', None)
     pattern = getattr(m, 'datafile_pattern', None)
