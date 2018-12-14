@@ -1,7 +1,7 @@
 # pylint: disable=unused-variable,no-member
 
 from dataclasses import dataclass, field
-from typing import List
+from typing import Dict, List
 
 import log
 
@@ -13,6 +13,7 @@ from datafiles import sync
 class Sample:
     item: str = 'a'
     items: List[int] = field(default_factory=lambda: [1])
+    data: Dict[str, int] = field(default_factory=lambda: {'a': 1})
 
     # pylint: disable=unsubscriptable-object
     def __getitem__(self, key):
@@ -214,6 +215,34 @@ def describe_automatic_save():
               items:
               - 2
               - 3
+            """
+        )
+
+    def with_update(logbreak, expect, read, dedent):
+        sample = Sample()
+
+        logbreak()
+        sample.data.update({'b': 2})
+
+        expect(read('tmp/sample.yml')) == dedent(
+            """
+            data:
+              a: 1
+              b: 2
+            """
+        )
+
+        sample.datafile.load()
+
+        logbreak()
+        sample.data.update({'c': 3})
+
+        expect(read('tmp/sample.yml')) == dedent(
+            """
+            data:
+              a: 1
+              b: 2
+              c: 3
             """
         )
 

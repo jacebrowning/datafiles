@@ -19,6 +19,7 @@ class MyNonDataclass:
 
 IntegerList = converters.List.subclass(converters.Integer)
 StringList = converters.List.subclass(converters.String)
+MyDict = converters.Dictionary.subclass(None, {}, name='MyDict')
 MyDataclassConverter = converters.map_type(MyDataclass)
 MyDataclassConverterList = converters.map_type(List[MyDataclass])
 
@@ -38,6 +39,12 @@ def describe_map_type():
         with expect.raises(TypeError):
             converters.map_type(List)
 
+    def it_handles_dict_annotations(expect):
+        converter = converters.map_type(Dict[str, int])
+        expect(converter.__name__) == 'StringIntegerDict'
+        expect(converter.DATACLASS) == None
+        expect(converter.CONVERTERS) == {}
+
     def it_handles_dataclasses(expect):
         converter = converters.map_type(MyDataclass)
         expect(converter.__name__) == 'MyDataclassConverter'
@@ -55,7 +62,7 @@ def describe_map_type():
 
     def it_rejects_unhandled_type_annotations(expect):
         with expect.raises(TypeError):
-            converters.map_type(Dict[str, int])
+            converters.map_type(None)
 
 
 def describe_converter():
@@ -123,6 +130,14 @@ def describe_converter():
             value2 = IntegerList.to_python_value("3, 4", value=value)
 
             expect(value2) == [3, 4]
+            expect(id(value2)) == id(value)
+
+        def when_existing_dict(expect):
+            value = {'a': 1}
+
+            value2 = MyDict.to_python_value({'b': 2}, value=value)
+
+            expect(value2) == {'b': 2}
             expect(id(value2)) == id(value)
 
         def with_existing_dataclass(expect):

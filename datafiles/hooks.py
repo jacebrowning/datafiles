@@ -52,6 +52,10 @@ def apply(instance, datafile, get_datafile):
                 attr = new_class('List', (list,))(attr)
                 setattr(instance, name, attr)
                 apply(attr, datafile, get_datafile)
+            elif type(attr) == dict:  # pylint: disable=unidiomatic-typecheck
+                attr = new_class('Dict', (dict,))(attr)
+                setattr(instance, name, attr)
+                apply(attr, datafile, get_datafile)
 
 
 def load_before(cls, method, datafile):

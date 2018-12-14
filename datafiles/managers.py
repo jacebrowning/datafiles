@@ -98,7 +98,7 @@ class InstanceManager:
         for name, converter in self.attrs.items():
             value = data[name]
 
-            if hasattr(converter, 'DATACLASS'):
+            if getattr(converter, 'DATACLASS', None):
                 log.debug(f"Converting '{name}' dataclass with {converter}")
                 if value is None:
                     value = {}
@@ -162,7 +162,7 @@ class InstanceManager:
         for name, converter in self.attrs.items():
             log.debug(f"Converting '{name}' data with {converter}")
 
-            if hasattr(converter, 'DATACLASS'):
+            if getattr(converter, 'DATACLASS', None):
                 self._set_dataclass_value(data, name, converter, first_load)
             else:
                 self._set_attribute_value(data, name, converter, first_load)

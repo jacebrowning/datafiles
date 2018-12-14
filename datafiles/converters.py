@@ -216,8 +216,8 @@ class Dictionary:
     CONVERTERS = None
 
     @classmethod
-    def subclass(cls, dataclass, converters: Dict[str, type]):
-        name = f'{dataclass.__name__}Converter'
+    def subclass(cls, dataclass, converters: Dict[str, type], name=''):
+        name = name or f'{dataclass.__name__}Converter'
         bases = (cls,)
         attributes = {'DATACLASS': dataclass, 'CONVERTERS': converters}
         return type(name, bases, attributes)
@@ -229,15 +229,23 @@ class Dictionary:
         else:
             data = {}
 
-        for name, converter in cls.CONVERTERS.items():
-            if name not in data:
-                data[name] = converter.to_python_value(None)
+        if cls.DATACLASS:
+            for name, converter in cls.CONVERTERS.items():
+                if name not in data:
+                    data[name] = converter.to_python_value(None)
 
-        new_value = cls.DATACLASS(**data)  # pylint: disable=not-callable
+            new_value = cls.DATACLASS(**data)  # pylint: disable=not-callable
+        else:
+            new_value = data
+
         if value is None:
             value = new_value
         else:
-            value.__dict__ = new_value.__dict__
+            try:
+                value.clear()
+                value.update(new_value)
+            except AttributeError:
+                value.__dict__ = new_value.__dict__
 
         return value
 
@@ -267,6 +275,9 @@ class Dictionary:
 
             data[name] = converter.to_preserialization_data(value)
 
+        if cls.DATACLASS is None:
+            data = dict(python_value)
+
         return data
 
 
@@ -295,6 +306,13 @@ def map_type(cls):
                 raise exc from None
             else:
                 converter = List.subclass(converter)
+
+        if cls.__origin__ == dict:
+            log.warn("Schema enforcement not possible with 'Dict' annotation")
+            key = map_type(cls.__args__[0])
+            value = map_type(cls.__args__[1])
+            name = f'{key.__name__}{value.__name__}Dict'
+            converter = Dictionary.subclass(None, {}, name=name)
 
         elif cls.__origin__ == Union:
             converter = map_type(cls.__args__[0])
