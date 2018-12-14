@@ -163,50 +163,51 @@ class InstanceManager:
             log.debug(f"Converting '{name}' data with {converter}")
 
             if hasattr(converter, 'DATACLASS'):
-                self._set_container_value(data, name, converter, first_load)
+                self._set_dataclass_value(data, name, converter, first_load)
             else:
                 self._set_attribute_value(data, name, converter, first_load)
 
         log.info(f'Loaded values for object: {self._instance}')
 
-    def _set_container_value(self, data, name, converter, first_load):
+    def _set_dataclass_value(self, data, name, converter, first_load):
         # TODO: Support nesting unlimited levels
         # https://github.com/jacebrowning/datafiles/issues/22
-        data2 = data.get(name)
-        if data2 is None:
+        nested_data = data.get(name)
+        if nested_data is None:
             return
 
-        log.debug(f'Converting nested data to Python: {data2}')
+        log.debug(f'Converting nested data to Python: {nested_data}')
 
-        value = getattr(self._instance, name)
-        if value is None:
+        dataclass = getattr(self._instance, name)
+        if dataclass is None:
             for field in dataclasses.fields(converter.DATACLASS):
-                if field.name not in data2:  # type: ignore
-                    data2[field.name] = None  # type: ignore
-            value = converter.to_python_value(data2)
+                if field.name not in nested_data:  # type: ignore
+                    nested_data[field.name] = None  # type: ignore
+            dataclass = converter.to_python_value(nested_data, value=dataclass)
         elif first_load:
             return
 
-        try:
-            manager2 = value.datafile
-        except AttributeError:
-            # TODO: Figure out why datafile wasn't set
+        # TODO: Figure out why datafile wasn't set
+        if not hasattr(dataclass, 'datafile'):
             from .models import get_datafile
 
-            manager2 = get_datafile(value)
+            log.warn(f"{dataclass} was missing 'datafile'")
+            dataclass.datafile = get_datafile(dataclass)
 
-        for name2, converter2 in manager2.attrs.items():
-            _value2 = data2.get(  # type: ignore
+        for name2, converter2 in dataclass.datafile.attrs.items():
+            _value = nested_data.get(  # type: ignore
                 # pylint: disable=protected-access
                 name2,
-                manager2._get_default_field_value(name2),
+                dataclass.datafile._get_default_field_value(name2),
             )
-            value2 = converter2.to_python_value(_value2)
-            log.debug(f"'{name2}' as Python: {value2!r}")
-            setattr(value, name2, value2)
+            value = converter2.to_python_value(
+                _value, value=getattr(dataclass, name2)
+            )
+            log.debug(f"'{name2}' as Python: {value!r}")
+            setattr(dataclass, name2, value)
 
-        log.debug(f"Setting '{name}' value: {value!r}")
-        setattr(self._instance, name, value)
+        log.debug(f"Setting '{name}' value: {dataclass!r}")
+        setattr(self._instance, name, dataclass)
 
     def _set_attribute_value(self, data, name, converter, first_load):
         file_value = data.get(name, Missing)
@@ -229,11 +230,13 @@ class InstanceManager:
 
         if file_value is Missing:
             if default_value is Missing:
-                value = converter.to_python_value(None)
+                value = converter.to_python_value(None, value=init_value)
             else:
-                value = converter.to_python_value(default_value)
+                value = converter.to_python_value(
+                    default_value, value=init_value
+                )
         else:
-            value = converter.to_python_value(file_value)
+            value = converter.to_python_value(file_value, value=init_value)
 
         log.info(f"Setting '{name}' value: {value!r}")
         setattr(self._instance, name, value)

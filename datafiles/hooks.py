@@ -42,10 +42,11 @@ def apply(instance, datafile, get_datafile):
             modified_method = save_after(cls, method, datafile)
             setattr(cls, name, modified_method)
 
-    if hasattr(instance, 'datafile'):
+    if dataclasses.is_dataclass(instance):
         for name in instance.datafile.attrs:
             attr = getattr(instance, name)
             if dataclasses.is_dataclass(attr):
+                attr.datafile = get_datafile(attr)
                 apply(attr, datafile, get_datafile)
             elif type(attr) == list:  # pylint: disable=unidiomatic-typecheck
                 attr = new_class('List', (list,))(attr)
@@ -116,11 +117,11 @@ def enabled(datafile, args) -> bool:
     if datafile.manual:
         return False
 
-    if args and args[0] in {'Meta', 'datafile'}:
-        return False
-
-    if args and isinstance(args[0], str) and args[0].startswith('_'):
-        return False
+    if args and isinstance(args[0], str):
+        if args[0] in {'Meta', 'datafile'}:
+            return False
+        if args[0].startswith('_'):
+            return False
 
     return True
 

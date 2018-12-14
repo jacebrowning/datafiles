@@ -43,6 +43,7 @@ class SampleWithIter:
 class NestedSample:
     name: str = 'b'
     score: float = 3.4
+    items: List[int] = field(default_factory=list)
 
 
 @sync('../tmp/sample.yml')
@@ -122,6 +123,21 @@ def describe_automatic_save():
             """
         )
 
+    def with_setattr_on_nested_dataclass(logbreak, expect, read, dedent):
+        sample = SampleWithNesting(2)
+
+        logbreak()
+        sample.nested.name = 'd'
+        logbreak()
+
+        expect(read('tmp/sample.yml')) == dedent(
+            """
+            item: 2
+            nested:
+              name: d
+            """
+        )
+
     def with_setitem(expect, read, dedent):
         sample = Sample()
 
@@ -145,35 +161,61 @@ def describe_automatic_save():
             """
         )
 
-    def describe_nesting():
-        def with_setattr(logbreak, expect, read, dedent):
-            sample = SampleWithNesting(2)
+    def with_append(logbreak, expect, read, dedent):
+        sample = Sample()
 
-            logbreak()
-            sample.nested.name = 'd'
-            logbreak()
+        logbreak()
+        sample.items.append(2)
 
-            expect(read('tmp/sample.yml')) == dedent(
-                """
-                item: 2
-                nested:
-                  name: d
-                """
-            )
+        expect(read('tmp/sample.yml')) == dedent(
+            """
+            items:
+            - 1
+            - 2
+            """
+        )
 
-        def with_append(logbreak, expect, read, dedent):
-            sample = Sample()
+        sample.datafile.load()
 
-            logbreak()
-            sample.items.append(2)
+        logbreak()
+        sample.items.append(3)
 
-            expect(read('tmp/sample.yml')) == dedent(
-                """
-                items:
-                - 1
-                - 2
-                """
-            )
+        expect(read('tmp/sample.yml')) == dedent(
+            """
+            items:
+            - 1
+            - 2
+            - 3
+            """
+        )
+
+    def with_append_on_nested_dataclass(logbreak, expect, read, dedent):
+        sample = SampleWithNesting(1)
+
+        logbreak()
+        sample.nested.items.append(2)
+
+        expect(read('tmp/sample.yml')) == dedent(
+            """
+            item: 1
+            nested:
+              items:
+              - 2
+            """
+        )
+
+        logbreak()
+        sample.nested.items.append(3)
+
+        expect(read('tmp/sample.yml')) == dedent(
+            """
+            item: 1
+            nested:
+              items:
+              - 2
+              - 3
+            """
+        )
 
 
 def describe_automatic_load_before_save():

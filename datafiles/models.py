@@ -53,6 +53,7 @@ class Model:
 
 def get_datafile(obj) -> InstanceManager:
     log.debug(f"Getting 'datafile' for {obj.__class__} instance")
+    assert not hasattr(obj, 'datafile')
 
     m = getattr(obj, 'Meta', None)
     pattern = getattr(m, 'datafile_pattern', None)

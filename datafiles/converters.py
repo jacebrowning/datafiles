@@ -22,7 +22,7 @@ class Converter(metaclass=ABCMeta):
 
     @classmethod
     @abstractmethod
-    def to_python_value(cls, deserialized_data):
+    def to_python_value(cls, deserialized_data, *, value):
         raise NotImplementedError
 
     @classmethod
@@ -38,10 +38,12 @@ class Boolean(Converter):
     _FALSY = {'false', 'f', 'no', 'n', 'disabled', 'off', '0'}
 
     @classmethod
-    def to_python_value(cls, deserialized_data):
+    def to_python_value(cls, deserialized_data, *, value=None):
         if isinstance(deserialized_data, str):
-            return deserialized_data.lower() not in cls._FALSY
-        return cls.TYPE(deserialized_data)
+            value = deserialized_data.lower() not in cls._FALSY
+        else:
+            value = cls.TYPE(deserialized_data)
+        return value
 
     @classmethod
     def to_preserialization_data(cls, python_value):
@@ -56,8 +58,9 @@ class Float(Converter):
     DEFAULT = 0.0
 
     @classmethod
-    def to_python_value(cls, deserialized_data):
-        return cls.to_preserialization_data(deserialized_data)
+    def to_python_value(cls, deserialized_data, *, value=None):
+        value = cls.to_preserialization_data(deserialized_data)
+        return value
 
     @classmethod
     def to_preserialization_data(cls, python_value):
@@ -72,8 +75,9 @@ class Integer(Converter):
     DEFAULT = 0
 
     @classmethod
-    def to_python_value(cls, deserialized_data):
-        return cls.to_preserialization_data(deserialized_data)
+    def to_python_value(cls, deserialized_data, *, value=None):
+        value = cls.to_preserialization_data(deserialized_data)
+        return value
 
     @classmethod
     def to_preserialization_data(cls, python_value):
@@ -109,8 +113,9 @@ class String(Converter):
     DEFAULT = ""
 
     @classmethod
-    def to_python_value(cls, deserialized_data):
-        return cls.to_preserialization_data(deserialized_data)
+    def to_python_value(cls, deserialized_data, *, value=None):
+        value = cls.to_preserialization_data(deserialized_data)
+        return value
 
     @classmethod
     def to_preserialization_data(cls, python_value):
@@ -123,10 +128,10 @@ class Text(String):
     DEFAULT = ""
 
     @classmethod
-    def to_python_value(cls, deserialized_data):
+    def to_python_value(cls, deserialized_data, *, value=None):
         value = cls.to_preserialization_data(deserialized_data).strip()
         if '\n' in value:
-            return value + '\n'
+            value = value + '\n'
         return value
 
     @classmethod
@@ -149,8 +154,11 @@ class List:
         return type(name, bases, attributes)
 
     @classmethod
-    def to_python_value(cls, deserialized_data):
-        value = []
+    def to_python_value(cls, deserialized_data, *, value):
+        if value is None:
+            value = []
+        else:
+            value.clear()
 
         convert = cls.CONVERTER.to_python_value
 
@@ -169,10 +177,10 @@ class List:
             try:
                 items = iter(deserialized_data)
             except TypeError:
-                value.append(convert(deserialized_data))
+                value.append(convert(deserialized_data, value=None))
             else:
                 for item in items:
-                    value.append(convert(item))
+                    value.append(convert(item, value=None))
 
         return value
 
@@ -215,7 +223,7 @@ class Dictionary:
         return type(name, bases, attributes)
 
     @classmethod
-    def to_python_value(cls, deserialized_data):
+    def to_python_value(cls, deserialized_data, *, value):
         if isinstance(deserialized_data, dict):
             data = deserialized_data.copy()
         else:
@@ -225,7 +233,11 @@ class Dictionary:
             if name not in data:
                 data[name] = converter.to_python_value(None)
 
-        value = cls.DATACLASS(**data)  # pylint: disable=not-callable
+        new_value = cls.DATACLASS(**data)  # pylint: disable=not-callable
+        if value is None:
+            value = new_value
+        else:
+            value.__dict__ = new_value.__dict__
 
         return value
 
