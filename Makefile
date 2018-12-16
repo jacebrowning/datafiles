@@ -1,7 +1,16 @@
 .PHONY: all
 all: install
 
-###############################################################################
+.PHONY: ci
+ci: format check test
+
+# SYSTEM DEPENDENCIES #########################################################
+
+.PHONY: doctor
+doctor:  ## Confirm system dependencies are available
+	bin/verchew
+
+# PROJECT DEPENDENCIES ########################################################
 
 VIRTUAL_ENV ?= .venv
 
@@ -19,12 +28,9 @@ poetry.lock: pyproject.toml
 .cache:
 	@ mkdir -p .cache
 
-###############################################################################
+# VALIDATION TARGETS ##########################################################
 
 PACKAGES :=  datafiles tests
-
-.PHONY: ci
-ci: format check test
 
 .PHONY: format
 format: install
@@ -53,13 +59,13 @@ test-repeat: install
 watch: install
 	poetry run ptw
 
-###############################################################################
+# DEMO ########################################################################
 
 .PHONY: demo
 demo: install
 	poetry run jupyter notebook --notebook-dir=notebooks
 
-###############################################################################
+# CLEANUP #####################################################################
 
 .PHONY: clean
 clean:
