@@ -5,9 +5,91 @@ Datafiles is bidirectional serialization library for Python [dataclasses](https:
 [![Unix Build Status](https://img.shields.io/travis/jacebrowning/datafiles.svg?label=unix)](https://travis-ci.org/jacebrowning/datafiles)
 [![Windows Build Status](https://img.shields.io/appveyor/ci/jacebrowning/datafiles.svg?label=windows)](https://ci.appveyor.com/project/jacebrowning/datafiles)
 
+## Usage
+
+Take an existing dataclass such as this example from the [documentation](https://docs.python.org/3/library/dataclasses.html#module-dataclasses):
+
+```python
+from dataclasses import dataclass
+
+@dataclass
+class InventoryItem:
+    """Class for keeping track of an item in inventory."""
+
+    name: str
+    unit_price: float
+    quantity_on_hand: int = 0
+
+    def total_cost(self) -> float:
+        return self.unit_price * self.quantity_on_hand
+```
+
+and decorate it with a directory pattern to synchronize instances:
+
+```python
+from dataclasses import dataclass
+from datafiles import sync
+
+@sync("inventory/items/{self.pk}.yml")
+@dataclass
+class InventoryItem:
+    """Class for keeping track of an item in inventory."""
+    
+    pk: int
+
+    name: str
+    unit_price: float
+    quantity_on_hand: int = 0
+
+    def total_cost(self) -> float:
+        return self.unit_price * self.quantity_on_hand
+```
+
+Then, work with instances of the class as normal:
+
+```python
+>>> item = InventoryItem(123, "Widget", 3)
+```
+
+```yaml
+# inventory/items/123.yml
+
+name: Widget
+unit_price: 3.0
+```
+
+Changes to the object are automatically saved to the filesystem:
+
+```python
+>>> item.quantity_on_hand += 100
+```
+
+```yaml
+# inventory/items/123.yml
+
+name: Widget
+unit_price: 3.0
+quantity_on_hand: 100
+```
+
+Changes to the filesystem are automatically reflected in the object:
+
+```yaml
+# inventory/items/123.yml
+
+name: Widget
+unit_price: 2.5  # was 3.0
+quantity_on_hand: 100
+```
+
+```python
+>>> item.unit_price
+2.5
+```
+
 ## Installation
 
-Because datafiles relies on dataclasses and type annotations, Python 3.7+ is required. Directly install it with `pip`:
+Because datafiles relies on dataclasses and type annotations, Python 3.7+ is required. Install it directly into an activated virtual environment:
 
 ```
 $ pip install datafiles
