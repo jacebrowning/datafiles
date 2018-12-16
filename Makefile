@@ -8,8 +8,7 @@ ci: format check test
 
 .PHONY: doctor
 doctor:  ## Confirm system dependencies are available
-	@ pip install --user verchew > /dev/null
-	verchew
+	bin/verchew
 
 # PROJECT DEPENDENCIES ########################################################
 
