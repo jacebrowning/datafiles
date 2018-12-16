@@ -1,7 +1,7 @@
 # pylint: disable=unused-variable
 
 from dataclasses import dataclass
-from typing import Dict, List, Optional
+from typing import ByteString, Dict, List, Optional
 
 import pytest
 
@@ -19,7 +19,7 @@ class MyNonDataclass:
 
 IntegerList = converters.List.subclass(converters.Integer)
 StringList = converters.List.subclass(converters.String)
-MyDict = converters.Dictionary.subclass(None, {}, name='MyDict')
+MyDict = converters.Dictionary.subclass(converters.String, converters.Integer)
 MyDataclassConverter = converters.map_type(MyDataclass)
 MyDataclassConverterList = converters.map_type(List[MyDataclass])
 
@@ -42,8 +42,6 @@ def describe_map_type():
     def it_handles_dict_annotations(expect):
         converter = converters.map_type(Dict[str, int])
         expect(converter.__name__) == 'StringIntegerDict'
-        expect(converter.DATACLASS) == None
-        expect(converter.CONVERTERS) == {}
 
     def it_handles_dataclasses(expect):
         converter = converters.map_type(MyDataclass)
@@ -62,7 +60,7 @@ def describe_map_type():
 
     def it_rejects_unhandled_type_annotations(expect):
         with expect.raises(TypeError):
-            converters.map_type(None)
+            converters.map_type(ByteString)
 
 
 def describe_converter():
@@ -102,6 +100,10 @@ def describe_converter():
                 (IntegerList, [42], [42]),
                 (IntegerList, [None], []),
                 (IntegerList, [None, None], []),
+                (MyDict, None, {}),
+                (MyDict, {}, {}),
+                (MyDict, {'a': 1}, {'a': 1}),
+                # Dataclasses
                 (MyDataclassConverter, None, MyDataclass(foobar=0)),
                 (MyDataclassConverterList, None, []),
                 (MyDataclassConverterList, 42, [MyDataclass(foobar=0)]),
@@ -167,6 +169,7 @@ def describe_converter():
                 (StringList, [123, True, False], ['123', 'True', 'False']),
                 (StringList, [], []),
                 (StringList, None, []),
+                # Dataclasses
                 (MyDataclassConverter, None, {'foobar': 0}),
                 (MyDataclassConverterList, None, []),
                 (MyDataclassConverterList, 42, [{'foobar': 0}]),
@@ -189,3 +192,10 @@ def describe_converter():
 
             expect(converter.to_preserialization_data(value)) == data
             expect(converter.to_preserialization_data(data)) == data
+
+        def when_dict_with_default(expect):
+            data = MyDict.to_preserialization_data({'a': 1}, default={'a': 1})
+            expect(data) == {}
+
+            data = MyDict.to_preserialization_data({'b': 2}, default={'a': 1})
+            expect(data) == {'b': 2}

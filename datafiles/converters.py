@@ -143,6 +143,7 @@ class Text(String):
 
 
 class List:
+    """Base converter for homogeneous lists of another converter."""
 
     CONVERTER = None
 
@@ -211,13 +212,49 @@ class List:
 
 
 class Dictionary:
+    """Base converter for raw dictionaries."""
+
+    @classmethod
+    def subclass(cls, key: type, value: type):
+        name = f'{key.__name__}{value.__name__}Dict'
+        bases = (cls,)
+        return type(name, bases, {})
+
+    @classmethod
+    def to_python_value(cls, deserialized_data, *, value):
+        if isinstance(deserialized_data, dict):
+            data = deserialized_data.copy()
+        else:
+            data = {}
+
+        if value is None:
+            value = data
+        else:
+            value.clear()
+            value.update(data)
+
+        return value
+
+    @classmethod
+    def to_preserialization_data(cls, python_value, *, default=Missing):
+        data = dict(python_value)
+
+        if default is not Missing:
+            if data == default:
+                data.clear()
+
+        return data
+
+
+class Object:
+    """Base converter for dataclasses."""
 
     DATACLASS = None
     CONVERTERS = None
 
     @classmethod
-    def subclass(cls, dataclass, converters: Dict[str, type], name=''):
-        name = name or f'{dataclass.__name__}Converter'
+    def subclass(cls, dataclass, converters: Dict[str, type]):
+        name = f'{dataclass.__name__}Converter'
         bases = (cls,)
         attributes = {'DATACLASS': dataclass, 'CONVERTERS': converters}
         return type(name, bases, attributes)
@@ -229,23 +266,16 @@ class Dictionary:
         else:
             data = {}
 
-        if cls.DATACLASS:
-            for name, converter in cls.CONVERTERS.items():
-                if name not in data:
-                    data[name] = converter.to_python_value(None)
+        for name, converter in cls.CONVERTERS.items():
+            if name not in data:
+                data[name] = converter.to_python_value(None)
 
-            new_value = cls.DATACLASS(**data)  # pylint: disable=not-callable
-        else:
-            new_value = data
+        new_value = cls.DATACLASS(**data)  # pylint: disable=not-callable
 
         if value is None:
             value = new_value
         else:
-            try:
-                value.clear()
-                value.update(new_value)
-            except AttributeError:
-                value.__dict__ = new_value.__dict__
+            value.__dict__ = new_value.__dict__
 
         return value
 
@@ -275,9 +305,6 @@ class Dictionary:
 
             data[name] = converter.to_preserialization_data(value)
 
-        if cls.DATACLASS is None:
-            data = dict(python_value)
-
         return data
 
 
@@ -290,7 +317,7 @@ def map_type(cls):
         converters = {}
         for field in dataclasses.fields(cls):
             converters[field.name] = map_type(field.type)
-        converter = Dictionary.subclass(cls, converters)
+        converter = Object.subclass(cls, converters)
         log.debug(f'Mapped {cls} to new converter: {converter}')
         return converter
 
@@ -311,8 +338,8 @@ def map_type(cls):
             log.warn("Schema enforcement not possible with 'Dict' annotation")
             key = map_type(cls.__args__[0])
             value = map_type(cls.__args__[1])
-            name = f'{key.__name__}{value.__name__}Dict'
-            converter = Dictionary.subclass(None, {}, name=name)
+
+            converter = Dictionary.subclass(key, value)
 
         elif cls.__origin__ == Union:
             converter = map_type(cls.__args__[0])
