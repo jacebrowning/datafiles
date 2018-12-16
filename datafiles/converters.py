@@ -22,23 +22,26 @@ class Converter(metaclass=ABCMeta):
 
     @classmethod
     @abstractmethod
-    def to_python_value(cls, deserialized_data, *, value):
+    def to_python_value(cls, deserialized_data, *, target):
         raise NotImplementedError
 
     @classmethod
     @abstractmethod
-    def to_preserialization_data(cls, python_value):
+    def to_preserialization_data(cls, python_value, *, skip=Missing):
         raise NotImplementedError
 
 
 class Boolean(Converter):
+    """Converter for `bool` literals."""
 
     TYPE = bool
     DEFAULT = False
     _FALSY = {'false', 'f', 'no', 'n', 'disabled', 'off', '0'}
 
+    # pylint: disable=unused-argument
+
     @classmethod
-    def to_python_value(cls, deserialized_data, *, value=None):
+    def to_python_value(cls, deserialized_data, *, target=None):
         if isinstance(deserialized_data, str):
             value = deserialized_data.lower() not in cls._FALSY
         else:
@@ -46,41 +49,47 @@ class Boolean(Converter):
         return value
 
     @classmethod
-    def to_preserialization_data(cls, python_value):
+    def to_preserialization_data(cls, python_value, *, skip=Missing):
         if python_value is None:
             return cls.DEFAULT
         return cls.TYPE(python_value)
 
 
 class Float(Converter):
+    """Converter for `float` literals."""
 
     TYPE = float
     DEFAULT = 0.0
 
+    # pylint: disable=unused-argument
+
     @classmethod
-    def to_python_value(cls, deserialized_data, *, value=None):
+    def to_python_value(cls, deserialized_data, *, target=None):
         value = cls.to_preserialization_data(deserialized_data)
         return value
 
     @classmethod
-    def to_preserialization_data(cls, python_value):
+    def to_preserialization_data(cls, python_value, *, skip=Missing):
         if python_value is None:
             return cls.DEFAULT
         return cls.TYPE(python_value)
 
 
 class Integer(Converter):
+    """Converter for `int` literals."""
 
     TYPE = int
     DEFAULT = 0
 
+    # pylint: disable=unused-argument
+
     @classmethod
-    def to_python_value(cls, deserialized_data, *, value=None):
+    def to_python_value(cls, deserialized_data, *, target=None):
         value = cls.to_preserialization_data(deserialized_data)
         return value
 
     @classmethod
-    def to_preserialization_data(cls, python_value):
+    def to_preserialization_data(cls, python_value, *, skip=Missing):
         if python_value is None:
             return cls.DEFAULT
         try:
@@ -97,10 +106,14 @@ class Integer(Converter):
 
 
 class Number(Float):
+    """Converter for integers or floats."""
+
     DEFAULT = 0
 
+    # pylint: disable=unused-argument
+
     @classmethod
-    def to_preserialization_data(cls, python_value):
+    def to_preserialization_data(cls, python_value, *, skip=Missing):
         data = super().to_preserialization_data(python_value)
         if int(data) == data:
             return int(data)
@@ -108,41 +121,48 @@ class Number(Float):
 
 
 class String(Converter):
+    """Converter for `str` literals."""
 
     TYPE = str
     DEFAULT = ""
 
+    # pylint: disable=unused-argument
+
     @classmethod
-    def to_python_value(cls, deserialized_data, *, value=None):
+    def to_python_value(cls, deserialized_data, *, target=None):
         value = cls.to_preserialization_data(deserialized_data)
         return value
 
     @classmethod
-    def to_preserialization_data(cls, python_value):
+    def to_preserialization_data(cls, python_value, *, skip=Missing):
         if python_value is None:
             return cls.DEFAULT
         return cls.TYPE(python_value)
 
 
 class Text(String):
+    """Converter for multiline strings."""
+
     DEFAULT = ""
 
+    # pylint: disable=unused-argument
+
     @classmethod
-    def to_python_value(cls, deserialized_data, *, value=None):
+    def to_python_value(cls, deserialized_data, *, target=None):
         value = cls.to_preserialization_data(deserialized_data).strip()
         if '\n' in value:
             value = value + '\n'
         return value
 
     @classmethod
-    def to_preserialization_data(cls, python_value):
+    def to_preserialization_data(cls, python_value, *, skip=Missing):
         data = super().to_preserialization_data(python_value).strip()
         if '\n' in data:
             return LiteralScalarString(data + '\n')
         return data
 
 
-class List:
+class List(Converter):
     """Base converter for homogeneous lists of another converter."""
 
     CONVERTER = None
@@ -155,10 +175,11 @@ class List:
         return type(name, bases, attributes)
 
     @classmethod
-    def to_python_value(cls, deserialized_data, *, value):
-        if value is None:
-            value = []
+    def to_python_value(cls, deserialized_data, *, target):
+        if target is None:
+            value = []  # type: ignore
         else:
+            value = target
             value.clear()
 
         convert = cls.CONVERTER.to_python_value
@@ -178,15 +199,15 @@ class List:
             try:
                 items = iter(deserialized_data)
             except TypeError:
-                value.append(convert(deserialized_data, value=None))
+                value.append(convert(deserialized_data, target=None))
             else:
                 for item in items:
-                    value.append(convert(item, value=None))
+                    value.append(convert(item, target=None))
 
         return value
 
     @classmethod
-    def to_preserialization_data(cls, python_value):
+    def to_preserialization_data(cls, python_value, *, skip=Missing):
         data = []
 
         convert = cls.CONVERTER.to_preserialization_data
@@ -197,21 +218,28 @@ class List:
         elif isinstance(python_value, Iterable):
 
             if isinstance(python_value, str):
-                data.append(convert(python_value))
+                data.append(convert(python_value, skip=Missing))
 
             elif isinstance(python_value, set):
-                data.extend(sorted(convert(item) for item in python_value))
+                data.extend(
+                    sorted(
+                        convert(item, skip=Missing) for item in python_value
+                    )
+                )
 
             else:
                 for item in python_value:
-                    data.append(convert(item))
+                    data.append(convert(item, skip=Missing))
         else:
-            data.append(convert(python_value))
+            data.append(convert(python_value, skip=Missing))
+
+        if data == skip:
+            data.clear()
 
         return data
 
 
-class Dictionary:
+class Dictionary(Converter):
     """Base converter for raw dictionaries."""
 
     @classmethod
@@ -221,32 +249,32 @@ class Dictionary:
         return type(name, bases, {})
 
     @classmethod
-    def to_python_value(cls, deserialized_data, *, value):
+    def to_python_value(cls, deserialized_data, *, target):
         if isinstance(deserialized_data, dict):
             data = deserialized_data.copy()
         else:
             data = {}
 
-        if value is None:
+        if target is None:
             value = data
         else:
+            value = target
             value.clear()
             value.update(data)
 
         return value
 
     @classmethod
-    def to_preserialization_data(cls, python_value, *, default=Missing):
+    def to_preserialization_data(cls, python_value, *, skip=Missing):
         data = dict(python_value)
 
-        if default is not Missing:
-            if data == default:
-                data.clear()
+        if data == skip:
+            data.clear()
 
         return data
 
 
-class Object:
+class Object(Converter):
     """Base converter for dataclasses."""
 
     DATACLASS = None
@@ -260,7 +288,7 @@ class Object:
         return type(name, bases, attributes)
 
     @classmethod
-    def to_python_value(cls, deserialized_data, *, value):
+    def to_python_value(cls, deserialized_data, *, target):
         if isinstance(deserialized_data, dict):
             data = deserialized_data.copy()
         else:
@@ -272,15 +300,16 @@ class Object:
 
         new_value = cls.DATACLASS(**data)  # pylint: disable=not-callable
 
-        if value is None:
+        if target is None:
             value = new_value
         else:
+            value = target
             value.__dict__ = new_value.__dict__
 
         return value
 
     @classmethod
-    def to_preserialization_data(cls, python_value, *, default=Missing):
+    def to_preserialization_data(cls, python_value, *, skip=Missing):
         data = {}
 
         for name, converter in cls.CONVERTERS.items():
@@ -298,8 +327,8 @@ class Object:
                     log.debug(e)
                     value = None
 
-            if default is not Missing:
-                if value == getattr(default, name):
+            if skip is not Missing:
+                if value == getattr(skip, name):
                     log.debug(f"Skipped default value for '{name}' attribute")
                     continue
 

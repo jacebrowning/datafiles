@@ -11,6 +11,7 @@ from datafiles import converters
 @dataclass
 class MyDataclass:
     foobar: int
+    flag: bool = False
 
 
 class MyNonDataclass:
@@ -46,7 +47,10 @@ def describe_map_type():
     def it_handles_dataclasses(expect):
         converter = converters.map_type(MyDataclass)
         expect(converter.__name__) == 'MyDataclassConverter'
-        expect(converter.CONVERTERS) == {'foobar': converters.Integer}
+        expect(converter.CONVERTERS) == {
+            'foobar': converters.Integer,
+            'flag': converters.Boolean,
+        }
 
     def it_handles_optionals(expect):
         converter = converters.map_type(Optional[str])
@@ -68,7 +72,7 @@ def describe_converter():
         @pytest.mark.parametrize(
             'converter, data, value',
             [
-                # Builtins
+                # Literals
                 (converters.Boolean, '1', True),
                 (converters.Boolean, '0', False),
                 (converters.Boolean, 'enabled', True),
@@ -110,7 +114,7 @@ def describe_converter():
             ],
         )
         def when_nominal(expect, converter, data, value):
-            expect(converter.to_python_value(data, value=None)) == value
+            expect(converter.to_python_value(data, target=None)) == value
 
         def when_invalid(expect):
             message = "invalid literal for int() with base 10: 'a'"
@@ -124,39 +128,39 @@ def describe_converter():
             data = [{'foobar': 1}, {'foobar': 2}, {'foobar': 3}]
             value = [MyDataclass(1), MyDataclass(2), MyDataclass(3)]
 
-            expect(converter.to_python_value(data, value=None)) == value
+            expect(converter.to_python_value(data, target=None)) == value
 
         def with_existing_list(expect):
-            value = [1, 2]
+            orginal = [1, 2]
 
-            value2 = IntegerList.to_python_value("3, 4", value=value)
+            value = IntegerList.to_python_value("3, 4", target=orginal)
 
-            expect(value2) == [3, 4]
-            expect(id(value2)) == id(value)
+            expect(value) == [3, 4]
+            expect(id(value)) == id(orginal)
 
         def when_existing_dict(expect):
-            value = {'a': 1}
+            orginal = {'a': 1}
 
-            value2 = MyDict.to_python_value({'b': 2}, value=value)
+            value = MyDict.to_python_value({'b': 2}, target=orginal)
 
-            expect(value2) == {'b': 2}
-            expect(id(value2)) == id(value)
+            expect(value) == {'b': 2}
+            expect(id(value)) == id(orginal)
 
         def with_existing_dataclass(expect):
-            value = MyDataclass(foobar=1)
+            orginal = MyDataclass(foobar=1)
 
-            value2 = MyDataclassConverter.to_python_value(
-                {'foobar': 2}, value=value
+            value = MyDataclassConverter.to_python_value(
+                {'foobar': 2}, target=orginal
             )
 
-            expect(value2) == MyDataclass(foobar=2)
-            expect(id(value2)) == id(value)
+            expect(value) == MyDataclass(foobar=2)
+            expect(id(value)) == id(orginal)
 
     def describe_to_preserialization_data():
         @pytest.mark.parametrize(
             'converter, value, data',
             [
-                # Builtins
+                # Literals
                 (converters.Boolean, None, False),
                 (converters.Float, None, 0.0),
                 (converters.Integer, None, 0),
@@ -170,9 +174,9 @@ def describe_converter():
                 (StringList, [], []),
                 (StringList, None, []),
                 # Dataclasses
-                (MyDataclassConverter, None, {'foobar': 0}),
+                (MyDataclassConverter, None, {'foobar': 0, 'flag': False}),
                 (MyDataclassConverterList, None, []),
-                (MyDataclassConverterList, 42, [{'foobar': 0}]),
+                (MyDataclassConverterList, 42, [{'foobar': 0, 'flag': False}]),
             ],
         )
         def when_nominal(expect, converter, value, data):
@@ -188,14 +192,41 @@ def describe_converter():
 
             logbreak()
             value = [MyDataclass(1), MyDataclass(2), MyDataclass(3)]
-            data = [{'foobar': 1}, {'foobar': 2}, {'foobar': 3}]
+            data = [
+                {'foobar': 1, 'flag': False},
+                {'foobar': 2, 'flag': False},
+                {'foobar': 3, 'flag': False},
+            ]
 
             expect(converter.to_preserialization_data(value)) == data
             expect(converter.to_preserialization_data(data)) == data
 
+        def when_list_with_default(expect):
+            data = IntegerList.to_preserialization_data([1], skip=[1])
+            expect(data) == []
+
+            data = IntegerList.to_preserialization_data([2], skip=[1])
+            expect(data) == [2]
+
         def when_dict_with_default(expect):
-            data = MyDict.to_preserialization_data({'a': 1}, default={'a': 1})
+            data = MyDict.to_preserialization_data({'a': 1}, skip={'a': 1})
             expect(data) == {}
 
-            data = MyDict.to_preserialization_data({'b': 2}, default={'a': 1})
+            data = MyDict.to_preserialization_data({'b': 2}, skip={'a': 1})
             expect(data) == {'b': 2}
+
+        def when_dataclass_with_default(expect):
+            data = MyDataclassConverter.to_preserialization_data(
+                MyDataclass(1), skip=MyDataclass(1)
+            )
+            expect(data) == {}
+
+            data = MyDataclassConverter.to_preserialization_data(
+                MyDataclass(2), skip=MyDataclass(1)
+            )
+            expect(data) == {'foobar': 2}
+
+            data = MyDataclassConverter.to_preserialization_data(
+                MyDataclass(1, flag=True), skip=MyDataclass(1)
+            )
+            expect(data) == {'flag': True}
