@@ -60,6 +60,9 @@ pytest-cov = "*"
 # Coverage
 coveragespace = "^2.1"
 
+# Documentation
+mkdocs = "^1.0.4"
+
 # Notebooks
 jupyter = "^1.0"
 

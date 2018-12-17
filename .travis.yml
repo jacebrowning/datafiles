@@ -21,6 +21,7 @@ install:
 script:
   - make test-repeat
   - make check
+  - make docs
 
 after_success:
   - pip install coveralls
