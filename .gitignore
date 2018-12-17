@@ -9,4 +9,7 @@ __pycache__/
 
 htmlcov/
 
+docs/*.png
+site/
+
 tmp/
