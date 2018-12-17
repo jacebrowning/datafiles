@@ -22,5 +22,15 @@ install:
 build: off
 
 test_script:
+  #############################################################################
+  # Remove UTF-8 from pytest.ini
+  - findstr /V tput pytest.ini > pytest.ini.tmp
+  - del pytest.ini
+  - ren pytest.ini.tmp pytest.ini
+  #############################################################################
   - make test-repeat
+  #############################################################################
+  # Restore pytest.ini
+  - git checkout pytest.ini
+  #############################################################################
   - make check
