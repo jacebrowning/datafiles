@@ -149,9 +149,7 @@ def describe_converter():
         def with_existing_dataclass(expect):
             orginal = MyDataclass(foobar=1)
 
-            value = MyDataclassConverter.to_python_value(
-                {'foobar': 2}, target=orginal
-            )
+            value = MyDataclassConverter.to_python_value({'foobar': 2}, target=orginal)
 
             expect(value) == MyDataclass(foobar=2)
             expect(id(value)) == id(orginal)

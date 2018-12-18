@@ -222,9 +222,7 @@ class List(Converter):
 
             elif isinstance(python_value, set):
                 data.extend(
-                    sorted(
-                        convert(item, skip=Missing) for item in python_value
-                    )
+                    sorted(convert(item, skip=Missing) for item in python_value)
                 )
 
             else:

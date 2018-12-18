@@ -109,9 +109,7 @@ class InstanceManager:
 
                 for field in dataclasses.fields(converter.DATACLASS):
                     if field.name not in value:
-                        log.debug(
-                            f'Added missing nested attribute: {field.name}'
-                        )
+                        log.debug(f'Added missing nested attribute: {field.name}')
                         value[field.name] = None
 
                 data[name] = converter.to_preserialization_data(
@@ -129,9 +127,7 @@ class InstanceManager:
                 data.pop(name)
 
             else:
-                log.debug(
-                    f"Converting '{name}' value with {converter}: {value!r}"
-                )
+                log.debug(f"Converting '{name}' value with {converter}: {value!r}")
                 data[name] = converter.to_preserialization_data(value)
 
         log.debug(f'Preserialized object data: {data}')
@@ -187,9 +183,7 @@ class InstanceManager:
             for field in dataclasses.fields(converter.DATACLASS):
                 if field.name not in nested_data:  # type: ignore
                     nested_data[field.name] = None  # type: ignore
-            dataclass = converter.to_python_value(
-                nested_data, target=dataclass
-            )
+            dataclass = converter.to_python_value(nested_data, target=dataclass)
         elif first_load:
             return
 
@@ -206,9 +200,7 @@ class InstanceManager:
                 name2,
                 dataclass.datafile._get_default_field_value(name2),
             )
-            value = converter2.to_python_value(
-                _value, target=getattr(dataclass, name2)
-            )
+            value = converter2.to_python_value(_value, target=getattr(dataclass, name2))
             log.debug(f"'{name2}' as Python: {value!r}")
             setattr(dataclass, name2, value)
 
@@ -229,18 +221,14 @@ class InstanceManager:
             )
 
             if init_value != default_value and not issubclass(converter, List):
-                log.debug(
-                    f"Keeping non-default '{name}' init value: {init_value!r}"
-                )
+                log.debug(f"Keeping non-default '{name}' init value: {init_value!r}")
                 return
 
         if file_value is Missing:
             if default_value is Missing:
                 value = converter.to_python_value(None, target=init_value)
             else:
-                value = converter.to_python_value(
-                    default_value, target=init_value
-                )
+                value = converter.to_python_value(default_value, target=init_value)
         else:
             value = converter.to_python_value(file_value, target=init_value)
 
@@ -253,9 +241,7 @@ class InstanceManager:
                 if not isinstance(field.default, Missing):
                     return field.default
 
-                if not isinstance(
-                    field.default_factory, Missing  # type: ignore
-                ):
+                if not isinstance(field.default_factory, Missing):  # type: ignore
                     return field.default_factory()  # type: ignore
 
                 if not field.init and hasattr(self._instance, '__post_init__'):
