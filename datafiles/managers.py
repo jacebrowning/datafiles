@@ -198,15 +198,7 @@ class InstanceManager:
                     nested_data[field.name] = None  # type: ignore
             dataclass = converter.to_python_value(nested_data, target=dataclass)
 
-        # TODO: Find a way to avoid this circular import
-        try:
-            datafile = dataclass.datafile
-        except AttributeError:
-            from .models import build_datafile
-
-            log.warn(f"{dataclass} has not yet been patched to have 'datafile'")
-            datafile = build_datafile(dataclass)
-
+        datafile = dataclass.datafile
         for name2, converter2 in datafile.attrs.items():
             _value = nested_data.get(  # type: ignore
                 # pylint: disable=protected-access
