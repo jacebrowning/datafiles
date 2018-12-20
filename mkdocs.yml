@@ -6,7 +6,7 @@ repo_url: https://github.com/jacebrowning/datafiles
 theme: readthedocs
 
 nav:
-- Home: home.md
+- Home: index.md
 - About:
   - Release Notes: about/changelog.md
   - Contributing: about/contributing.md
