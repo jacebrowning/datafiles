@@ -81,7 +81,6 @@ docs: mkdocs uml ## Generate documentation and UML
 mkdocs: install $(MKDOCS_INDEX)
 $(MKDOCS_INDEX): mkdocs.yml docs/*.md
 	@ mkdir -p docs/about
-	@ cd docs && ln -sf ../README.md index.md
 	@ cd docs/about && ln -sf ../../CHANGELOG.md changelog.md
 	@ cd docs/about && ln -sf ../../CONTRIBUTING.md contributing.md
 	@ cd docs/about && ln -sf ../../LICENSE.md license.md
