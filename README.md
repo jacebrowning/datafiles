@@ -31,13 +31,11 @@ and decorate it with a directory pattern to synchronize instances:
 from dataclasses import dataclass
 from datafiles import sync
 
-@sync("inventory/items/{self.pk}.yml")
+@sync("inventory/items/{self.name}.yml")
 @dataclass
 class InventoryItem:
     """Class for keeping track of an item in inventory."""
     
-    pk: int
-
     name: str
     unit_price: float
     quantity_on_hand: int = 0
@@ -49,13 +47,12 @@ class InventoryItem:
 Then, work with instances of the class as normal:
 
 ```python
->>> item = InventoryItem(123, "Widget", 3)
+>>> item = InventoryItem("widget", 3)
 ```
 
 ```yaml
-# inventory/items/123.yml
+# inventory/items/widget.yml
 
-name: Widget
 unit_price: 3.0
 ```
 
@@ -66,9 +63,8 @@ Changes to the object are automatically saved to the filesystem:
 ```
 
 ```yaml
-# inventory/items/123.yml
+# inventory/items/widget.yml
 
-name: Widget
 unit_price: 3.0
 quantity_on_hand: 100
 ```
@@ -76,9 +72,8 @@ quantity_on_hand: 100
 Changes to the filesystem are automatically reflected in the object:
 
 ```yaml
-# inventory/items/123.yml
+# inventory/items/widget.yml
 
-name: Widget
 unit_price: 2.5  # was 3.0
 quantity_on_hand: 100
 ```
@@ -87,6 +82,8 @@ quantity_on_hand: 100
 >>> item.unit_price
 2.5
 ```
+
+Demo: [Jupyter Notebook](https://github.com/jacebrowning/datafiles/blob/develop/notebooks/readme.ipynb)
 
 ## Installation
 

@@ -141,17 +141,17 @@ class InstanceManager:
         extension = self.path.suffix if self.path else '.yml'
         data = self._get_data(**kwargs)
         text = formats.serialize(data, extension)
-        log.info(f'Serialized data to text ({extension}): {text!r}')
+        log.debug(f'Serialized data to text ({extension}): {text!r}')
         return text
 
     @prevent_recursion
     def load(self, *, first_load=False) -> None:
-        log.info(f'Loading values for {self._instance.__class__} instance')
+        log.debug(f'Loading values for {self._instance.__class__} instance')
 
         if not self.path:
             raise RuntimeError("'pattern' must be set to load the model")
 
-        message = f'Deserializing: {self.relpath}'
+        message = f'Reading file: {self.relpath}'
         frame = '=' * len(message)
         log.info(message)
         data = formats.deserialize(self.path, self.path.suffix)
@@ -167,7 +167,7 @@ class InstanceManager:
             else:
                 self._set_attribute_value(data, name, converter, first_load)
 
-        log.info(f'Loaded values for object: {self._instance}')
+        log.info(f'Loaded object: {self._instance}')
 
     def _set_dataclass_value(self, data, name, converter, first_load):
         # TODO: Support nesting unlimited levels
@@ -232,7 +232,7 @@ class InstanceManager:
         else:
             value = converter.to_python_value(file_value, target=init_value)
 
-        log.info(f"Setting '{name}' value: {value!r}")
+        log.debug(f"Setting '{name}' value: {value!r}")
         setattr(self._instance, name, value)
 
     def _get_default_field_value(self, name):
@@ -251,7 +251,7 @@ class InstanceManager:
 
     @prevent_recursion
     def save(self, include_default_values: Trilean = None) -> None:
-        log.info(f'Saving data for object: {self._instance}')
+        log.info(f'Saving object: {self._instance}')
 
         if not self.path:
             raise RuntimeError(f"'pattern' must be set to save the model")
@@ -260,7 +260,7 @@ class InstanceManager:
 
         self.path.parent.mkdir(parents=True, exist_ok=True)
 
-        message = f'Writing: {self.relpath}'
+        message = f'Writing file: {self.relpath}'
         frame = '=' * len(message)
         log.info(message)
         log.debug(frame + '\n\n' + (text or '<nothing>\n'))
