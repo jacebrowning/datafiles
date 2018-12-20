@@ -6,7 +6,7 @@ Datafiles is a bidirectional serialization library for Python [dataclasses](http
 [![AppVeyor](https://img.shields.io/appveyor/ci/jacebrowning/datafiles/develop.svg?label=windows)](https://ci.appveyor.com/project/jacebrowning/datafiles)
 [![Coveralls](https://img.shields.io/coveralls/jacebrowning/datafiles.svg)](https://coveralls.io/r/jacebrowning/datafiles)
 
-## Usage
+# Usage
 
 Take an existing dataclass such as this example from the [documentation](https://docs.python.org/3/library/dataclasses.html#module-dataclasses):
 
@@ -85,7 +85,7 @@ quantity_on_hand: 100
 
 Demo: [Jupyter Notebook](https://github.com/jacebrowning/datafiles/blob/develop/notebooks/readme.ipynb)
 
-## Installation
+# Installation
 
 Because datafiles relies on dataclasses and type annotations, Python 3.7+ is required. Install it directly into an activated virtual environment:
 
