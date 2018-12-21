@@ -5,11 +5,10 @@ from typing import Dict, List
 
 import log
 
-from datafiles import sync
+from datafiles import datafile
 
 
-@sync('../tmp/sample.yml')
-@dataclass
+@datafile('../tmp/sample.yml')
 class Sample:
     item: str = 'a'
     items: List[int] = field(default_factory=lambda: [1])
@@ -31,8 +30,7 @@ class Sample:
         del self.items[key]
 
 
-@sync('../tmp/sample.yml')
-@dataclass
+@datafile('../tmp/sample.yml')
 class SampleWithIter:
     items: List[int] = field(default_factory=lambda: [1])
 
@@ -47,8 +45,7 @@ class NestedSample:
     items: List[int] = field(default_factory=list)
 
 
-@sync('../tmp/sample.yml')
-@dataclass
+@datafile('../tmp/sample.yml')
 class SampleWithNesting:
     item: int
     nested: NestedSample = field(default_factory=NestedSample)

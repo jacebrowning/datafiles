@@ -25,14 +25,12 @@ class InventoryItem:
         return self.unit_price * self.quantity_on_hand
 ```
 
-and decorate it with a directory pattern to synchronize instances:
+and replace the decorator, including a directory pattern to synchronize instances:
 
 ```python
-from dataclasses import dataclass
-from datafiles import sync
+from datafiles import datafile
 
-@sync("inventory/items/{self.name}.yml")
-@dataclass
+@datafile("inventory/items/{self.name}.yml")
 class InventoryItem:
     """Class for keeping track of an item in inventory."""
     

@@ -1,12 +1,9 @@
-from dataclasses import dataclass
-
-from datafiles import sync
+from datafiles import datafile
 
 
 # This model is based on the example dataclass from:
 # https://docs.python.org/3/library/dataclasses.html
-@sync('../tmp/inventory/{self.pk}.yml')
-@dataclass
+@datafile('../tmp/inventory/{self.pk}.yml')
 class InventoryItem:
     pk: int
     name: str
