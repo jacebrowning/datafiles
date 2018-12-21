@@ -1,6 +1,6 @@
 # pylint: disable=unused-variable
 
-from datafiles.models import get_datafile
+from datafiles.models import create_model, get_datafile
 
 
 def describe_get_datafile():
@@ -12,3 +12,12 @@ def describe_get_datafile():
         new_datafile = get_datafile(obj)
 
         expect(new_datafile) == obj.datafile
+
+
+def describe_create_model():
+    def it_requires_dataclass(expect):
+        class NonDataclass:
+            pass
+
+        with expect.raises(ValueError):
+            create_model(NonDataclass)

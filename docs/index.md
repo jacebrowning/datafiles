@@ -18,15 +18,12 @@ $ poetry add datafiles
 
 # Quick Start
 
-Decorate a dataclass with a directory pattern to synchronize instances:
+Decorate a class with a directory pattern to synchronize instances:
 
 ```python
-from dataclasses import dataclass
+from datafiles import datafile
 
-from datafiles import sync
-
-@sync("samples/{self.key}.yml")
-@dataclass
+@datafile("samples/{self.key}.yml")
 class Sample:
     
     key: int

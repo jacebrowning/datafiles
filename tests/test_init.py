@@ -2,11 +2,10 @@
 
 from dataclasses import dataclass, field
 
-from datafiles import sync
+from datafiles import datafile
 
 
-@sync('../tmp/sample.yml', manual=True)
-@dataclass
+@datafile('../tmp/sample.yml', manual=True)
 class SampleWithDefaults:
     foo: int = 1
     bar: str = 'a'
@@ -18,24 +17,21 @@ class NestedSample:
     score: float
 
 
-@sync('../tmp/sample.yml', manual=True)
-@dataclass
+@datafile('../tmp/sample.yml', manual=True)
 class SampleWithDefaultsAndNesting:
     nested: NestedSample
     name: str = ''
     score: float = 0.0
 
 
-@sync('../tmp/sample.yml', manual=True)
-@dataclass
+@datafile('../tmp/sample.yml', manual=True)
 class SampleWithFactoryDefaults:
     a: float
     b: float
     c: float = field(default_factory=lambda: 42)
 
 
-@sync('../tmp/sample.yml', manual=True)
-@dataclass
+@datafile('../tmp/sample.yml', manual=True)
 class SampleWithComputedDefaults:
     a: float
     b: float

@@ -1,15 +1,12 @@
 # pylint: disable=unused-variable
 
-from dataclasses import dataclass
-
 import pytest
 
-from datafiles import sync
+from datafiles import datafile
 from datafiles.converters import Number, Text
 
 
-@sync('../tmp/sample.yml')
-@dataclass
+@datafile('../tmp/sample.yml')
 class Sample:
     number: Number = 0
     text: Text = ""

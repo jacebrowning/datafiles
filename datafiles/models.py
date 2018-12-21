@@ -1,4 +1,5 @@
 import dataclasses
+from dataclasses import dataclass
 from typing import Dict, Optional
 
 import log
@@ -9,7 +10,7 @@ from .converters import Converter, map_type
 from .managers import InstanceManager, ModelManager
 
 
-@dataclasses.dataclass
+@dataclass
 class ModelMeta:
     datafile_attrs: Optional[Dict[str, Converter]] = None
     datafile_pattern: Optional[str] = None

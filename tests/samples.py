@@ -1,12 +1,11 @@
 from dataclasses import dataclass, field
 from typing import List, Optional
 
-from datafiles import sync
+from datafiles import datafile
 from datafiles.converters import String
 
 
-@sync('../tmp/sample.yml', manual=True)
-@dataclass
+@datafile('../tmp/sample.yml', manual=True)
 class Sample:
     bool_: bool
     int_: int
@@ -14,8 +13,7 @@ class Sample:
     str_: str
 
 
-@sync('../tmp/sample.json', manual=True)
-@dataclass
+@datafile('../tmp/sample.json', manual=True)
 class SampleAsJSON:
     bool_: bool
     int_: int
@@ -23,8 +21,7 @@ class SampleAsJSON:
     str_: str
 
 
-@sync('../tmp/sample.yml', manual=True)
-@dataclass
+@datafile('../tmp/sample.yml', manual=True)
 class SampleWithCustomFields:
     included: str
     exluced: str
@@ -33,8 +30,7 @@ class SampleWithCustomFields:
         datafile_attrs = {'included': String}
 
 
-@sync('../tmp/sample.yml', manual=True)
-@dataclass
+@datafile('../tmp/sample.yml', manual=True)
 class SampleWithDefaults:
     without_default: str
     with_default: str = 'foo'
@@ -46,8 +42,7 @@ class _NestedSample1:
     score: float
 
 
-@sync('../tmp/sample.yml', manual=True)
-@dataclass
+@datafile('../tmp/sample.yml', manual=True)
 class SampleWithNesting:
     name: str
     score: float
@@ -60,34 +55,29 @@ class _NestedSample2:
     score: float = 3.4
 
 
-@sync('../tmp/sample.yml', manual=True)
-@dataclass
+@datafile('../tmp/sample.yml', manual=True)
 class SampleWithNestingAndDefaults:
     name: str
     score: float = 1.2
     nested: _NestedSample2 = field(default_factory=_NestedSample2)
 
 
-@sync('../tmp/sample.yml', manual=True)
-@dataclass
+@datafile('../tmp/sample.yml', manual=True)
 class SampleWithList:
     items: List[float]
 
 
-@sync('../tmp/sample.yml', manual=True)
-@dataclass
+@datafile('../tmp/sample.yml', manual=True)
 class SampleWithListAndDefaults:
     items: List[float] = field(default_factory=list)
 
 
-@sync('../tmp/sample.yml', manual=True)
-@dataclass
+@datafile('../tmp/sample.yml', manual=True)
 class SampleWithListOfDataclasses:
     items: List[_NestedSample1] = field(default_factory=list)
 
 
-@sync('../tmp/sample.yml', manual=True)
-@dataclass
+@datafile('../tmp/sample.yml', manual=True)
 class SampleWithOptionals:
     required: float
     optional: Optional[float]
