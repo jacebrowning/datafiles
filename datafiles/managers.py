@@ -163,7 +163,7 @@ class InstanceManager:
             log.debug(f"Converting '{name}' data with {converter}")
 
             if getattr(converter, 'DATACLASS', None):
-                self._set_dataclass_value(data, name, converter, first_load)
+                self._set_dataclass_value(data, name, converter)
             else:
                 self._set_attribute_value(data, name, converter, first_load)
 
@@ -171,7 +171,7 @@ class InstanceManager:
 
         self.modified = False
 
-    def _set_dataclass_value(self, data, name, converter, first_load):
+    def _set_dataclass_value(self, data, name, converter):
         # TODO: Support nesting unlimited levels
         # https://github.com/jacebrowning/datafiles/issues/22
         nested_data = data.get(name)
@@ -186,8 +186,6 @@ class InstanceManager:
                 if field.name not in nested_data:  # type: ignore
                     nested_data[field.name] = None  # type: ignore
             dataclass = converter.to_python_value(nested_data, target=dataclass)
-        elif first_load:
-            return
 
         # TODO: Figure out why datafile wasn't set
         if not hasattr(dataclass, 'datafile'):
