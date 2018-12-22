@@ -167,7 +167,9 @@ class InstanceManager:
             else:
                 self._set_attribute_value(data, name, converter, first_load)
 
-        log.info(f'Loaded object: {self._instance}')
+        log.info(f'Loaded instance: {self._instance.__class__.__name__}')
+
+        self.modified = False
 
     def _set_dataclass_value(self, data, name, converter, first_load):
         # TODO: Support nesting unlimited levels
@@ -251,7 +253,7 @@ class InstanceManager:
 
     @prevent_recursion
     def save(self, include_default_values: Trilean = None) -> None:
-        log.info(f'Saving object: {self._instance}')
+        log.info(f'Saving instance: {self._instance.__class__.__name__}')
 
         if not self.path:
             raise RuntimeError(f"'pattern' must be set to save the model")

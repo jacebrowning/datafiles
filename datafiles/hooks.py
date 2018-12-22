@@ -49,11 +49,11 @@ def apply(instance, datafile, get_datafile):
                 attr.datafile = get_datafile(attr)
                 apply(attr, datafile, get_datafile)
             elif type(attr) == list:  # pylint: disable=unidiomatic-typecheck
-                attr = new_class('List', (list,))(attr)
+                attr = new_class(f'list-{name}', (list,))(attr)
                 setattr(instance, name, attr)
                 apply(attr, datafile, get_datafile)
             elif type(attr) == dict:  # pylint: disable=unidiomatic-typecheck
-                attr = new_class('Dict', (dict,))(attr)
+                attr = new_class(f'dict-{name}', (dict,))(attr)
                 setattr(instance, name, attr)
                 apply(attr, datafile, get_datafile)
 
