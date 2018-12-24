@@ -7,6 +7,11 @@ REPOSITORY := jacebrowning/datafiles
 PACKAGES := $(PACKAGE) tests
 MODULES := $(wildcard $(PACKAGE)/*.py)
 
+# Virtual environment paths
+VIRTUAL_ENV ?= .venv
+
+# MAIN TASKS ##################################################################
+
 .PHONY: all
 all: install
 
@@ -29,11 +34,12 @@ doctor:  ## Confirm system dependencies are available
 
 # PROJECT DEPENDENCIES ########################################################
 
-VIRTUAL_ENV ?= .venv
+DEPENDENCIES := $(VIRTUAL_ENV)/.poetry-$(shell bin/checksum pyproject.toml poetry.lock)
 
 .PHONY: install
-install: $(VIRTUAL_ENV)/flag .cache
-$(VIRTUAL_ENV)/flag: poetry.lock
+install: $(DEPENDENCIES) .cache
+
+$(DEPENDENCIES): poetry.lock
 	@ poetry config settings.virtualenvs.in-project true
 	poetry install
 	@ touch $@
@@ -45,7 +51,7 @@ poetry.lock: pyproject.toml
 .cache:
 	@ mkdir -p .cache
 
-# VALIDATION TARGETS ##########################################################
+# CHECKS ######################################################################
 
 .PHONY: format
 format: install
@@ -60,6 +66,9 @@ ifdef CI
 endif
 	poetry run pylint $(PACKAGES) --rcfile=.pylint.ini
 	poetry run mypy $(PACKAGES) --config-file=.mypy.ini
+	poetry run pydocstyle $(PACKAGES) $(CONFIG)
+
+# TESTS #######################################################################
 
 .PHONY: test
 test: install  ## Run unit and integration tests
