@@ -3,15 +3,23 @@
 name = "datafiles"
 version = "0.1a9"
 description = "File-based ORM for dataclasses."
-authors = ["Jace Browning <jacebrowning@gmail.com>"]
+
 license = "MIT"
+
+authors = ["Jace Browning <jacebrowning@gmail.com>"]
+
+readme = "README.md"
 
 homepage = "https://pypi.org/project/datafiles"
 documentation = "https://datafiles.readthedocs.io"
 repository = "https://github.com/jacebrowning/datafiles"
 
-readme = "README.md"
-keywords = ["YAML", "JSON", "ORM", "serialization"]
+keywords = [
+    "YAML",
+    "JSON",
+    "ORM",
+    "serialization",
+]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
@@ -45,8 +53,10 @@ black = "=18.9b0"
 isort = "=4.3.4"
 
 # Linters
-pylint = "^2.1"
 mypy = "*"
+pylint = "^2.1"
+pydocstyle = "*"
+
 
 # Testing
 pytest = "^3.8.0"

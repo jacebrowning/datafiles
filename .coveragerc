@@ -2,10 +2,12 @@
 
 branch = true
 
+data_file = .cache/coverage
+
 omit =
     .venv/*
-
-data_file = .cache/coverage
+    */tests/*
+    */__main__.py
 
 [report]
 

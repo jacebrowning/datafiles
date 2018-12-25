@@ -11,7 +11,7 @@ def datafile(
     manual: bool = False,
     defaults: bool = False,
 ):
-    """Decorator to synchronize a data class to the specified path."""
+    """Synchronize a data class to the specified path."""
 
     def decorator(cls):
         if dataclasses.is_dataclass(cls):
