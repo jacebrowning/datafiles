@@ -1,10 +1,13 @@
+import logging
 from pathlib import Path
 from shutil import get_terminal_size, rmtree
 
-import log
 import pytest
 
 from datafiles import settings
+
+
+log = logging.getLogger(__name__)
 
 
 settings.HIDE_TRACEBACK_IN_HOOKS = False
