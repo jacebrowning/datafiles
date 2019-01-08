@@ -1,11 +1,13 @@
 import dataclasses
+import logging
 from contextlib import contextmanager, suppress
 from functools import wraps
 from types import new_class
 
-import log
-
 from . import settings
+
+
+log = logging.getLogger(__name__)
 
 
 LOAD_BEFORE_METHODS = ['__getattribute__', '__getitem__', '__iter__']

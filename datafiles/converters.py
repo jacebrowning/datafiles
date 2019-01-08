@@ -1,12 +1,15 @@
 import dataclasses
+import logging
 from abc import ABCMeta, abstractmethod
 from collections.abc import Iterable
 from typing import Any, Dict, Union
 
-import log
 from ruamel.yaml.scalarstring import LiteralScalarString
 
 from .utils import Missing, cached
+
+
+log = logging.getLogger(__name__)
 
 
 class Converter(metaclass=ABCMeta):
@@ -101,7 +104,7 @@ class Integer(Converter):
                 raise exc from None
             else:
                 msg = f'Precision lost in conversion to int: {python_value}'
-                log.warn(msg)
+                log.warning(msg)
                 return data
 
 
@@ -362,7 +365,7 @@ def map_type(cls):
                 converter = List.subclass(converter)
 
         if cls.__origin__ == dict:
-            log.warn("Schema enforcement not possible with 'Dict' annotation")
+            log.warning("Schema enforcement not possible with 'Dict' annotation")
             key = map_type(cls.__args__[0])
             value = map_type(cls.__args__[1])
 

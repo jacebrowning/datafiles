@@ -1,13 +1,16 @@
 import dataclasses
+import logging
 from dataclasses import dataclass
 from typing import Dict, Optional
 
-import log
 from classproperties import classproperty
 
 from . import hooks
 from .converters import Converter, map_type
 from .managers import InstanceManager, ModelManager
+
+
+log = logging.getLogger(__name__)
 
 
 @dataclass

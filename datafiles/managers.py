@@ -1,14 +1,17 @@
 import dataclasses
 import inspect
+import logging
 from pathlib import Path
 from typing import Any, Dict, Optional
 
-import log
 from cached_property import cached_property
 
 from . import formats
 from .converters import List
 from .utils import Missing, prettify, prevent_recursion
+
+
+log = logging.getLogger(__name__)
 
 
 Trilean = Optional[bool]
@@ -51,7 +54,7 @@ class InstanceManager:
         try:
             root = Path(inspect.getfile(cls)).parent
         except TypeError:  # pragma: no cover
-            level = log.DEBUG if '__main__' in str(cls) else log.WARNING
+            level = logging.DEBUG if '__main__' in str(cls) else logging.WARNING
             log.log(level, f'Unable to determine module for {cls}')
             root = Path.cwd()
 
@@ -191,7 +194,7 @@ class InstanceManager:
         if not hasattr(dataclass, 'datafile'):
             from .models import get_datafile
 
-            log.warn(f"{dataclass} was missing 'datafile'")
+            log.warning(f"{dataclass} was missing 'datafile'")
             dataclass.datafile = get_datafile(dataclass)
 
         for name2, converter2 in dataclass.datafile.attrs.items():

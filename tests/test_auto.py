@@ -1,11 +1,13 @@
 # pylint: disable=unused-variable,no-member
 
+import logging
 from dataclasses import dataclass, field
 from typing import Dict, List
 
-import log
-
 from datafiles import datafile
+
+
+log = logging.getLogger(__name__)
 
 
 @datafile('../tmp/sample.yml')
