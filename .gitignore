@@ -33,6 +33,7 @@ tmp/
 /.coverage
 /.coverage.*
 /htmlcov/
+/prof/
 
 # Build and release directories
 /build/

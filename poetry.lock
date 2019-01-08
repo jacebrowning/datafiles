@@ -199,6 +199,14 @@ version = "0.3"
 
 [[package]]
 category = "dev"
+description = "Generate a dot graph from the output of several profilers."
+name = "gprof2dot"
+optional = false
+python-versions = "*"
+version = "2017.9.19"
+
+[[package]]
+category = "dev"
 description = "Internationalized Domain Names in Applications (IDNA)"
 name = "idna"
 optional = false
@@ -711,6 +719,19 @@ pytest = ">=2.7"
 
 [[package]]
 category = "dev"
+description = "Profiling plugin for py.test"
+name = "pytest-profiling"
+optional = false
+python-versions = "*"
+version = "1.3.0"
+
+[package.dependencies]
+gprof2dot = "*"
+pytest = "*"
+six = "*"
+
+[[package]]
+category = "dev"
 description = "py.test plugin to randomize tests"
 name = "pytest-random"
 optional = false
@@ -966,7 +987,7 @@ python-versions = "*"
 version = "1.10.11"
 
 [metadata]
-content-hash = "7fadec434bacf6236c0976413026def6d853774347e6191581530e596e32892e"
+content-hash = "ca81501ec0573db8ca3717db0862f8be6145c97dacb12ede734ec2922366f19d"
 python-versions = "^3.7"
 
 [metadata.hashes]
@@ -992,6 +1013,7 @@ decorator = ["2c51dff8ef3c447388fe5e4453d24a2bf128d3a4c32af3fabef1f01c6851ab82",
 defusedxml = ["24d7f2f94f7f3cb6061acb215685e5125fbcdc40a857eff9de22518820b0a4f4", "702a91ade2968a82beb0db1e0766a6a273f33d4616a6ce8cde475d8e09853b20"]
 docopt = ["49b3a825280bd66b3aa83585ef59c4a8c82f2c8a522dbe754a8bc8d08c85c491"]
 entrypoints = ["589f874b313739ad35be6e0cd7efde2a4e9b6fea91edcc34e58ecbb8dbe56d19", "c70dd71abe5a8c85e55e12c19bd91ccfeec11a6e99044204511f9ed547d48451"]
+gprof2dot = ["cebc7aa2782fd813ead415ea1fae3409524343485eadc7fb60ef5bd1e810309e"]
 idna = ["c357b3f628cf53ae2c4c05627ecc484553142ca23264e593d327bcde5e9c3407", "ea8b7f6188e6fa117537c3df7da9fc686d485087abf6ac197f9c46432f7e4a3c"]
 ipykernel = ["0aeb7ec277ac42cc2b59ae3d08b10909b2ec161dc6908096210527162b53675d", "0fc0bf97920d454102168ec2008620066878848fcfca06c22b669696212e292f"]
 ipython = ["6a9496209b76463f1dec126ab928919aaf1f55b38beb9219af3fe202f6bbdd12", "f69932b1e806b38a7818d9a1e918e5821b685715040b48e59c657b3c7961b742"]
@@ -1037,6 +1059,7 @@ pytest-cov = ["0ab664b25c6aa9716cbf203b17ddb301932383046082c081b9848a0edf5add33"
 pytest-describe = ["bd6be131452b7822c872735ffe53ce3931b3b80cbbad1647c2b482cc9ef3d00e"]
 pytest-expecter = ["1c8e9ab98ddd576436b61a7ba61ea11cfa5a3fc6b00288ce9e91e9dd770daf19", "27c93dfe87e2f4d28c525031be68d3f89457e3315241d97ee15f7689544e0e37"]
 pytest-mock = ["53801e621223d34724926a5c98bd90e8e417ce35264365d39d6c896388dcc928", "d89a8209d722b8307b5e351496830d5cc5e192336003a485443ae9adeb7dd4c0"]
+pytest-profiling = ["02545575fad9953de0181e697adaa6567d9de2106aa1e314263b6dd7a9f17dd3", "6b86a2e547bf1a70610da6568d91ed3e785d15a12151abebdd5e885fba532523", "ce222a8682b893467b95e48e8cfe7372cf1afd213ffe558c023fd3591ebdadd8"]
 pytest-random = ["92f25db8c5d9ffc20d90b51997b914372d6955cb9cf1f6ead45b90514fc0eddd"]
 pytest-repeat = ["637e68dd615e850b47b2dee0edf72bcede44de6a5335837fe2980daaf0cdab2b", "c51e166d652cf779588801f8b57594a46e62f05877d3929b10aadb874a9faf04"]
 pytest-watch = ["06136f03d5b361718b8d0d234042f7b2f203910d8568f63df2f866b547b3d4b9"]

@@ -66,6 +66,7 @@ pytest-random = "*"
 pytest-repeat = "*"
 pytest-watch = "*"
 pytest-cov = "*"
+pytest-profiling = "*"
 
 # Coverage
 coveragespace = "^2.1"
