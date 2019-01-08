@@ -79,6 +79,10 @@ test: install  ## Run unit and integration tests
 test-repeat: install
 	poetry run pytest --count=5 --random --exitfirst
 
+.PHONY: test-profile
+test-profile: install
+	poetry run pytest tests/test_profiling.py --profile-svg
+
 # DOCUMENTATION ###############################################################
 
 MKDOCS_INDEX := site/index.html
