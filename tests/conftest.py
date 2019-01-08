@@ -1,15 +1,13 @@
-import logging
 from pathlib import Path
 from shutil import get_terminal_size, rmtree
 
+import log
 import pytest
 
 from datafiles import settings
 
 
 settings.HIDE_TRACEBACK_IN_HOOKS = False
-
-log = logging.getLogger(__name__)
 
 
 def pytest_configure(config):

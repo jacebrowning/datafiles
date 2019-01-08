@@ -1,14 +1,12 @@
-import logging
 from shutil import get_terminal_size
 
+import log
 import pytest
 
 from datafiles import settings
 
 
 settings.HIDE_TRACEBACK_IN_HOOKS = False
-
-log = logging.getLogger(__name__)
 
 
 @pytest.fixture
