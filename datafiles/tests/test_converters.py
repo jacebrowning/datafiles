@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from typing import ByteString, Dict, List, Optional
 
 import pytest
+from ruamel.yaml.scalarstring import LiteralScalarString
 
 from datafiles import converters
 
@@ -26,6 +27,10 @@ MyDataclassConverterList = converters.map_type(List[MyDataclass])
 
 
 def describe_map_type():
+    def it_handles_extended_types(expect):
+        converter = converters.map_type(converters.Number)
+        expect(converter.__name__) == 'Number'
+
     def it_handles_list_annotations(expect):
         converter = converters.map_type(List[str])
         expect(converter.__name__) == 'StringList'
@@ -116,6 +121,17 @@ def describe_converter():
         def when_nominal(expect, converter, data, value):
             expect(converter.to_python_value(data, target=None)) == value
 
+        def when_number(expect):
+            convert = converters.Number.to_python_value
+            expect(convert(1.23)).isinstance(float)
+            expect(convert(42)).isinstance(int)
+
+        def when_text(expect):
+            convert = converters.Text.to_python_value
+            expect(convert("")) == ""
+            expect(convert("Hello, world!")) == "Hello, world!"
+            expect(convert("Line 1\nLine 2\n")) == "Line 1\nLine 2\n"
+
         def when_invalid(expect):
             message = "invalid literal for int() with base 10: 'a'"
             with expect.raises(ValueError, message):
@@ -179,6 +195,18 @@ def describe_converter():
         )
         def when_nominal(expect, converter, value, data):
             expect(converter.to_preserialization_data(value)) == data
+
+        def when_number(expect):
+            convert = converters.Number.to_preserialization_data
+            expect(convert(1.23)).isinstance(float)
+            expect(convert(42)).isinstance(int)
+
+        def when_text(expect):
+            convert = converters.Text.to_preserialization_data
+            expect(convert("")) == ""
+            expect(convert("Hello, world!")) == "Hello, world!"
+            expect(convert("Line 1\nLine 2")) == "Line 1\nLine 2\n"
+            expect(convert("Line 1\nLine 2")).isinstance(LiteralScalarString)
 
         def when_invalid(expect):
             message = "invalid literal for int() with base 10: 'a'"
