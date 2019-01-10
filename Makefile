@@ -77,7 +77,7 @@ test: install  ## Run unit and integration tests
 
 .PHONY: test-repeat
 test-repeat: install
-	poetry run pytest --count=5 --random
+	poetry run pytest --count=5 --random --exitfirst
 
 .PHONY: test-profile
 test-profile: install
