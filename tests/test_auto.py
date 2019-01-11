@@ -93,6 +93,7 @@ def describe_automatic_load():
     def describe_nesting():
         def with_getattr(logbreak, write, expect):
             sample = SampleWithNesting(1)
+            log.c(id(sample))
 
             logbreak("Modifying nested file")
             write(
@@ -162,7 +163,7 @@ def describe_automatic_save():
     def with_append(logbreak, expect, read, dedent):
         sample = Sample()
 
-        logbreak()
+        logbreak("Appending to list")
         sample.items.append(2)
 
         expect(read('tmp/sample.yml')) == dedent(
@@ -175,7 +176,7 @@ def describe_automatic_save():
 
         sample.datafile.load()
 
-        logbreak()
+        logbreak("Appending to list")
         sample.items.append(3)
 
         expect(read('tmp/sample.yml')) == dedent(
@@ -190,7 +191,7 @@ def describe_automatic_save():
     def with_append_on_nested_dataclass(logbreak, expect, read, dedent):
         sample = SampleWithNesting(1)
 
-        logbreak()
+        logbreak("Appending to nested list")
         sample.nested.items.append(2)
 
         expect(read('tmp/sample.yml')) == dedent(
@@ -202,7 +203,7 @@ def describe_automatic_save():
             """
         )
 
-        logbreak()
+        logbreak("Appending to nested list")
         sample.nested.items.append(3)
 
         expect(read('tmp/sample.yml')) == dedent(

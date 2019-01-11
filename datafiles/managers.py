@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import dataclasses
 import inspect
 import os
@@ -32,6 +34,7 @@ class InstanceManager:
         pattern: Optional[str],
         manual: bool,
         defaults: bool,
+        root: Optional[InstanceManager] = None,
     ) -> None:
         assert manual is not None
         assert defaults is not None
@@ -42,6 +45,7 @@ class InstanceManager:
         self.defaults = defaults
         self._last_load = 0.0
         self._last_data: Dict = {}
+        self._root = root
 
     @property
     def classname(self) -> str:
@@ -151,6 +155,10 @@ class InstanceManager:
 
     @prevent_recursion
     def load(self, *, first_load=False) -> None:
+        if self._root:
+            self._root.load(first_load=first_load)
+            return
+
         if self.path:
             log.info(f"Loading '{self.classname}' object from '{self.relpath}'")
         else:
@@ -252,6 +260,10 @@ class InstanceManager:
 
     @prevent_recursion
     def save(self, include_default_values: Trilean = None) -> None:
+        if self._root:
+            self._root.save(include_default_values=include_default_values)
+            return
+
         if self.path:
             log.info(f"Saving '{self.classname}' object to '{self.relpath}'")
         else:

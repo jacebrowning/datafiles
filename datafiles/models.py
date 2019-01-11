@@ -25,9 +25,9 @@ class Model:
 
     def __post_init__(self):
         # pylint: disable=attribute-defined-outside-init
-        log.debug(f'Initializing {self.__class__} object')
 
         with hooks.disabled():
+            log.debug(f'Initializing {self.__class__} object')
 
             self.datafile = get_datafile(self)
 
@@ -52,9 +52,9 @@ class Model:
         return ModelManager(cls)
 
 
-def get_datafile(obj) -> InstanceManager:
+def get_datafile(obj, root=None) -> InstanceManager:
     try:
-        return obj.datafile
+        return object.__getattribute__(obj, 'datafile')
     except AttributeError:
         log.debug(f"Getting 'datafile' for {obj.__class__} object")
 
@@ -73,7 +73,7 @@ def get_datafile(obj) -> InstanceManager:
                 attrs[field.name] = map_type(field.type)
 
     return InstanceManager(
-        obj, attrs=attrs, pattern=pattern, manual=manual, defaults=defaults
+        obj, attrs=attrs, pattern=pattern, manual=manual, defaults=defaults, root=root
     )
 
 

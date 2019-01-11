@@ -1,7 +1,6 @@
 import dataclasses
 from contextlib import contextmanager, suppress
 from functools import wraps
-from types import new_class
 
 import log
 
@@ -24,6 +23,15 @@ SAVE_AFTER_METHODS = [
     'popitem',
     'update',
 ]
+FLAG = '_patched'
+
+
+class List(list):
+    """Mutable `list` type."""
+
+
+class Dict(dict):
+    """Mutable `dict` type."""
 
 
 def apply(instance, datafile, get_datafile):
@@ -34,92 +42,106 @@ def apply(instance, datafile, get_datafile):
     for method_name in LOAD_BEFORE_METHODS:
         with suppress(AttributeError):
             method = getattr(cls, method_name)
-            modified_method = load_before(cls, method, datafile)
+            modified_method = load_before(cls, method)
             setattr(cls, method_name, modified_method)
 
     for method_name in SAVE_AFTER_METHODS:
         with suppress(AttributeError):
             method = getattr(cls, method_name)
-            modified_method = save_after(cls, method, datafile)
+            modified_method = save_after(cls, method)
             setattr(cls, method_name, modified_method)
 
+    # pylint: disable=unidiomatic-typecheck,attribute-defined-outside-init
     if dataclasses.is_dataclass(instance):
         for attr_name in instance.datafile.attrs:
             attr = getattr(instance, attr_name)
             if dataclasses.is_dataclass(attr):
-                attr.datafile = get_datafile(attr)
+                attr.datafile = get_datafile(attr, root=datafile)
                 apply(attr, datafile, get_datafile)
-            elif type(attr) == list:  # pylint: disable=unidiomatic-typecheck
-                attr = new_class(f'list:{attr_name}', (list,))(attr)
+            elif type(attr) == list:
+                attr = List(attr)
+                attr.datafile = datafile
                 setattr(instance, attr_name, attr)
                 apply(attr, datafile, get_datafile)
-            elif type(attr) == dict:  # pylint: disable=unidiomatic-typecheck
-                attr = new_class(f'dict:{attr_name}', (dict,))(attr)
+            elif type(attr) == dict:
+                attr = Dict(attr)
+                attr.datafile = datafile
                 setattr(instance, attr_name, attr)
                 apply(attr, datafile, get_datafile)
 
 
-def load_before(cls, method, datafile):
+def load_before(cls, method):
     """Decorate methods that should load before call."""
+
+    if hasattr(method, FLAG):
+        return method
 
     @wraps(method)
     def wrapped(self, *args, **kwargs):
         __tracebackhide__ = settings.HIDE_TRACEBACK_IN_HOOKS
 
-        if enabled(datafile, args):
-            if datafile.exists and datafile.modified:
-                log.debug(f"Loading automatically before '{method.__name__}' call")
-
-                with disabled():
-                    datafile.load()
-                    datafile.modified = False
-                    # TODO: Implement this?
-                    # if mapper.auto_save_after_load:
-                    #     mapper.save()
-                    #     mapper.modified = False
+        if settings.HOOKS_ENABLED:
+            datafile = object.__getattribute__(self, 'datafile')
+            if enabled(datafile, args):
+                if datafile.exists and datafile.modified:
+                    log.debug(f"Loading automatically before '{method.__name__}' call")
+                    with disabled():
+                        datafile.load()
+                        datafile.modified = False
+                        # TODO: Implement this?
+                        # if mapper.auto_save_after_load:
+                        #     mapper.save()
+                        #     mapper.modified = False
 
         return method(self, *args, **kwargs)
 
     log.debug(f'Patched method to load before call: {cls.__name__}.{method.__name__}')
+    setattr(wrapped, FLAG, True)
 
     return wrapped
 
 
-def save_after(cls, method, datafile):
+def save_after(cls, method):
     """Decorate methods that should save after call."""
+
+    if hasattr(method, FLAG):
+        return method
 
     @wraps(method)
     def wrapped(self, *args, **kwargs):
         __tracebackhide__ = settings.HIDE_TRACEBACK_IN_HOOKS
 
-        if enabled(datafile, args):
-            if datafile.exists and datafile.modified:
-                log.debug(f"Loading automatically before '{method.__name__}' call")
-                with disabled():
-                    datafile.load()
+        if settings.HOOKS_ENABLED:
+            datafile = object.__getattribute__(self, 'datafile')
+            if enabled(datafile, args):
+                if datafile.exists and datafile.modified:
+                    log.debug(f"Loading automatically before '{method.__name__}' call")
+                    with disabled():  # TODO: remove redundancy
+                        datafile.load()
 
         result = method(self, *args, **kwargs)
 
-        if enabled(datafile, args):
-            log.debug(f"Saving automatically after '{method.__name__}' call")
-            with disabled():
-                datafile.save()
+        if settings.HOOKS_ENABLED:
+            datafile = object.__getattribute__(self, 'datafile')
+            if enabled(datafile, args):
+                log.debug(f"Saving automatically after '{method.__name__}' call")
+                with disabled():
+                    datafile.save()
 
         return result
 
     log.debug(f'Patched method to save after call: {cls.__name__}.{method.__name__}')
+    setattr(wrapped, FLAG, True)
 
     return wrapped
 
 
 def enabled(datafile, args) -> bool:
     """Determine if hooks are enabled for the current method."""
-    if not settings.HOOKS_ENABLED:
-        return False
-
     if datafile.manual:
         return False
 
+    # TODO: Investigate performance impact of removing this code
     if args and isinstance(args[0], str):
         if args[0] in {'Meta', 'datafile'}:
             return False
