@@ -29,40 +29,38 @@ SAVE_AFTER_METHODS = [
 def apply(instance, datafile, get_datafile):
     """Path methods that get or set attributes."""
     cls = instance.__class__
+    log.debug(f'Patching methods on {cls}')
 
-    for name in LOAD_BEFORE_METHODS:
+    for method_name in LOAD_BEFORE_METHODS:
         with suppress(AttributeError):
-            method = getattr(cls, name)
+            method = getattr(cls, method_name)
             modified_method = load_before(cls, method, datafile)
-            setattr(cls, name, modified_method)
+            setattr(cls, method_name, modified_method)
 
-    for name in SAVE_AFTER_METHODS:
+    for method_name in SAVE_AFTER_METHODS:
         with suppress(AttributeError):
-            method = getattr(cls, name)
+            method = getattr(cls, method_name)
             modified_method = save_after(cls, method, datafile)
-            setattr(cls, name, modified_method)
+            setattr(cls, method_name, modified_method)
 
     if dataclasses.is_dataclass(instance):
-        for name in instance.datafile.attrs:
-            attr = getattr(instance, name)
+        for attr_name in instance.datafile.attrs:
+            attr = getattr(instance, attr_name)
             if dataclasses.is_dataclass(attr):
                 attr.datafile = get_datafile(attr)
                 apply(attr, datafile, get_datafile)
             elif type(attr) == list:  # pylint: disable=unidiomatic-typecheck
-                attr = new_class(f'list-{name}', (list,))(attr)
-                setattr(instance, name, attr)
+                attr = new_class(f'list:{attr_name}', (list,))(attr)
+                setattr(instance, attr_name, attr)
                 apply(attr, datafile, get_datafile)
             elif type(attr) == dict:  # pylint: disable=unidiomatic-typecheck
-                attr = new_class(f'dict-{name}', (dict,))(attr)
-                setattr(instance, name, attr)
+                attr = new_class(f'dict:{attr_name}', (dict,))(attr)
+                setattr(instance, attr_name, attr)
                 apply(attr, datafile, get_datafile)
 
 
 def load_before(cls, method, datafile):
     """Decorate methods that should load before call."""
-
-    name = method.__name__
-    log.debug(f'Patching method to load before call: {cls.__name__}.{name}')
 
     @wraps(method)
     def wrapped(self, *args, **kwargs):
@@ -70,7 +68,7 @@ def load_before(cls, method, datafile):
 
         if enabled(datafile, args):
             if datafile.exists and datafile.modified:
-                log.debug(f"Loading automatically before '{name}' call")
+                log.debug(f"Loading automatically before '{method.__name__}' call")
 
                 with disabled():
                     datafile.load()
@@ -82,14 +80,13 @@ def load_before(cls, method, datafile):
 
         return method(self, *args, **kwargs)
 
+    log.debug(f'Patched method to load before call: {cls.__name__}.{method.__name__}')
+
     return wrapped
 
 
 def save_after(cls, method, datafile):
     """Decorate methods that should save after call."""
-
-    name = method.__name__
-    log.debug(f'Patching method to save after call: {cls.__name__}.{name}')
 
     @wraps(method)
     def wrapped(self, *args, **kwargs):
@@ -97,18 +94,20 @@ def save_after(cls, method, datafile):
 
         if enabled(datafile, args):
             if datafile.exists and datafile.modified:
-                log.debug(f"Loading modified datafile before '{name}' call")
+                log.debug(f"Loading automatically before '{method.__name__}' call")
                 with disabled():
                     datafile.load()
 
         result = method(self, *args, **kwargs)
 
         if enabled(datafile, args):
-            log.debug(f"Saving automatically after '{name}' call")
+            log.debug(f"Saving automatically after '{method.__name__}' call")
             with disabled():
                 datafile.save()
 
         return result
+
+    log.debug(f'Patched method to save after call: {cls.__name__}.{method.__name__}')
 
     return wrapped
 
