@@ -35,9 +35,12 @@ def create_tmp():
 
 @pytest.fixture
 def logbreak():
-    def _():
-        width = get_terminal_size().columns - 30
-        line = '-' * width
+    def _(message=""):
+        width = get_terminal_size().columns - 31
+        if message:
+            line = '-' * (width - len(message) - 1) + ' ' + message
+        else:
+            line = '-' * width
         log.info(line)
 
     return _

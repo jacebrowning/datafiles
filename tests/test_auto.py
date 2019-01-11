@@ -61,7 +61,7 @@ def describe_automatic_load():
             item: b
             """,
         )
-        logbreak()
+        logbreak("Getting attribute")
 
         expect(sample.item) == 'b'
 
@@ -91,10 +91,10 @@ def describe_automatic_load():
         expect([x for x in sample]) == [3]
 
     def describe_nesting():
-        def with_getattr(write, expect):
+        def with_getattr(logbreak, write, expect):
             sample = SampleWithNesting(1)
 
-            log.info("Modifying nested file")
+            logbreak("Modifying nested file")
             write(
                 'tmp/sample.yml',
                 """
