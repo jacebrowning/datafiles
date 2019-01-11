@@ -1,6 +1,6 @@
 import dataclasses
 from contextlib import suppress
-from functools import lru_cache, wraps
+from functools import lru_cache
 from pprint import pformat
 from typing import Any, Dict
 
@@ -25,22 +25,3 @@ def dictify(value: Any) -> Dict:
         return [dictify(x) for x in value]
 
     return value
-
-
-def prevent_recursion(method):
-    """Decorate methods to prevent indirect recursive calls."""
-
-    FLAG = '_activity'
-
-    @wraps(method)
-    def wrapped(self, *args, **kwargs):
-        if getattr(self, FLAG, False):
-            return None
-
-        setattr(self, FLAG, True)
-        try:
-            return method(self, *args, **kwargs)
-        finally:
-            delattr(self, FLAG)
-
-    return wrapped

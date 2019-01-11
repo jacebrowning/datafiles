@@ -69,14 +69,11 @@ def load_before(cls, method, datafile):
         if enabled(datafile, args):
             if datafile.exists and datafile.modified:
                 log.debug(f"Loading automatically before '{method.__name__}' call")
-
-                with disabled():
-                    datafile.load()
-                    datafile.modified = False
-                    # TODO: Implement this?
-                    # if mapper.auto_save_after_load:
-                    #     mapper.save()
-                    #     mapper.modified = False
+                datafile.load()
+                # TODO: Implement this?
+                # if mapper.auto_save_after_load:
+                #     mapper.save()
+                #     mapper.modified = False
 
         return method(self, *args, **kwargs)
 
@@ -95,15 +92,13 @@ def save_after(cls, method, datafile):
         if enabled(datafile, args):
             if datafile.exists and datafile.modified:
                 log.debug(f"Loading automatically before '{method.__name__}' call")
-                with disabled():
-                    datafile.load()
+                datafile.load()
 
         result = method(self, *args, **kwargs)
 
         if enabled(datafile, args):
             log.debug(f"Saving automatically after '{method.__name__}' call")
-            with disabled():
-                datafile.save()
+            datafile.save()
 
         return result
 
@@ -138,3 +133,14 @@ def disabled():
         settings.HOOKS_ENABLED = True
     else:
         yield
+
+
+def disable(method):
+    """Decorate methods that should disable hooks for call duration."""
+
+    @wraps(method)
+    def wrapped(self, *args, **kwargs):
+        with disabled():
+            return method(self, *args, **kwargs)
+
+    return wrapped

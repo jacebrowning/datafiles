@@ -7,9 +7,9 @@ from typing import Any, Dict, Optional
 import log
 from cached_property import cached_property
 
-from . import formats
+from . import formats, hooks
 from .converters import List
-from .utils import Missing, prettify, prevent_recursion
+from .utils import Missing, prettify
 
 
 Trilean = Optional[bool]
@@ -149,7 +149,7 @@ class InstanceManager:
         log.debug(f'Serialized data to text ({extension}): {text!r}')
         return text
 
-    @prevent_recursion
+    @hooks.disable
     def load(self, *, first_load=False) -> None:
         if self.path:
             log.info(f"Loading '{self.classname}' object from '{self.relpath}'")
@@ -250,7 +250,7 @@ class InstanceManager:
 
         return Missing
 
-    @prevent_recursion
+    @hooks.disable
     def save(self, include_default_values: Trilean = None) -> None:
         if self.path:
             log.info(f"Saving '{self.classname}' object to '{self.relpath}'")
