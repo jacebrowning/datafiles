@@ -1,5 +1,6 @@
 import dataclasses
 import inspect
+import os
 from pathlib import Path
 from typing import Any, Dict, Optional
 
@@ -60,7 +61,7 @@ class InstanceManager:
 
     @property
     def relpath(self) -> Path:
-        return self.path.relative_to(Path.cwd())
+        return Path(os.path.relpath(self.path, Path.cwd()))
 
     @property
     def exists(self) -> bool:
