@@ -137,10 +137,9 @@ def describe_converter():
             with expect.raises(ValueError, message):
                 converters.Integer.to_python_value('a')
 
-        def when_list_of_dataclasses(logbreak, expect):
+        def when_list_of_dataclasses(expect):
             converter = converters.map_type(List[MyDataclass])
 
-            logbreak()
             data = [{'foobar': 1}, {'foobar': 2}, {'foobar': 3}]
             value = [MyDataclass(1), MyDataclass(2), MyDataclass(3)]
 
@@ -213,10 +212,9 @@ def describe_converter():
             with expect.raises(ValueError, message):
                 converters.Integer.to_preserialization_data('a')
 
-        def when_list_of_dataclasses(logbreak, expect):
+        def when_list_of_dataclasses(expect):
             converter = converters.map_type(List[MyDataclass])
 
-            logbreak()
             value = [MyDataclass(1), MyDataclass(2), MyDataclass(3)]
             data = [
                 {'foobar': 1, 'flag': False},
