@@ -148,16 +148,12 @@ def describe_automatic_save():
             """
         )
 
-    def with_delitem(expect, read, dedent):
+    def with_delitem(expect, read):
         sample = Sample()
 
         del sample[0]
 
-        expect(read('tmp/sample.yml')) == dedent(
-            """
-            items: []
-            """
-        )
+        expect(read('tmp/sample.yml')) == "items:\n- \n"
 
     def with_append(logbreak, expect, read, dedent):
         sample = Sample()

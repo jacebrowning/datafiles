@@ -234,7 +234,7 @@ class List(Converter):
         if data == skip:
             data.clear()
 
-        return data
+        return data or [None]
 
 
 class Dictionary(Converter):
