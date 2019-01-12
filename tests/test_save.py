@@ -68,6 +68,14 @@ def describe_nominal():
 
 
 def describe_lists():
+    def when_empty(expect):
+        sample = SampleWithList([])
+
+        sample.datafile.save()
+
+        with open('tmp/sample.yml') as f:
+            expect(f.read()) == "items:\n- \n"
+
     def with_conversion(expect, dedent):
         sample = SampleWithList([1, 2.3, '4.5'])
 
