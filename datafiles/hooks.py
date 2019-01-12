@@ -58,16 +58,21 @@ def apply(instance, datafile, get_datafile):
             if dataclasses.is_dataclass(attr):
                 attr.datafile = get_datafile(attr, root=datafile)
                 apply(attr, datafile, get_datafile)
-            elif type(attr) == list:
-                attr = List(attr)
-                attr.datafile = datafile
-                setattr(instance, attr_name, attr)
-                apply(attr, datafile, get_datafile)
-            elif type(attr) == dict:
-                attr = Dict(attr)
-                attr.datafile = datafile
-                setattr(instance, attr_name, attr)
-                apply(attr, datafile, get_datafile)
+            else:
+                try:
+                    attr.datafile = get_datafile(attr, root=datafile)
+                    apply(attr, datafile, get_datafile)
+                    assert 0
+                except (AttributeError, TypeError):
+                    if type(attr) == list:
+                        attr = List(attr)
+                    elif type(attr) == dict:
+                        attr = Dict(attr)
+                    else:
+                        continue
+                    setattr(instance, attr_name, attr)
+                    attr.datafile = get_datafile(attr, root=datafile)
+                    apply(attr, datafile, get_datafile)
 
 
 def load_before(cls, method):
@@ -85,13 +90,11 @@ def load_before(cls, method):
             if enabled(datafile, args):
                 if datafile.exists and datafile.modified:
                     log.debug(f"Loading automatically before '{method.__name__}' call")
-                    with disabled():
-                        datafile.load()
-                        datafile.modified = False
-                        # TODO: Implement this?
-                        # if mapper.auto_save_after_load:
-                        #     mapper.save()
-                        #     mapper.modified = False
+                    datafile.load()
+                    # TODO: Implement this?
+                    # if mapper.auto_save_after_load:
+                    #     mapper.save()
+                    #     mapper.modified = False
 
         return method(self, *args, **kwargs)
 
@@ -116,8 +119,7 @@ def save_after(cls, method):
             if enabled(datafile, args):
                 if datafile.exists and datafile.modified:
                     log.debug(f"Loading automatically before '{method.__name__}' call")
-                    with disabled():  # TODO: remove redundancy
-                        datafile.load()
+                    datafile.load()
 
         result = method(self, *args, **kwargs)
 
@@ -125,8 +127,7 @@ def save_after(cls, method):
             datafile = object.__getattribute__(self, 'datafile')
             if enabled(datafile, args):
                 log.debug(f"Saving automatically after '{method.__name__}' call")
-                with disabled():
-                    datafile.save()
+                datafile.save()
 
         return result
 

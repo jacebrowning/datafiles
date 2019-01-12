@@ -68,9 +68,10 @@ def describe_nominal():
 
 
 def describe_lists():
-    def with_conversion(expect, dedent):
+    def with_conversion(logbreak, expect, dedent):
         sample = SampleWithList([1, 2.3, '4.5'])
 
+        logbreak("Saving")
         sample.datafile.save()
 
         with open('tmp/sample.yml') as f:

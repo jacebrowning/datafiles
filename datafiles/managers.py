@@ -9,7 +9,7 @@ from typing import Any, Dict, Optional
 import log
 from cached_property import cached_property
 
-from . import formats
+from . import formats, hooks
 from .converters import List
 from .utils import Missing, prettify, prevent_recursion
 
@@ -146,12 +146,10 @@ class InstanceManager:
     def text(self) -> str:
         return self._get_text()
 
-    def _get_text(self, **kwargs):
+    def _get_text(self, **kwargs) -> str:
         extension = self.path.suffix if self.path else '.yml'
         data = self._get_data(**kwargs)
-        text = formats.serialize(data, extension)
-        log.debug(f'Serialized data to text ({extension}): {text!r}')
-        return text
+        return formats.serialize(data, extension)
 
     @prevent_recursion
     def load(self, *, first_load=False) -> None:
@@ -269,7 +267,8 @@ class InstanceManager:
         else:
             raise RuntimeError(f"'pattern' must be set to save the model")
 
-        text = self._get_text(include_default_values=include_default_values)
+        with hooks.disabled():
+            text = self._get_text(include_default_values=include_default_values)
 
         message = f'Writing file: {self.path}'
         log.debug(message)

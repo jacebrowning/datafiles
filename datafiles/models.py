@@ -64,7 +64,7 @@ def get_datafile(obj, root=None) -> InstanceManager:
     manual = getattr(m, 'datafile_manual', False)
     defaults = getattr(m, 'datafile_defaults', False)
 
-    if attrs is None:
+    if attrs is None and dataclasses.is_dataclass(obj):
         attrs = {}
         log.debug(f'Mapping attributes for {obj.__class__} object')
         for field in dataclasses.fields(obj):
