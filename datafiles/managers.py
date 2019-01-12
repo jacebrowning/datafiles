@@ -43,6 +43,10 @@ class InstanceManager:
         self._last_load = 0.0
         self._last_data: Dict = {}
 
+    @property
+    def classname(self) -> str:
+        return self._instance.__class__.__name__
+
     @cached_property
     def path(self) -> Optional[Path]:
         if not self._pattern:
@@ -147,18 +151,16 @@ class InstanceManager:
 
     @prevent_recursion
     def load(self, *, first_load=False) -> None:
-        log.debug(f'Loading values for {self._instance.__class__} instance')
-
-        if not self.path:
+        if self.path:
+            log.info(f"Loading '{self.classname}' object from '{self.relpath}'")
+        else:
             raise RuntimeError("'pattern' must be set to load the model")
 
-        message = f'Reading file: {self.relpath}'
-        frame = '=' * len(message)
-        log.info(message)
+        message = f'Reading file: {self.path}'
+        log.debug(message)
         data = formats.deserialize(self.path, self.path.suffix)
         self._last_data = data
-        log.debug(frame + '\n\n' + prettify(data) + '\n')
-        log.debug(frame)
+        log.debug('=' * len(message) + '\n\n' + prettify(data) + '\n')
 
         for name, converter in self.attrs.items():
             log.debug(f"Converting '{name}' data with {converter}")
@@ -167,8 +169,6 @@ class InstanceManager:
                 self._set_dataclass_value(data, name, converter)
             else:
                 self._set_attribute_value(data, name, converter, first_load)
-
-        log.info(f'Loaded instance: {self._instance.__class__.__name__}')
 
         self.modified = False
 
@@ -252,20 +252,17 @@ class InstanceManager:
 
     @prevent_recursion
     def save(self, include_default_values: Trilean = None) -> None:
-        log.info(f'Saving instance: {self._instance.__class__.__name__}')
-
-        if not self.path:
+        if self.path:
+            log.info(f"Saving '{self.classname}' object to '{self.relpath}'")
+        else:
             raise RuntimeError(f"'pattern' must be set to save the model")
 
         text = self._get_text(include_default_values=include_default_values)
 
+        message = f'Writing file: {self.path}'
+        log.debug(message)
+        log.debug('=' * len(message) + '\n\n' + (text or '<nothing>\n'))
         self.path.parent.mkdir(parents=True, exist_ok=True)
-
-        message = f'Writing file: {self.relpath}'
-        frame = '=' * len(message)
-        log.info(message)
-        log.debug(frame + '\n\n' + (text or '<nothing>\n'))
         self.path.write_text(text)
-        log.debug(frame)
 
         self.modified = False

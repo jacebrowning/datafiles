@@ -25,7 +25,7 @@ class Model:
 
     def __post_init__(self):
         # pylint: disable=attribute-defined-outside-init
-        log.debug(f'Initializing {self.__class__} instance')
+        log.debug(f'Initializing {self.__class__} object')
 
         with hooks.disabled():
 
@@ -45,7 +45,7 @@ class Model:
 
                 hooks.apply(self, self.datafile, get_datafile)
 
-        log.debug(f'Initialized {self.__class__} instance')
+        log.debug(f'Initialized {self.__class__} object')
 
     @classproperty
     def datafiles(cls) -> ModelManager:  # pylint: disable=no-self-argument
@@ -56,7 +56,7 @@ def get_datafile(obj) -> InstanceManager:
     try:
         return obj.datafile
     except AttributeError:
-        log.debug(f"Getting 'datafile' for {obj.__class__} instance")
+        log.debug(f"Getting 'datafile' for {obj.__class__} object")
 
     m = getattr(obj, 'Meta', None)
     pattern = getattr(m, 'datafile_pattern', None)
@@ -66,7 +66,7 @@ def get_datafile(obj) -> InstanceManager:
 
     if attrs is None:
         attrs = {}
-        log.debug(f'Mapping attributes for {obj.__class__} instance')
+        log.debug(f'Mapping attributes for {obj.__class__} object')
         for field in dataclasses.fields(obj):
             self_name = f'self.{field.name}'
             if pattern is None or self_name not in pattern:
