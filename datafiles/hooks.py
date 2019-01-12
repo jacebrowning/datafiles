@@ -27,11 +27,11 @@ FLAG = '_patched'
 
 
 class List(list):
-    """Mutable `list` type."""
+    """Patchable `list` type."""
 
 
 class Dict(dict):
-    """Mutable `dict` type."""
+    """Patchable `dict` type."""
 
 
 def apply(instance, datafile, get_datafile):
@@ -51,28 +51,21 @@ def apply(instance, datafile, get_datafile):
             modified_method = save_after(cls, method)
             setattr(cls, method_name, modified_method)
 
-    # pylint: disable=unidiomatic-typecheck,attribute-defined-outside-init
     if dataclasses.is_dataclass(instance):
         for attr_name in instance.datafile.attrs:
             attr = getattr(instance, attr_name)
-            if dataclasses.is_dataclass(attr):
-                attr.datafile = get_datafile(attr, root=datafile)
-                apply(attr, datafile, get_datafile)
-            else:
-                try:
-                    attr.datafile = get_datafile(attr, root=datafile)
-                    apply(attr, datafile, get_datafile)
-                    assert 0
-                except (AttributeError, TypeError):
-                    if type(attr) == list:
-                        attr = List(attr)
-                    elif type(attr) == dict:
-                        attr = Dict(attr)
-                    else:
-                        continue
+            if not dataclasses.is_dataclass(attr):
+                # pylint: disable=unidiomatic-typecheck
+                if type(attr) == list:
+                    attr = List(attr)
                     setattr(instance, attr_name, attr)
-                    attr.datafile = get_datafile(attr, root=datafile)
-                    apply(attr, datafile, get_datafile)
+                elif type(attr) == dict:
+                    attr = Dict(attr)
+                    setattr(instance, attr_name, attr)
+                else:
+                    continue
+            attr.datafile = get_datafile(attr, root=datafile)
+            apply(attr, datafile, get_datafile)
 
 
 def load_before(cls, method):

@@ -24,8 +24,6 @@ class Model:
     Meta: ModelMeta = ModelMeta()
 
     def __post_init__(self):
-        # pylint: disable=attribute-defined-outside-init
-
         with hooks.disabled():
             log.debug(f'Initializing {self.__class__} object')
 

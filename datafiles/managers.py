@@ -41,7 +41,7 @@ class InstanceManager:
         self._instance = instance
         self.attrs = attrs
         self._pattern = pattern
-        self.manual = manual
+        self._manual = manual
         self.defaults = defaults
         self._last_load = 0.0
         self._last_data: Dict = {}
@@ -90,6 +90,10 @@ class InstanceManager:
         else:
             assert self.path, 'Cannot mark a missing file as unmodified'
             self._last_load = self.path.stat().st_mtime
+
+    @property
+    def manual(self) -> bool:
+        return self._root.manual if self._root else self._manual
 
     @property
     def data(self) -> Dict:
@@ -162,19 +166,20 @@ class InstanceManager:
         else:
             raise RuntimeError("'pattern' must be set to load the model")
 
-        message = f'Reading file: {self.path}'
+        message = f'Reading data from file: {self.path}'
         log.debug(message)
         data = formats.deserialize(self.path, self.path.suffix)
         self._last_data = data
         log.debug('=' * len(message) + '\n\n' + prettify(data) + '\n')
 
-        for name, converter in self.attrs.items():
-            log.debug(f"Converting '{name}' data with {converter}")
+        with hooks.disabled():
+            for name, converter in self.attrs.items():
+                log.debug(f"Converting '{name}' data with {converter}")
 
-            if getattr(converter, 'DATACLASS', None):
-                self._set_dataclass_value(data, name, converter)
-            else:
-                self._set_attribute_value(data, name, converter, first_load)
+                if getattr(converter, 'DATACLASS', None):
+                    self._set_dataclass_value(data, name, converter)
+                else:
+                    self._set_attribute_value(data, name, converter, first_load)
 
         self.modified = False
 

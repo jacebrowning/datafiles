@@ -285,7 +285,7 @@ def describe_preservation():
             """
         )
 
-    def with_comments_in_nested_objects(write, expect, read, dedent):
+    def with_comments_in_nested_objects(write, logbreak, expect, read, dedent):
         sample = SampleWithNestingAndDefaults(None)
 
         write(
@@ -302,9 +302,14 @@ def describe_preservation():
             """,
         )
 
+        logbreak("Loading")
         sample.datafile.load()
+
+        logbreak("Modifying")
         sample.score = 3
         sample.nested.score = 4
+
+        logbreak("Saving")
         sample.datafile.save()
 
         expect(read('tmp/sample.yml')) == dedent(
