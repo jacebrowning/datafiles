@@ -1,14 +1,16 @@
 site_name: Datafiles
 site_description: A file-based ORM for dataclasses.
 site_author: Jace Browning
+
 repo_url: https://github.com/jacebrowning/datafiles
+edit_uri: https://github.com/jacebrowning/datafiles/edit/develop/docs
 
 theme: readthedocs
 
 nav:
-- Home: index.md
-- Types: types.md
-- About:
-  - Release Notes: about/changelog.md
-  - Contributing: about/contributing.md
-  - License: about/license.md
+  - Home: index.md
+  - Types: types.md
+  - About:
+    - Release Notes: about/changelog.md
+    - Contributing: about/contributing.md
+    - License: about/license.md
