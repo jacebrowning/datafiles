@@ -184,11 +184,11 @@ def describe_converter():
                 (StringList, {'b', 1, 'A'}, ['1', 'A', 'b']),
                 (StringList, 42, ['42']),
                 (StringList, [123, True, False], ['123', 'True', 'False']),
-                (StringList, [], []),
-                (StringList, None, []),
+                (StringList, [], [None]),
+                (StringList, None, [None]),
                 # Dataclasses
                 (MyDataclassConverter, None, {'foobar': 0, 'flag': False}),
-                (MyDataclassConverterList, None, []),
+                (MyDataclassConverterList, None, [None]),
                 (MyDataclassConverterList, 42, [{'foobar': 0, 'flag': False}]),
             ],
         )
@@ -227,7 +227,7 @@ def describe_converter():
 
         def when_list_with_default(expect):
             data = IntegerList.to_preserialization_data([1], skip=[1])
-            expect(data) == []
+            expect(data) == [None]
 
             data = IntegerList.to_preserialization_data([2], skip=[1])
             expect(data) == [2]

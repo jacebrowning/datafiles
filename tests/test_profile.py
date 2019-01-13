@@ -35,10 +35,11 @@ def test_init():
 def test_load(logbreak):
     sample = get_sample()
     logbreak("Loading")
-    sample.datafile.load()
+    sample.datafile.load()  # pylint: disable=no-member
+
 
 
 def test_save(logbreak):
     sample = get_sample()
     logbreak("Saving")
-    sample.datafile.save()
+    sample.datafile.save()  # pylint: disable=no-member
