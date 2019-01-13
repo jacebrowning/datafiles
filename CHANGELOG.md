@@ -1,5 +1,5 @@
 # Release Notes
 
-## 0.0.0 (YYYY-MM-DD)
+## 0.1 (2019-01-13)
 
- - TBD
+ - Initial release.
