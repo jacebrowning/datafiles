@@ -61,6 +61,16 @@ def describe_instance_manager():
             manager.attrs = {'foobar': MyField}
             expect(manager.text) == '{\n  "foobar": 42\n}'
 
+        def with_toml_format(expect, manager):
+            manager._pattern = '_.toml'
+            manager.attrs = {'foobar': MyField}
+            expect(manager.text) == "foobar = 42\n"
+
+        def with_no_format(expect, manager):
+            manager._pattern = '_'
+            manager.attrs = {'foobar': MyField}
+            expect(manager.text) == "foobar: 42\n"
+
         def with_unknown_format(expect, manager):
             manager._pattern = '_.xyz'
             manager.attrs = {'foobar': MyField}

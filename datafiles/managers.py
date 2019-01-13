@@ -151,9 +151,10 @@ class InstanceManager:
         return self._get_text()
 
     def _get_text(self, **kwargs) -> str:
-        extension = self.path.suffix if self.path else '.yml'
         data = self._get_data(**kwargs)
-        return formats.serialize(data, extension)
+        if self.path and self.path.suffix:
+            return formats.serialize(data, self.path.suffix)
+        return formats.serialize(data)
 
     def load(self, *, first_load=False) -> None:
         if self._root:

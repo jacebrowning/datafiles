@@ -36,7 +36,7 @@ By default, all member variables will be included in the serialized file except 
 - Included in the directory pattern
 - Set to default values
 
-So the following instantiation:
+So, the following instantiation:
 
 ```python
 >>> sample = Sample(42, "Widget")

@@ -15,10 +15,13 @@ documentation = "https://datafiles.readthedocs.io"
 repository = "https://github.com/jacebrowning/datafiles"
 
 keywords = [
-    "YAML",
+    "dataclasses",
     "JSON",
     "ORM",
     "serialization",
+    "TOML",
+    "type-annotations",
+    "YAML",
 ]
 classifiers = [
     "Development Status :: 3 - Alpha",
