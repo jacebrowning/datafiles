@@ -1,7 +1,10 @@
 # pylint: disable=unused-variable,no-member
 
+import os
 from dataclasses import dataclass, field
 from typing import Dict, List
+
+import pytest
 
 from datafiles import datafile
 
@@ -27,6 +30,7 @@ class SampleWithNesting:
 
 
 def describe_automatic_load():
+    @pytest.mark.xfail(bool(os.getenv('CI')), reason="Flaky on CI")
     def with_getattribute(logbreak, write, expect):
         sample = Sample()
 
@@ -42,6 +46,7 @@ def describe_automatic_load():
 
 
 def describe_automatic_save():
+    @pytest.mark.xfail(bool(os.getenv('CI')), reason="Flaky on CI")
     def with_setattr(logbreak, expect, read, dedent):
         sample = Sample()
 
@@ -174,6 +179,7 @@ def describe_automatic_save():
 
 
 def describe_automatic_load_before_save():
+    @pytest.mark.xfail(bool(os.getenv('CI')), reason="Flaky on CI")
     def with_setattr(write, expect, dedent):
         sample = Sample()
 
