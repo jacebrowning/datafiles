@@ -32,7 +32,7 @@ and replace the decorator, including a directory pattern to synchronize instance
 ```python
 from datafiles import datafile
 
-@datafile("inventory/items/{self.name}.yml")
+@datafile("inventory/items/{self.name}.yml")  # <= save instances in the `inventory/items` directory
 class InventoryItem:
     """Class for keeping track of an item in inventory."""
     
