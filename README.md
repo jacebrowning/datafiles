@@ -10,7 +10,7 @@ Datafiles is a bidirectional serialization library for Python [dataclasses](http
 
 ## Usage
 
-Take an existing dataclass such as this example from the [documentation](https://docs.python.org/3/library/dataclasses.html#module-dataclasses):
+Take an existing dataclass such as [this example](https://docs.python.org/3/library/dataclasses.html#module-dataclasses) from the documentation:
 
 ```python
 from dataclasses import dataclass
