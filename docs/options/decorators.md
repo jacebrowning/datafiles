@@ -1,4 +1,6 @@
-# Synchronization
+# Options
+
+## Synchronization
 
 The simplest way to turn a dataclass into a datafile is to replace the `@dataclass` decorator with `@datafile`:
 
@@ -55,7 +57,7 @@ class Item:
     available: bool
 ```
 
-# Options
+## Options
 
 The following options can be passed to `@datafile()` decorator:
 
@@ -77,7 +79,7 @@ class Item:
     available: bool
 ```
 
-# Meta class
+## Meta class
 
 Alternatively, any of the above options can be configured through code by setting `datafile_<option>` in a `Meta` class:
 
@@ -97,7 +99,7 @@ class Item:
 
 ```
 
-# Base class
+## Base class
 
 Finally, a datafile can explicitly extend `datafiles.Model` to set all options in the `Meta` class:
 

@@ -1,4 +1,6 @@
-# Numbers
+# Extended Types
+
+## Numbers
 
 ```python
 from typing import Optional
@@ -13,7 +15,7 @@ from datafiles.converters import Number
 | `foobar: Number` | `foobar = None` | `foobar: 0.0` |
 | `foobar: Optional[Number]` | `foobar = None` | `foobar: ` |
 
-# Text
+## Text
 
 ```python
 from typing import Optional

@@ -1,3 +1,5 @@
+# License
+
 **The MIT License (MIT)**
 
 Copyright &copy; 2018, Jace Browning
