@@ -198,18 +198,20 @@ class InstanceManager:
                     nested_data[field.name] = None  # type: ignore
             dataclass = converter.to_python_value(nested_data, target=dataclass)
 
-        # TODO: Figure out why datafile wasn't set
-        if not hasattr(dataclass, 'datafile'):
+        # TODO: Find a way to avoid this circular import
+        try:
+            datafile = dataclass.datafile
+        except AttributeError:
             from .models import build_datafile
 
-            log.warn(f"{dataclass} was missing 'datafile'")
-            dataclass.datafile = build_datafile(dataclass)
+            log.warn(f"{dataclass} has not yet been patched to have 'datafile'")
+            datafile = build_datafile(dataclass)
 
-        for name2, converter2 in dataclass.datafile.attrs.items():
+        for name2, converter2 in datafile.attrs.items():
             _value = nested_data.get(  # type: ignore
                 # pylint: disable=protected-access
                 name2,
-                dataclass.datafile._get_default_field_value(name2),
+                datafile._get_default_field_value(name2),
             )
             value = converter2.to_python_value(_value, target=getattr(dataclass, name2))
             log.debug(f"'{name2}' as Python: {value!r}")
