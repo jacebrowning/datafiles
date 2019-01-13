@@ -1,7 +1,7 @@
 import json
 from abc import ABCMeta, abstractmethod
 from pathlib import Path
-from typing import IO, Any, Dict, List, Text
+from typing import IO, Any, Dict, List
 
 import tomlkit
 from ruamel import yaml
@@ -12,7 +12,7 @@ class Formatter(metaclass=ABCMeta):
 
     @classmethod
     @abstractmethod
-    def extensions(cls) -> List[Text]:
+    def extensions(cls) -> List[str]:
         raise NotImplementedError
 
     @classmethod
@@ -22,7 +22,7 @@ class Formatter(metaclass=ABCMeta):
 
     @classmethod
     @abstractmethod
-    def serialize(cls, data: Dict) -> Text:
+    def serialize(cls, data: Dict) -> str:
         raise NotImplementedError
 
 
@@ -75,7 +75,7 @@ class YAML(Formatter):
         return "" if text == "{}\n" else text
 
 
-def deserialize(path: Path, extension: Text) -> Dict:
+def deserialize(path: Path, extension: str) -> Dict:
     for formatter in Formatter.__subclasses__():
         if extension in formatter.extensions():
             with path.open('r') as file_object:
@@ -84,9 +84,9 @@ def deserialize(path: Path, extension: Text) -> Dict:
     raise ValueError(f'Unsupported file extension: {extension}')
 
 
-def serialize(data: Dict, extension: Text) -> Text:
+def serialize(data: Dict, extension: str = '.yml') -> str:
     for formatter in Formatter.__subclasses__():
         if extension in formatter.extensions():
             return formatter.serialize(data)
 
-    raise ValueError(f'Unsupported file extension: {extension}')
+    raise ValueError(f'Unsupported file extension: {extension!r}')
