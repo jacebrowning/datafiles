@@ -74,7 +74,7 @@ Changes to the filesystem are automatically reflected in the object:
 ```yaml
 # inventory/items/widget.yml
 
-unit_price: 2.5  # was 3.0
+unit_price: 2.5  # <= manually changed from "3.0"
 quantity_on_hand: 100
 ```
 
