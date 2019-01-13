@@ -1,4 +1,4 @@
-# Options
+# Decorators
 
 ## Synchronization
 
