@@ -1,12 +1,11 @@
 from dataclasses import dataclass
 
-from datafiles import sync
+from datafiles import datafile
 
 
 # This model is based on the example dataclass from:
 # https://docs.python.org/3/library/dataclasses.html
-@sync('../tmp/inventory/{self.pk}.yml')
-@dataclass
+@datafile('../tmp/inventory/{self.pk}.yml')
 class InventoryItem:
     pk: int
     name: str
@@ -52,3 +51,27 @@ def test_multiple_instances_are_distinct(expect, read, dedent):
         quantity_on_hand: 100
         """
     )
+
+
+def test_classes_can_share_a_nested_dataclass(logbreak, expect):
+    @dataclass
+    class Nested:
+        value: int
+
+    @datafile('../tmp/sample.json')
+    class Foo:
+        nested: Nested
+
+    logbreak("Initialize Foo")
+    foo = Foo(Nested(1))
+
+    expect(foo.nested.value) == 1
+
+    @datafile('../tmp/sample.toml')
+    class Bar:
+        nested: Nested
+
+    logbreak("Initialize Bar")
+    bar = Bar(Nested(2))
+
+    expect(bar.nested.value) == 2

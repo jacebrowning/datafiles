@@ -1,17 +1,28 @@
 [tool.poetry]
 
 name = "datafiles"
-version = "0.1a7"
+version = "0.1"
 description = "File-based ORM for dataclasses."
-authors = ["Jace Browning <jacebrowning@gmail.com>"]
+
 license = "MIT"
+
+authors = ["Jace Browning <jacebrowning@gmail.com>"]
+
+readme = "README.md"
 
 homepage = "https://pypi.org/project/datafiles"
 documentation = "https://datafiles.readthedocs.io"
 repository = "https://github.com/jacebrowning/datafiles"
 
-readme = "README.md"
-keywords = ["YAML", "JSON", "ORM", "serialization"]
+keywords = [
+    "dataclasses",
+    "JSON",
+    "ORM",
+    "serialization",
+    "TOML",
+    "type-annotations",
+    "YAML",
+]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
@@ -31,9 +42,10 @@ python = "^3.7"
 
 # Formats
 "ruamel.yaml" = "~0.15.46"
+tomlkit = "^0.5.3"
 
 # Utilities
-minilog = "^1.2.1"
+minilog = "^1.2.3"
 classproperties = "~0.1.3"
 cached_property = "^1.5"
 
@@ -44,8 +56,9 @@ black = "=18.9b0"
 isort = "=4.3.4"
 
 # Linters
-pylint = "^2.1"
 mypy = "*"
+pylint = "^2.1"
+pydocstyle = "*"
 
 # Testing
 pytest = "^3.8.0"
@@ -56,6 +69,7 @@ pytest-random = "*"
 pytest-repeat = "*"
 pytest-watch = "*"
 pytest-cov = "*"
+pytest-profiling = "*"
 
 # Coverage
 coveragespace = "^2.1"
@@ -68,10 +82,8 @@ jupyter = "^1.0"
 
 [tool.black]
 
-line-length = 79
 py36 = true
 skip-string-normalization = true
-
 
 [build-system]
 

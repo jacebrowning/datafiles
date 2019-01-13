@@ -35,9 +35,12 @@ def create_tmp():
 
 @pytest.fixture
 def logbreak():
-    def _():
-        width = get_terminal_size().columns - 30
-        line = '-' * width
+    def _(message=""):
+        width = get_terminal_size().columns - 31
+        if message:
+            line = '-' * (width - len(message) - 1) + ' ' + message
+        else:
+            line = '-' * width
         log.info(line)
 
     return _
@@ -56,12 +59,10 @@ def write(dedent):
     def _(path: str, text: str) -> None:
         _path = Path(path).resolve()
         _text = dedent(text)
-        message = f'Writing: {_path}'
-        frame = '=' * len(message)
+        message = f'Writing file: {_path}'
         log.info(message)
-        log.debug(frame + '\n\n' + (_text or '<nothing>\n'))
+        log.debug('=' * len(message) + '\n\n' + (_text or '<nothing>\n'))
         _path.write_text(_text)
-        log.debug(frame)
 
     return _
 
@@ -70,12 +71,10 @@ def write(dedent):
 def read():
     def _(path: str) -> str:
         _path = Path(path).resolve()
-        message = f'Reading: {_path}'
-        frame = '=' * len(message)
+        message = f'Reading file: {_path}'
         log.info(message)
         text = _path.read_text()
-        log.debug(frame + '\n\n' + (text or '<nothing>\n'))
-        log.debug(frame)
+        log.debug('=' * len(message) + '\n\n' + (text or '<nothing>\n'))
         return text
 
     return _

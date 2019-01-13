@@ -1,10 +1,12 @@
-# Datafiles: A File-based ORM for Dataclasses
+# Datafiles: A file-based ORM for dataclasses
 
-Datafiles is a bidirectional serialization library for Python [dataclasses](https://docs.python.org/3/library/dataclasses.html) that automatically synchronizes object instances to the filesystem using type annotations. It supports a variety of file formats with round-trip preservation of formatting and comments, where possible.
+Datafiles is a bidirectional serialization library for Python [dataclasses](https://docs.python.org/3/library/dataclasses.html) that automatically synchronizes objects to the filesystem using type annotations. It supports a variety of file formats with round-trip preservation of formatting and comments, where possible. By default, saves are automatic and only include the minimum data needed to restore an object.
 
 [![Travis CI](https://img.shields.io/travis/jacebrowning/datafiles/develop.svg?label=unix)](https://travis-ci.org/jacebrowning/datafiles)
 [![AppVeyor](https://img.shields.io/appveyor/ci/jacebrowning/datafiles/develop.svg?label=windows)](https://ci.appveyor.com/project/jacebrowning/datafiles)
 [![Coveralls](https://img.shields.io/coveralls/jacebrowning/datafiles.svg)](https://coveralls.io/r/jacebrowning/datafiles)
+[![PyPI Version](https://img.shields.io/pypi/v/datafiles.svg)](https://pypi.org/project/datafiles)
+[![PyPI License](https://img.shields.io/pypi/l/datafiles.svg)](https://pypi.org/project/datafiles)
 
 ## Usage
 
@@ -25,19 +27,15 @@ class InventoryItem:
         return self.unit_price * self.quantity_on_hand
 ```
 
-and decorate it with a directory pattern to synchronize instances:
+and replace the decorator, including a directory pattern to synchronize instances:
 
 ```python
-from dataclasses import dataclass
-from datafiles import sync
+from datafiles import datafile
 
-@sync("inventory/items/{self.pk}.yml")
-@dataclass
+@datafile("inventory/items/{self.name}.yml")
 class InventoryItem:
     """Class for keeping track of an item in inventory."""
     
-    pk: int
-
     name: str
     unit_price: float
     quantity_on_hand: int = 0
@@ -49,13 +47,12 @@ class InventoryItem:
 Then, work with instances of the class as normal:
 
 ```python
->>> item = InventoryItem(123, "Widget", 3)
+>>> item = InventoryItem("widget", 3)
 ```
 
 ```yaml
-# inventory/items/123.yml
+# inventory/items/widget.yml
 
-name: Widget
 unit_price: 3.0
 ```
 
@@ -66,9 +63,8 @@ Changes to the object are automatically saved to the filesystem:
 ```
 
 ```yaml
-# inventory/items/123.yml
+# inventory/items/widget.yml
 
-name: Widget
 unit_price: 3.0
 quantity_on_hand: 100
 ```
@@ -76,9 +72,8 @@ quantity_on_hand: 100
 Changes to the filesystem are automatically reflected in the object:
 
 ```yaml
-# inventory/items/123.yml
+# inventory/items/widget.yml
 
-name: Widget
 unit_price: 2.5  # was 3.0
 quantity_on_hand: 100
 ```
@@ -88,9 +83,11 @@ quantity_on_hand: 100
 2.5
 ```
 
+Demo: [Jupyter Notebook](https://github.com/jacebrowning/datafiles/blob/develop/notebooks/readme.ipynb)
+
 ## Installation
 
-Because datafiles relies on dataclasses and type annotations, Python 3.7+ is required. Install it directly into an activated virtual environment:
+Because datafiles relies on dataclasses and type annotations, Python 3.7+ is required. Install this library directly into an activated virtual environment:
 
 ```
 $ pip install datafiles
@@ -101,3 +98,7 @@ or add it to your [Poetry](https://poetry.eustace.io/) project:
 ```
 $ poetry add datafiles
 ```
+
+## Documentation
+
+To see additional syncrhonization and formatting options, please consult the [full documentation](https://datafiles.readthedocs.io/en/latest/options/decorators/).

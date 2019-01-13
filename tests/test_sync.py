@@ -6,7 +6,7 @@ from pathlib import Path
 import pytest
 
 import datafiles
-from datafiles import sync
+from datafiles import datafile
 
 
 def describe_automatic():
@@ -14,8 +14,7 @@ def describe_automatic():
 
     @pytest.fixture
     def sample():
-        @sync('../tmp/{self.key}.yml')
-        @dataclass
+        @datafile('../tmp/{self.key}.yml')
         class Sample:
             key: int
             name: str
@@ -39,15 +38,6 @@ def describe_automatic():
         expect(sample.score) == 0.5
         expect(sample.datafile.data) == {'name': "a"}
 
-    def it_requires_dataclasses(expect):
-        with expect.raises(ValueError):
-
-            @dataclass
-            @sync('tmp/{self.key}.yml')
-            class Sample:
-                key: int
-                name: str
-
 
 def describe_automatic_with_defaults():
     """Tests to create a datafile using the decorator with defaults."""
@@ -55,8 +45,7 @@ def describe_automatic_with_defaults():
     def describe_flat():
         @pytest.fixture
         def sample():
-            @sync('../tmp/{self.key}.yml', defaults=True)
-            @dataclass
+            @datafile('../tmp/{self.key}.yml', defaults=True)
             class Sample:
                 key: int
                 name: str
@@ -75,8 +64,7 @@ def describe_automatic_with_defaults():
                 name: str
                 score: float = 1 / 4
 
-            @sync('../tmp/{self.key}.yml', defaults=True)
-            @dataclass
+            @datafile('../tmp/{self.key}.yml', defaults=True)
             class Sample:
                 key: int
                 nested: Nested
@@ -103,8 +91,7 @@ def describe_automatic_with_defaults():
                 class Meta:
                     datafile_defaults = False
 
-            @sync('../tmp/{self.key}.yml', defaults=True)
-            @dataclass
+            @datafile('../tmp/{self.key}.yml', defaults=True)
             class Sample:
                 key: int
                 nested: Nested

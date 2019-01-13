@@ -1,26 +1,24 @@
 # pylint: disable=unused-variable
 
-from dataclasses import dataclass
+import os
 
 import pytest
 
-from datafiles import sync
+from datafiles import datafile
 from datafiles.converters import Number, Text
 
 
-@sync('../tmp/sample.yml')
-@dataclass
+@datafile('../tmp/sample.yml')
 class Sample:
     number: Number = 0
     text: Text = ""
 
 
-@pytest.fixture
-def sample():
-    return Sample()
-
-
 def describe_number():
+    @pytest.fixture
+    def sample():
+        return Sample()
+
     def with_float_to_integer(sample, expect, read, dedent):
         sample.number = 1.23
 
@@ -38,6 +36,7 @@ def describe_number():
             """
         )
 
+    @pytest.mark.xfail(bool(os.getenv('CI')), reason="Flaky on CI")
     def with_integer_to_float(sample, write, expect):
         write(
             'tmp/sample.yml',
@@ -59,6 +58,10 @@ def describe_number():
 
 
 def describe_text():
+    @pytest.fixture
+    def sample():
+        return Sample()
+
     def with_single_line(sample, expect, read, dedent):
         sample.text = "Hello, world!"
 
@@ -68,6 +71,7 @@ def describe_text():
             """
         )
 
+    @pytest.mark.xfail(bool(os.getenv('CI')), reason="Flaky on CI")
     def with_multiple_lines(sample, expect, read, dedent, write):
         sample.text = '\n'.join(f'Line {i+1}' for i in range(3))
 

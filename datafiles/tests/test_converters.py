@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from typing import ByteString, Dict, List, Optional
 
 import pytest
+from ruamel.yaml.scalarstring import LiteralScalarString
 
 from datafiles import converters
 
@@ -26,6 +27,10 @@ MyDataclassConverterList = converters.map_type(List[MyDataclass])
 
 
 def describe_map_type():
+    def it_handles_extended_types(expect):
+        converter = converters.map_type(converters.Number)
+        expect(converter.__name__) == 'Number'
+
     def it_handles_list_annotations(expect):
         converter = converters.map_type(List[str])
         expect(converter.__name__) == 'StringList'
@@ -116,15 +121,25 @@ def describe_converter():
         def when_nominal(expect, converter, data, value):
             expect(converter.to_python_value(data, target=None)) == value
 
+        def when_number(expect):
+            convert = converters.Number.to_python_value
+            expect(convert(1.23)).isinstance(float)
+            expect(convert(42)).isinstance(int)
+
+        def when_text(expect):
+            convert = converters.Text.to_python_value
+            expect(convert("")) == ""
+            expect(convert("Hello, world!")) == "Hello, world!"
+            expect(convert("Line 1\nLine 2\n")) == "Line 1\nLine 2\n"
+
         def when_invalid(expect):
             message = "invalid literal for int() with base 10: 'a'"
             with expect.raises(ValueError, message):
                 converters.Integer.to_python_value('a')
 
-        def when_list_of_dataclasses(logbreak, expect):
+        def when_list_of_dataclasses(expect):
             converter = converters.map_type(List[MyDataclass])
 
-            logbreak()
             data = [{'foobar': 1}, {'foobar': 2}, {'foobar': 3}]
             value = [MyDataclass(1), MyDataclass(2), MyDataclass(3)]
 
@@ -149,9 +164,7 @@ def describe_converter():
         def with_existing_dataclass(expect):
             orginal = MyDataclass(foobar=1)
 
-            value = MyDataclassConverter.to_python_value(
-                {'foobar': 2}, target=orginal
-            )
+            value = MyDataclassConverter.to_python_value({'foobar': 2}, target=orginal)
 
             expect(value) == MyDataclass(foobar=2)
             expect(id(value)) == id(orginal)
@@ -171,26 +184,37 @@ def describe_converter():
                 (StringList, {'b', 1, 'A'}, ['1', 'A', 'b']),
                 (StringList, 42, ['42']),
                 (StringList, [123, True, False], ['123', 'True', 'False']),
-                (StringList, [], []),
-                (StringList, None, []),
+                (StringList, [], [None]),
+                (StringList, None, [None]),
                 # Dataclasses
                 (MyDataclassConverter, None, {'foobar': 0, 'flag': False}),
-                (MyDataclassConverterList, None, []),
+                (MyDataclassConverterList, None, [None]),
                 (MyDataclassConverterList, 42, [{'foobar': 0, 'flag': False}]),
             ],
         )
         def when_nominal(expect, converter, value, data):
             expect(converter.to_preserialization_data(value)) == data
 
+        def when_number(expect):
+            convert = converters.Number.to_preserialization_data
+            expect(convert(1.23)).isinstance(float)
+            expect(convert(42)).isinstance(int)
+
+        def when_text(expect):
+            convert = converters.Text.to_preserialization_data
+            expect(convert("")) == ""
+            expect(convert("Hello, world!")) == "Hello, world!"
+            expect(convert("Line 1\nLine 2")) == "Line 1\nLine 2\n"
+            expect(convert("Line 1\nLine 2")).isinstance(LiteralScalarString)
+
         def when_invalid(expect):
             message = "invalid literal for int() with base 10: 'a'"
             with expect.raises(ValueError, message):
                 converters.Integer.to_preserialization_data('a')
 
-        def when_list_of_dataclasses(logbreak, expect):
+        def when_list_of_dataclasses(expect):
             converter = converters.map_type(List[MyDataclass])
 
-            logbreak()
             value = [MyDataclass(1), MyDataclass(2), MyDataclass(3)]
             data = [
                 {'foobar': 1, 'flag': False},
@@ -203,7 +227,7 @@ def describe_converter():
 
         def when_list_with_default(expect):
             data = IntegerList.to_preserialization_data([1], skip=[1])
-            expect(data) == []
+            expect(data) == [None]
 
             data = IntegerList.to_preserialization_data([2], skip=[1])
             expect(data) == [2]

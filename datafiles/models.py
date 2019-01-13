@@ -1,4 +1,5 @@
 import dataclasses
+from dataclasses import dataclass
 from typing import Dict, Optional
 
 import log
@@ -9,7 +10,7 @@ from .converters import Converter, map_type
 from .managers import InstanceManager, ModelManager
 
 
-@dataclasses.dataclass
+@dataclass
 class ModelMeta:
     datafile_attrs: Optional[Dict[str, Converter]] = None
     datafile_pattern: Optional[str] = None
@@ -23,12 +24,10 @@ class Model:
     Meta: ModelMeta = ModelMeta()
 
     def __post_init__(self):
-        # pylint: disable=attribute-defined-outside-init
-        log.debug(f'Initializing {self.__class__} instance')
-
         with hooks.disabled():
+            log.debug(f'Initializing {self.__class__} object')
 
-            self.datafile = get_datafile(self)
+            self.datafile = build_datafile(self)
 
             path = self.datafile.path
             exists = self.datafile.exists
@@ -42,20 +41,20 @@ class Model:
                 elif path:
                     self.datafile.save()
 
-                hooks.apply(self, self.datafile, get_datafile)
+                hooks.apply(self, self.datafile, build_datafile)
 
-        log.debug(f'Initialized {self.__class__} instance')
+        log.debug(f'Initialized {self.__class__} object')
 
     @classproperty
     def datafiles(cls) -> ModelManager:  # pylint: disable=no-self-argument
         return ModelManager(cls)
 
 
-def get_datafile(obj) -> InstanceManager:
+def build_datafile(obj, root=None) -> InstanceManager:
     try:
-        return obj.datafile
+        return object.__getattribute__(obj, 'datafile')
     except AttributeError:
-        log.debug(f"Getting 'datafile' for {obj.__class__} instance")
+        log.debug(f"Building 'datafile' for {obj.__class__} object")
 
     m = getattr(obj, 'Meta', None)
     pattern = getattr(m, 'datafile_pattern', None)
@@ -63,16 +62,16 @@ def get_datafile(obj) -> InstanceManager:
     manual = getattr(m, 'datafile_manual', False)
     defaults = getattr(m, 'datafile_defaults', False)
 
-    if attrs is None:
+    if attrs is None and dataclasses.is_dataclass(obj):
         attrs = {}
-        log.debug(f'Mapping attributes for {obj.__class__} instance')
+        log.debug(f'Mapping attributes for {obj.__class__} object')
         for field in dataclasses.fields(obj):
             self_name = f'self.{field.name}'
             if pattern is None or self_name not in pattern:
                 attrs[field.name] = map_type(field.type)
 
     return InstanceManager(
-        obj, attrs=attrs, pattern=pattern, manual=manual, defaults=defaults
+        obj, attrs=attrs, pattern=pattern, manual=manual, defaults=defaults, root=root
     )
 
 

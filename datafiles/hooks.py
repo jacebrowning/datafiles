@@ -1,7 +1,6 @@
 import dataclasses
 from contextlib import contextmanager, suppress
 from functools import wraps
-from types import new_class
 
 import log
 
@@ -24,93 +23,114 @@ SAVE_AFTER_METHODS = [
     'popitem',
     'update',
 ]
+FLAG = '_patched'
 
 
-def apply(instance, datafile, get_datafile):
+class List(list):
+    """Patchable `list` type."""
+
+
+class Dict(dict):
+    """Patchable `dict` type."""
+
+
+def apply(instance, datafile, build_datafile):
     """Path methods that get or set attributes."""
     cls = instance.__class__
+    log.debug(f'Patching methods on {cls}')
 
-    for name in LOAD_BEFORE_METHODS:
+    for method_name in LOAD_BEFORE_METHODS:
         with suppress(AttributeError):
-            method = getattr(cls, name)
-            modified_method = load_before(cls, method, datafile)
-            setattr(cls, name, modified_method)
+            method = getattr(cls, method_name)
+            modified_method = load_before(cls, method)
+            setattr(cls, method_name, modified_method)
 
-    for name in SAVE_AFTER_METHODS:
+    for method_name in SAVE_AFTER_METHODS:
         with suppress(AttributeError):
-            method = getattr(cls, name)
-            modified_method = save_after(cls, method, datafile)
-            setattr(cls, name, modified_method)
+            method = getattr(cls, method_name)
+            modified_method = save_after(cls, method)
+            setattr(cls, method_name, modified_method)
 
     if dataclasses.is_dataclass(instance):
-        for name in instance.datafile.attrs:
-            attr = getattr(instance, name)
-            if dataclasses.is_dataclass(attr):
-                attr.datafile = get_datafile(attr)
-                apply(attr, datafile, get_datafile)
-            elif type(attr) == list:  # pylint: disable=unidiomatic-typecheck
-                attr = new_class('List', (list,))(attr)
-                setattr(instance, name, attr)
-                apply(attr, datafile, get_datafile)
-            elif type(attr) == dict:  # pylint: disable=unidiomatic-typecheck
-                attr = new_class('Dict', (dict,))(attr)
-                setattr(instance, name, attr)
-                apply(attr, datafile, get_datafile)
+        for attr_name in instance.datafile.attrs:
+            attr = getattr(instance, attr_name)
+            if not dataclasses.is_dataclass(attr):
+                # pylint: disable=unidiomatic-typecheck
+                if type(attr) == list:
+                    attr = List(attr)
+                    setattr(instance, attr_name, attr)
+                elif type(attr) == dict:
+                    attr = Dict(attr)
+                    setattr(instance, attr_name, attr)
+                else:
+                    continue
+            attr.datafile = build_datafile(attr, root=datafile)
+            apply(attr, datafile, build_datafile)
 
 
-def load_before(cls, method, datafile):
+def load_before(cls, method):
     """Decorate methods that should load before call."""
 
-    name = method.__name__
-    log.debug(f'Patching method to load before call: {cls.__name__}.{name}')
+    if hasattr(method, FLAG):
+        return method
 
     @wraps(method)
     def wrapped(self, *args, **kwargs):
         __tracebackhide__ = settings.HIDE_TRACEBACK_IN_HOOKS
 
+        datafile = get_datafile(self)
         if enabled(datafile, args):
             if datafile.exists and datafile.modified:
-                log.debug(f"Loading automatically before '{name}' call")
-
-                with disabled():
-                    datafile.load()
-                    datafile.modified = False
-                    # TODO: Implement this?
-                    # if mapper.auto_save_after_load:
-                    #     mapper.save()
-                    #     mapper.modified = False
+                log.debug(f"Loading automatically before '{method.__name__}' call")
+                datafile.load()
+                # TODO: Implement this?
+                # if mapper.auto_save_after_load:
+                #     mapper.save()
+                #     mapper.modified = False
 
         return method(self, *args, **kwargs)
+
+    log.debug(f'Patched method to load before call: {cls.__name__}.{method.__name__}')
+    setattr(wrapped, FLAG, True)
 
     return wrapped
 
 
-def save_after(cls, method, datafile):
+def save_after(cls, method):
     """Decorate methods that should save after call."""
 
-    name = method.__name__
-    log.debug(f'Patching method to save after call: {cls.__name__}.{name}')
+    if hasattr(method, FLAG):
+        return method
 
     @wraps(method)
     def wrapped(self, *args, **kwargs):
         __tracebackhide__ = settings.HIDE_TRACEBACK_IN_HOOKS
 
+        datafile = get_datafile(self)
         if enabled(datafile, args):
             if datafile.exists and datafile.modified:
-                log.debug(f"Loading modified datafile before '{name}' call")
-                with disabled():
-                    datafile.load()
+                log.debug(f"Loading automatically before '{method.__name__}' call")
+                datafile.load()
 
         result = method(self, *args, **kwargs)
 
         if enabled(datafile, args):
-            log.debug(f"Saving automatically after '{name}' call")
-            with disabled():
-                datafile.save()
+            log.debug(f"Saving automatically after '{method.__name__}' call")
+            datafile.save()
 
         return result
 
+    log.debug(f'Patched method to save after call: {cls.__name__}.{method.__name__}')
+    setattr(wrapped, FLAG, True)
+
     return wrapped
+
+
+def get_datafile(obj):
+    try:
+        return object.__getattribute__(obj, 'datafile')
+    except AttributeError:
+        return None
 
 
 def enabled(datafile, args) -> bool:
@@ -118,9 +138,13 @@ def enabled(datafile, args) -> bool:
     if not settings.HOOKS_ENABLED:
         return False
 
+    if datafile is None:
+        return False
+
     if datafile.manual:
         return False
 
+    # TODO: Investigate performance impact of removing this code
     if args and isinstance(args[0], str):
         if args[0] in {'Meta', 'datafile'}:
             return False

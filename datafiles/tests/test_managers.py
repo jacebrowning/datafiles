@@ -39,6 +39,15 @@ def describe_instance_manager():
             root = Path(__file__).parents[2]
             expect(manager.path) == root / 'tmp' / 'sample.yml'
 
+    def describe_relpath():
+        def when_cwd_is_parent(expect, manager):
+            manager._pattern = '../../tmp/sample.yml'
+            expect(manager.relpath) == Path('tmp', 'sample.yml')
+
+        def when_cwd_is_sibling(expect, manager):
+            manager._pattern = '../../../tmp/sample.yml'
+            expect(manager.relpath) == Path('..', 'tmp', 'sample.yml')
+
     def describe_text():
         def is_blank_when_no_attrs(expect, manager):
             expect(manager.text) == ""
@@ -51,6 +60,16 @@ def describe_instance_manager():
             manager._pattern = '_.json'
             manager.attrs = {'foobar': MyField}
             expect(manager.text) == '{\n  "foobar": 42\n}'
+
+        def with_toml_format(expect, manager):
+            manager._pattern = '_.toml'
+            manager.attrs = {'foobar': MyField}
+            expect(manager.text) == "foobar = 42\n"
+
+        def with_no_format(expect, manager):
+            manager._pattern = '_'
+            manager.attrs = {'foobar': MyField}
+            expect(manager.text) == "foobar: 42\n"
 
         def with_unknown_format(expect, manager):
             manager._pattern = '_.xyz'

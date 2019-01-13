@@ -1,15 +1,47 @@
-.venv/
-
-setup.py
+# Temporary Python files
+*.pyc
 *.egg-info
-dist/
+__pycache__
+.ipynb_checkpoints
 
-__pycache__/
-.cache/
+# Temporary OS files
+Icon*
 
-htmlcov/
-
-docs/*.png
-site/
-
+# Temporary virtual environment files
+/.cache/
+/.venv/
 tmp/
+
+# Temporary server files
+.env
+*.pid
+
+# Generated documentation
+/docs/gen/
+/docs/apidocs/
+/site/
+/*.html
+/docs/*.png
+
+# Google Drive
+*.gdoc
+*.gsheet
+*.gslides
+*.gdraw
+
+# Testing and coverage results
+/.coverage
+/.coverage.*
+/htmlcov/
+/prof/
+
+# Build and release directories
+/build/
+/dist/
+*.spec
+
+# Sublime Text
+*.sublime-workspace
+
+# Eclipse
+.settings
