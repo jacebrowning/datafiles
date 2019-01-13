@@ -1,5 +1,3 @@
-# pylint: disable=no-member
-
 from dataclasses import dataclass, field
 from typing import List, Optional
 
@@ -36,7 +34,6 @@ def test_load(logbreak):
     sample = get_sample()
     logbreak("Loading")
     sample.datafile.load()  # pylint: disable=no-member
-
 
 
 def test_save(logbreak):

@@ -1,4 +1,4 @@
-# pylint: disable=unused-variable,no-member,no-member,assigning-non-slot
+# pylint: disable=unused-variable,assigning-non-slot
 
 import pytest
 
