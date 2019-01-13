@@ -201,10 +201,10 @@ class InstanceManager:
 
         # TODO: Figure out why datafile wasn't set
         if not hasattr(dataclass, 'datafile'):
-            from .models import get_datafile
+            from .models import build_datafile
 
             log.warn(f"{dataclass} was missing 'datafile'")
-            dataclass.datafile = get_datafile(dataclass)
+            dataclass.datafile = build_datafile(dataclass)
 
         for name2, converter2 in dataclass.datafile.attrs.items():
             _value = nested_data.get(  # type: ignore

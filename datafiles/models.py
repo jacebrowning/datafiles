@@ -27,7 +27,7 @@ class Model:
         with hooks.disabled():
             log.debug(f'Initializing {self.__class__} object')
 
-            self.datafile = get_datafile(self)
+            self.datafile = build_datafile(self)
 
             path = self.datafile.path
             exists = self.datafile.exists
@@ -41,7 +41,7 @@ class Model:
                 elif path:
                     self.datafile.save()
 
-                hooks.apply(self, self.datafile, get_datafile)
+                hooks.apply(self, self.datafile, build_datafile)
 
         log.debug(f'Initialized {self.__class__} object')
 
@@ -50,11 +50,11 @@ class Model:
         return ModelManager(cls)
 
 
-def get_datafile(obj, root=None) -> InstanceManager:
+def build_datafile(obj, root=None) -> InstanceManager:
     try:
         return object.__getattribute__(obj, 'datafile')
     except AttributeError:
-        log.debug(f"Getting 'datafile' for {obj.__class__} object")
+        log.debug(f"Building 'datafile' for {obj.__class__} object")
 
     m = getattr(obj, 'Meta', None)
     pattern = getattr(m, 'datafile_pattern', None)
