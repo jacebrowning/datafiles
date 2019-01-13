@@ -11,7 +11,7 @@ from cached_property import cached_property
 
 from . import formats, hooks
 from .converters import List
-from .utils import Missing, prettify, prevent_recursion
+from .utils import Missing, prettify
 
 
 Trilean = Optional[bool]
@@ -155,7 +155,6 @@ class InstanceManager:
         data = self._get_data(**kwargs)
         return formats.serialize(data, extension)
 
-    @prevent_recursion
     def load(self, *, first_load=False) -> None:
         if self._root:
             self._root.load(first_load=first_load)
@@ -261,7 +260,6 @@ class InstanceManager:
 
         return Missing
 
-    @prevent_recursion
     def save(self, include_default_values: Trilean = None) -> None:
         if self._root:
             self._root.save(include_default_values=include_default_values)
