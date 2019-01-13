@@ -26,4 +26,4 @@ install:
 build: off
 
 test_script:
-  - make test
+  - make test-repeat

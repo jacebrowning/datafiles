@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import dataclasses
 import inspect
 import os
@@ -7,9 +9,9 @@ from typing import Any, Dict, Optional
 import log
 from cached_property import cached_property
 
-from . import formats
+from . import formats, hooks
 from .converters import List
-from .utils import Missing, prettify, prevent_recursion
+from .utils import Missing, prettify
 
 
 Trilean = Optional[bool]
@@ -32,16 +34,18 @@ class InstanceManager:
         pattern: Optional[str],
         manual: bool,
         defaults: bool,
+        root: Optional[InstanceManager] = None,
     ) -> None:
         assert manual is not None
         assert defaults is not None
         self._instance = instance
         self.attrs = attrs
         self._pattern = pattern
-        self.manual = manual
+        self._manual = manual
         self.defaults = defaults
         self._last_load = 0.0
         self._last_data: Dict = {}
+        self._root = root
 
     @property
     def classname(self) -> str:
@@ -86,6 +90,10 @@ class InstanceManager:
         else:
             assert self.path, 'Cannot mark a missing file as unmodified'
             self._last_load = self.path.stat().st_mtime
+
+    @property
+    def manual(self) -> bool:
+        return self._root.manual if self._root else self._manual
 
     @property
     def data(self) -> Dict:
@@ -142,33 +150,35 @@ class InstanceManager:
     def text(self) -> str:
         return self._get_text()
 
-    def _get_text(self, **kwargs):
+    def _get_text(self, **kwargs) -> str:
         extension = self.path.suffix if self.path else '.yml'
         data = self._get_data(**kwargs)
-        text = formats.serialize(data, extension)
-        log.debug(f'Serialized data to text ({extension}): {text!r}')
-        return text
+        return formats.serialize(data, extension)
 
-    @prevent_recursion
     def load(self, *, first_load=False) -> None:
+        if self._root:
+            self._root.load(first_load=first_load)
+            return
+
         if self.path:
             log.info(f"Loading '{self.classname}' object from '{self.relpath}'")
         else:
             raise RuntimeError("'pattern' must be set to load the model")
 
-        message = f'Reading file: {self.path}'
+        message = f'Reading data from file: {self.path}'
         log.debug(message)
         data = formats.deserialize(self.path, self.path.suffix)
         self._last_data = data
         log.debug('=' * len(message) + '\n\n' + prettify(data) + '\n')
 
-        for name, converter in self.attrs.items():
-            log.debug(f"Converting '{name}' data with {converter}")
+        with hooks.disabled():
+            for name, converter in self.attrs.items():
+                log.debug(f"Converting '{name}' data with {converter}")
 
-            if getattr(converter, 'DATACLASS', None):
-                self._set_dataclass_value(data, name, converter)
-            else:
-                self._set_attribute_value(data, name, converter, first_load)
+                if getattr(converter, 'DATACLASS', None):
+                    self._set_dataclass_value(data, name, converter)
+                else:
+                    self._set_attribute_value(data, name, converter, first_load)
 
         self.modified = False
 
@@ -190,10 +200,10 @@ class InstanceManager:
 
         # TODO: Figure out why datafile wasn't set
         if not hasattr(dataclass, 'datafile'):
-            from .models import get_datafile
+            from .models import build_datafile
 
             log.warn(f"{dataclass} was missing 'datafile'")
-            dataclass.datafile = get_datafile(dataclass)
+            dataclass.datafile = build_datafile(dataclass)
 
         for name2, converter2 in dataclass.datafile.attrs.items():
             _value = nested_data.get(  # type: ignore
@@ -250,14 +260,18 @@ class InstanceManager:
 
         return Missing
 
-    @prevent_recursion
     def save(self, include_default_values: Trilean = None) -> None:
+        if self._root:
+            self._root.save(include_default_values=include_default_values)
+            return
+
         if self.path:
             log.info(f"Saving '{self.classname}' object to '{self.relpath}'")
         else:
             raise RuntimeError(f"'pattern' must be set to save the model")
 
-        text = self._get_text(include_default_values=include_default_values)
+        with hooks.disabled():
+            text = self._get_text(include_default_values=include_default_values)
 
         message = f'Writing file: {self.path}'
         log.debug(message)

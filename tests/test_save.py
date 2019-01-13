@@ -76,9 +76,10 @@ def describe_lists():
         with open('tmp/sample.yml') as f:
             expect(f.read()) == "items:\n- \n"
 
-    def with_conversion(expect, dedent):
+    def with_conversion(logbreak, expect, dedent):
         sample = SampleWithList([1, 2.3, '4.5'])
 
+        logbreak("Saving")
         sample.datafile.save()
 
         with open('tmp/sample.yml') as f:
@@ -284,7 +285,7 @@ def describe_preservation():
             """
         )
 
-    def with_comments_in_nested_objects(write, expect, read, dedent):
+    def with_comments_in_nested_objects(write, logbreak, expect, read, dedent):
         sample = SampleWithNestingAndDefaults(None)
 
         write(
@@ -301,9 +302,14 @@ def describe_preservation():
             """,
         )
 
+        logbreak("Loading")
         sample.datafile.load()
+
+        logbreak("Modifying")
         sample.score = 3
         sample.nested.score = 4
+
+        logbreak("Saving")
         sample.datafile.save()
 
         expect(read('tmp/sample.yml')) == dedent(
