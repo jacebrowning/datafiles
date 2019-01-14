@@ -188,6 +188,7 @@ def describe_converter():
                 (StringList, None, [None]),
                 # Dataclasses
                 (MyDataclassConverter, None, {'foobar': 0, 'flag': False}),
+                (MyDataclassConverter, {'foobar': 42}, {'foobar': 42, 'flag': False}),
                 (MyDataclassConverterList, None, [None]),
                 (MyDataclassConverterList, 42, [{'foobar': 0, 'flag': False}]),
             ],
