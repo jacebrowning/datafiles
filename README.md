@@ -28,21 +28,15 @@ class InventoryItem:
         return self.unit_price * self.quantity_on_hand
 ```
 
-and replace the decorator, including a directory pattern to synchronize instances:
+and decorate it with directory pattern to synchronize instances:
 
 ```python
 from datafiles import datafile
 
-@datafile("inventory/items/{self.name}.yml")  # <= save instances in the `inventory/items` directory
+@datafile("inventory/items/{self.name}.yml")
+@dataclass
 class InventoryItem:
-    """Class for keeping track of an item in inventory."""
-    
-    name: str
-    unit_price: float
-    quantity_on_hand: int = 0
-
-    def total_cost(self) -> float:
-        return self.unit_price * self.quantity_on_hand
+    ...
 ```
 
 Then, work with instances of the class as normal:
