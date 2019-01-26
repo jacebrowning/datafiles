@@ -1,6 +1,4 @@
-# Container Types
-
-## Lists
+# Lists
 
 ```python
 from typing import List, Optional
@@ -15,7 +13,7 @@ from typing import List, Optional
 
 More examples can be found in this [Jupyter Notebook](https://github.com/jacebrowning/datafiles/blob/develop/notebooks/patched_containers.ipynb).
 
-## Dictionaries
+# Dictionaries
 
 ```python
 from typing import Dict, Optional
@@ -30,6 +28,6 @@ from typing import Dict, Optional
 
 **NOTE:** Schema enforcement is not available with the `Dict` annotation.
 
-## Dataclasses
+# Dataclasses
 
 Dataclasses can also be nested as shown in this [Jupyter Notebook](https://github.com/jacebrowning/datafiles/blob/develop/notebooks/nested_dataclass.ipynb).

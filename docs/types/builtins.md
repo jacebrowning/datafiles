@@ -1,6 +1,4 @@
-# Builtins Types
-
-## Booleans
+# Booleans
 
 ```python
 from typing import Optional
@@ -13,7 +11,7 @@ from typing import Optional
 | `foobar: bool` | `foobar = None` | `foobar: false` |
 | `foobar: Optional[bool]` | `foobar = False` | `foobar: ` |
 
-## Integers
+# Integers
 
 ```python
 from typing import Optional
@@ -26,7 +24,7 @@ from typing import Optional
 | `foobar: int` | `foobar = None` | `foobar: 0` |
 | `foobar: Optional[int]` | `foobar = None` | `foobar: ` |
 
-## Floats
+# Floats
 
 ```python
 from typing import Optional
@@ -39,7 +37,7 @@ from typing import Optional
 | `foobar: float` | `foobar = None` | `foobar: 0.0` |
 | `foobar: Optional[float]` | `foobar = None` | `foobar: ` |
 
-## Strings
+# Strings
 
 ```python
 from typing import Optional
