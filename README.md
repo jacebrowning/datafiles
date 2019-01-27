@@ -96,4 +96,4 @@ $ poetry add datafiles
 
 ## Documentation
 
-To see additional syncrhonization and formatting options, please consult the [full documentation](https://datafiles.readthedocs.io/en/latest/options/decorators/).
+To see additional syncrhonization and formatting options, please consult the [full documentation](https://datafiles.readthedocs.io/en/latest/options/setup/).
