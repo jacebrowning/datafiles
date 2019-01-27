@@ -84,6 +84,7 @@ def load_before(cls, method):
                 log.debug(f"Loading automatically before '{method.__name__}' call")
                 datafile.load()
                 if datafile.auto_save:
+                    log.debug("Saving automatically after load")
                     datafile.save(_log=False)
 
         return method(self, *args, **kwargs)
@@ -116,6 +117,7 @@ def save_after(cls, method):
             log.debug(f"Saving automatically after '{method.__name__}' call")
             datafile.save()
             if datafile.auto_load:
+                log.debug("Loading automatically after save")
                 datafile.load(_log=False)
 
         return result
