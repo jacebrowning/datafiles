@@ -83,10 +83,8 @@ def load_before(cls, method):
             if datafile.exists and datafile.modified:
                 log.debug(f"Loading automatically before '{method.__name__}' call")
                 datafile.load()
-                # TODO: Implement this?
-                # if mapper.auto_save_after_load:
-                #     mapper.save()
-                #     mapper.modified = False
+                if datafile.auto_save:
+                    datafile.save()
 
         return method(self, *args, **kwargs)
 
@@ -117,6 +115,8 @@ def save_after(cls, method):
         if enabled(datafile, args):
             log.debug(f"Saving automatically after '{method.__name__}' call")
             datafile.save()
+            if datafile.auto_load:
+                datafile.load()
 
         return result
 

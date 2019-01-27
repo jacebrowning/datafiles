@@ -1,9 +1,10 @@
 # Synchronization
 
-The simplest way to turn a dataclass into a datafile is to replace the `@dataclass` decorator with `@datafile`:
+Enable synchronization by replacing the `@dataclass` decorator with `@datafile(...)`:
 
-```python
-# BEFORE
+```
+#!python hl_lines="5 16"
+# BEFORE ##################################################
 
 from dataclasses import dataclass
 
@@ -12,10 +13,9 @@ class Item:
     name: str
     count: int
     available: bool
-```
 
-```python
-# AFTER
+
+# AFTER ##################################################
 
 from datafiles import datafile
 
@@ -28,8 +28,9 @@ class Item:
 
 But you can also decorate an existing dataclass:
 
-```python
-# BEFORE
+```
+#!python hl_lines="5 18"
+# BEFORE ##################################################
 
 from dataclasses import dataclass
 
@@ -38,10 +39,9 @@ class Item:
     name: str
     count: int
     available: bool
-```
 
-```python
-# AFTER
+
+# AFTER ##################################################
 
 from dataclasses import dataclass
 
@@ -57,17 +57,22 @@ class Item:
 
 # Options
 
-The following options can be passed to `@datafile()` decorator:
+The following options can be passed to the `@datafile()` decorator:
 
 | Name | Type | Description | Default
 | --- | --- | --- | --- |
-| `attrs` | `dict` | Attributes to synchronize mapped to `datafile.converters` classes for serialization. | _Inferred from type annotations._ |
+| `attrs` | `dict` | Attributes to synchronize mapped to `datafile.converters` classes for serialization. | `{}` <sup>1</sup> |
 | `manual` | `bool` | Synchronize object and file changes manually. | `False` |
 | `defaults` | `bool` | Include default values in files. | `False` | 
+| `auto_load` | `bool` | Load automatically after saving.<br>If `manual=True` this option is ignored. | `True` |
+| `auto_save` | `bool` | Save automatically after loading.<br>If `manual=True` this option is ignored. | `True` |
+
+<sup>1</sup> _By default, synchronized attributes are inferred from the type annotations._
 
 For example:
 
-```python
+```
+#!python hl_lines="3 9"
 from datafiles import datafile
 
 @datafile('items/{self.name}.yml', manual=True, defaults=True)
@@ -75,13 +80,18 @@ class Item:
     name: str
     count: int
     available: bool
+
+@datafile('config.yml', auto_save=False)
+class Config:
+    default_count: int = 42
 ```
 
 # Meta class
 
 Alternatively, any of the above options can be configured through code by setting `datafile_<option>` in a `Meta` class:
 
-```python
+```
+#!python hl_lines="9 10 11 12 13 14"
 from datafiles import datafile, converters
 
 @datafile('items/{self.name}.yml')
@@ -94,6 +104,8 @@ class Item:
         datafile_attrs = {'count': converters.Integer}
         datafile_manual = True
         datafile_defaults = True
+        datafiles_auto_load = False
+        datafiles_auto_save = False
 
 ```
 
@@ -101,7 +113,8 @@ class Item:
 
 Finally, a datafile can explicitly extend `datafiles.Model` to set all options in the `Meta` class:
 
-```python
+```
+#!python hl_lines="11 12 13 14 15"
 from dataclasses import dataclass
 
 from datafiles import Model, converters

@@ -34,6 +34,8 @@ class InstanceManager:
         pattern: Optional[str],
         manual: bool,
         defaults: bool,
+        auto_load: bool,
+        auto_save: bool,
         root: Optional[InstanceManager] = None,
     ) -> None:
         assert manual is not None
@@ -43,6 +45,8 @@ class InstanceManager:
         self._pattern = pattern
         self._manual = manual
         self.defaults = defaults
+        self._auto_load = auto_load
+        self._auto_save = auto_save
         self._last_load = 0.0
         self._last_data: Dict = {}
         self._root = root
@@ -94,6 +98,14 @@ class InstanceManager:
     @property
     def manual(self) -> bool:
         return self._root.manual if self._root else self._manual
+
+    @property
+    def auto_load(self) -> bool:
+        return self._root.auto_load if self._root else self._auto_load
+
+    @property
+    def auto_save(self) -> bool:
+        return self._root.auto_save if self._root else self._auto_save
 
     @property
     def data(self) -> Dict:

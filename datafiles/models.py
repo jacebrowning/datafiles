@@ -17,6 +17,8 @@ class ModelMeta:
 
     datafile_manual: bool = False
     datafile_defaults: bool = False
+    datafile_auto_load: bool = True
+    datafile_auto_save: bool = True
 
 
 class Model:
@@ -59,8 +61,10 @@ def build_datafile(obj, root=None) -> InstanceManager:
     m = getattr(obj, 'Meta', None)
     pattern = getattr(m, 'datafile_pattern', None)
     attrs = getattr(m, 'datafile_attrs', None)
-    manual = getattr(m, 'datafile_manual', False)
-    defaults = getattr(m, 'datafile_defaults', False)
+    manual = getattr(m, 'datafile_manual', ModelMeta.datafile_manual)
+    defaults = getattr(m, 'datafile_defaults', ModelMeta.datafile_defaults)
+    auto_load = getattr(m, 'datafile_auto_load', ModelMeta.datafile_auto_load)
+    auto_save = getattr(m, 'datafile_auto_save', ModelMeta.datafile_auto_save)
 
     if attrs is None and dataclasses.is_dataclass(obj):
         attrs = {}
@@ -71,11 +75,27 @@ def build_datafile(obj, root=None) -> InstanceManager:
                 attrs[field.name] = map_type(field.type)
 
     return InstanceManager(
-        obj, attrs=attrs, pattern=pattern, manual=manual, defaults=defaults, root=root
+        obj,
+        attrs=attrs,
+        pattern=pattern,
+        manual=manual,
+        defaults=defaults,
+        auto_load=auto_load,
+        auto_save=auto_save,
+        root=root,
     )
 
 
-def create_model(cls, *, attrs=None, pattern=None, manual=None, defaults=None):
+def create_model(
+    cls,
+    *,
+    attrs=None,
+    pattern=None,
+    manual=None,
+    defaults=None,
+    auto_load=None,
+    auto_save=None,
+):
     """Patch datafile attributes on to an existing dataclass."""
     log.debug(f'Converting {cls} to a datafile model')
 
@@ -95,6 +115,10 @@ def create_model(cls, *, attrs=None, pattern=None, manual=None, defaults=None):
         m.datafile_manual = manual
     if not hasattr(cls, 'Meta') and defaults is not None:
         m.datafile_defaults = defaults
+    if not hasattr(cls, 'Meta') and auto_load is not None:
+        m.datafile_auto_load = auto_load
+    if not hasattr(cls, 'Meta') and auto_save is not None:
+        m.datafile_auto_save = auto_save
 
     cls.Meta = m
 
