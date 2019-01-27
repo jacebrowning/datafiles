@@ -5,7 +5,7 @@ from dataclasses import dataclass
 import pytest
 
 from datafiles import datafile
-from datafiles.utils import logbreak
+from datafiles.utils import dedent, logbreak, read, write
 
 
 # This model is based on the example dataclass from:
@@ -69,6 +69,98 @@ def test_classes_can_share_a_nested_dataclass(expect):
     bar = Bar(Nested(2))
 
     expect(bar.nested.value) == 2
+
+
+def test_unlimited_nesting(expect):
+    @dataclass
+    class Bottom:
+        level: int = 4
+
+    @dataclass
+    class C:
+        level: int = 3
+        d: Bottom = Bottom()
+
+    @dataclass
+    class B:
+        level: int = 2
+        c: C = C()
+
+    @dataclass
+    class A:
+        level: int = 1
+        b: B = B()
+
+    @datafile('../tmp/sample.toml', defaults=True, auto_save=False)
+    class Top:
+        level: int = 0
+        a: A = A()
+
+    sample = Top()
+
+    expect(read('tmp/sample.toml')) == dedent(
+        """
+        level = 0
+
+        [a]
+        level = 1
+
+        [a.b]
+        level = 2
+
+        [a.b.c]
+        level = 3
+
+        [a.b.c.d]
+        level = 4
+        """
+    )
+
+    logbreak()
+    sample.a.b.c.d.level = 99
+
+    expect(read('tmp/sample.toml')) == dedent(
+        """
+        level = 0
+
+        [a]
+        level = 1
+
+        [a.b]
+        level = 2
+
+        [a.b.c]
+        level = 3
+
+        [a.b.c.d]
+        level = 99
+        """
+    )
+
+    write(
+        'tmp/sample.toml',
+        """
+        level = 0
+
+        [a]
+        level = 10
+
+        [a.b]
+        level = 20
+
+        [a.b.c]
+        level = 30
+
+        [a.b.c.d]
+        level = 40
+        """,
+    )
+
+    logbreak()
+    expect(sample.a.level) == 10
+    expect(sample.a.b.level) == 20
+    expect(sample.a.b.c.level) == 30
+    expect(sample.a.b.c.d.level) == 40
 
 
 @pytest.mark.xfail(reason='https://github.com/jacebrowning/datafiles/issues/147')

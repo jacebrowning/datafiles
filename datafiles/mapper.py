@@ -236,8 +236,6 @@ class Mapper:
         self.modified = False
 
     def _set_dataclass_value(self, data, name, converter):
-        # TODO: Support nesting unlimited levels
-        # https://github.com/jacebrowning/datafiles/issues/22
         nested_data = data.get(name)
         if nested_data is None:
             return
