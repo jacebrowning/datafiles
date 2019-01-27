@@ -1,11 +1,9 @@
-# Synchronization
+# Decorator
 
-Enable synchronization by replacing the `@dataclass` decorator with `@datafile(...)`:
+Given this example dataclass:
 
 ```
-#!python hl_lines="5 16"
-# BEFORE ##################################################
-
+#!python"
 from dataclasses import dataclass
 
 @dataclass
@@ -13,41 +11,17 @@ class Item:
     name: str
     count: int
     available: bool
-
-
-# AFTER ##################################################
-
-from datafiles import datafile
-
-@datafile('items/{self.name}.yml')
-class Item:
-    name: str
-    count: int
-    available: bool
 ```
 
-But you can also decorate an existing dataclass:
+Synchronization is enabled by add the `@datafile(<pattern>)` decorator:
 
 ```
-#!python hl_lines="5 18"
-# BEFORE ##################################################
-
-from dataclasses import dataclass
-
-@dataclass
-class Item:
-    name: str
-    count: int
-    available: bool
-
-
-# AFTER ##################################################
-
+#!python hl_lines="5"
 from dataclasses import dataclass
 
 from datafiles import datafile
 
-@datafile('items/{self.name}.yml')
+@datafile("items/{self.name}.yml")
 @dataclass
 class Item:
     name: str
@@ -55,7 +29,31 @@ class Item:
     available: bool
 ```
 
-# Options
+or by replacing the `@dataclass` decorator entirely:
+
+```
+#!python hl_lines="3"
+from datafiles import datafile
+
+@datafile("items/{self.name}.yml")
+class Item:
+    name: str
+    count: int
+    available: bool
+```
+
+## Filename
+
+Instances of the class are synchronized to disk according to the `<pattern>` string:
+
+```python
+Item("abc")  # <=> items/abc.yml
+Item("def")  # <=> items/def.yml
+```
+
+Attributes included in the filename pattern are automatically excluded from the file contents.
+
+## Options
 
 The following options can be passed to the `@datafile()` decorator:
 
@@ -75,13 +73,13 @@ For example:
 #!python hl_lines="3 9"
 from datafiles import datafile
 
-@datafile('items/{self.name}.yml', manual=True, defaults=True)
+@datafile("items/{self.name}.yml", manual=True, defaults=True)
 class Item:
     name: str
     count: int
     available: bool
 
-@datafile('config.yml', auto_save=False)
+@datafile("config.yml", auto_save=False)
 class Config:
     default_count: int = 42
 ```
@@ -94,7 +92,7 @@ Alternatively, any of the above options can be configured through code by settin
 #!python hl_lines="9 10 11 12 13 14"
 from datafiles import datafile, converters
 
-@datafile('items/{self.name}.yml')
+@datafile("items/{self.name}.yml")
 class Item:
     name: str
     count: int
@@ -106,12 +104,11 @@ class Item:
         datafile_defaults = True
         datafiles_auto_load = False
         datafiles_auto_save = False
-
 ```
 
 # Base class
 
-Finally, a datafile can explicitly extend `datafiles.Model` to set all options in the `Meta` class:
+Finally, a datafile can explicitly extend `datafiles.Model` and set the pattern in the `Meta` class:
 
 ```
 #!python hl_lines="11 12 13 14 15"
@@ -126,10 +123,8 @@ class Item(Model):
     available: bool
 
     class Meta:
-        datafile_pattern = 'items/{self.name}.yml'
+        datafile_pattern = "items/{self.name}.yml"
         datafile_attrs = {'count': converters.Integer}
         datafile_manual = True
         datafile_defaults = True
-
 ```
-

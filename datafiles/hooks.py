@@ -144,7 +144,6 @@ def enabled(datafile, args) -> bool:
     if datafile.manual:
         return False
 
-    # TODO: Investigate performance impact of removing this code
     if args and isinstance(args[0], str):
         if args[0] in {'Meta', 'datafile'}:
             return False

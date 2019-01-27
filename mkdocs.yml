@@ -14,7 +14,7 @@ markdown_extensions:
 nav:
 - Home: index.md
 - Options:
-  - Decorators: options/decorators.md
+  - Setup: options/setup.md
   - Formats: options/formats.md
 - Types:
   - Builtins: types/builtins.md
