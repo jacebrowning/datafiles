@@ -81,7 +81,7 @@ test-repeat: install
 
 .PHONY: test-profile
 test-profile: install
-	poetry run pytest tests/test_profile.py --profile-svg
+	poetry run pytest tests/test_profiling.py --profile-svg
 
 # DOCUMENTATION ###############################################################
 
@@ -100,7 +100,7 @@ $(MKDOCS_INDEX): docs/requirements.txt mkdocs.yml docs/*.md
 	poetry run mkdocs build --clean --strict
 
 docs/requirements.txt: poetry.lock
-	poetry run pip freeze | grep mkdocs > $@
+	@ poetry run pip freeze -qqq | grep mkdocs > $@
 
 .PHONY: mkdocs-live
 mkdocs-live: mkdocs

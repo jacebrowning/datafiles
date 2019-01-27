@@ -1,3 +1,5 @@
+"""Tests for extended converters."""
+
 # pylint: disable=unused-variable
 
 import os

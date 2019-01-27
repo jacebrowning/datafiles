@@ -1,3 +1,5 @@
+"""Tests for automatic saving and loading through patched methods."""
+
 # pylint: disable=unused-variable
 
 import os

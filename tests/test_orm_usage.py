@@ -1,3 +1,5 @@
+"""Tests that represent usage as an ORM."""
+
 from dataclasses import dataclass
 
 from datafiles import datafile

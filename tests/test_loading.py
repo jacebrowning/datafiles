@@ -1,3 +1,5 @@
+"""Tests for loading from a file."""
+
 # pylint: disable=unused-variable
 
 import pytest

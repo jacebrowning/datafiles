@@ -1,3 +1,5 @@
+"""Tests for setting up a new class."""
+
 # pylint: disable=unused-variable
 
 from dataclasses import dataclass
