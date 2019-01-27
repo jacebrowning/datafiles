@@ -39,7 +39,7 @@ class Model:
                 log.debug(f'Datafile exists: {exists}')
 
                 if exists:
-                    self.datafile.load(first_load=True)
+                    self.datafile.load(_first=True)
                 elif path:
                     self.datafile.save()
 
