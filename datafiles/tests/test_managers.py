@@ -31,6 +31,7 @@ def describe_instance_manager():
             defaults=ModelMeta.datafile_defaults,
             auto_load=ModelMeta.datafile_auto_load,
             auto_save=ModelMeta.datafile_auto_save,
+            auto_attr=ModelMeta.datafile_auto_attr,
         )
 
     def describe_path():

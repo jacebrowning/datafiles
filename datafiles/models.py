@@ -19,6 +19,7 @@ class ModelMeta:
     datafile_defaults: bool = False
     datafile_auto_load: bool = True
     datafile_auto_save: bool = True
+    datafile_auto_attr: bool = False
 
 
 class Model:
@@ -65,6 +66,7 @@ def build_datafile(obj, root=None) -> InstanceManager:
     defaults = getattr(m, 'datafile_defaults', ModelMeta.datafile_defaults)
     auto_load = getattr(m, 'datafile_auto_load', ModelMeta.datafile_auto_load)
     auto_save = getattr(m, 'datafile_auto_save', ModelMeta.datafile_auto_save)
+    auto_attr = getattr(m, 'datafile_auto_attr', ModelMeta.datafile_auto_attr)
 
     if attrs is None and dataclasses.is_dataclass(obj):
         attrs = {}
@@ -82,6 +84,7 @@ def build_datafile(obj, root=None) -> InstanceManager:
         defaults=defaults,
         auto_load=auto_load,
         auto_save=auto_save,
+        auto_attr=auto_attr,
         root=root,
     )
 
@@ -95,6 +98,7 @@ def create_model(
     defaults=None,
     auto_load=None,
     auto_save=None,
+    auto_attr=None,
 ):
     """Patch datafile attributes on to an existing dataclass."""
     log.debug(f'Converting {cls} to a datafile model')
@@ -119,6 +123,8 @@ def create_model(
         m.datafile_auto_load = auto_load
     if not hasattr(cls, 'Meta') and auto_save is not None:
         m.datafile_auto_save = auto_save
+    if not hasattr(cls, 'Meta') and auto_attr is not None:
+        m.datafile_auto_attr = auto_attr
 
     cls.Meta = m
 

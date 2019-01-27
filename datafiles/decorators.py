@@ -12,6 +12,7 @@ def datafile(
     defaults: bool = ModelMeta.datafile_defaults,
     auto_load: bool = ModelMeta.datafile_auto_load,
     auto_save: bool = ModelMeta.datafile_auto_save,
+    auto_attr: bool = ModelMeta.datafile_auto_attr,
 ):
     """Synchronize a data class to the specified path."""
 
@@ -29,6 +30,7 @@ def datafile(
             defaults=defaults,
             auto_load=auto_load,
             auto_save=auto_save,
+            auto_attr=auto_attr,
         )
 
     return decorator

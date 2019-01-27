@@ -64,6 +64,7 @@ The following options can be passed to the `@datafile()` decorator:
 | `defaults` | `bool` | Include default values in files. | `False` | 
 | `auto_load` | `bool` | Load automatically after saving.<br>If `manual=True` this option is ignored. | `True` |
 | `auto_save` | `bool` | Save automatically after loading.<br>If `manual=True` this option is ignored. | `True` |
+| `auto_attr` | `bool` | Automatically infer new attributes from the file. | `False` |
 
 <sup>1</sup> _By default, synchronized attributes are inferred from the type annotations._
 
