@@ -6,6 +6,7 @@ from pathlib import Path
 import pytest
 
 from datafiles import managers
+from datafiles.models import ModelMeta
 
 
 @dataclass
@@ -26,8 +27,10 @@ def describe_instance_manager():
             instance=MyModel(foobar=42),
             attrs={},
             pattern=None,
-            manual=False,
-            defaults=False,
+            manual=ModelMeta.datafile_manual,
+            defaults=ModelMeta.datafile_defaults,
+            auto_load=ModelMeta.datafile_auto_load,
+            auto_save=ModelMeta.datafile_auto_save,
         )
 
     def describe_path():

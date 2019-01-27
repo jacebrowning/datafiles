@@ -34,6 +34,8 @@ class InstanceManager:
         pattern: Optional[str],
         manual: bool,
         defaults: bool,
+        auto_load: bool,
+        auto_save: bool,
         root: Optional[InstanceManager] = None,
     ) -> None:
         assert manual is not None
@@ -43,6 +45,8 @@ class InstanceManager:
         self._pattern = pattern
         self._manual = manual
         self.defaults = defaults
+        self._auto_load = auto_load
+        self._auto_save = auto_save
         self._last_load = 0.0
         self._last_data: Dict = {}
         self._root = root
@@ -94,6 +98,14 @@ class InstanceManager:
     @property
     def manual(self) -> bool:
         return self._root.manual if self._root else self._manual
+
+    @property
+    def auto_load(self) -> bool:
+        return self._root.auto_load if self._root else self._auto_load
+
+    @property
+    def auto_save(self) -> bool:
+        return self._root.auto_save if self._root else self._auto_save
 
     @property
     def data(self) -> Dict:
@@ -156,13 +168,14 @@ class InstanceManager:
             return formats.serialize(data, self.path.suffix)
         return formats.serialize(data)
 
-    def load(self, *, first_load=False) -> None:
+    def load(self, *, _log=True, _first=False) -> None:
         if self._root:
-            self._root.load(first_load=first_load)
+            self._root.load(_log=_log, _first=_first)
             return
 
         if self.path:
-            log.info(f"Loading '{self.classname}' object from '{self.relpath}'")
+            if _log:
+                log.info(f"Loading '{self.classname}' object from '{self.relpath}'")
         else:
             raise RuntimeError("'pattern' must be set to load the model")
 
@@ -179,7 +192,7 @@ class InstanceManager:
                 if getattr(converter, 'DATACLASS', None):
                     self._set_dataclass_value(data, name, converter)
                 else:
-                    self._set_attribute_value(data, name, converter, first_load)
+                    self._set_attribute_value(data, name, converter, _first)
 
         self.modified = False
 
@@ -228,7 +241,7 @@ class InstanceManager:
 
         if first_load:
             log.debug(
-                'First load values: file=%r, init=%r, default=%r',
+                'Initial load values: file=%r, init=%r, default=%r',
                 file_value,
                 init_value,
                 default_value,
@@ -263,13 +276,14 @@ class InstanceManager:
 
         return Missing
 
-    def save(self, include_default_values: Trilean = None) -> None:
+    def save(self, *, include_default_values: Trilean = None, _log=True) -> None:
         if self._root:
-            self._root.save(include_default_values=include_default_values)
+            self._root.save(include_default_values=include_default_values, _log=_log)
             return
 
         if self.path:
-            log.info(f"Saving '{self.classname}' object to '{self.relpath}'")
+            if _log:
+                log.info(f"Saving '{self.classname}' object to '{self.relpath}'")
         else:
             raise RuntimeError(f"'pattern' must be set to save the model")
 

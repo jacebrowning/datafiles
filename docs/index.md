@@ -6,13 +6,13 @@ Datafiles is a bidirectional serialization library for Python [dataclasses](http
 
 Install it directly into an activated virtual environment:
 
-```
+```text
 $ pip install datafiles
 ```
 
 or add it to your [Poetry](https://poetry.eustace.io/) project:
 
-```
+```text
 $ poetry add datafiles
 ```
 

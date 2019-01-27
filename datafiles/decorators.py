@@ -2,14 +2,16 @@ import dataclasses
 from typing import Dict, Optional
 
 from .converters import Converter
-from .models import create_model
+from .models import ModelMeta, create_model
 
 
 def datafile(
     pattern: str,
     attrs: Optional[Dict[str, Converter]] = None,
-    manual: bool = False,
-    defaults: bool = False,
+    manual: bool = ModelMeta.datafile_manual,
+    defaults: bool = ModelMeta.datafile_defaults,
+    auto_load: bool = ModelMeta.datafile_auto_load,
+    auto_save: bool = ModelMeta.datafile_auto_save,
 ):
     """Synchronize a data class to the specified path."""
 
@@ -20,7 +22,13 @@ def datafile(
             dataclass = dataclasses.dataclass(cls)
 
         return create_model(
-            dataclass, attrs=attrs, pattern=pattern, manual=manual, defaults=defaults
+            dataclass,
+            attrs=attrs,
+            pattern=pattern,
+            manual=manual,
+            defaults=defaults,
+            auto_load=auto_load,
+            auto_save=auto_save,
         )
 
     return decorator

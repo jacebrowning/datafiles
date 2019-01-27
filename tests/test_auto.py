@@ -186,14 +186,29 @@ def describe_automatic_load_before_save():
         write(
             'tmp/sample.yml',
             """
-            item: b  # Comment
+            item: 42
             """,
         )
 
-        sample.item = 'c'
+        expect(sample.item) == '42'
 
         expect(sample.datafile.text) == dedent(
             """
-            item: c  # Comment
+            item: '42'
             """
         )
+
+
+def describe_automatic_load_after_save():
+    def with_setattr(expect, dedent):
+        sample = Sample()
+
+        sample.item = 42
+
+        expect(sample.datafile.text) == dedent(
+            """
+            item: '42'
+            """
+        )
+
+        expect(sample.item) == '42'
