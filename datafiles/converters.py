@@ -1,12 +1,16 @@
 import dataclasses
 from abc import ABCMeta, abstractmethod
 from collections.abc import Iterable
+from inspect import isclass
 from typing import Any, Dict, Union
 
 import log
 from ruamel.yaml.scalarstring import LiteralScalarString
 
 from .utils import Missing, cached
+
+
+_REGISTRY: Dict[type, type] = {}
 
 
 class Converter(metaclass=ABCMeta):
@@ -335,17 +339,29 @@ class Object(Converter):
         return data
 
 
+def register(cls: type, converter: type):
+    _REGISTRY[cls] = converter
+
+
 @cached
-def map_type(cls):
+def map_type(cls, *, name=''):
     """Infer the converter type from a dataclass, type, or annotation."""
-    log.debug(f'Mapping {cls} to converter')
+    if name:
+        log.debug(f'Mapping {name!r} of {cls!r} to converter')
+    else:
+        log.debug(f'Mapping {cls!r} to converter')
+
+    if cls in _REGISTRY:
+        converter: Any = _REGISTRY[cls]
+        log.debug(f'Mapped {cls!r} to registered converter: {converter}')
+        return converter
 
     if dataclasses.is_dataclass(cls):
         converters = {}
         for field in dataclasses.fields(cls):
-            converters[field.name] = map_type(field.type)
+            converters[field.name] = map_type(field.type, name=field.name)
         converter = Object.subclass(cls, converters)
-        log.debug(f'Mapped {cls} to new converter: {converter}')
+        log.debug(f'Mapped {cls!r} to new converter: {converter}')
         return converter
 
     if hasattr(cls, '__origin__'):
@@ -354,10 +370,10 @@ def map_type(cls):
         if cls.__origin__ == list:
             try:
                 converter = map_type(cls.__args__[0])
-            except TypeError as exc:
-                log.debug(exc)
-                exc = TypeError(f"Type is required with 'List' annotation")
-                raise exc from None
+            except TypeError as e:
+                if '~T' in str(e):
+                    e = TypeError(f"Type is required with 'List' annotation")
+                raise e from None
             else:
                 converter = List.subclass(converter)
 
@@ -375,7 +391,7 @@ def map_type(cls):
             converter = converter.as_optional()
 
         if converter:
-            log.debug(f'Mapped {cls} to new converter: {converter}')
+            log.debug(f'Mapped {cls!r} to new converter: {converter}')
             return converter
 
         raise TypeError(f'Unsupported container type: {cls.__origin__}')
@@ -383,11 +399,14 @@ def map_type(cls):
     else:
         for converter in Converter.__subclasses__():
             if converter.TYPE == cls:
-                log.debug(f'Mapped {cls} to existing converter: {converter}')
+                log.debug(f'Mapped {cls!r} to existing converter: {converter}')
                 return converter
 
+    if not isclass(cls):
+        raise TypeError(f'Annotation is not a type: {cls!r}')
+
     if issubclass(cls, Converter):
-        log.debug(f'Mapped {cls} to existing converter (itself)')
+        log.debug(f'Mapped {cls!r} to existing converter (itself)')
         return cls
 
     raise TypeError(f'Could not map type: {cls}')

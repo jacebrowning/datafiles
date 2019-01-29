@@ -72,7 +72,7 @@ def build_datafile(obj, root=None) -> InstanceManager:
         for field in dataclasses.fields(obj):
             self_name = f'self.{field.name}'
             if pattern is None or self_name not in pattern:
-                attrs[field.name] = map_type(field.type)
+                attrs[field.name] = map_type(field.type, name=field.name)
 
     return InstanceManager(
         obj,

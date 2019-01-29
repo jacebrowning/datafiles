@@ -19,6 +19,10 @@ class MyNonDataclass:
     pass
 
 
+class MyNonDataclass2:
+    pass
+
+
 IntegerList = converters.List.subclass(converters.Integer)
 StringList = converters.List.subclass(converters.String)
 MyDict = converters.Dictionary.subclass(converters.String, converters.Integer)
@@ -42,7 +46,7 @@ def describe_map_type():
         expect(converter.CONVERTER.__name__) == 'MyDataclassConverter'
 
     def it_requires_list_annotations_to_have_a_type(expect):
-        with expect.raises(TypeError):
+        with expect.raises(TypeError, "Type is required with 'List' annotation"):
             converters.map_type(List)
 
     def it_handles_dict_annotations(expect):
@@ -64,11 +68,21 @@ def describe_map_type():
         expect(converter.DEFAULT) == None
 
     def it_rejects_unknown_types(expect):
-        with expect.raises(TypeError):
+        with expect.raises(
+            TypeError,
+            "Could not map type: <class 'datafiles.tests.test_converters.MyNonDataclass'>",
+        ):
             converters.map_type(MyNonDataclass)
 
+    def it_rejects_non_types(expect):
+        with expect.raises(TypeError, "Annotation is not a type: 'foobar'"):
+            converters.map_type("foobar")
+
     def it_rejects_unhandled_type_annotations(expect):
-        with expect.raises(TypeError):
+        with expect.raises(
+            TypeError,
+            "Unsupported container type: <class 'collections.abc.ByteString'>",
+        ):
             converters.map_type(ByteString)
 
 
@@ -255,3 +269,10 @@ def describe_converter():
                 MyDataclass(1, flag=True), skip=MyDataclass(1)
             )
             expect(data) == {'flag': True}
+
+
+def describe_register():
+    def with_new_type(expect):
+        converters.register(MyNonDataclass2, converters.String)
+        converter = converters.map_type(MyNonDataclass2)
+        expect(converter) == converters.String
