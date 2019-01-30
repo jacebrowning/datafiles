@@ -77,7 +77,8 @@ test: install  ## Run unit and integration tests
 
 .PHONY: test-repeat
 test-repeat: install
-	poetry run pytest --count=5 --random --exitfirst
+	poetry run pytest -m "not flaky" --count=5 --random --exitfirst
+	poetry run pytest -m "flaky"
 
 .PHONY: test-profile
 test-profile: install
