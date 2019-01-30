@@ -1,6 +1,9 @@
 # pylint: disable=arguments-differ,unused-argument
 
+import os
 from datetime import datetime
+
+import pytest
 
 from datafiles import converters, datafile
 
@@ -29,6 +32,7 @@ class MyDateTime(converters.Converter, datetime):
         return MyDateTime.fromisoformat(deserialized_data)
 
 
+@pytest.mark.xfail(bool(os.getenv('CI')), reason="Flaky on CI")
 def test_extensiion(expect):
     @datafile("../tmp/sample.yml")
     class Timestamp:
