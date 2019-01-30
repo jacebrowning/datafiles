@@ -20,7 +20,7 @@ nav:
   - Builtins: types/builtins.md
   - Extensions: types/extensions.md
   - Containers: types/containers.md
-  - Custom: types/custom.md
+  - Custom Types: types/custom.md
 - About:
   - Release Notes: about/changelog.md
   - Contributing: about/contributing.md

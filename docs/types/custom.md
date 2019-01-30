@@ -1,30 +1,69 @@
-# Registration
+# Extension
 
-Custom types can be saved and loaded by registering a new converter class:
+Custom types can be saved and loaded by extending one of the included converter classes:
 
-```python
+| Class | Description |
+| --- | --- |
+| `converters.Converter` | Base class for all converters. |
+| `converters.Boolean` | Converts to `bool` before serialization. |
+| `converters.Integer` | Converts to `int` before serialization. |
+| `converters.Float` | Converts to `float` before serialization. |
+| `converters.String` | Converts to `str` before serialization. |
+
+For example, here is a `datetime` class that serializes using the ISO format:
+
+```
+#!python hl_lines="6 7 11 12"
 from datafiles import converters, datafile
 
-from .my_models import MyDateTime
 
-
-class MyDateTimeConverter(converters.String):
+class MyDateTime(converters.Converter, datetime):
 
     @classmethod
     def to_preserialization_data(cls, python_value, **kwargs):
-        # Convert `MyDateTime` to custom string format
-        return python_value.to_custom_string_format()
+        # Convert `MyDateTime` to a value that can be serialized
+        return python_value.isoformat()
 
     @classmethod
     def to_python_value(cls, deserialized_data, **kwargs):
-        value = super().to_python_value(deserialized_data, **kwargs)
-        # Convert custom string format back to `MyDateTime`
-        return MyDateTime.from_custom_string_format(value)
+        # Convert file value back into a `MyDateTime` object
+        return MyDateTime.fromisoformat(deserialized_data)
 
-converters.register(MyDateTime, MyDateTimeConverter)
+    # Any additional methods could go here...
 
 
 @datafile("sample.yml")
 class MyTimestamp:
     my_datetime: MyDateTime
+```
+
+# Registration
+
+If you'd rather not have to modify your own classes (or don't have control over the source of a class), you can also register a custom converter for any class:
+
+```python
+from datetime import datetime
+
+from datafiles import converters, datafile
+
+
+class DateTimeConverter(converters.String):
+
+    @classmethod
+    def to_preserialization_data(cls, python_value, **kwargs):
+        # Convert `datetime` to a value that can be serialized
+        return python_value.isoformat()
+
+    @classmethod
+    def to_python_value(cls, deserialized_data, **kwargs):
+        # Convert file value back into a `datetime` object
+        return datetime.fromisoformat(deserialized_data)
+
+
+converters.register(datetime, DateTimeConverter)
+
+
+@datafile("sample.yml")
+class MyTimestamp:
+    my_datetime: datetime
 ```

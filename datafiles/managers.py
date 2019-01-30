@@ -168,6 +168,10 @@ class InstanceManager:
             return formats.serialize(data, self.path.suffix)
         return formats.serialize(data)
 
+    @text.setter  # type: ignore
+    def text(self, value: str):
+        self._write(value)
+
     def load(self, *, _log=True, _first=False) -> None:
         if self._root:
             self._root.load(_log=_log, _first=_first)
@@ -290,10 +294,13 @@ class InstanceManager:
         with hooks.disabled():
             text = self._get_text(include_default_values=include_default_values)
 
+        self._write(text)
+
+        self.modified = False
+
+    def _write(self, text: str):
         message = f'Writing file: {self.path}'
         log.debug(message)
         log.debug('=' * len(message) + '\n\n' + (text or '<nothing>\n'))
         self.path.parent.mkdir(parents=True, exist_ok=True)
         self.path.write_text(text)
-
-        self.modified = False
