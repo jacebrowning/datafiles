@@ -13,7 +13,7 @@ Custom types can be saved and loaded by extending one of the included converter 
 For example, here is a `datetime` class that serializes using the ISO format:
 
 ```
-#!python hl_lines="6 7 11 12"
+#!python hl_lines="7 12"
 from datafiles import converters, datafile
 
 
@@ -41,7 +41,8 @@ class MyTimestamp:
 
 If you'd rather not have to modify your own classes (or don't have control over the source of a class), you can also register a custom converter for any class:
 
-```python
+```
+#!python hl_lines="9 14"
 from datetime import datetime
 
 from datafiles import converters, datafile
