@@ -47,6 +47,7 @@ def test_extensiion(expect):
     expect(ts.dt.day) == 11
 
 
+@pytest.mark.xfail(bool(os.getenv('CI')), reason="Flaky on CI")
 def test_registration(expect):
 
     converters.register(datetime, MyDateTimeConverter)
