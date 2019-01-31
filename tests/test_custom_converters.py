@@ -1,4 +1,4 @@
-# pylint: disable=arguments-differ,unused-argument
+# pylint: disable=arguments-differ
 
 import os
 from datetime import datetime
@@ -8,28 +8,28 @@ import pytest
 from datafiles import converters, datafile
 
 
-class MyDateTimeConverter(converters.Converter):
-    """A converter to serialize a custom class."""
-
-    @classmethod
-    def to_preserialization_data(cls, python_value, **kwargs):
-        return python_value.isoformat()
-
-    @classmethod
-    def to_python_value(cls, deserialized_data, **kwargs):
-        return MyDateTime.fromisoformat(deserialized_data)
-
-
 class MyDateTime(converters.Converter, datetime):
     """A custom class modified to support serialization."""
 
     @classmethod
-    def to_preserialization_data(cls, python_value, **kwargs):
+    def to_preserialization_data(cls, python_value, **_kwargs):
         return python_value.isoformat()
 
     @classmethod
-    def to_python_value(cls, deserialized_data, **kwargs):
+    def to_python_value(cls, deserialized_data, **_kwargs):
         return MyDateTime.fromisoformat(deserialized_data)
+
+
+class DateTimeConverter(converters.Converter):
+    """A converter to serialize a custom class."""
+
+    @classmethod
+    def to_preserialization_data(cls, python_value, **_kwargs):
+        return python_value.isoformat()
+
+    @classmethod
+    def to_python_value(cls, deserialized_data, **_kwargs):
+        return datetime.fromisoformat(deserialized_data)
 
 
 @pytest.mark.xfail(bool(os.getenv('CI')), reason="Flaky on CI")
@@ -50,7 +50,7 @@ def test_extensiion(expect):
 @pytest.mark.xfail(bool(os.getenv('CI')), reason="Flaky on CI")
 def test_registration(expect):
 
-    converters.register(datetime, MyDateTimeConverter)
+    converters.register(datetime, DateTimeConverter)
 
     @datafile("../tmp/sample.yml")
     class Timestamp:
