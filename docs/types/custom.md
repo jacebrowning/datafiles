@@ -39,7 +39,7 @@ class MyTimestamp:
     my_datetime: MyDateTime = None
 ```
 
-which can be created like so:
+which can be constructed like so:
 
 ```python
 my_timestamp = MyTimestamp(datetime.now())
@@ -91,7 +91,7 @@ class MyTimestamp:
     my_datetime: datetime = None
 ```
 
-which can be created like so:
+which can be constructed like so:
 
 ```python
 my_timestamp = MyTimestamp(datetime.now())
