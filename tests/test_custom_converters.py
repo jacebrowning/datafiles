@@ -5,7 +5,7 @@ from datetime import datetime
 
 import pytest
 
-from datafiles import converters, datafile
+from datafiles import Missing, converters, datafile
 
 
 class MyDateTime(converters.Converter, datetime):
@@ -39,11 +39,28 @@ def test_extensiion(expect):
         dt: MyDateTime
 
     ts = Timestamp(datetime(2019, 1, 29))
-
     expect(ts.datafile.text) == "dt: '2019-01-29T00:00:00'\n"
 
-    ts.datafile.text = "dt: '2019-01-11T00:00:00'\n"
+    ts = Timestamp(Missing)
+    expect(ts.dt) == datetime(2019, 1, 29)
 
+    ts.datafile.text = "dt: '2019-01-11T00:00:00'\n"
+    expect(ts.dt.day) == 11
+
+
+@pytest.mark.xfail(bool(os.getenv('CI')), reason="Flaky on CI")
+def test_extensiion_with_default(expect):
+    @datafile("../tmp/sample.yml")
+    class Timestamp:
+        dt: MyDateTime = None
+
+    ts = Timestamp(datetime(2019, 1, 29))
+    expect(ts.datafile.text) == "dt: '2019-01-29T00:00:00'\n"
+
+    ts = Timestamp()
+    expect(ts.dt) == datetime(2019, 1, 29)
+
+    ts.datafile.text = "dt: '2019-01-11T00:00:00'\n"
     expect(ts.dt.day) == 11
 
 
@@ -57,9 +74,29 @@ def test_registration(expect):
         dt: datetime
 
     ts = Timestamp(datetime(2019, 1, 29))
-
     expect(ts.datafile.text) == "dt: '2019-01-29T00:00:00'\n"
 
-    ts.datafile.text = "dt: '2019-01-22T00:00:00'\n"
+    ts = Timestamp(Missing)
+    expect(ts.dt) == datetime(2019, 1, 29)
 
+    ts.datafile.text = "dt: '2019-01-22T00:00:00'\n"
+    expect(ts.dt.day) == 22
+
+
+@pytest.mark.xfail(bool(os.getenv('CI')), reason="Flaky on CI")
+def test_registration_with_default(expect):
+
+    converters.register(datetime, DateTimeConverter)
+
+    @datafile("../tmp/sample.yml")
+    class Timestamp:
+        dt: datetime = None
+
+    ts = Timestamp(datetime(2019, 1, 29))
+    expect(ts.datafile.text) == "dt: '2019-01-29T00:00:00'\n"
+
+    ts = Timestamp()
+    expect(ts.dt) == datetime(2019, 1, 29)
+
+    ts.datafile.text = "dt: '2019-01-22T00:00:00'\n"
     expect(ts.dt.day) == 22

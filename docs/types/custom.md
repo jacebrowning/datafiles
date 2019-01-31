@@ -10,10 +10,12 @@ Custom types can be saved and loaded by extending one of the included converter 
 | `converters.Float` | Converts to `float` before serialization. |
 | `converters.String` | Converts to `str` before serialization. |
 
-For example, here is a `datetime` class that serializes using the ISO format:
+For example, here is a custom `datetime` class that serializes using the ISO format:
 
 ```
-#!python hl_lines="7 12"
+#!python hl_lines="9 14"
+from datetime import datetime
+
 from datafiles import converters, datafile
 
 
@@ -34,7 +36,27 @@ class MyDateTime(converters.Converter, datetime):
 
 @datafile("sample.yml")
 class MyTimestamp:
-    my_datetime: MyDateTime
+    my_datetime: MyDateTime = None
+```
+
+which can be created like so:
+
+```python
+my_timestamp = MyTimestamp(datetime.now())
+```
+
+to save this `sample.yml` file:
+
+```yaml
+my_datetime: 2019-01-30T23:17:45
+```
+
+that can be loaded as follows:
+
+```python
+>>> my_timestamp = MyTimestamp()
+>>> my_timestamp.my_datetime
+datetime.datetime(2019, 1, 30, 23, 17, 45)
 ```
 
 # Registration
@@ -48,7 +70,7 @@ from datetime import datetime
 from datafiles import converters, datafile
 
 
-class DateTimeConverter(converters.String):
+class DateTimeConverter(converters.Converter):
 
     @classmethod
     def to_preserialization_data(cls, python_value, **kwargs):
@@ -66,5 +88,25 @@ converters.register(datetime, DateTimeConverter)
 
 @datafile("sample.yml")
 class MyTimestamp:
-    my_datetime: datetime
+    my_datetime: datetime = None
+```
+
+which can be created like so:
+
+```python
+my_timestamp = MyTimestamp(datetime.now())
+```
+
+to save this `sample.yml` file:
+
+```yaml
+my_datetime: 2019-01-30T23:18:30
+```
+
+that can be loaded as follows:
+
+```python
+>>> my_timestamp = MyTimestamp()
+>>> my_timestamp.my_datetime
+datetime.datetime(2019, 1, 30, 23, 18, 30)
 ```
