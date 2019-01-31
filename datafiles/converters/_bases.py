@@ -2,8 +2,6 @@
 
 from typing import Any
 
-from ..utils import Missing
-
 
 class Converter:
     """Base class for immutable attribute conversion."""
@@ -23,7 +21,7 @@ class Converter:
         return cls.to_preserialization_data(deserialized_data)
 
     @classmethod
-    def to_preserialization_data(cls, python_value, *, default_to_skip=Missing):
+    def to_preserialization_data(cls, python_value, *, default_to_skip=None):
         if python_value is None:
             return cls.DEFAULT
         assert cls.TYPE is not object, f"'TYPE' must be set on {cls}"

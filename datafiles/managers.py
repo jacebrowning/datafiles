@@ -11,10 +11,11 @@ from cached_property import cached_property
 
 from . import formats, hooks
 from .converters import List
-from .utils import Missing, prettify
+from .utils import prettify
 
 
 Trilean = Optional[bool]
+Missing = dataclasses._MISSING_TYPE  # pylint: disable=protected-access
 
 
 class ModelManager:

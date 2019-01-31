@@ -1,9 +1,9 @@
 from collections.abc import Iterable
+from contextlib import suppress
 from typing import Dict
 
 import log
 
-from ..utils import Missing
 from ._bases import Converter
 
 
@@ -52,7 +52,7 @@ class List(Converter):
         return value
 
     @classmethod
-    def to_preserialization_data(cls, python_value, *, default_to_skip=Missing):
+    def to_preserialization_data(cls, python_value, *, default_to_skip=None):
         data = []
 
         convert = cls.CONVERTER.to_preserialization_data
@@ -63,20 +63,18 @@ class List(Converter):
         elif isinstance(python_value, Iterable):
 
             if isinstance(python_value, str):
-                data.append(convert(python_value, default_to_skip=Missing))
+                data.append(convert(python_value, default_to_skip=None))
 
             elif isinstance(python_value, set):
                 data.extend(
-                    sorted(
-                        convert(item, default_to_skip=Missing) for item in python_value
-                    )
+                    sorted(convert(item, default_to_skip=None) for item in python_value)
                 )
 
             else:
                 for item in python_value:
-                    data.append(convert(item, default_to_skip=Missing))
+                    data.append(convert(item, default_to_skip=None))
         else:
-            data.append(convert(python_value, default_to_skip=Missing))
+            data.append(convert(python_value, default_to_skip=None))
 
         if data == default_to_skip:
             data.clear()
@@ -110,7 +108,7 @@ class Dictionary(Converter):
         return value
 
     @classmethod
-    def to_preserialization_data(cls, python_value, *, default_to_skip=Missing):
+    def to_preserialization_data(cls, python_value, *, default_to_skip=None):
         data = dict(python_value)
 
         if data == default_to_skip:
@@ -154,7 +152,7 @@ class Object(Converter):
         return value
 
     @classmethod
-    def to_preserialization_data(cls, python_value, *, default_to_skip=Missing):
+    def to_preserialization_data(cls, python_value, *, default_to_skip=None):
         data = {}
 
         for name, converter in cls.CONVERTERS.items():
@@ -172,7 +170,7 @@ class Object(Converter):
                     log.debug(e)
                     value = None
 
-            if default_to_skip is not Missing:
+            with suppress(AttributeError):
                 if value == getattr(default_to_skip, name):
                     log.debug(f"Skipped default value for '{name}' attribute")
                     continue
