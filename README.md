@@ -78,6 +78,17 @@ quantity_on_hand: 100
 2.5
 ```
 
+Restore an object from the filesystem:
+
+```python
+from datafiles import Missing
+
+item = InventoryItem("widget", Missing)
+
+assert item.unit_price == 2.5
+assert item.quantity_on_hand == 100
+```
+
 Demo: [Jupyter Notebook](https://github.com/jacebrowning/datafiles/blob/develop/notebooks/readme.ipynb)
 
 ## Installation

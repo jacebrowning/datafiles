@@ -47,3 +47,12 @@ produces `samples/42.yml` containing:
 ```yaml
 name: Widget
 ```
+
+and the following instantiation restores the object:
+
+```python
+>>> from datafiles import Missing
+>>> sample = Sample(42, Missing)
+>>> sample.name
+Widget
+```
