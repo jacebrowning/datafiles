@@ -1,0 +1,86 @@
+import dataclasses
+from inspect import isclass
+from typing import Any, Dict, Union
+
+import log
+
+from ..utils import cached
+from ._bases import Converter
+from .builtins import Boolean, Float, Integer, String
+from .containers import Dictionary, List, Object
+from .extensions import *  # pylint: disable=unused-wildcard-import
+
+
+_REGISTRY: Dict[type, type] = {
+    Integer.TYPE: Integer,
+    Float.TYPE: Float,
+    String.TYPE: String,
+    Boolean.TYPE: Boolean,
+}
+
+
+def register(cls: type, converter: type):
+    _REGISTRY[cls] = converter
+
+
+@cached
+def map_type(cls, *, name=''):
+    """Infer the converter type from a dataclass, type, or annotation."""
+    if name:
+        log.debug(f'Mapping {name!r} of {cls!r} to converter')
+    else:
+        log.debug(f'Mapping {cls!r} to converter')
+
+    if cls in _REGISTRY:
+        converter: Any = _REGISTRY[cls]
+        log.debug(f'Mapped {cls!r} to existing converter: {converter}')
+        return converter
+
+    if dataclasses.is_dataclass(cls):
+        converters = {}
+        for field in dataclasses.fields(cls):
+            converters[field.name] = map_type(field.type, name=field.name)
+        converter = Object.subclass(cls, converters)
+        log.debug(f'Mapped {cls!r} to new converter: {converter}')
+        return converter
+
+    if hasattr(cls, '__origin__'):
+        converter = None
+
+        if cls.__origin__ == list:
+            try:
+                converter = map_type(cls.__args__[0])
+            except TypeError as e:
+                if '~T' in str(e):
+                    e = TypeError(f"Type is required with 'List' annotation")
+                raise e from None
+            else:
+                converter = List.subclass(converter)
+
+        if cls.__origin__ == dict:
+            log.warn("Schema enforcement not possible with 'Dict' annotation")
+            key = map_type(cls.__args__[0])
+            value = map_type(cls.__args__[1])
+
+            converter = Dictionary.subclass(key, value)
+
+        elif cls.__origin__ == Union:
+            converter = map_type(cls.__args__[0])
+            assert len(cls.__args__) == 2
+            assert cls.__args__[1] == type(None)
+            converter = converter.as_optional()
+
+        if converter:
+            log.debug(f'Mapped {cls!r} to new converter: {converter}')
+            return converter
+
+        raise TypeError(f'Unsupported container type: {cls.__origin__}')
+
+    if not isclass(cls):
+        raise TypeError(f'Annotation is not a type: {cls!r}')
+
+    if issubclass(cls, Converter):
+        log.debug(f'Mapped {cls!r} to existing converter (itself)')
+        return cls
+
+    raise TypeError(f'Could not map type: {cls}')

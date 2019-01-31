@@ -1,4 +1,4 @@
-__version__ = '0.0.0'
+# pylint: disable=unused-import
 
 from dataclasses import field
 

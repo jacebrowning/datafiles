@@ -139,7 +139,7 @@ class InstanceManager:
 
                 data[name] = converter.to_preserialization_data(
                     value,
-                    skip=Missing
+                    default_to_skip=Missing
                     if include_default_values
                     else self._get_default_field_value(name),
                 )
@@ -214,7 +214,7 @@ class InstanceManager:
             for field in dataclasses.fields(converter.DATACLASS):
                 if field.name not in nested_data:  # type: ignore
                     nested_data[field.name] = None  # type: ignore
-            dataclass = converter.to_python_value(nested_data, target=dataclass)
+            dataclass = converter.to_python_value(nested_data, target_object=dataclass)
 
         # TODO: Find a way to avoid this circular import
         try:
@@ -231,7 +231,9 @@ class InstanceManager:
                 name2,
                 datafile._get_default_field_value(name2),
             )
-            value = converter2.to_python_value(_value, target=getattr(dataclass, name2))
+            value = converter2.to_python_value(
+                _value, target_object=getattr(dataclass, name2)
+            )
             log.debug(f"'{name2}' as Python: {value!r}")
             setattr(dataclass, name2, value)
 
@@ -257,11 +259,13 @@ class InstanceManager:
 
         if file_value is Missing:
             if default_value is Missing:
-                value = converter.to_python_value(None, target=init_value)
+                value = converter.to_python_value(None, target_object=init_value)
             else:
-                value = converter.to_python_value(default_value, target=init_value)
+                value = converter.to_python_value(
+                    default_value, target_object=init_value
+                )
         else:
-            value = converter.to_python_value(file_value, target=init_value)
+            value = converter.to_python_value(file_value, target_object=init_value)
 
         log.debug(f"Setting '{name}' value: {value!r}")
         setattr(self._instance, name, value)
