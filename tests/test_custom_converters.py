@@ -33,7 +33,7 @@ class DateTimeConverter(converters.Converter):
 
 
 @pytest.mark.xfail(bool(os.getenv('CI')), reason="Flaky on CI")
-def test_extensiion(expect):
+def test_extension(expect):
     @datafile("../tmp/sample.yml")
     class Timestamp:
         dt: MyDateTime
@@ -49,7 +49,7 @@ def test_extensiion(expect):
 
 
 @pytest.mark.xfail(bool(os.getenv('CI')), reason="Flaky on CI")
-def test_extensiion_with_default(expect):
+def test_extension_with_default(expect):
     @datafile("../tmp/sample.yml")
     class Timestamp:
         dt: MyDateTime = None
