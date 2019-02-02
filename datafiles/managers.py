@@ -205,8 +205,9 @@ class InstanceManager:
 
             for name, value in data.items():
                 if name not in self.attrs and self.auto_attr:
-                    log.debug(f'Inferring {name!r} type')
-                    self.attrs[name] = map_type(type(value))
+                    cls = type(value)
+                    log.debug(f'Inferring {name!r} type: {cls}')
+                    self.attrs[name] = map_type(cls)
 
             for name, converter in self.attrs.items():
                 log.debug(f"Converting '{name}' data with {converter}")

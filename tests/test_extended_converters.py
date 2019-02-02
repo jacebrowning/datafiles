@@ -2,7 +2,6 @@
 
 # pylint: disable=unused-variable
 
-import os
 
 import pytest
 
@@ -38,7 +37,7 @@ def describe_number():
             """
         )
 
-    @pytest.mark.xfail(bool(os.getenv('CI')), reason="Flaky on CI")
+    @pytest.mark.flaky
     def with_integer_to_float(sample, write, expect):
         write(
             'tmp/sample.yml',
@@ -73,7 +72,7 @@ def describe_text():
             """
         )
 
-    @pytest.mark.xfail(bool(os.getenv('CI')), reason="Flaky on CI")
+    @pytest.mark.flaky
     def with_multiple_lines(sample, expect, read, dedent, write):
         sample.text = '\n'.join(f'Line {i+1}' for i in range(3))
 
