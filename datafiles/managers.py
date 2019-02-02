@@ -207,8 +207,19 @@ class InstanceManager:
                 if name not in self.attrs and self.auto_attr:
                     cls: Any = type(value)
                     if issubclass(cls, list):
-                        item_cls = type(value[0]) if value else Converter
                         cls.__origin__ = list
+
+                        if value:
+                            item_cls = type(value[0])
+                            for item in value:
+                                if not isinstance(item, item_cls):
+                                    log.warn(f'{name!r} list type cannot be inferred')
+                                    item_cls = Converter
+                                    break
+                        else:
+                            log.warn(f'{name!r} list type cannot be inferred')
+                            item_cls = Converter
+
                         log.debug(f'Inferring {name!r} type: {cls} of {item_cls}')
                         self.attrs[name] = map_type(cls, name=name, item_cls=item_cls)
                     else:

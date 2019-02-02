@@ -28,21 +28,6 @@ def describe_automatic_attributes():
         expect(sample.count) == 4
 
     @pytest.mark.flaky
-    def with_homogeneous_list(expect, logbreak):
-        sample = Sample('abc')
-
-        sample.datafile.text = "int_items: [1, 2]"
-
-        logbreak("Getting attribute")
-        expect(sample.int_items) == [1, 2]
-
-        logbreak("Setting attribute")
-        sample.int_items.append(3.2)
-
-        logbreak("Getting attribute")
-        expect(sample.int_items) == [1, 2, 3]
-
-    @pytest.mark.flaky
     def with_empty_list(expect, logbreak):
         sample = Sample('abc')
 
@@ -57,3 +42,33 @@ def describe_automatic_attributes():
 
         logbreak("Getting attribute")
         expect(sample.empty_items) == [4.2, "abc"]
+
+    @pytest.mark.flaky
+    def with_homogeneous_list(expect, logbreak):
+        sample = Sample('abc')
+
+        sample.datafile.text = "same_items: [1, 2]"
+
+        logbreak("Getting attribute")
+        expect(sample.same_items) == [1, 2]
+
+        logbreak("Setting attribute")
+        sample.same_items.append(3.2)
+
+        logbreak("Getting attribute")
+        expect(sample.same_items) == [1, 2, 3]
+
+    @pytest.mark.flaky
+    def with_heterogeneous_list(expect, logbreak):
+        sample = Sample('abc')
+
+        sample.datafile.text = "mixed_items: [1, 'abc']"
+
+        logbreak("Getting attribute")
+        expect(sample.mixed_items) == [1, "abc"]
+
+        logbreak("Setting attribute")
+        sample.mixed_items.append(3.2)
+
+        logbreak("Getting attribute")
+        expect(sample.mixed_items) == [1, "abc", 3.2]
