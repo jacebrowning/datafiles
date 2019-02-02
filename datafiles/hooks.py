@@ -5,6 +5,7 @@ from functools import wraps
 import log
 
 from . import settings
+from .builders import build_datafile
 
 
 LOAD_BEFORE_METHODS = ['__getattribute__', '__getitem__', '__iter__']
@@ -34,7 +35,7 @@ class Dict(dict):
     """Patchable `dict` type."""
 
 
-def apply(instance, datafile, build_datafile):
+def apply(instance, datafile):
     """Path methods that get or set attributes."""
     cls = instance.__class__
     log.debug(f'Patching methods on {cls}')
@@ -65,7 +66,7 @@ def apply(instance, datafile, build_datafile):
                 else:
                     continue
             attr.datafile = build_datafile(attr, root=datafile)
-            apply(attr, datafile, build_datafile)
+            apply(attr, datafile)
 
 
 def load_before(cls, method):

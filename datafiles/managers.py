@@ -245,7 +245,7 @@ class InstanceManager:
         try:
             datafile = dataclass.datafile
         except AttributeError:
-            from .models import build_datafile
+            from .builders import build_datafile
 
             log.warn(f"{dataclass} has not yet been patched to have 'datafile'")
             datafile = build_datafile(dataclass)
@@ -294,10 +294,7 @@ class InstanceManager:
 
         log.debug(f"Setting '{name}' value: {value!r}")
         setattr(self._instance, name, value)
-        # TODO: Do this elsewhere?
-        from .models import build_datafile
-
-        hooks.apply(self._instance, self, build_datafile)
+        hooks.apply(self._instance, self)
 
     def _get_default_field_value(self, name):
         for field in dataclasses.fields(self._instance):
