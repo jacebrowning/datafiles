@@ -205,8 +205,14 @@ class InstanceManager:
 
             for name, value in data.items():
                 if name not in self.attrs and self.auto_attr:
-                    cls = type(value)
-                    log.debug(f'Inferring {name!r} type: {cls}')
+                    cls: Any = type(value)
+                    if issubclass(cls, list):
+                        item_cls = type(value[0])
+                        cls.__origin__ = list
+                        cls.__args__ = [item_cls]
+                        log.debug(f'Inferring {name!r} type: {cls} of {item_cls}')
+                    else:
+                        log.debug(f'Inferring {name!r} type: {cls}')
                     self.attrs[name] = map_type(cls)
 
             for name, converter in self.attrs.items():
@@ -261,7 +267,7 @@ class InstanceManager:
 
     def _set_attribute_value(self, data, name, converter, first_load):
         file_value = data.get(name, Missing)
-        init_value = getattr(self._instance, name, Missing)
+        init_value = getattr(self._instance, name, None)
         default_value = self._get_default_field_value(name)
 
         if first_load:
@@ -288,6 +294,10 @@ class InstanceManager:
 
         log.debug(f"Setting '{name}' value: {value!r}")
         setattr(self._instance, name, value)
+        # TODO: Do this elsewhere?
+        from .models import build_datafile
+
+        hooks.apply(self._instance, self, build_datafile)
 
     def _get_default_field_value(self, name):
         for field in dataclasses.fields(self._instance):

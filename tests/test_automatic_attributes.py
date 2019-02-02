@@ -27,17 +27,17 @@ def describe_automatic_attributes():
         logbreak("Getting attribute")
         expect(sample.count) == 4
 
-    # @pytest.mark.flaky
-    # def with_homogeneous_list(expect, logbreak):
-    #     sample = Sample('abc')
+    @pytest.mark.flaky
+    def with_homogeneous_list(expect, logbreak):
+        sample = Sample('abc')
 
-    #     sample.datafile.text = "items: [1, 2]"
+        sample.datafile.text = "items: [1, 2]"
 
-    #     logbreak("Getting attribute")
-    #     expect(sample.items) == [1, 2]
+        logbreak("Getting attribute")
+        expect(sample.items) == [1, 2]
 
-    #     logbreak("Setting attribute")
-    #     sample.items.append = [3.2]
+        logbreak("Setting attribute")
+        sample.items.append(3.2)
 
-    #     logbreak("Getting attribute")
-    #     expect(sample.items) == [1, 2, 3]
+        logbreak("Getting attribute")
+        expect(sample.items) == [1, 2, 3]
