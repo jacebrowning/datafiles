@@ -1,6 +1,6 @@
 import dataclasses
 from inspect import isclass
-from typing import Any, Dict, Union
+from typing import Any, Dict, Optional, Union
 
 import log
 
@@ -24,7 +24,7 @@ def register(cls: type, converter: type):
 
 
 @cached
-def map_type(cls, *, name=''):
+def map_type(cls, *, name: str = '', item_cls: Optional[type] = None):
     """Infer the converter type from a dataclass, type, or annotation."""
     if name:
         log.debug(f'Mapping {name!r} of {cls!r} to converter')
@@ -49,7 +49,7 @@ def map_type(cls, *, name=''):
 
         if cls.__origin__ == list:
             try:
-                converter = map_type(cls.__args__[0])
+                converter = map_type(item_cls or cls.__args__[0])
             except TypeError as e:
                 if '~T' in str(e):
                     e = TypeError(f"Type is required with 'List' annotation")

@@ -24,5 +24,8 @@ class Converter:
     def to_preserialization_data(cls, python_value, *, default_to_skip=None):
         if python_value is None:
             return cls.DEFAULT
-        assert cls.TYPE is not object, f"'TYPE' must be set on {cls}"
+
+        if cls.TYPE is object:
+            return python_value
+
         return cls.TYPE(python_value)

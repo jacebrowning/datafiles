@@ -10,7 +10,7 @@ import log
 from cached_property import cached_property
 
 from . import formats, hooks
-from .converters import List, map_type
+from .converters import Converter, List, map_type
 from .utils import prettify
 
 
@@ -207,13 +207,13 @@ class InstanceManager:
                 if name not in self.attrs and self.auto_attr:
                     cls: Any = type(value)
                     if issubclass(cls, list):
-                        item_cls = type(value[0])
+                        item_cls = type(value[0]) if value else Converter
                         cls.__origin__ = list
-                        cls.__args__ = [item_cls]
                         log.debug(f'Inferring {name!r} type: {cls} of {item_cls}')
+                        self.attrs[name] = map_type(cls, name=name, item_cls=item_cls)
                     else:
                         log.debug(f'Inferring {name!r} type: {cls}')
-                    self.attrs[name] = map_type(cls)
+                        self.attrs[name] = map_type(cls, name=name)
 
             for name, converter in self.attrs.items():
                 log.debug(f"Converting '{name}' data with {converter}")

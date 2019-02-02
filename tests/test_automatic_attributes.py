@@ -31,13 +31,29 @@ def describe_automatic_attributes():
     def with_homogeneous_list(expect, logbreak):
         sample = Sample('abc')
 
-        sample.datafile.text = "items: [1, 2]"
+        sample.datafile.text = "int_items: [1, 2]"
 
         logbreak("Getting attribute")
-        expect(sample.items) == [1, 2]
+        expect(sample.int_items) == [1, 2]
 
         logbreak("Setting attribute")
-        sample.items.append(3.2)
+        sample.int_items.append(3.2)
 
         logbreak("Getting attribute")
-        expect(sample.items) == [1, 2, 3]
+        expect(sample.int_items) == [1, 2, 3]
+
+    @pytest.mark.flaky
+    def with_empty_list(expect, logbreak):
+        sample = Sample('abc')
+
+        sample.datafile.text = "empty_items: []"
+
+        logbreak("Getting attribute")
+        expect(sample.empty_items) == []
+
+        logbreak("Setting attribute")
+        sample.empty_items.append(4.2)
+        sample.empty_items.append("abc")
+
+        logbreak("Getting attribute")
+        expect(sample.empty_items) == [4.2, "abc"]
