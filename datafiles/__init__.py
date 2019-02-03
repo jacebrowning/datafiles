@@ -3,6 +3,6 @@
 from dataclasses import field
 
 from . import converters
-from .decorators import datafile
+from .decorators import auto, datafile
 from .managers import Missing
 from .models import Model

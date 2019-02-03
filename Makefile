@@ -24,7 +24,7 @@ watch: install  ## Continuously run all CI tasks when files chanage
 
 .PHONY: demo
 demo: install
-	poetry run jupyter notebook --notebook-dir=notebooks
+	poetry run jupyter notebook --notebook-dir=notebooks --browser=firefox
 
 # SYSTEM DEPENDENCIES #########################################################
 

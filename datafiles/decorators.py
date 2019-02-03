@@ -1,4 +1,5 @@
 import dataclasses
+from pathlib import Path
 from typing import Dict, Optional
 
 from .converters import Converter
@@ -34,3 +35,12 @@ def datafile(
         )
 
     return decorator
+
+
+def auto(path: str, **kwargs):
+    kwargs['auto_attr'] = True
+
+    name = Path(path).stem
+    cls = type(name, (), {})
+
+    return datafile(path, **kwargs)(cls)()

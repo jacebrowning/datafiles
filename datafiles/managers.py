@@ -197,7 +197,7 @@ class InstanceManager:
         data = formats.deserialize(self.path, self.path.suffix)
         self._last_data = data
 
-        message = f'Read data from file: {self.path}'
+        message = f'Data from file: {self.path}'
         log.debug(message)
         log.debug('=' * len(message) + '\n\n' + prettify(data) + '\n')
 

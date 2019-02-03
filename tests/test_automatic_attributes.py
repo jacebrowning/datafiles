@@ -11,7 +11,7 @@ class Sample:
     name: str
 
 
-def describe_automatic_attributes():
+def describe_auto_attr():
     @pytest.mark.flaky
     def with_builtin(expect, logbreak):
         sample = Sample('abc')
