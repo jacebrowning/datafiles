@@ -37,10 +37,11 @@ def datafile(
     return decorator
 
 
-def auto(path: str, **kwargs):
+def auto(filename: str, **kwargs):
     kwargs['auto_attr'] = True
 
-    name = Path(path).stem
-    cls = type(name, (), {})
+    path = Path.cwd() / filename
 
-    return datafile(path, **kwargs)(cls)()
+    cls = type(path.stem, (), {})
+
+    return datafile(str(path), **kwargs)(cls)()

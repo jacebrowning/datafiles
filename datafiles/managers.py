@@ -234,6 +234,8 @@ class InstanceManager:
                 else:
                     self._set_attribute_value(data, name, converter, _first)
 
+            hooks.apply(self._instance, self)
+
         self.modified = False
 
     def _set_dataclass_value(self, data, name, converter):
@@ -305,7 +307,6 @@ class InstanceManager:
 
         log.debug(f"Setting '{name}' value: {value!r}")
         setattr(self._instance, name, value)
-        hooks.apply(self._instance, self)
 
     def _get_default_field_value(self, name):
         for field in dataclasses.fields(self._instance):

@@ -21,7 +21,7 @@ def test_auto(write, logbreak, expect):
     )
 
     logbreak("Inferring object")
-    sample = auto('../tmp/sample.yml')
+    sample = auto('tmp/sample.yml')
 
     logbreak("Reading attributes")
     expect(sample.homogeneous_list) == [1, 2]
