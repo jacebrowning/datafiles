@@ -11,10 +11,9 @@ def describe_apply():
     def it_can_be_called_twice(mocker):
         instance = Sample()
         setattr(instance, 'datafile', mocker.Mock())
-        get_datafile = mocker.Mock()
 
-        hooks.apply(instance, None, get_datafile)
-        hooks.apply(instance, None, get_datafile)
+        hooks.apply(instance, None)
+        hooks.apply(instance, None)
 
 
 def describe_disabled():

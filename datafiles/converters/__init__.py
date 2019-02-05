@@ -1,6 +1,6 @@
 import dataclasses
 from inspect import isclass
-from typing import Any, Dict, Union
+from typing import Any, Dict, Optional, Union
 
 import log
 
@@ -24,7 +24,7 @@ def register(cls: type, converter: type):
 
 
 @cached
-def map_type(cls, *, name=''):
+def map_type(cls, *, name: str = '', item_cls: Optional[type] = None):
     """Infer the converter type from a dataclass, type, or annotation."""
     if name:
         log.debug(f'Mapping {name!r} of {cls!r} to converter')
@@ -49,7 +49,7 @@ def map_type(cls, *, name=''):
 
         if cls.__origin__ == list:
             try:
-                converter = map_type(cls.__args__[0])
+                converter = map_type(item_cls or cls.__args__[0])
             except TypeError as e:
                 if '~T' in str(e):
                     e = TypeError(f"Type is required with 'List' annotation")
@@ -58,9 +58,13 @@ def map_type(cls, *, name=''):
                 converter = List.subclass(converter)
 
         if cls.__origin__ == dict:
-            log.warn("Schema enforcement not possible with 'Dict' annotation")
-            key = map_type(cls.__args__[0])
-            value = map_type(cls.__args__[1])
+            if item_cls:
+                key = map_type(str)
+                value = map_type(item_cls)
+            else:
+                log.warn("Schema enforcement not possible with 'Dict' annotation")
+                key = map_type(cls.__args__[0])
+                value = map_type(cls.__args__[1])
 
             converter = Dictionary.subclass(key, value)
 

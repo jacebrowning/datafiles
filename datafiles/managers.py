@@ -10,7 +10,7 @@ import log
 from cached_property import cached_property
 
 from . import formats, hooks
-from .converters import List
+from .converters import Converter, List, map_type
 from .utils import prettify
 
 
@@ -37,6 +37,7 @@ class InstanceManager:
         defaults: bool,
         auto_load: bool,
         auto_save: bool,
+        auto_attr: bool,
         root: Optional[InstanceManager] = None,
     ) -> None:
         assert manual is not None
@@ -48,6 +49,7 @@ class InstanceManager:
         self.defaults = defaults
         self._auto_load = auto_load
         self._auto_save = auto_save
+        self._auto_attr = auto_attr
         self._last_load = 0.0
         self._last_data: Dict = {}
         self._root = root
@@ -109,6 +111,10 @@ class InstanceManager:
         return self._root.auto_save if self._root else self._auto_save
 
     @property
+    def auto_attr(self) -> bool:
+        return self._root.auto_attr if self._root else self._auto_attr
+
+    @property
     def data(self) -> Dict:
         return self._get_data()
 
@@ -117,7 +123,11 @@ class InstanceManager:
         if include_default_values is None:
             include_default_values = self.defaults
 
-        self._last_data.update(dataclasses.asdict(self._instance))
+        if self.auto_attr:
+            self._last_data.update(self._instance.__dict__)
+        else:
+            self._last_data.update(dataclasses.asdict(self._instance))
+
         data = self._last_data
 
         for name in list(data.keys()):
@@ -171,7 +181,7 @@ class InstanceManager:
 
     @text.setter  # type: ignore
     def text(self, value: str):
-        self._write(value)
+        self._write(value.strip() + '\n')
 
     def load(self, *, _log=True, _first=False) -> None:
         if self._root:
@@ -184,13 +194,43 @@ class InstanceManager:
         else:
             raise RuntimeError("'pattern' must be set to load the model")
 
-        message = f'Reading data from file: {self.path}'
-        log.debug(message)
         data = formats.deserialize(self.path, self.path.suffix)
         self._last_data = data
+
+        message = f'Data from file: {self.path}'
+        log.debug(message)
         log.debug('=' * len(message) + '\n\n' + prettify(data) + '\n')
 
         with hooks.disabled():
+
+            for name, value in data.items():
+                if name not in self.attrs and self.auto_attr:
+                    cls: Any = type(value)
+                    if issubclass(cls, list):
+                        cls.__origin__ = list
+
+                        if value:
+                            item_cls = type(value[0])
+                            for item in value:
+                                if not isinstance(item, item_cls):
+                                    log.warn(f'{name!r} list type cannot be inferred')
+                                    item_cls = Converter
+                                    break
+                        else:
+                            log.warn(f'{name!r} list type cannot be inferred')
+                            item_cls = Converter
+
+                        log.debug(f'Inferring {name!r} type: {cls} of {item_cls}')
+                        self.attrs[name] = map_type(cls, name=name, item_cls=item_cls)
+                    elif issubclass(cls, dict):
+                        cls.__origin__ = dict
+
+                        log.debug(f'Inferring {name!r} type: {cls}')
+                        self.attrs[name] = map_type(cls, name=name, item_cls=Converter)
+                    else:
+                        log.debug(f'Inferring {name!r} type: {cls}')
+                        self.attrs[name] = map_type(cls, name=name)
+
             for name, converter in self.attrs.items():
                 log.debug(f"Converting '{name}' data with {converter}")
 
@@ -198,6 +238,8 @@ class InstanceManager:
                     self._set_dataclass_value(data, name, converter)
                 else:
                     self._set_attribute_value(data, name, converter, _first)
+
+            hooks.apply(self._instance, self)
 
         self.modified = False
 
@@ -221,7 +263,7 @@ class InstanceManager:
         try:
             datafile = dataclass.datafile
         except AttributeError:
-            from .models import build_datafile
+            from .builders import build_datafile
 
             log.warn(f"{dataclass} has not yet been patched to have 'datafile'")
             datafile = build_datafile(dataclass)
@@ -243,7 +285,7 @@ class InstanceManager:
 
     def _set_attribute_value(self, data, name, converter, first_load):
         file_value = data.get(name, Missing)
-        init_value = getattr(self._instance, name)
+        init_value = getattr(self._instance, name, Missing)
         default_value = self._get_default_field_value(name)
 
         if first_load:
