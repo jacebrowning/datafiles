@@ -42,6 +42,6 @@ def auto(filename: str, **kwargs):
 
     path = Path.cwd() / filename
 
-    cls = type(path.stem, (), {})
+    cls = type(path.stem.strip('.'), (), {})
 
     return datafile(str(path), **kwargs)(cls)()

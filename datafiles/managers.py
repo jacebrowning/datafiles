@@ -222,6 +222,11 @@ class InstanceManager:
 
                         log.debug(f'Inferring {name!r} type: {cls} of {item_cls}')
                         self.attrs[name] = map_type(cls, name=name, item_cls=item_cls)
+                    elif issubclass(cls, dict):
+                        cls.__origin__ = dict
+
+                        log.debug(f'Inferring {name!r} type: {cls}')
+                        self.attrs[name] = map_type(cls, name=name, item_cls=Converter)
                     else:
                         log.debug(f'Inferring {name!r} type: {cls}')
                         self.attrs[name] = map_type(cls, name=name)
@@ -280,7 +285,7 @@ class InstanceManager:
 
     def _set_attribute_value(self, data, name, converter, first_load):
         file_value = data.get(name, Missing)
-        init_value = getattr(self._instance, name, None)
+        init_value = getattr(self._instance, name, Missing)
         default_value = self._get_default_field_value(name)
 
         if first_load:

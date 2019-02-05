@@ -1,5 +1,6 @@
 from collections.abc import Iterable
 from contextlib import suppress
+from dataclasses import _MISSING_TYPE as Missing
 from typing import Dict
 
 import log
@@ -21,7 +22,7 @@ class List(Converter):
 
     @classmethod
     def to_python_value(cls, deserialized_data, *, target_object):
-        if target_object is None:
+        if target_object is None or target_object is Missing:
             value = []  # type: ignore
         else:
             value = target_object
@@ -98,7 +99,7 @@ class Dictionary(Converter):
         else:
             data = {}
 
-        if target_object is None:
+        if target_object is None or target_object is Missing:
             value = data
         else:
             value = target_object

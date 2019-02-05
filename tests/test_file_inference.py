@@ -27,3 +27,8 @@ def test_auto(write, logbreak, expect):
     expect(sample.homogeneous_list) == [1, 2]
     expect(sample.heterogeneous_list) == [1, 'abc']
     expect(sample.empty_list) == []
+
+
+def test_auto_travis(expect):
+    travis = auto('.travis.yml')
+    expect(travis.language) == 'python'

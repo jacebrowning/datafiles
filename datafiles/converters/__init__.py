@@ -58,9 +58,13 @@ def map_type(cls, *, name: str = '', item_cls: Optional[type] = None):
                 converter = List.subclass(converter)
 
         if cls.__origin__ == dict:
-            log.warn("Schema enforcement not possible with 'Dict' annotation")
-            key = map_type(cls.__args__[0])
-            value = map_type(cls.__args__[1])
+            if item_cls:
+                key = map_type(str)
+                value = map_type(item_cls)
+            else:
+                log.warn("Schema enforcement not possible with 'Dict' annotation")
+                key = map_type(cls.__args__[0])
+                value = map_type(cls.__args__[1])
 
             converter = Dictionary.subclass(key, value)
 

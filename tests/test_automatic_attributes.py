@@ -72,3 +72,18 @@ def describe_auto_attr():
 
         logbreak("Getting attribute")
         expect(sample.mixed_items) == [1, "abc", 3.2]
+
+    @pytest.mark.flaky
+    def with_dict(expect, logbreak):
+        sample = Sample('abc')
+
+        sample.datafile.text = "data: {'a': 1}"
+
+        logbreak("Getting attribute")
+        expect(sample.data) == {'a': 1}
+
+        logbreak("Setting attribute")
+        sample.data['b'] = 2.3
+
+        logbreak("Getting attribute")
+        expect(sample.data) == {'a': 1, 'b': 2.3}
