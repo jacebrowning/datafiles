@@ -57,7 +57,7 @@ def map_type(cls, *, name: str = '', item_cls: Optional[type] = None):
             else:
                 converter = List.subclass(converter)
 
-        if cls.__origin__ == dict:
+        elif cls.__origin__ == dict:
             if item_cls:
                 key = map_type(str)
                 value = map_type(item_cls)
