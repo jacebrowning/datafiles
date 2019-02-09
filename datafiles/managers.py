@@ -18,7 +18,7 @@ Trilean = Optional[bool]
 Missing = dataclasses._MISSING_TYPE  # pylint: disable=protected-access
 
 
-class ModelManager:
+class Manager:
     def __init__(self, cls):
         self.model = cls
 
@@ -26,7 +26,7 @@ class ModelManager:
         raise NotImplementedError
 
 
-class InstanceManager:
+class Datafile:
     def __init__(
         self,
         instance: Any,
@@ -38,7 +38,7 @@ class InstanceManager:
         auto_load: bool,
         auto_save: bool,
         auto_attr: bool,
-        root: Optional[InstanceManager] = None,
+        root: Optional[Datafile] = None,
     ) -> None:
         assert manual is not None
         assert defaults is not None

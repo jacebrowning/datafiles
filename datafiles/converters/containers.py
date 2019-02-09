@@ -118,7 +118,7 @@ class Dictionary(Converter):
         return data
 
 
-class Object(Converter):
+class Dataclass(Converter):
     """Base converter for dataclasses."""
 
     DATACLASS = None

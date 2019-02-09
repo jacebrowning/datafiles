@@ -3,11 +3,11 @@ import dataclasses
 import log
 
 from .converters import map_type
-from .managers import InstanceManager
+from .managers import Datafile
 from .meta import ModelMeta
 
 
-def build_datafile(obj, root=None) -> InstanceManager:
+def build_datafile(obj, root=None) -> Datafile:
     try:
         return object.__getattribute__(obj, 'datafile')
     except AttributeError:
@@ -30,7 +30,7 @@ def build_datafile(obj, root=None) -> InstanceManager:
             if pattern is None or self_name not in pattern:
                 attrs[field.name] = map_type(field.type, name=field.name)
 
-    return InstanceManager(
+    return Datafile(
         obj,
         attrs=attrs,
         pattern=pattern,

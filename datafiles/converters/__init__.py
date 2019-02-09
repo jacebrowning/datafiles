@@ -7,7 +7,7 @@ import log
 from ..utils import cached
 from ._bases import Converter
 from .builtins import Boolean, Float, Integer, String
-from .containers import Dictionary, List, Object
+from .containers import Dataclass, Dictionary, List
 from .extensions import *  # pylint: disable=unused-wildcard-import
 
 
@@ -40,7 +40,7 @@ def map_type(cls, *, name: str = '', item_cls: Optional[type] = None):
         converters = {}
         for field in dataclasses.fields(cls):
             converters[field.name] = map_type(field.type, name=field.name)
-        converter = Object.subclass(cls, converters)
+        converter = Dataclass.subclass(cls, converters)
         log.debug(f'Mapped {cls!r} to new converter: {converter}')
         return converter
 

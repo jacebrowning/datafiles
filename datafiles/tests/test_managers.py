@@ -23,7 +23,7 @@ class MyField:
 def describe_instance_manager():
     @pytest.fixture
     def manager():
-        return managers.InstanceManager(
+        return managers.Datafile(
             instance=MyModel(foobar=42),
             attrs={},
             pattern=None,

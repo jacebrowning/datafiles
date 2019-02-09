@@ -5,7 +5,7 @@ from classproperties import classproperty
 
 from . import hooks
 from .builders import build_datafile
-from .managers import ModelManager
+from .managers import Manager
 from .meta import ModelMeta
 
 
@@ -36,8 +36,8 @@ class Model:
         log.debug(f'Initialized {self.__class__} object')
 
     @classproperty
-    def datafiles(cls) -> ModelManager:  # pylint: disable=no-self-argument
-        return ModelManager(cls)
+    def datafiles(cls) -> Manager:  # pylint: disable=no-self-argument
+        return Manager(cls)
 
 
 def create_model(
