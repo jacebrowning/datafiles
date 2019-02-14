@@ -206,6 +206,27 @@ def describe_nesting():
         expect(sample.nested.name) == 'bar'
         expect(sample.nested.score) == 8.0
 
+    def with_extra_attributes(write, sample, expect):
+        write(
+            'tmp/sample.yml',
+            """
+            name: 'a'
+            score: 1.2
+            nested:
+              name: 'b'
+              score: 3.4
+              extra: 5
+            """,
+        )
+
+        sample.datafile.load()
+
+        expect(sample.name) == 'a'
+        expect(sample.score) == 1.2
+        expect(sample.nested.name) == 'b'
+        expect(sample.nested.score) == 3.4
+        expect(hasattr(sample.nested, 'extra')) == False
+
 
 def describe_lists():
     def with_matching_types(write, expect):

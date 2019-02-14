@@ -138,6 +138,11 @@ class Dataclass(Converter):
         else:
             data = {}
 
+        for name, value in data.items():
+            if name not in cls.CONVERTERS:
+                log.debug(f'Removed unmapped nested file attribute: {name}')
+                data.pop(name)
+
         for name, converter in cls.CONVERTERS.items():
             if name not in data:
                 data[name] = converter.to_python_value(None)

@@ -1,7 +1,7 @@
 [tool.poetry]
 
 name = "datafiles"
-version = "0.2b3"
+version = "0.2b4"
 description = "File-based ORM for dataclasses."
 
 license = "MIT"
@@ -61,7 +61,7 @@ pylint = "^2.1"
 pydocstyle = "*"
 
 # Testing
-pytest = "^4.2.0"
+pytest = "=4.2.0"
 pytest-describe = "*"
 pytest-expecter = "*"
 pytest-mock = "*"
