@@ -11,7 +11,7 @@ from cached_property import cached_property
 
 from . import formats, hooks
 from .converters import Converter, List, map_type
-from .utils import prettify
+from .utils import prettify, recursive_update
 
 
 Trilean = Optional[bool]
@@ -124,11 +124,9 @@ class Datafile:
             include_default_values = self.defaults
 
         if self.auto_attr:
-            self._last_data.update(self._instance.__dict__)
+            data = recursive_update(self._last_data, self._instance.__dict__)
         else:
-            self._last_data.update(dataclasses.asdict(self._instance))
-
-        data = self._last_data
+            data = recursive_update(self._last_data, dataclasses.asdict(self._instance))
 
         for name in list(data.keys()):
             if name not in self.attrs:
