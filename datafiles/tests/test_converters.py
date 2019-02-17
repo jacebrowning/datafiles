@@ -67,6 +67,10 @@ def describe_map_type():
         expect(converter.TYPE) == str
         expect(converter.DEFAULT) == None
 
+    def it_handles_string_type_annotations(expect):
+        converter = converters.map_type('float')
+        expect(converter.TYPE) == float
+
     def it_rejects_unknown_types(expect):
         with expect.raises(
             TypeError,

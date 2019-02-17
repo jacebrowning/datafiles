@@ -11,16 +11,18 @@ from .containers import Dataclass, Dictionary, List
 from .extensions import *  # pylint: disable=unused-wildcard-import
 
 
-_REGISTRY: Dict[type, type] = {
-    Integer.TYPE: Integer,
-    Float.TYPE: Float,
-    String.TYPE: String,
-    Boolean.TYPE: Boolean,
-}
+_REGISTRY: Dict[Union[type, str], type] = {}
 
 
 def register(cls: type, converter: type):
     _REGISTRY[cls] = converter
+    _REGISTRY[cls.__name__] = converter
+
+
+register(Integer.TYPE, Integer)
+register(Float.TYPE, Float)
+register(Boolean.TYPE, Boolean)
+register(String.TYPE, String)
 
 
 @cached
