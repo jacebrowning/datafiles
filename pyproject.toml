@@ -52,7 +52,7 @@ cached_property = "^1.5"
 [tool.poetry.dev-dependencies]
 
 # Formatters
-black = "=18.9b0"
+black = "=19.3b0"
 isort = "=4.3.4"
 
 # Linters
@@ -61,7 +61,7 @@ pylint = "^2.1"
 pydocstyle = "*"
 
 # Testing
-pytest = "=4.2.0"
+pytest = "^4.3.1"
 pytest-describe = "*"
 pytest-expecter = "*"
 pytest-mock = "*"
@@ -78,11 +78,12 @@ coveragespace = "^2.1"
 mkdocs = "^1.0.4"
 
 # Notebooks
+ipython = "^7.4"
 jupyter = "^1.0"
 
 [tool.black]
 
-py36 = true
+target-version = ["py37"]
 skip-string-normalization = true
 
 [build-system]
