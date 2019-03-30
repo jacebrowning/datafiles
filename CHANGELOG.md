@@ -1,4 +1,4 @@
-# 0.2 (unreleased)
+# 0.2 (2019-03-30)
 
 - Added registration system for custom class converters.
 
