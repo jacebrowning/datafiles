@@ -40,3 +40,5 @@ numbers:
 - 2
 - 3
 ```
+
+Additional examples can be found in this [Jupyter Notebook](https://github.com/jacebrowning/datafiles/blob/develop/notebooks/file_inference.ipynb).
