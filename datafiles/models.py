@@ -1,22 +1,12 @@
 import dataclasses
-from dataclasses import dataclass
-from typing import Dict, Optional
 
 import log
 from classproperties import classproperty
 
 from . import hooks
-from .converters import Converter, map_type
-from .managers import InstanceManager, ModelManager
-
-
-@dataclass
-class ModelMeta:
-    datafile_attrs: Optional[Dict[str, Converter]] = None
-    datafile_pattern: Optional[str] = None
-
-    datafile_manual: bool = False
-    datafile_defaults: bool = False
+from .builders import build_datafile
+from .managers import Manager
+from .meta import ModelMeta
 
 
 class Model:
@@ -37,45 +27,30 @@ class Model:
                 log.debug(f'Datafile exists: {exists}')
 
                 if exists:
-                    self.datafile.load(first_load=True)
+                    self.datafile.load(_first=True)
                 elif path:
                     self.datafile.save()
 
-                hooks.apply(self, self.datafile, build_datafile)
+                hooks.apply(self, self.datafile)
 
         log.debug(f'Initialized {self.__class__} object')
 
     @classproperty
-    def datafiles(cls) -> ModelManager:  # pylint: disable=no-self-argument
-        return ModelManager(cls)
+    def datafiles(cls) -> Manager:  # pylint: disable=no-self-argument
+        return Manager(cls)
 
 
-def build_datafile(obj, root=None) -> InstanceManager:
-    try:
-        return object.__getattribute__(obj, 'datafile')
-    except AttributeError:
-        log.debug(f"Building 'datafile' for {obj.__class__} object")
-
-    m = getattr(obj, 'Meta', None)
-    pattern = getattr(m, 'datafile_pattern', None)
-    attrs = getattr(m, 'datafile_attrs', None)
-    manual = getattr(m, 'datafile_manual', False)
-    defaults = getattr(m, 'datafile_defaults', False)
-
-    if attrs is None and dataclasses.is_dataclass(obj):
-        attrs = {}
-        log.debug(f'Mapping attributes for {obj.__class__} object')
-        for field in dataclasses.fields(obj):
-            self_name = f'self.{field.name}'
-            if pattern is None or self_name not in pattern:
-                attrs[field.name] = map_type(field.type)
-
-    return InstanceManager(
-        obj, attrs=attrs, pattern=pattern, manual=manual, defaults=defaults, root=root
-    )
-
-
-def create_model(cls, *, attrs=None, pattern=None, manual=None, defaults=None):
+def create_model(
+    cls,
+    *,
+    attrs=None,
+    pattern=None,
+    manual=None,
+    defaults=None,
+    auto_load=None,
+    auto_save=None,
+    auto_attr=None,
+):
     """Patch datafile attributes on to an existing dataclass."""
     log.debug(f'Converting {cls} to a datafile model')
 
@@ -95,6 +70,12 @@ def create_model(cls, *, attrs=None, pattern=None, manual=None, defaults=None):
         m.datafile_manual = manual
     if not hasattr(cls, 'Meta') and defaults is not None:
         m.datafile_defaults = defaults
+    if not hasattr(cls, 'Meta') and auto_load is not None:
+        m.datafile_auto_load = auto_load
+    if not hasattr(cls, 'Meta') and auto_save is not None:
+        m.datafile_auto_save = auto_save
+    if not hasattr(cls, 'Meta') and auto_attr is not None:
+        m.datafile_auto_attr = auto_attr
 
     cls.Meta = m
 

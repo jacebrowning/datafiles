@@ -1,3 +1,5 @@
+"""Tests used to profile the library."""
+
 from dataclasses import dataclass, field
 from typing import List, Optional
 

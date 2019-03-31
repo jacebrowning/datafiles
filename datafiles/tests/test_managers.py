@@ -6,6 +6,7 @@ from pathlib import Path
 import pytest
 
 from datafiles import managers
+from datafiles.models import ModelMeta
 
 
 @dataclass
@@ -22,12 +23,15 @@ class MyField:
 def describe_instance_manager():
     @pytest.fixture
     def manager():
-        return managers.InstanceManager(
+        return managers.Datafile(
             instance=MyModel(foobar=42),
             attrs={},
             pattern=None,
-            manual=False,
-            defaults=False,
+            manual=ModelMeta.datafile_manual,
+            defaults=ModelMeta.datafile_defaults,
+            auto_load=ModelMeta.datafile_auto_load,
+            auto_save=ModelMeta.datafile_auto_save,
+            auto_attr=ModelMeta.datafile_auto_attr,
         )
 
     def describe_path():

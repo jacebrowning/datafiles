@@ -1,6 +1,7 @@
+"""Tests for automatic saving and loading through patched methods."""
+
 # pylint: disable=unused-variable
 
-import os
 from dataclasses import dataclass, field
 from typing import Dict, List
 
@@ -30,7 +31,7 @@ class SampleWithNesting:
 
 
 def describe_automatic_load():
-    @pytest.mark.xfail(bool(os.getenv('CI')), reason="Flaky on CI")
+    @pytest.mark.flaky
     def with_getattribute(logbreak, write, expect):
         sample = Sample()
 
@@ -46,7 +47,7 @@ def describe_automatic_load():
 
 
 def describe_automatic_save():
-    @pytest.mark.xfail(bool(os.getenv('CI')), reason="Flaky on CI")
+    @pytest.mark.flaky
     def with_setattr(logbreak, expect, read, dedent):
         sample = Sample()
 
@@ -179,21 +180,36 @@ def describe_automatic_save():
 
 
 def describe_automatic_load_before_save():
-    @pytest.mark.xfail(bool(os.getenv('CI')), reason="Flaky on CI")
+    @pytest.mark.flaky
     def with_setattr(write, expect, dedent):
         sample = Sample()
 
         write(
             'tmp/sample.yml',
             """
-            item: b  # Comment
+            item: 42
             """,
         )
 
-        sample.item = 'c'
+        expect(sample.item) == '42'
 
         expect(sample.datafile.text) == dedent(
             """
-            item: c  # Comment
+            item: '42'
             """
         )
+
+
+def describe_automatic_load_after_save():
+    def with_setattr(expect, dedent):
+        sample = Sample()
+
+        sample.item = 42
+
+        expect(sample.datafile.text) == dedent(
+            """
+            item: '42'
+            """
+        )
+
+        expect(sample.item) == '42'

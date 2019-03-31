@@ -6,13 +6,13 @@ Datafiles is a bidirectional serialization library for Python [dataclasses](http
 
 Install it directly into an activated virtual environment:
 
-```
+```text
 $ pip install datafiles
 ```
 
 or add it to your [Poetry](https://poetry.eustace.io/) project:
 
-```
+```text
 $ poetry add datafiles
 ```
 
@@ -46,4 +46,13 @@ produces `samples/42.yml` containing:
 
 ```yaml
 name: Widget
+```
+
+and the following instantiation restores the object:
+
+```python
+>>> from datafiles import Missing
+>>> sample = Sample(42, Missing)
+>>> sample.name
+Widget
 ```

@@ -5,6 +5,7 @@ from functools import wraps
 import log
 
 from . import settings
+from .builders import build_datafile
 
 
 LOAD_BEFORE_METHODS = ['__getattribute__', '__getitem__', '__iter__']
@@ -34,7 +35,7 @@ class Dict(dict):
     """Patchable `dict` type."""
 
 
-def apply(instance, datafile, build_datafile):
+def apply(instance, datafile):
     """Path methods that get or set attributes."""
     cls = instance.__class__
     log.debug(f'Patching methods on {cls}')
@@ -65,7 +66,7 @@ def apply(instance, datafile, build_datafile):
                 else:
                     continue
             attr.datafile = build_datafile(attr, root=datafile)
-            apply(attr, datafile, build_datafile)
+            apply(attr, datafile)
 
 
 def load_before(cls, method):
@@ -83,10 +84,9 @@ def load_before(cls, method):
             if datafile.exists and datafile.modified:
                 log.debug(f"Loading automatically before '{method.__name__}' call")
                 datafile.load()
-                # TODO: Implement this?
-                # if mapper.auto_save_after_load:
-                #     mapper.save()
-                #     mapper.modified = False
+                if datafile.auto_save:
+                    log.debug("Saving automatically after load")
+                    datafile.save(_log=False)
 
         return method(self, *args, **kwargs)
 
@@ -117,6 +117,9 @@ def save_after(cls, method):
         if enabled(datafile, args):
             log.debug(f"Saving automatically after '{method.__name__}' call")
             datafile.save()
+            if datafile.auto_load:
+                log.debug("Loading automatically after save")
+                datafile.load(_log=False)
 
         return result
 
@@ -144,7 +147,6 @@ def enabled(datafile, args) -> bool:
     if datafile.manual:
         return False
 
-    # TODO: Investigate performance impact of removing this code
     if args and isinstance(args[0], str):
         if args[0] in {'Meta', 'datafile'}:
             return False

@@ -24,7 +24,7 @@ watch: install  ## Continuously run all CI tasks when files chanage
 
 .PHONY: demo
 demo: install
-	poetry run jupyter notebook --notebook-dir=notebooks
+	poetry run jupyter notebook --notebook-dir=notebooks --browser=firefox
 
 # SYSTEM DEPENDENCIES #########################################################
 
@@ -81,7 +81,7 @@ test-repeat: install
 
 .PHONY: test-profile
 test-profile: install
-	poetry run pytest tests/test_profile.py --profile-svg
+	poetry run pytest tests/test_profiling.py --profile-svg
 
 # DOCUMENTATION ###############################################################
 
@@ -92,12 +92,15 @@ docs: mkdocs uml ## Generate documentation and UML
 
 .PHONY: mkdocs
 mkdocs: install $(MKDOCS_INDEX)
-$(MKDOCS_INDEX): mkdocs.yml docs/*.md
+$(MKDOCS_INDEX): docs/requirements.txt mkdocs.yml docs/*.md
 	@ mkdir -p docs/about
 	@ cd docs/about && ln -sf ../../CHANGELOG.md changelog.md
 	@ cd docs/about && ln -sf ../../CONTRIBUTING.md contributing.md
 	@ cd docs/about && ln -sf ../../LICENSE.md license.md
 	poetry run mkdocs build --clean --strict
+
+docs/requirements.txt: poetry.lock
+	@ poetry run pip freeze -qqq | grep mkdocs > $@
 
 .PHONY: mkdocs-live
 mkdocs-live: mkdocs

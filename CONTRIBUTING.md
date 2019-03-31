@@ -1,75 +1,76 @@
-# Contributor Instructions
+# Setup
 
-## Setup
-
-### Requirements
+## Requirements
 
 * Make:
-    * Windows: http://mingw.org/download/installer
-    * Mac: http://developer.apple.com/xcode
-    * Linux: http://www.gnu.org/software/make
+    * macOS: `$ xcode-select --install`
+    * Linux: [https://www.gnu.org/software/make](https://www.gnu.org/software/make)
+    * Windows: [https://mingw.org/download/installer](https://mingw.org/download/installer)
 * Python: `$ pyenv install`
-* Poetry: https://poetry.eustace.io/docs/#installation
-* Graphviz: http://www.graphviz.org/Download.php
+* Poetry: [https://poetry.eustace.io/docs/#installation](https://poetry.eustace.io/docs/#installation)
+* Graphviz:
+    * macOS: `$ brew install graphviz`
+    * Linux: [https://graphviz.org/download](https://graphviz.org/download/)
+    * Windows: [https://graphviz.org/download](https://graphviz.org/download/)
 
 To confirm these system dependencies are configured correctly:
 
-```sh
+```text
 $ make doctor
 ```
 
-### Installation
+## Installation
 
 Install project dependencies into a virtual environment:
 
-```sh
+```text
 $ make install
 ```
 
-## Development Tasks
+# Development Tasks
 
-### Manual
+## Manual
 
 Run the tests:
 
-```sh
+```text
 $ make test
 ```
 
 Run static analysis:
 
-```sh
+```text
 $ make check
 ```
 
 Build the documentation:
 
-```sh
+```text
 $ make docs
 ```
 
-### Automatic
+## Automatic
 
 Keep all of the above tasks running on change:
 
-```sh
+```text
 $ make watch
 ```
 
 > In order to have OS X notifications, `brew install terminal-notifier`.
 
-## Continuous Integration
+# Continuous Integration
 
 The CI server will report overall build status:
 
-```sh
+```text
 $ make ci
 ```
 
-## Release Tasks
+# Release Tasks
 
 Release to PyPI:
 
-```sh
+```text
 $ make upload
 ```

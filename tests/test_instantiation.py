@@ -1,3 +1,5 @@
+"""Tests for instantiating new synchronized objects."""
+
 # pylint: disable=unused-variable
 
 from dataclasses import dataclass, field

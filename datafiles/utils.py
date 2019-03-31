@@ -1,11 +1,8 @@
-import dataclasses
 from contextlib import suppress
 from functools import lru_cache
 from pprint import pformat
 from typing import Any, Dict
 
-
-Missing = dataclasses._MISSING_TYPE  # pylint: disable=protected-access
 
 cached = lru_cache()
 
@@ -25,3 +22,23 @@ def dictify(value: Any) -> Dict:
         return [dictify(x) for x in value]
 
     return value
+
+
+def recursive_update(old: Dict, new: Dict):
+    """Recursively update a dictionary."""
+
+    for key, value in new.items():
+        if isinstance(value, dict):
+            if key in old:
+                recursive_update(old[key], value)
+            else:
+                old[key] = value
+        elif isinstance(value, list):
+            if key in old:
+                old[key][:] = value
+            else:
+                old[key] = value
+        else:
+            old[key] = value
+
+    return old
