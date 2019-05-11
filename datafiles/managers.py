@@ -15,7 +15,7 @@ from .utils import prettify, recursive_update
 
 
 Trilean = Optional[bool]
-Missing = dataclasses._MISSING_TYPE  # pylint: disable=protected-access
+Missing = dataclasses._MISSING_TYPE
 
 
 class Manager:
@@ -24,6 +24,27 @@ class Manager:
 
     def all(self):
         raise NotImplementedError
+
+    def get_or_none(self, *args, **kwargs):
+        original_manual = self.model.Meta.datafile_manual
+
+        self.model.Meta.datafile_manual = True
+        instance = self.model(*args, **kwargs)
+        self.model.Meta.datafile_manual = original_manual
+
+        if instance.datafile.exists:
+            instance.datafile._manual = original_manual
+            return instance
+
+        return None
+
+    def get_or_create(self, *args, **kwargs):
+        instance = self.model(*args, **kwargs)
+
+        if not instance.datafile.exists:
+            instance.datafile.save()
+
+        return instance
 
 
 class Datafile:
@@ -268,9 +289,7 @@ class Datafile:
 
         for name2, converter2 in datafile.attrs.items():
             _value = nested_data.get(  # type: ignore
-                # pylint: disable=protected-access
-                name2,
-                datafile._get_default_field_value(name2),
+                name2, datafile._get_default_field_value(name2)
             )
             value = converter2.to_python_value(
                 _value, target_object=getattr(dataclass, name2)

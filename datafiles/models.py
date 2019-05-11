@@ -21,6 +21,7 @@ class Model:
 
             path = self.datafile.path
             exists = self.datafile.exists
+            create = not self.datafile.manual
 
             if path:
                 log.debug(f'Datafile path: {path}')
@@ -28,7 +29,7 @@ class Model:
 
                 if exists:
                     self.datafile.load(_first=True)
-                elif path:
+                elif path and create:
                     self.datafile.save()
 
                 hooks.apply(self, self.datafile)
@@ -44,8 +45,8 @@ def create_model(
     cls,
     *,
     attrs=None,
-    pattern=None,
     manual=None,
+    pattern=None,
     defaults=None,
     auto_load=None,
     auto_save=None,
@@ -57,7 +58,7 @@ def create_model(
     if not dataclasses.is_dataclass(cls):
         raise ValueError(f'{cls} must be a dataclass')
 
-    # Patch Meta
+    # Patch meta
 
     m = getattr(cls, 'Meta', ModelMeta())
 
@@ -78,6 +79,10 @@ def create_model(
         m.datafile_auto_attr = auto_attr
 
     cls.Meta = m
+
+    # Patch manager
+
+    cls.datafiles = Manager(cls)
 
     # Patch __init__
 
