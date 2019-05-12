@@ -49,6 +49,9 @@ minilog = "^1.2.3"
 classproperties = "~0.1.3"
 cached_property = "^1.5"
 
+# Typing
+typing-extensions = "^3.7"
+
 [tool.poetry.dev-dependencies]
 
 # Formatters
