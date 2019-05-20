@@ -37,7 +37,7 @@ class Model:
         log.debug(f'Initialized {self.__class__} object')
 
     @classproperty
-    def datafiles(cls) -> Manager:  # pylint: disable=no-self-argument
+    def objects(cls) -> Manager:  # pylint: disable=no-self-argument
         return Manager(cls)
 
 
@@ -82,7 +82,7 @@ def create_model(
 
     # Patch manager
 
-    cls.datafiles = Manager(cls)
+    cls.objects = Manager(cls)
 
     # Patch __init__
 

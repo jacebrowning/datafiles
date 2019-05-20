@@ -17,7 +17,8 @@ class MyClass:
 def describe_manager():
     @pytest.fixture
     def manager():
-        return managers.Manager(create_model(MyClass, manual=True))
+        model = create_model(MyClass, manual=True)
+        return managers.Manager(model)
 
     def describe_get_or_none():
         @patch('datafiles.mappers.Mapper.exists', True)
