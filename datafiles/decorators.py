@@ -2,18 +2,19 @@ import dataclasses
 from pathlib import Path
 from typing import Dict, Optional
 
+from .config import Meta
 from .converters import Converter
-from .models import ModelMeta, create_model
+from .models import create_model
 
 
 def datafile(
     pattern: str,
     attrs: Optional[Dict[str, Converter]] = None,
-    manual: bool = ModelMeta.datafile_manual,
-    defaults: bool = ModelMeta.datafile_defaults,
-    auto_load: bool = ModelMeta.datafile_auto_load,
-    auto_save: bool = ModelMeta.datafile_auto_save,
-    auto_attr: bool = ModelMeta.datafile_auto_attr,
+    manual: bool = Meta.datafile_manual,
+    defaults: bool = Meta.datafile_defaults,
+    auto_load: bool = Meta.datafile_auto_load,
+    auto_save: bool = Meta.datafile_auto_save,
+    auto_attr: bool = Meta.datafile_auto_attr,
 ):
     """Synchronize a data class to the specified path."""
 

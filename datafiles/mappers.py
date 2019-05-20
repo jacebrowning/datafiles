@@ -12,6 +12,7 @@ import log
 from cached_property import cached_property
 
 from . import formats, hooks
+from .config import Meta
 from .converters import Converter, List, map_type
 from .utils import prettify, recursive_update
 
@@ -253,16 +254,17 @@ class Mapper:
 
         # TODO: Find a way to avoid this circular import
         try:
-            datafile = dataclass.datafile
+            mapper = dataclass.datafile
         except AttributeError:
-            from .builders import build_datafile
+            # TODO: delete block
+            # from .mappers import create_mapper
 
             log.warn(f"{dataclass} has not yet been patched to have 'datafile'")
-            datafile = build_datafile(dataclass)
+            mapper = create_mapper(dataclass)
 
-        for name2, converter2 in datafile.attrs.items():
+        for name2, converter2 in mapper.attrs.items():
             _value = nested_data.get(  # type: ignore
-                name2, datafile._get_default_field_value(name2)
+                name2, mapper._get_default_field_value(name2)
             )
             value = converter2.to_python_value(
                 _value, target_object=getattr(dataclass, name2)
@@ -341,3 +343,39 @@ class Mapper:
         log.debug('=' * len(message) + '\n\n' + (text or '<nothing>\n'))
         self.path.parent.mkdir(parents=True, exist_ok=True)
         self.path.write_text(text)
+
+
+def create_mapper(obj, root=None) -> Mapper:
+    try:
+        return object.__getattribute__(obj, 'datafile')
+    except AttributeError:
+        log.debug(f"Building 'datafile' for {obj.__class__} object")
+
+    m = getattr(obj, 'Meta', None)
+    pattern = getattr(m, 'datafile_pattern', None)
+    attrs = getattr(m, 'datafile_attrs', None)
+    manual = getattr(m, 'datafile_manual', Meta.datafile_manual)
+    defaults = getattr(m, 'datafile_defaults', Meta.datafile_defaults)
+    auto_load = getattr(m, 'datafile_auto_load', Meta.datafile_auto_load)
+    auto_save = getattr(m, 'datafile_auto_save', Meta.datafile_auto_save)
+    auto_attr = getattr(m, 'datafile_auto_attr', Meta.datafile_auto_attr)
+
+    if attrs is None and dataclasses.is_dataclass(obj):
+        attrs = {}
+        log.debug(f'Mapping attributes for {obj.__class__} object')
+        for field in dataclasses.fields(obj):
+            self_name = f'self.{field.name}'
+            if pattern is None or self_name not in pattern:
+                attrs[field.name] = map_type(field.type, name=field.name)
+
+    return Mapper(
+        obj,
+        attrs=attrs,
+        pattern=pattern,
+        manual=manual,
+        defaults=defaults,
+        auto_load=auto_load,
+        auto_save=auto_save,
+        auto_attr=auto_attr,
+        root=root,
+    )

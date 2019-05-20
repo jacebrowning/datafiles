@@ -5,8 +5,8 @@ from pathlib import Path
 
 import pytest
 
-from datafiles import managers
-from datafiles.models import ModelMeta
+from datafiles.config import Meta
+from datafiles.mappers import Mapper, create_mapper
 
 
 @dataclass
@@ -22,71 +22,82 @@ class MyField:
 
 def describe_mapper():
     @pytest.fixture
-    def manager():
-        return managers.Mapper(
+    def mapper():
+        return Mapper(
             instance=MyClass(foobar=42),
             attrs={},
             pattern=None,
-            manual=ModelMeta.datafile_manual,
-            defaults=ModelMeta.datafile_defaults,
-            auto_load=ModelMeta.datafile_auto_load,
-            auto_save=ModelMeta.datafile_auto_save,
-            auto_attr=ModelMeta.datafile_auto_attr,
+            manual=Meta.datafile_manual,
+            defaults=Meta.datafile_defaults,
+            auto_load=Meta.datafile_auto_load,
+            auto_save=Meta.datafile_auto_save,
+            auto_attr=Meta.datafile_auto_attr,
         )
 
     def describe_path():
-        def is_none_when_no_pattern(expect, manager):
-            expect(manager.path) == None
+        def is_none_when_no_pattern(expect, mapper):
+            expect(mapper.path) == None
 
-        def is_absolute_based_on_the_file(expect, manager):
-            manager._pattern = '../../tmp/sample.yml'
+        def is_absolute_based_on_the_file(expect, mapper):
+            mapper._pattern = '../../tmp/sample.yml'
             root = Path(__file__).parents[2]
-            expect(manager.path) == root / 'tmp' / 'sample.yml'
+            expect(mapper.path) == root / 'tmp' / 'sample.yml'
 
     def describe_relpath():
-        def when_cwd_is_parent(expect, manager):
-            manager._pattern = '../../tmp/sample.yml'
-            expect(manager.relpath) == Path('tmp', 'sample.yml')
+        def when_cwd_is_parent(expect, mapper):
+            mapper._pattern = '../../tmp/sample.yml'
+            expect(mapper.relpath) == Path('tmp', 'sample.yml')
 
-        def when_cwd_is_sibling(expect, manager):
-            manager._pattern = '../../../tmp/sample.yml'
-            expect(manager.relpath) == Path('..', 'tmp', 'sample.yml')
+        def when_cwd_is_sibling(expect, mapper):
+            mapper._pattern = '../../../tmp/sample.yml'
+            expect(mapper.relpath) == Path('..', 'tmp', 'sample.yml')
 
     def describe_text():
-        def is_blank_when_no_attrs(expect, manager):
-            expect(manager.text) == ""
+        def is_blank_when_no_attrs(expect, mapper):
+            expect(mapper.text) == ""
 
-        def is_yaml_by_default(expect, manager):
-            manager.attrs = {'foobar': MyField}
-            expect(manager.text) == "foobar: 42\n"
+        def is_yaml_by_default(expect, mapper):
+            mapper.attrs = {'foobar': MyField}
+            expect(mapper.text) == "foobar: 42\n"
 
-        def with_json_format(expect, manager):
-            manager._pattern = '_.json'
-            manager.attrs = {'foobar': MyField}
-            expect(manager.text) == '{\n  "foobar": 42\n}'
+        def with_json_format(expect, mapper):
+            mapper._pattern = '_.json'
+            mapper.attrs = {'foobar': MyField}
+            expect(mapper.text) == '{\n  "foobar": 42\n}'
 
-        def with_toml_format(expect, manager):
-            manager._pattern = '_.toml'
-            manager.attrs = {'foobar': MyField}
-            expect(manager.text) == "foobar = 42\n"
+        def with_toml_format(expect, mapper):
+            mapper._pattern = '_.toml'
+            mapper.attrs = {'foobar': MyField}
+            expect(mapper.text) == "foobar = 42\n"
 
-        def with_no_format(expect, manager):
-            manager._pattern = '_'
-            manager.attrs = {'foobar': MyField}
-            expect(manager.text) == "foobar: 42\n"
+        def with_no_format(expect, mapper):
+            mapper._pattern = '_'
+            mapper.attrs = {'foobar': MyField}
+            expect(mapper.text) == "foobar: 42\n"
 
-        def with_unknown_format(expect, manager):
-            manager._pattern = '_.xyz'
-            manager.attrs = {'foobar': MyField}
+        def with_unknown_format(expect, mapper):
+            mapper._pattern = '_.xyz'
+            mapper.attrs = {'foobar': MyField}
             with expect.raises(ValueError):
-                print(manager.text)
+                print(mapper.text)
 
     def describe_load():
-        def it_requires_path(expect, manager):
+        def it_requires_path(expect, mapper):
             with expect.raises(RuntimeError):
-                manager.load()
+                mapper.load()
 
     def describe_save():
-        def it_requires_path(expect, manager):
+        def it_requires_path(expect, mapper):
             with expect.raises(RuntimeError):
-                manager.save()
+                mapper.save()
+
+
+def describe_create_mapper():
+    def it_reuses_existing_datafile(mocker, expect):
+        obj = mocker.Mock()
+        mapper = mocker.Mock()
+        obj.datafile = mapper
+
+        new_mapper = create_mapper(obj)
+
+        expect(new_mapper) == obj.datafile

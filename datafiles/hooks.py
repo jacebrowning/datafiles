@@ -5,7 +5,7 @@ from functools import wraps
 import log
 
 from . import settings
-from .builders import build_datafile
+from .mappers import create_mapper
 
 
 LOAD_BEFORE_METHODS = ['__getattribute__', '__getitem__', '__iter__']
@@ -65,7 +65,7 @@ def apply(instance, datafile):
                     setattr(instance, attr_name, attr)
                 else:
                     continue
-            attr.datafile = build_datafile(attr, root=datafile)
+            attr.datafile = create_mapper(attr, root=datafile)
             apply(attr, datafile)
 
 

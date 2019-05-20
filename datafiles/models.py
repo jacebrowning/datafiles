@@ -3,21 +3,20 @@ import dataclasses
 import log
 from classproperties import classproperty
 
-from . import hooks
-from .builders import build_datafile
+from . import config, hooks
 from .managers import Manager
-from .meta import ModelMeta
+from .mappers import create_mapper
 
 
 class Model:
 
-    Meta: ModelMeta = ModelMeta()
+    Meta: config.Meta = config.Meta()
 
     def __post_init__(self):
         with hooks.disabled():
             log.debug(f'Initializing {self.__class__} object')
 
-            self.datafile = build_datafile(self)
+            self.datafile = create_mapper(self)
 
             path = self.datafile.path
             exists = self.datafile.exists
@@ -52,7 +51,7 @@ def create_model(
     auto_save=None,
     auto_attr=None,
 ):
-    """Patch datafile attributes on to an existing dataclass."""
+    """Patch model attributes on to an existing dataclass."""
     log.debug(f'Converting {cls} to a datafile model')
 
     if not dataclasses.is_dataclass(cls):
@@ -60,7 +59,7 @@ def create_model(
 
     # Patch meta
 
-    m = getattr(cls, 'Meta', ModelMeta())
+    m = getattr(cls, 'Meta', config.Meta())
 
     if attrs is not None:
         m.datafile_attrs = attrs

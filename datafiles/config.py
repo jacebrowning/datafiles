@@ -5,7 +5,7 @@ from .converters import Converter
 
 
 @dataclass
-class ModelMeta:
+class Meta:
     datafile_attrs: Optional[Dict[str, Converter]] = None
     datafile_pattern: Optional[str] = None
 
