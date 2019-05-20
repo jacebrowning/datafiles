@@ -3,27 +3,35 @@
 from __future__ import annotations
 
 import dataclasses
-from typing import Optional
+from glob import iglob
+from typing import TYPE_CHECKING, Iterator, Optional
 from typing_extensions import Protocol
 
-from .mappers import Mapper
+import log
+from parse import parse
+
+
+if TYPE_CHECKING:
+    from .mappers import Mapper
+    from .models import Model
 
 
 Trilean = Optional[bool]
 Missing = dataclasses._MISSING_TYPE
 
 
-class HasDatafile(Protocol):
-
-    datafile: Mapper
-
-
 class Manager:
     def __init__(self, cls):
         self.model = cls
 
-    def all(self):
-        raise NotImplementedError
+    def all(self) -> Iterator[HasDatafile]:
+        pattern = self.model.Meta.datafile_pattern
+        splatted = pattern.format(self=Splats())
+        log.info(f'Finding files matching pattern: {splatted}')
+        for filename in iglob(splatted):
+            log.info(f'Found matching path: {filename}')
+            results = parse(pattern, filename)
+            yield self.model(*results.named.values())
 
     def get_or_none(self, *args, **kwargs) -> Optional[HasDatafile]:
         original_manual = self.model.Meta.datafile_manual
@@ -45,3 +53,12 @@ class Manager:
             instance.datafile.save()
 
         return instance
+
+
+class HasDatafile(Protocol):
+    datafile: Mapper
+
+
+class Splats:
+    def __getattr__(self, name):
+        return '*'

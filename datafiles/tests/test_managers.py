@@ -17,27 +17,39 @@ class MyClass:
 def describe_manager():
     @pytest.fixture
     def manager():
-        model = create_model(MyClass, manual=True)
+        model = create_model(MyClass, pattern='files/{self.foobar}.yml')
         return managers.Manager(model)
 
+    def describe_all():
+        @patch('datafiles.mappers.Mapper.exists', False)
+        def when_no_files_exist(expect, manager):
+            items = list(manager.all())
+            expect(items) == []
+
     def describe_get_or_none():
+        @patch('datafiles.mappers.Mapper.load')
         @patch('datafiles.mappers.Mapper.exists', True)
-        def when_file_exists(expect, manager):
+        @patch('datafiles.mappers.Mapper.modified', False)
+        def when_file_exists(mock_load, expect, manager):
             expect(manager.get_or_none(foobar=1)) == MyClass(foobar=1)
+            expect(mock_load.called) == True
 
         @patch('datafiles.mappers.Mapper.exists', False)
         def when_file_missing(expect, manager):
             expect(manager.get_or_none(foobar=2)) == None
 
     def describe_get_or_create():
+        @patch('datafiles.mappers.Mapper.load')
         @patch('datafiles.mappers.Mapper.save')
         @patch('datafiles.mappers.Mapper.exists', True)
-        def when_file_exists(mock_save, expect, manager):
+        @patch('datafiles.mappers.Mapper.modified', False)
+        def when_file_exists(mock_load, mock_save, expect, manager):
             expect(manager.get_or_create(foobar=1)) == MyClass(foobar=1)
-            expect(mock_save.call_count) == 0
+            expect(mock_load.called) == False
+            expect(mock_save.called) == True
 
         @patch('datafiles.mappers.Mapper.save')
         @patch('datafiles.mappers.Mapper.exists', False)
         def when_file_missing(mock_save, expect, manager):
             expect(manager.get_or_create(foobar=2)) == MyClass(foobar=2)
-            expect(mock_save.call_count) == 1
+            expect(mock_save.called) == True

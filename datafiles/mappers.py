@@ -352,6 +352,7 @@ def create_mapper(obj, root=None) -> Mapper:
         log.debug(f"Building 'datafile' for {obj.__class__} object")
 
     m = getattr(obj, 'Meta', None)
+    # TODO: Move this parsing into config.py
     pattern = getattr(m, 'datafile_pattern', None)
     attrs = getattr(m, 'datafile_attrs', None)
     manual = getattr(m, 'datafile_manual', Meta.datafile_manual)

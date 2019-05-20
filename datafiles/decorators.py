@@ -1,10 +1,15 @@
+from __future__ import annotations
+
 import dataclasses
 from pathlib import Path
-from typing import Dict, Optional
+from typing import TYPE_CHECKING, Dict, Optional
 
 from .config import Meta
-from .converters import Converter
 from .models import create_model
+
+
+if TYPE_CHECKING:
+    from .converters import Converter
 
 
 def datafile(

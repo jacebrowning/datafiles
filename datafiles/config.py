@@ -1,7 +1,13 @@
-from dataclasses import dataclass
-from typing import Dict, Optional
+"""Configuration defaults for each model."""
 
-from .converters import Converter
+from __future__ import annotations
+
+from dataclasses import dataclass
+from typing import TYPE_CHECKING, Dict, Optional
+
+
+if TYPE_CHECKING:
+    from .converters import Converter
 
 
 @dataclass
