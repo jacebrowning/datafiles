@@ -11,8 +11,7 @@ from typing import Any, Dict, Optional
 import log
 from cached_property import cached_property
 
-from . import formats, hooks
-from .config import Meta
+from . import config, formats, hooks
 from .converters import Converter, List, map_type
 from .utils import prettify, recursive_update
 
@@ -351,15 +350,9 @@ def create_mapper(obj, root=None) -> Mapper:
     except AttributeError:
         log.debug(f"Building 'datafile' for {obj.__class__} object")
 
-    m = getattr(obj, 'Meta', None)
-    # TODO: Move this parsing into config.py
-    pattern = getattr(m, 'datafile_pattern', None)
-    attrs = getattr(m, 'datafile_attrs', None)
-    manual = getattr(m, 'datafile_manual', Meta.datafile_manual)
-    defaults = getattr(m, 'datafile_defaults', Meta.datafile_defaults)
-    auto_load = getattr(m, 'datafile_auto_load', Meta.datafile_auto_load)
-    auto_save = getattr(m, 'datafile_auto_save', Meta.datafile_auto_save)
-    auto_attr = getattr(m, 'datafile_auto_attr', Meta.datafile_auto_attr)
+    meta = config.load(obj)
+    attrs = meta.datafile_attrs
+    pattern = meta.datafile_pattern
 
     if attrs is None and dataclasses.is_dataclass(obj):
         attrs = {}
@@ -371,12 +364,12 @@ def create_mapper(obj, root=None) -> Mapper:
 
     return Mapper(
         obj,
-        attrs=attrs,
+        attrs=attrs or {},
         pattern=pattern,
-        manual=manual,
-        defaults=defaults,
-        auto_load=auto_load,
-        auto_save=auto_save,
-        auto_attr=auto_attr,
+        manual=meta.datafile_manual,
+        defaults=meta.datafile_defaults,
+        auto_load=meta.datafile_auto_load,
+        auto_save=meta.datafile_auto_save,
+        auto_attr=meta.datafile_auto_attr,
         root=root,
     )
