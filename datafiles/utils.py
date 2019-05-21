@@ -1,3 +1,5 @@
+"""Internal helper functions."""
+
 from contextlib import suppress
 from functools import lru_cache
 from pprint import pformat

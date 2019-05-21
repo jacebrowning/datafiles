@@ -1,4 +1,4 @@
-Object-relational mapper (ORM) methods are available on all model classes via the `datafiles` proxy. The following examples are based on this sample datafile:
+Object-relational mapping (ORM) methods are available on all model classes via the `objects` proxy. The following sections assume an empty filesystem and the following sample datafile definition:
 
 ```python
 from datafiles import datafile
@@ -10,18 +10,44 @@ class MyModel:
     my_value: int = 0
 ```
 
+# `all`
+
+Iterate over all objects matching the pattern:
+
+```python
+>>> generator = MyModel.objects.all()
+>>> list(generator)
+[]
+```
+
+```python
+>>> m1 = MyModel('foo')
+>>> m2 = MyModel('bar', 42)
+```
+
+```python
+>>> for m in MyModel.objects.all():
+...     print(m)
+MyModel(my_key='foo' my_value=0)
+MyModel(my_key='bar', my_value=42)
+```
+
 # `get_or_none`
 
 Instantiate an object from an existing file or return `None` if no matching file exists:
 
 ```python
->>> MyModel.datafiles.get_or_none('existing')
-MyModel(my_key='existing')
+>>> MyModel.objects.get_or_none('foobar')
+None
 ```
 
 ```python
->>> MyModel.datafiles.get_or_none('unknown')
-None
+>>> m = MyModel('foobar', 42)
+```
+
+```python
+>>> MyModel.objects.get_or_none('foobar')
+MyModel(my_key='foobar', my_value=42)
 ```
 
 # `get_or_create`
@@ -29,11 +55,15 @@ None
 Instantiate an object from an existing file or create one if no matching file exists:
 
 ```python
->>> MyModel.datafiles.get_or_none('existing')
-MyModel(my_key='existing')
+>>> m = MyModel('foobar', 42)
 ```
 
 ```python
->>> MyModel.datafiles.get_or_none('unknown')
-MyModel(my_key='unknown')
+>>> MyModel.objects.get_or_create('foobar')
+MyModel(my_key='foobar', my_value=42)
+```
+
+```python
+>>> MyModel.objects.get_or_create('new')
+MyModel(my_key='new', my_value=0)
 ```

@@ -1,5 +1,6 @@
 # 0.3 (unreleased)
 
+- Added ORM method: `all()`
 - Added ORM method: `get_or_none()`.
 - Added ORM method: `get_or_create()`.
 
