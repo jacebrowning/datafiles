@@ -28,6 +28,7 @@ Iterate over all objects matching the pattern:
 ```python
 >>> for m in MyModel.objects.all():
 ...     print(m)
+...
 MyModel(my_key='foo' my_value=0)
 MyModel(my_key='bar', my_value=42)
 ```
@@ -55,15 +56,15 @@ MyModel(my_key='foobar', my_value=42)
 Instantiate an object from an existing file or create one if no matching file exists:
 
 ```python
->>> m = MyModel('foobar', 42)
+>>> m = MyModel('foo', 42)
 ```
 
 ```python
->>> MyModel.objects.get_or_create('foobar')
-MyModel(my_key='foobar', my_value=42)
+>>> MyModel.objects.get_or_create('foo')
+MyModel(my_key='foo', my_value=42)
 ```
 
 ```python
->>> MyModel.objects.get_or_create('new')
-MyModel(my_key='new', my_value=0)
+>>> MyModel.objects.get_or_create('bar')
+MyModel(my_key='bar', my_value=0)
 ```
