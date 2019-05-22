@@ -41,7 +41,7 @@ classifiers = [
 python = "^3.7"
 
 # Formats
-"ruamel.yaml" = "~0.15.46"
+"ruamel.yaml" = "~0.15.96"
 tomlkit = "^0.5.3"
 
 # Utilities
@@ -65,7 +65,7 @@ pylint = "^2.1"
 pydocstyle = "*"
 
 # Testing
-pytest = "^4.3.1"
+pytest = "^4.5.0"
 pytest-describe = "*"
 pytest-expecter = "*"
 pytest-mock = "*"

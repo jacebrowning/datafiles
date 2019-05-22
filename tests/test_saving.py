@@ -327,7 +327,7 @@ def describe_preservation():
             """
         )
 
-    @pytest.mark.xfail
+    @pytest.mark.xfail(reason="unknown ruamel.yaml bug")
     def with_comments_on_nested_lines(write, expect, read, dedent):
         sample = SampleWithNestingAndDefaults(None)
 
