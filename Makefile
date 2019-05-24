@@ -24,6 +24,7 @@ watch: install  ## Continuously run all CI tasks when files chanage
 
 .PHONY: demo
 demo: install
+	poetry run nbstripout notebooks/*.ipynb
 	poetry run jupyter notebook --notebook-dir=notebooks --browser=firefox
 
 # SYSTEM DEPENDENCIES #########################################################
@@ -88,7 +89,7 @@ test-profile: install
 MKDOCS_INDEX := site/index.html
 
 .PHONY: docs
-docs: mkdocs uml ## Generate documentation and UML
+docs: mkdocs uml papermill ## Generate documentation and UML
 
 .PHONY: mkdocs
 mkdocs: install $(MKDOCS_INDEX)
@@ -113,6 +114,14 @@ docs/*.png: $(MODULES)
 	poetry run pyreverse $(PACKAGE) -p $(PACKAGE) -a 1 -f ALL -o png --ignore tests
 	- mv -f classes_$(PACKAGE).png docs/classes.png
 	- mv -f packages_$(PACKAGE).png docs/packages.png
+
+.PHONY: papermill
+papermill: install
+	@ cd notebooks; for filename in *.ipynb; do \
+	  poetry run papermill $$filename $$filename; \
+	done
+	git config filter.nbstripout.extrakeys 'metadata.papermill cell.metadata.papermill'
+	poetry run nbstripout --keep-output notebooks/*.ipynb
 
 # RELEASE #####################################################################
 
