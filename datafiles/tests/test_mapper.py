@@ -6,7 +6,7 @@ from pathlib import Path
 import pytest
 
 from datafiles.config import Meta
-from datafiles.mappers import Mapper, create_mapper
+from datafiles.mapper import Mapper, create_mapper
 
 
 @dataclass

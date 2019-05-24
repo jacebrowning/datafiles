@@ -251,13 +251,9 @@ class Mapper:
                     nested_data[field.name] = None  # type: ignore
             dataclass = converter.to_python_value(nested_data, target_object=dataclass)
 
-        # TODO: Find a way to avoid this circular import
         try:
             mapper = dataclass.datafile
         except AttributeError:
-            # TODO: delete block
-            # from .mappers import create_mapper
-
             log.warn(f"{dataclass} has not yet been patched to have 'datafile'")
             mapper = create_mapper(dataclass)
 

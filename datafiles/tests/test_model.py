@@ -1,6 +1,6 @@
 # pylint: disable=unused-variable
 
-from datafiles.models import create_model
+from datafiles import model
 
 
 def describe_create_model():
@@ -9,4 +9,4 @@ def describe_create_model():
             pass
 
         with expect.raises(ValueError):
-            create_model(NonDataclass)
+            model.create_model(NonDataclass)

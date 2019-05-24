@@ -5,7 +5,7 @@ from functools import wraps
 import log
 
 from . import settings
-from .mappers import create_mapper
+from .mapper import create_mapper
 
 
 LOAD_BEFORE_METHODS = ['__getattribute__', '__getitem__', '__iter__']

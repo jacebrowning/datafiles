@@ -12,8 +12,8 @@ from parse import parse
 
 
 if TYPE_CHECKING:
-    from .mappers import Mapper
-    from .models import Model
+    from .mapper import Mapper
+    from .model import Model
 
 
 Trilean = Optional[bool]
@@ -29,7 +29,7 @@ class Manager:
         splatted = pattern.format(self=Splats())
         log.info(f'Finding files matching pattern: {splatted}')
         for filename in iglob(splatted):
-            log.info(f'Found matching path: {filename}')
+            log.debug(f'Found matching path: {filename}')
             results = parse(pattern, filename)
             yield self.model(*results.named.values())
 

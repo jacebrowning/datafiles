@@ -4,8 +4,8 @@ import log
 from classproperties import classproperty
 
 from . import config, hooks
-from .managers import Manager
-from .mappers import create_mapper
+from .manager import Manager
+from .mapper import create_mapper
 
 
 class Model:

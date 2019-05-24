@@ -1,6 +1,5 @@
 # pylint: disable=unused-variable
 
-
 import pytest
 
 from datafiles import formats

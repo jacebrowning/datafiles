@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Dict, Optional
 
 from .config import Meta
-from .models import create_model
+from .model import create_model
 
 
 if TYPE_CHECKING:
