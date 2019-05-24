@@ -10,6 +10,8 @@ class MyModel:
     my_value: int = 0
 ```
 
+Many of the following examples are also shown in this [Jupyter Notebook](https://github.com/jacebrowning/datafiles/blob/develop/notebooks/orm.ipynb).
+
 # `all`
 
 Iterate over all objects matching the pattern:
