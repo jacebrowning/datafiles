@@ -53,3 +53,9 @@ def describe_manager():
         def when_file_missing(mock_save, expect, manager):
             expect(manager.get_or_create(foobar=2)) == MyClass(foobar=2)
             expect(mock_save.called) == True
+
+    def describe_filter():
+        @patch('datafiles.mapper.Mapper.exists', False)
+        def when_no_files_exist(expect, manager):
+            items = list(manager.filter())
+            expect(items) == []

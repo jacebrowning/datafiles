@@ -3,6 +3,7 @@
 - Added ORM method: `all()`
 - Added ORM method: `get_or_none()`.
 - Added ORM method: `get_or_create()`.
+- Added ORM method: `filter`.
 
 # 0.2 (2019-03-30)
 

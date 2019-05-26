@@ -70,3 +70,13 @@ MyModel(my_key='foo', my_value=42)
 >>> MyModel.objects.get_or_create('bar')
 MyModel(my_key='bar', my_value=0)
 ```
+
+# `filter`
+
+Iterate all objects matching the pattern with additional required attribute values:
+
+```python
+>>> generator = MyModel.objects.filter(my_value=42)
+>>> list(generator)
+[MyModel(my_key='foo', my_value=42)]
+```

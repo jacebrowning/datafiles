@@ -54,6 +54,15 @@ class Manager:
 
         return instance
 
+    def filter(self, **query):
+        for item in self.all():
+            match = True
+            for key, value in query.items():
+                if getattr(item, key) != value:
+                    match = False
+            if match:
+                yield item
+
 
 class HasDatafile(Protocol):
     datafile: Mapper
