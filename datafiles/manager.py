@@ -13,7 +13,6 @@ from parse import parse
 
 if TYPE_CHECKING:
     from .mapper import Mapper
-    from .model import Model
 
 
 Trilean = Optional[bool]
