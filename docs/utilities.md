@@ -1,3 +1,5 @@
+The follow functions exist to provide additional high-level functionality.
+
 # `auto`
 
 Given an arbitrary file, this library can attempt to map its structure into a Python object synchronized back to that file. For example, a YAML file named `sample.yml` containing the following:

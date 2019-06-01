@@ -1,3 +1,5 @@
+Finally, it's possible to use any custom types as annotations.
+
 # Extension
 
 Custom types can be saved and loaded by extending one of the included converter classes:

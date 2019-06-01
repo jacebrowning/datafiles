@@ -1,3 +1,5 @@
+Various container types are supported to defined collections of objects.
+
 # Lists
 
 The `List` annotation can be used to define a homogeneous collection of any other type.
