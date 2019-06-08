@@ -12,7 +12,7 @@
     "notebooks/files/": true,
     "notebooks/inventory/": true,
     "prof/": true,
-    "site/": true,
+    "site/": true
   },
   "python.pythonPath": ".venv/bin/python",
   "python.linting.enabled": true,
