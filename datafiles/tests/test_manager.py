@@ -14,6 +14,12 @@ class MyClass:
     foobar: int
 
 
+@dataclass
+class MyClass2:
+    foo: int
+    bar: int
+
+
 def describe_manager():
     @pytest.fixture
     def manager():
@@ -58,4 +64,11 @@ def describe_manager():
         @patch('datafiles.mapper.Mapper.exists', False)
         def when_no_files_exist(expect, manager):
             items = list(manager.filter())
+            expect(items) == []
+
+        @patch('datafiles.mapper.Mapper.exists', False)
+        def with_partial_positional_arguments(expect):
+            model = create_model(MyClass2, pattern='files/{self.foobar}.yml')
+            manager = Manager(model)
+            items = list(manager.filter(foo=1))
             expect(items) == []
