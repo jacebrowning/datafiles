@@ -16,7 +16,7 @@ nav:
 - API:
   - Model: api/model.md
   - Manager: api/manager.md
-  # - Mapper: api/mapper.md
+  - Mapper: api/mapper.md
 - Types:
   - Builtins: types/builtins.md
   - Extensions: types/extensions.md

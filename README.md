@@ -77,15 +77,13 @@ quantity_on_hand: 100
 2.5
 ```
 
-Restore an object from the filesystem:
+Objects can also be restored from the filesystem:
 
 ```python
-from datafiles import Missing
-
-item = InventoryItem("widget", Missing)
-
-assert item.unit_price == 2.5
-assert item.quantity_on_hand == 100
+>>> from datafiles import Missing
+>>> item = InventoryItem("widget", Missing)
+>>> assert item.unit_price == 2.5
+>>> assert item.quantity_on_hand == 100
 ```
 
 Demo: [Jupyter Notebook](https://github.com/jacebrowning/datafiles/blob/develop/notebooks/readme.ipynb)
@@ -106,4 +104,4 @@ $ poetry add datafiles
 
 ## Documentation
 
-To see additional syncrhonization and formatting options, please consult the [full documentation](https://datafiles.readthedocs.io/en/latest/options/setup/).
+To see additional syncrhonization and formatting options, please consult the [full documentation](https://datafiles.readthedocs.io).

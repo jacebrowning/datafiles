@@ -32,7 +32,7 @@ from typing import Dict, Optional
 | `foobar: Dict[str, int]` | `foobar = None` | `foobar: {}` |
 | `foobar: Optional[Dict[str, int]]` | `foobar = None` | `foobar: ` |
 
-**NOTE:** Schema enforcement is not available with the `Dict` annotation.
+_Schema enforcement is not available with the `Dict` annotation._
 
 # Dataclasses
 

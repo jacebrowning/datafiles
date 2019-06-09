@@ -10,7 +10,7 @@ class MyModel:
     my_value: int = 0
 ```
 
-Many of the following examples are also shown in this [Jupyter Notebook](https://github.com/jacebrowning/datafiles/blob/develop/notebooks/orm.ipynb).
+Many of the following examples are also shown in this [Jupyter Notebook](https://github.com/jacebrowning/datafiles/blob/develop/notebooks/manager_api.ipynb).
 
 # `all`
 
