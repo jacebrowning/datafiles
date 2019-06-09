@@ -1,13 +1,12 @@
 # Datafiles: A file-based ORM for dataclasses
 
-Datafiles is a bidirectional serialization library for Python [dataclasses](https://docs.python.org/3/library/dataclasses.html) that automatically synchronizes objects to the filesystem using type annotations. It supports a variety of file formats with round-trip preservation of formatting and comments, where possible. By default, saves are automatic and include the minimum data needed to restore an object.
+Datafiles is a bidirectional serialization library for Python [dataclasses](https://docs.python.org/3/library/dataclasses.html) to synchronizes objects to the filesystem using type annotations. It supports a variety of file formats with round-trip preservation of formatting and comments, where possible. By default, changes are automatically saved and only include the minimum data needed to restore an object.
 
-[![Waffle](https://img.shields.io/waffle/label/jacebrowning/datafiles/backlog.svg?colorB=blue)](https://waffle.io/jacebrowning/datafiles)
+[![PyPI Version](https://img.shields.io/pypi/v/datafiles.svg)](https://pypi.org/project/datafiles)
+[![PyPI License](https://img.shields.io/pypi/l/datafiles.svg)](https://pypi.org/project/datafiles)
 [![Travis CI](https://img.shields.io/travis/jacebrowning/datafiles/develop.svg?label=unix)](https://travis-ci.org/jacebrowning/datafiles)
 [![AppVeyor](https://img.shields.io/appveyor/ci/jacebrowning/datafiles/develop.svg?label=windows)](https://ci.appveyor.com/project/jacebrowning/datafiles)
 [![Coveralls](https://img.shields.io/coveralls/jacebrowning/datafiles.svg)](https://coveralls.io/r/jacebrowning/datafiles)
-[![PyPI Version](https://img.shields.io/pypi/v/datafiles.svg)](https://pypi.org/project/datafiles)
-[![PyPI License](https://img.shields.io/pypi/l/datafiles.svg)](https://pypi.org/project/datafiles)
 
 ## Usage
 
@@ -78,15 +77,13 @@ quantity_on_hand: 100
 2.5
 ```
 
-Restore an object from the filesystem:
+Objects can also be restored from the filesystem:
 
 ```python
-from datafiles import Missing
-
-item = InventoryItem("widget", Missing)
-
-assert item.unit_price == 2.5
-assert item.quantity_on_hand == 100
+>>> from datafiles import Missing
+>>> item = InventoryItem("widget", Missing)
+>>> assert item.unit_price == 2.5
+>>> assert item.quantity_on_hand == 100
 ```
 
 Demo: [Jupyter Notebook](https://github.com/jacebrowning/datafiles/blob/develop/notebooks/readme.ipynb)
@@ -107,4 +104,4 @@ $ poetry add datafiles
 
 ## Documentation
 
-To see additional syncrhonization and formatting options, please consult the [full documentation](https://datafiles.readthedocs.io/en/latest/options/setup/).
+To see additional syncrhonization and formatting options, please consult the [full documentation](https://datafiles.readthedocs.io).

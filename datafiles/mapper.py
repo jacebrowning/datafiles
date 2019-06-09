@@ -1,3 +1,5 @@
+"""Defines methods to synchronize model instances to the filesystem."""
+
 from __future__ import annotations
 
 import dataclasses
@@ -9,24 +11,16 @@ from typing import Any, Dict, Optional
 import log
 from cached_property import cached_property
 
-from . import formats, hooks
+from . import config, formats, hooks
 from .converters import Converter, List, map_type
 from .utils import prettify, recursive_update
 
 
 Trilean = Optional[bool]
-Missing = dataclasses._MISSING_TYPE  # pylint: disable=protected-access
+Missing = dataclasses._MISSING_TYPE
 
 
-class Manager:
-    def __init__(self, cls):
-        self.model = cls
-
-    def all(self):
-        raise NotImplementedError
-
-
-class Datafile:
+class Mapper:
     def __init__(
         self,
         instance: Any,
@@ -38,7 +32,7 @@ class Datafile:
         auto_load: bool,
         auto_save: bool,
         auto_attr: bool,
-        root: Optional[Datafile] = None,
+        root: Optional[Mapper] = None,
     ) -> None:
         assert manual is not None
         assert defaults is not None
@@ -257,20 +251,15 @@ class Datafile:
                     nested_data[field.name] = None  # type: ignore
             dataclass = converter.to_python_value(nested_data, target_object=dataclass)
 
-        # TODO: Find a way to avoid this circular import
         try:
-            datafile = dataclass.datafile
+            mapper = dataclass.datafile
         except AttributeError:
-            from .builders import build_datafile
-
             log.warn(f"{dataclass} has not yet been patched to have 'datafile'")
-            datafile = build_datafile(dataclass)
+            mapper = create_mapper(dataclass)
 
-        for name2, converter2 in datafile.attrs.items():
+        for name2, converter2 in mapper.attrs.items():
             _value = nested_data.get(  # type: ignore
-                # pylint: disable=protected-access
-                name2,
-                datafile._get_default_field_value(name2),
+                name2, mapper._get_default_field_value(name2)
             )
             value = converter2.to_python_value(
                 _value, target_object=getattr(dataclass, name2)
@@ -349,3 +338,34 @@ class Datafile:
         log.debug('=' * len(message) + '\n\n' + (text or '<nothing>\n'))
         self.path.parent.mkdir(parents=True, exist_ok=True)
         self.path.write_text(text)
+
+
+def create_mapper(obj, root=None) -> Mapper:
+    try:
+        return object.__getattribute__(obj, 'datafile')
+    except AttributeError:
+        log.debug(f"Building 'datafile' for {obj.__class__} object")
+
+    meta = config.load(obj)
+    attrs = meta.datafile_attrs
+    pattern = meta.datafile_pattern
+
+    if attrs is None and dataclasses.is_dataclass(obj):
+        attrs = {}
+        log.debug(f'Mapping attributes for {obj.__class__} object')
+        for field in dataclasses.fields(obj):
+            self_name = f'self.{field.name}'
+            if pattern is None or self_name not in pattern:
+                attrs[field.name] = map_type(field.type, name=field.name)
+
+    return Mapper(
+        obj,
+        attrs=attrs or {},
+        pattern=pattern,
+        manual=meta.datafile_manual,
+        defaults=meta.datafile_defaults,
+        auto_load=meta.datafile_auto_load,
+        auto_save=meta.datafile_auto_save,
+        auto_attr=meta.datafile_auto_attr,
+        root=root,
+    )

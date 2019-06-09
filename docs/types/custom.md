@@ -1,3 +1,5 @@
+Finally, it's possible to use any custom types as annotations.
+
 # Extension
 
 Custom types can be saved and loaded by extending one of the included converter classes:
@@ -10,7 +12,49 @@ Custom types can be saved and loaded by extending one of the included converter 
 | `converters.Float` | Converts to `float` before serialization. |
 | `converters.String` | Converts to `str` before serialization. |
 
-For example, here is a custom `datetime` class that serializes using the ISO format:
+For example, here is a custom converter that ensures floating point numbers are always rounded to two decimal places:
+
+```
+#!python hl_lines="7"
+from datafiles import converters
+
+
+class RoundedFloat(converters.Float):
+
+    @classmethod
+    def to_preserialization_data(cls, python_value, **kwargs):
+        number = super().to_preserialization_data(python_value, **kwargs)
+        return round(number, 2)
+
+
+@datafile("sample.yml")
+class Result:
+    total: RoundedFloat = 0.0
+```
+
+which can be constructed like so:
+
+```python
+result = Result(1.2345)
+```
+
+to save this `sample.yml` file:
+
+```yaml
+total: 1.23
+```
+
+that can be loaded as follows:
+
+```python
+>>> result = Result()
+>>> result.total
+1.23
+```
+
+# Multiple Inheritance
+
+It's also possible to extend an existing class in order to have instances inherit the functionality of that class. For example, here is a custom converter based on the `datetime` class that serializes using the ISO format:
 
 ```
 #!python hl_lines="9 14"
@@ -35,14 +79,14 @@ class MyDateTime(converters.Converter, datetime):
 
 
 @datafile("sample.yml")
-class MyTimestamp:
+class Timestamp:
     my_datetime: MyDateTime = None
 ```
 
 which can be constructed like so:
 
 ```python
-my_timestamp = MyTimestamp(datetime.now())
+timestamp = Timestamp(datetime.now())
 ```
 
 to save this `sample.yml` file:
@@ -54,12 +98,12 @@ my_datetime: 2019-01-30T23:17:45
 that can be loaded as follows:
 
 ```python
->>> my_timestamp = MyTimestamp()
->>> my_timestamp.my_datetime
+>>> timestamp = Timestamp()
+>>> timestamp.my_datetime
 datetime.datetime(2019, 1, 30, 23, 17, 45)
 ```
 
-# Registration
+# Converter Registration
 
 If you'd rather not have to modify your own classes (or don't have control over the source of a class), you can also register a custom converter for any class:
 
@@ -87,14 +131,14 @@ converters.register(datetime, DateTimeConverter)
 
 
 @datafile("sample.yml")
-class MyTimestamp:
+class Timestamp:
     my_datetime: datetime = None
 ```
 
 which can be constructed like so:
 
 ```python
-my_timestamp = MyTimestamp(datetime.now())
+timestamp = Timestamp(datetime.now())
 ```
 
 to save this `sample.yml` file:
@@ -106,7 +150,7 @@ my_datetime: 2019-01-30T23:18:30
 that can be loaded as follows:
 
 ```python
->>> my_timestamp = MyTimestamp()
->>> my_timestamp.my_datetime
+>>> timestamp = Timestamp()
+>>> timestamp.my_datetime
 datetime.datetime(2019, 1, 30, 23, 18, 30)
 ```

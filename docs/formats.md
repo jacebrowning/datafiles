@@ -1,3 +1,5 @@
+The following formats are supported for serialization.
+
 # YAML
 
 By default, datafiles uses the [YAML language](https://yaml.org/) for serialization. Any of the following file extensions will use this format:

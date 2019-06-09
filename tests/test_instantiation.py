@@ -104,6 +104,24 @@ def describe_existing_file():
         expect(sample.nested.score) == 8.0
 
 
+def describe_nonexisting_file():
+    @datafile('../tmp/sample.yml')
+    class SampleAutomatic:
+        pass
+
+    SampleManual = SampleWithDefaults
+
+    def it_is_created_automatically_by_default(expect):
+        sample = SampleAutomatic()
+
+        expect(sample.datafile.exists) == True
+
+    def it_is_not_created_automatically_when_manual(expect):
+        sample = SampleManual()
+
+        expect(sample.datafile.exists) == False
+
+
 def describe_factory_defaults():
     def when_no_file(expect):
         sample = SampleWithFactoryDefaults(1.2, 3.4)

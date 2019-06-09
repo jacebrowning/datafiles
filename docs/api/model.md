@@ -1,3 +1,5 @@
+A model is created by either extending the `Model` class or using the `datafile()` decorator.
+
 # Decorator
 
 Given this example dataclass:

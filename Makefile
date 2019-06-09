@@ -16,7 +16,7 @@ VIRTUAL_ENV ?= .venv
 all: install
 
 .PHONY: ci
-ci: format check test mkdocs ## Run all tasks that determine CI status
+ci: format check test mkdocs  ## Run all tasks that determine CI status
 
 .PHONY: watch
 watch: install  ## Continuously run all CI tasks when files chanage
@@ -24,6 +24,7 @@ watch: install  ## Continuously run all CI tasks when files chanage
 
 .PHONY: demo
 demo: install
+	poetry run nbstripout notebooks/*.ipynb
 	poetry run jupyter notebook --notebook-dir=notebooks --browser=firefox
 
 # SYSTEM DEPENDENCIES #########################################################
@@ -88,7 +89,7 @@ test-profile: install
 MKDOCS_INDEX := site/index.html
 
 .PHONY: docs
-docs: mkdocs uml ## Generate documentation and UML
+docs: mkdocs uml papermill  ## Generate documentation and UML
 
 .PHONY: mkdocs
 mkdocs: install $(MKDOCS_INDEX)
@@ -114,6 +115,14 @@ docs/*.png: $(MODULES)
 	- mv -f classes_$(PACKAGE).png docs/classes.png
 	- mv -f packages_$(PACKAGE).png docs/packages.png
 
+.PHONY: papermill
+papermill: install
+	@ cd notebooks; for filename in *.ipynb; do \
+	  poetry run papermill $$filename $$filename; \
+	done
+	git config filter.nbstripout.extrakeys 'metadata.papermill cell.metadata.papermill'
+	poetry run nbstripout --keep-output notebooks/*.ipynb
+
 # RELEASE #####################################################################
 
 DIST_FILES := dist/*.tar.gz dist/*.whl
@@ -125,7 +134,7 @@ $(DIST_FILES): $(MODULES) pyproject.toml
 	poetry build
 
 .PHONY: upload
-upload: dist ## Upload the current version to PyPI
+upload: dist  ## Upload the current version to PyPI
 	git diff --name-only --exit-code
 	poetry publish
 	bin/open https://pypi.org/project/$(PROJECT)

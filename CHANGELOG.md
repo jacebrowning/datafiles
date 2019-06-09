@@ -1,3 +1,10 @@
+# 0.3 (2019-06-09)
+
+- Added ORM method: `all()`
+- Added ORM method: `get_or_none()`.
+- Added ORM method: `get_or_create()`.
+- Added ORM method: `filter`.
+
 # 0.2 (2019-03-30)
 
 - Added an option to automatically resave files after loading.

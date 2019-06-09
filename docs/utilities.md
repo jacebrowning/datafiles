@@ -1,3 +1,5 @@
+The follow functions exist to provide additional high-level functionality.
+
 # `auto`
 
 Given an arbitrary file, this library can attempt to map its structure into a Python object synchronized back to that file. For example, a YAML file named `sample.yml` containing the following:
@@ -40,3 +42,5 @@ numbers:
 - 2
 - 3
 ```
+
+Additional examples can be found in this [Jupyter Notebook](https://github.com/jacebrowning/datafiles/blob/develop/notebooks/file_inference.ipynb).

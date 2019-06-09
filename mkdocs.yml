@@ -12,15 +12,17 @@ markdown_extensions:
       linenums: True
 
 nav:
-- Home: index.md
-- Options:
-  - Setup: options/setup.md
-  - Formats: options/formats.md
+- Overview: index.md
+- API:
+  - Model: api/model.md
+  - Manager: api/manager.md
+  - Mapper: api/mapper.md
 - Types:
   - Builtins: types/builtins.md
   - Extensions: types/extensions.md
   - Containers: types/containers.md
   - Custom Types: types/custom.md
+- Formats: formats.md
 - Utilities: utilities.md
 - About:
   - Release Notes: about/changelog.md

@@ -5,7 +5,7 @@ from functools import wraps
 import log
 
 from . import settings
-from .builders import build_datafile
+from .mapper import create_mapper
 
 
 LOAD_BEFORE_METHODS = ['__getattribute__', '__getitem__', '__iter__']
@@ -35,7 +35,7 @@ class Dict(dict):
     """Patchable `dict` type."""
 
 
-def apply(instance, datafile):
+def apply(instance, mapper):
     """Path methods that get or set attributes."""
     cls = instance.__class__
     log.debug(f'Patching methods on {cls}')
@@ -65,8 +65,8 @@ def apply(instance, datafile):
                     setattr(instance, attr_name, attr)
                 else:
                     continue
-            attr.datafile = build_datafile(attr, root=datafile)
-            apply(attr, datafile)
+            attr.datafile = create_mapper(attr, root=mapper)
+            apply(attr, mapper)
 
 
 def load_before(cls, method):
@@ -79,14 +79,14 @@ def load_before(cls, method):
     def wrapped(self, *args, **kwargs):
         __tracebackhide__ = settings.HIDE_TRACEBACK_IN_HOOKS
 
-        datafile = get_datafile(self)
-        if enabled(datafile, args):
-            if datafile.exists and datafile.modified:
+        mapper = get_mapper(self)
+        if enabled(mapper, args):
+            if mapper.exists and mapper.modified:
                 log.debug(f"Loading automatically before '{method.__name__}' call")
-                datafile.load()
-                if datafile.auto_save:
+                mapper.load()
+                if mapper.auto_save:
                     log.debug("Saving automatically after load")
-                    datafile.save(_log=False)
+                    mapper.save(_log=False)
 
         return method(self, *args, **kwargs)
 
@@ -106,20 +106,20 @@ def save_after(cls, method):
     def wrapped(self, *args, **kwargs):
         __tracebackhide__ = settings.HIDE_TRACEBACK_IN_HOOKS
 
-        datafile = get_datafile(self)
-        if enabled(datafile, args):
-            if datafile.exists and datafile.modified:
+        mapper = get_mapper(self)
+        if enabled(mapper, args):
+            if mapper.exists and mapper.modified:
                 log.debug(f"Loading automatically before '{method.__name__}' call")
-                datafile.load()
+                mapper.load()
 
         result = method(self, *args, **kwargs)
 
-        if enabled(datafile, args):
+        if enabled(mapper, args):
             log.debug(f"Saving automatically after '{method.__name__}' call")
-            datafile.save()
-            if datafile.auto_load:
+            mapper.save()
+            if mapper.auto_load:
                 log.debug("Loading automatically after save")
-                datafile.load(_log=False)
+                mapper.load(_log=False)
 
         return result
 
@@ -129,22 +129,22 @@ def save_after(cls, method):
     return wrapped
 
 
-def get_datafile(obj):
+def get_mapper(obj):
     try:
         return object.__getattribute__(obj, 'datafile')
     except AttributeError:
         return None
 
 
-def enabled(datafile, args) -> bool:
+def enabled(mapper, args) -> bool:
     """Determine if hooks are enabled for the current method."""
     if not settings.HOOKS_ENABLED:
         return False
 
-    if datafile is None:
+    if mapper is None:
         return False
 
-    if datafile.manual:
+    if mapper.manual:
         return False
 
     if args and isinstance(args[0], str):

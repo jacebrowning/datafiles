@@ -1,0 +1,24 @@
+{
+  "files.exclude": {
+    ".cache/": true,
+    ".venv/": true,
+    "*.egg-info": true,
+    "**/__pycache__": true,
+    "**/.ipynb_checkpoints": true,
+    "**/tmp/": true,
+    "dist/": true,
+    "htmlcov/": true,
+    "notebooks/*.yml": true,
+    "notebooks/files/": true,
+    "notebooks/inventory/": true,
+    "prof/": true,
+    "site/": true
+  },
+  "python.pythonPath": ".venv/bin/python",
+  "python.linting.enabled": true,
+  "python.linting.pylintEnabled": true,
+  "python.linting.pylintArgs": ["--rcfile", ".pylint.ini"],
+  "python.linting.mypyEnabled": true,
+  "python.linting.mypyArgs": ["--config-file", ".mypy.ini"],
+  "python.linting.pydocstyleEnabled": true
+}

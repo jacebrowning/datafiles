@@ -3,24 +3,24 @@ import dataclasses
 import log
 from classproperties import classproperty
 
-from . import hooks
-from .builders import build_datafile
-from .managers import Manager
-from .meta import ModelMeta
+from . import config, hooks
+from .manager import Manager
+from .mapper import create_mapper
 
 
 class Model:
 
-    Meta: ModelMeta = ModelMeta()
+    Meta: config.Meta = config.Meta()
 
     def __post_init__(self):
         with hooks.disabled():
             log.debug(f'Initializing {self.__class__} object')
 
-            self.datafile = build_datafile(self)
+            self.datafile = create_mapper(self)
 
             path = self.datafile.path
             exists = self.datafile.exists
+            create = not self.datafile.manual
 
             if path:
                 log.debug(f'Datafile path: {path}')
@@ -28,7 +28,7 @@ class Model:
 
                 if exists:
                     self.datafile.load(_first=True)
-                elif path:
+                elif path and create:
                     self.datafile.save()
 
                 hooks.apply(self, self.datafile)
@@ -36,7 +36,7 @@ class Model:
         log.debug(f'Initialized {self.__class__} object')
 
     @classproperty
-    def datafiles(cls) -> Manager:  # pylint: disable=no-self-argument
+    def objects(cls) -> Manager:  # pylint: disable=no-self-argument
         return Manager(cls)
 
 
@@ -44,22 +44,22 @@ def create_model(
     cls,
     *,
     attrs=None,
-    pattern=None,
     manual=None,
+    pattern=None,
     defaults=None,
     auto_load=None,
     auto_save=None,
     auto_attr=None,
 ):
-    """Patch datafile attributes on to an existing dataclass."""
+    """Patch model attributes on to an existing dataclass."""
     log.debug(f'Converting {cls} to a datafile model')
 
     if not dataclasses.is_dataclass(cls):
         raise ValueError(f'{cls} must be a dataclass')
 
-    # Patch Meta
+    # Patch meta
 
-    m = getattr(cls, 'Meta', ModelMeta())
+    m = getattr(cls, 'Meta', config.Meta())
 
     if attrs is not None:
         m.datafile_attrs = attrs
@@ -78,6 +78,10 @@ def create_model(
         m.datafile_auto_attr = auto_attr
 
     cls.Meta = m
+
+    # Patch manager
+
+    cls.objects = Manager(cls)
 
     # Patch __init__
 

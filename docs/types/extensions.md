@@ -1,3 +1,5 @@
+For convenience, additional types are defined to handle common scenarios.
+
 # Numbers
 
 The `Number` converter should be used for values that can be both integers or floats, but should not be coerced into either type during serialization.
