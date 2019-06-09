@@ -16,7 +16,7 @@ VIRTUAL_ENV ?= .venv
 all: install
 
 .PHONY: ci
-ci: format check test mkdocs ## Run all tasks that determine CI status
+ci: format check test mkdocs  ## Run all tasks that determine CI status
 
 .PHONY: watch
 watch: install  ## Continuously run all CI tasks when files chanage
@@ -89,7 +89,7 @@ test-profile: install
 MKDOCS_INDEX := site/index.html
 
 .PHONY: docs
-docs: mkdocs uml papermill ## Generate documentation and UML
+docs: mkdocs uml papermill  ## Generate documentation and UML
 
 .PHONY: mkdocs
 mkdocs: install $(MKDOCS_INDEX)
@@ -134,7 +134,7 @@ $(DIST_FILES): $(MODULES) pyproject.toml
 	poetry build
 
 .PHONY: upload
-upload: dist ## Upload the current version to PyPI
+upload: dist  ## Upload the current version to PyPI
 	git diff --name-only --exit-code
 	poetry publish
 	bin/open https://pypi.org/project/$(PROJECT)

@@ -1,4 +1,4 @@
-# 0.3 (unreleased)
+# 0.3 (2019-06-09)
 
 - Added ORM method: `all()`
 - Added ORM method: `get_or_none()`.

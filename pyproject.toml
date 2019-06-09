@@ -1,7 +1,7 @@
 [tool.poetry]
 
 name = "datafiles"
-version = "0.3b4"
+version = "0.3"
 description = "File-based ORM for dataclasses."
 
 license = "MIT"
@@ -16,12 +16,12 @@ repository = "https://github.com/jacebrowning/datafiles"
 
 keywords = [
     "dataclasses",
-    "JSON",
-    "ORM",
     "serialization",
-    "TOML",
     "type-annotations",
+    "object-relational mapping",
     "YAML",
+    "JSON",
+    "TOML",
 ]
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -62,7 +62,7 @@ black = "=19.3b0"
 isort = "=4.3.4"
 
 # Linters
-mypy = "*"
+mypy = "^0.701"
 pylint = "^2.1"
 pydocstyle = "*"
 
