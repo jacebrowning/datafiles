@@ -36,7 +36,7 @@ False
 
 _By default, the file is created automatically. Set `manual=True` to disable this behavior._
 
-# `save` / `load`
+# `save()` / `load()`
 
 Manually synchronize an object with the filesystem:
 

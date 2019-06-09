@@ -12,7 +12,7 @@ class MyModel:
 
 Many of the following examples are also shown in this [Jupyter Notebook](https://github.com/jacebrowning/datafiles/blob/develop/notebooks/manager_api.ipynb).
 
-# `all`
+# `all()`
 
 Iterate over all objects matching the pattern:
 
@@ -35,7 +35,7 @@ MyModel(my_key='foo' my_value=0)
 MyModel(my_key='bar', my_value=42)
 ```
 
-# `get_or_none`
+# `get_or_none()`
 
 Instantiate an object from an existing file or return `None` if no matching file exists:
 
@@ -53,7 +53,7 @@ None
 MyModel(my_key='foobar', my_value=42)
 ```
 
-# `get_or_create`
+# `get_or_create()`
 
 Instantiate an object from an existing file or create one if no matching file exists:
 
@@ -71,7 +71,7 @@ MyModel(my_key='foo', my_value=42)
 MyModel(my_key='bar', my_value=0)
 ```
 
-# `filter`
+# `filter()`
 
 Iterate all objects matching the pattern with additional required attribute values:
 
