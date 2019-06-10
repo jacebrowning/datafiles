@@ -204,7 +204,7 @@ def describe_automatic_load_after_save():
     def with_setattr(expect, dedent):
         sample = Sample()
 
-        sample.item = 42
+        sample.item = 42  # type: ignore
 
         expect(sample.datafile.text) == dedent(
             """

@@ -23,7 +23,7 @@ from datafiles import datafile
 
 @datafile("samples/{self.key}.yml")
 class Sample:
-    
+
     key: int
     name: str
     value: float = 0.0
@@ -53,6 +53,16 @@ and the following instantiation restores the object:
 >>> sample = Sample(42, Missing)
 >>> sample.name
 Widget
+```
+
+# Type Checker Support
+
+If using mypy, enable the plugin via the `mypy.ini` configuration file:
+
+```ini
+[mypy]
+
+plugins = datafiles.plugins:mypy
 ```
 
 # Resources

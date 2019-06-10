@@ -12,7 +12,7 @@ from datafiles import datafile
 
 
 def describe_automatic():
-    """Tests to create a datafile using the decorator."""
+    """Test creating a datafile using the decorator."""
 
     @pytest.fixture
     def sample():
@@ -42,7 +42,7 @@ def describe_automatic():
 
 
 def describe_automatic_with_defaults():
-    """Tests to create a datafile using the decorator with defaults."""
+    """Test creating a datafile using the decorator with defaults."""
 
     def describe_flat():
         @pytest.fixture
@@ -112,7 +112,7 @@ def describe_automatic_with_defaults():
 
 
 def describe_manual():
-    """Tests to create a datafile using the model class."""
+    """Test creating a datafile using the model class."""
 
     @pytest.fixture
     def sample():
@@ -142,7 +142,7 @@ def describe_manual():
 
 
 def describe_manual_with_attrs():
-    """Tests to create a datafile with explicit attrs."""
+    """Test creating a datafile with explicit attrs."""
 
     @pytest.fixture
     def sample():
@@ -169,7 +169,7 @@ def describe_manual_with_attrs():
 
 
 def describe_manual_with_attrs_and_pattern():
-    """Tests to create a datafile with explicit attrs and pattern."""
+    """Test creating a datafile with explicit attrs and pattern."""
 
     @pytest.fixture
     def sample():

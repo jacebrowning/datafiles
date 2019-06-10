@@ -1,3 +1,7 @@
+# 0.4 (unreleased)
+
+- Added plugin for `mypy` support.
+
 # 0.3 (2019-06-09)
 
 - Added ORM method: `all()`

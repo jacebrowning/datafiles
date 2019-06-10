@@ -11,8 +11,8 @@ from datafiles.converters import Number, Text
 
 @datafile('../tmp/sample.yml')
 class Sample:
-    number: Number = 0
-    text: Text = ""
+    number: Number = Number(0)
+    text: Text = Text("")
 
 
 def describe_number():
