@@ -5,6 +5,7 @@ from typing import Callable, Optional
 from mypy.nodes import MDEF, SymbolTableNode, Var
 from mypy.plugin import ClassDefContext, Plugin
 from mypy.plugins.dataclasses import DataclassTransformer
+from mypy.types import AnyType, TypeOfAny
 
 
 class DatafilesPlugin(Plugin):
@@ -20,8 +21,14 @@ def datafile_class_maker_callback(ctx: ClassDefContext) -> None:
     # Inherit all type definitions from dataclasses
     DataclassTransformer(ctx).transform()
 
-    # Define 'datafile' as a property on the class
-    var = Var('datafile', None)
+    # Define 'objects' as a class propery
+    var = Var('objects', AnyType(TypeOfAny.unannotated))
+    var.info = ctx.cls.info
+    var.is_property = True
+    ctx.cls.info.names[var.name()] = SymbolTableNode(MDEF, var)
+
+    # Define 'datafile' as an instance property
+    var = Var('datafile', AnyType(TypeOfAny.unannotated))
     var.info = ctx.cls.info
     var.is_property = True
     ctx.cls.info.names[var.name()] = SymbolTableNode(MDEF, var)

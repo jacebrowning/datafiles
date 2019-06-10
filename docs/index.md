@@ -55,7 +55,7 @@ and the following instantiation restores the object:
 Widget
 ```
 
-# Type Checker Support
+# Type Checking
 
 If using mypy, enable the plugin via the `mypy.ini` configuration file:
 

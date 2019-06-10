@@ -18,41 +18,30 @@ class InventoryItem:
         return self.unit_price * self.quantity_on_hand
 
 
-def test_multiple_instances_are_distinct(expect, read, dedent):
-    item_1 = InventoryItem(1, "Nuts", 0.23)
-    item_2 = InventoryItem(2, "Bolts", 0.45, quantity_on_hand=100)
+def test_multiple_instances_are_distinct(expect):
+    item_1 = InventoryItem.objects.get_or_create(1, "Nuts", 0.23)
+    item_2 = InventoryItem.objects.get_or_create(2, "Bolts", 0.45, quantity_on_hand=100)
 
-    expect(read('tmp/inventory/1.yml')) == dedent(
-        """
-        name: Nuts
-        unit_price: 0.23
-        """
-    )
-    expect(read('tmp/inventory/2.yml')) == dedent(
-        """
-        name: Bolts
-        unit_price: 0.45
-        quantity_on_hand: 100
-        """
-    )
+    expect(item_1.datafile.data) == {'name': 'Nuts', 'unit_price': 0.23}
+    expect(item_2.datafile.data) == {
+        'name': 'Bolts',
+        'unit_price': 0.45,
+        'quantity_on_hand': 100,
+    }
 
     item_1.quantity_on_hand = 200
     item_2.unit_price = 0.34
 
-    expect(read('tmp/inventory/1.yml')) == dedent(
-        """
-        name: Nuts
-        unit_price: 0.23
-        quantity_on_hand: 200
-        """
-    )
-    expect(read('tmp/inventory/2.yml')) == dedent(
-        """
-        name: Bolts
-        unit_price: 0.34
-        quantity_on_hand: 100
-        """
-    )
+    expect(item_1.datafile.data) == {
+        'name': 'Nuts',
+        'unit_price': 0.23,
+        'quantity_on_hand': 200,
+    }
+    expect(item_2.datafile.data) == {
+        'name': 'Bolts',
+        'unit_price': 0.34,
+        'quantity_on_hand': 100,
+    }
 
 
 def test_classes_can_share_a_nested_dataclass(logbreak, expect):
