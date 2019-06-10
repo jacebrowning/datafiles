@@ -12,7 +12,7 @@ class DatafilesPlugin(Plugin):
     def get_class_decorator_hook(
         self, fullname: str
     ) -> Optional[Callable[[ClassDefContext], None]]:
-        if fullname == 'datafiles.decorators.datafile':
+        if fullname.endswith('.datafile'):
             return datafile_class_maker_callback
         return None
 
