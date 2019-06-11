@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import dataclasses
+import inspect
 from glob import iglob
+from pathlib import Path
 from typing import TYPE_CHECKING, Iterator, Optional
 from typing_extensions import Protocol
 
@@ -24,7 +26,8 @@ class Manager:
         self.model = cls
 
     def all(self) -> Iterator[HasDatafile]:
-        pattern = self.model.Meta.datafile_pattern
+        root = Path(inspect.getfile(self.model)).parent
+        pattern = str(root / self.model.Meta.datafile_pattern)
         splatted = pattern.format(self=Splats())
         log.info(f'Finding files matching pattern: {splatted}')
         for filename in iglob(splatted):
