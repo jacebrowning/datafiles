@@ -1,6 +1,8 @@
+<h1>Custom Types</h1>
+
 Finally, it's possible to use any custom types as annotations.
 
-# Extension
+## Single Inheritance
 
 Custom types can be saved and loaded by extending one of the included converter classes:
 
@@ -52,7 +54,7 @@ that can be loaded as follows:
 1.23
 ```
 
-# Multiple Inheritance
+## Multiple Inheritance
 
 It's also possible to extend an existing class in order to have instances inherit the functionality of that class. For example, here is a custom converter based on the `datetime` class that serializes using the ISO format:
 
@@ -103,9 +105,9 @@ that can be loaded as follows:
 datetime.datetime(2019, 1, 30, 23, 17, 45)
 ```
 
-# Converter Registration
+## Converter Registration
 
-If you'd rather not have to modify your own classes (or don't have control over the source of a class), you can also register a custom converter for any class:
+Finally, if you'd rather not have to modify your own classes (or don't have control over the source of a class), you can also register a custom converter for any class:
 
 ```
 #!python hl_lines="9 14"

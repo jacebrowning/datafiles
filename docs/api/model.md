@@ -1,6 +1,8 @@
+<h1>Model API</h1>
+
 A model is created by either extending the `Model` class or using the `datafile()` decorator.
 
-# Decorator
+## Decorator
 
 Given this example dataclass:
 
@@ -44,7 +46,7 @@ class Item:
     available: bool
 ```
 
-## Filename
+<h3>Filename</h3>
 
 Instances of the class are synchronized to disk according to the `<pattern>` string:
 
@@ -55,7 +57,7 @@ Item("def")  # <=> items/def.yml
 
 Attributes included in the filename pattern are automatically excluded from the file contents.
 
-## Options
+<h3>Options</h3>
 
 The following options can be passed to the `@datafile()` decorator:
 
@@ -63,7 +65,7 @@ The following options can be passed to the `@datafile()` decorator:
 | --- | --- | --- | --- |
 | `attrs` | `dict` | Attributes to synchronize mapped to `datafile.converters` classes for serialization. | `{}` <sup>1</sup> |
 | `manual` | `bool` | Synchronize object and file changes manually. | `False` |
-| `defaults` | `bool` | Include default values in files. | `False` | 
+| `defaults` | `bool` | Include default values in files. | `False` |
 | `auto_load` | `bool` | Load automatically after saving.<br>If `manual=True` this option is ignored. | `True` |
 | `auto_save` | `bool` | Save automatically after loading.<br>If `manual=True` this option is ignored. | `True` |
 | `auto_attr` | `bool` | Automatically infer new attributes from the file. | `False` |
@@ -87,7 +89,7 @@ class Config:
     default_count: int = 42
 ```
 
-# Meta class
+## Meta class
 
 Alternatively, any of the above options can be configured through code by setting `datafile_<option>` in a `Meta` class:
 
@@ -109,7 +111,7 @@ class Item:
         datafiles_auto_save = False
 ```
 
-# Base class
+## Base class
 
 Finally, a datafile can explicitly extend `datafiles.Model` and set the pattern in the `Meta` class:
 

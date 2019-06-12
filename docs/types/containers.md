@@ -1,6 +1,8 @@
+<h1>Container Types</h1>
+
 Various container types are supported to defined collections of objects.
 
-# Lists
+## Lists
 
 The `List` annotation can be used to define a homogeneous collection of any other type.
 
@@ -17,7 +19,7 @@ from typing import List, Optional
 
 More examples can be found in this [Jupyter Notebook](https://github.com/jacebrowning/datafiles/blob/develop/notebooks/patched_containers.ipynb).
 
-# Dictionaries
+## Dictionaries
 
 The `Dict` annotation can be used to define a loose mapping of multiple types.
 
@@ -34,7 +36,7 @@ from typing import Dict, Optional
 
 _Schema enforcement is not available with the `Dict` annotation._
 
-# Dataclasses
+## Dataclasses
 
 Other dataclasses can serve as the annotation for an attribute to create nested structure:
 

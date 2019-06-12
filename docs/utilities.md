@@ -1,3 +1,5 @@
+<h1>Utilities</h1>
+
 The follow functions exist to provide additional high-level functionality.
 
 # `auto()`
