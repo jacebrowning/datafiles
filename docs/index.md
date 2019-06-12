@@ -18,7 +18,7 @@ $ poetry add datafiles
 
 ## Quick Start
 
-Decorate a class with a directory pattern to synchronize instances:
+Decorate a [type-annotated](https://docs.python.org/3/library/typing.html) class with a directory pattern to synchronize instances:
 
 ```python
 from datafiles import datafile

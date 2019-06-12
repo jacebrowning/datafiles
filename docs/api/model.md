@@ -56,6 +56,7 @@ Item("def")  # <=> items/def.yml
 ```
 
 Attributes included in the filename pattern are automatically excluded from the file contents.
+Filename patterns are relative to the file in which models are defined unless `<pattern>` is an absolute path.
 
 <h3>Options</h3>
 

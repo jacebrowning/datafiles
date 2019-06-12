@@ -194,3 +194,20 @@ def describe_manual_with_attrs_and_pattern():
 
     def it_converts_attributes(expect, sample):
         expect(sample.datafile.data) == {'name': "d"}
+
+
+def describe_absolute_pattern():
+    """Test creating a datafile using the decorator with an absolute path."""
+
+    @pytest.fixture
+    def sample():
+        @datafile('/private/tmp/{self.key}.yml')
+        class Sample:
+            key: int
+            name: str
+            score: float = 1 / 2
+
+        return Sample(5, "a")
+
+    def it_formats_path_from_pattern(expect, sample):
+        expect(sample.datafile.path) == Path('/private/tmp') / '5.yml'
