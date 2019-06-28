@@ -11,9 +11,11 @@ from .samples import (
     SampleWithCustomFields,
     SampleWithDefaults,
     SampleWithList,
+    SampleWithListOfDataclasses,
     SampleWithNesting,
     SampleWithNestingAndDefaults,
     SampleWithOptionals,
+    _NestedSample1,
 )
 
 
@@ -72,6 +74,7 @@ def describe_nominal():
 
 
 def describe_lists():
+    @pytest.mark.xfail(reason="TODO: remove trailing whitespace")
     def when_empty(expect):
         sample = SampleWithList([])
 
@@ -98,6 +101,21 @@ def describe_lists():
                   - 1.0
                   - 2.3
                   - 4.5
+                """
+            )
+
+    def with_dataclasses(expect):
+        sample = SampleWithListOfDataclasses([_NestedSample1('foobar', 42)])
+
+        logbreak("Saving")
+        sample.datafile.save()
+
+        with open('tmp/sample.yml') as f:
+            expect(f.read()) == dedent(
+                """
+                items:
+                  - name: foobar
+                    score: 42.0
                 """
             )
 

@@ -57,22 +57,22 @@ def dedent(text: str) -> str:
     return text.replace('    ' * indent, '')
 
 
-def write(path: str, text: str) -> None:
+def write(filename: str, text: str) -> None:
     """Write text to a file with logging."""
-    _path = Path(path).resolve()
-    _text = dedent(text)
-    message = f'Writing file: {_path}'
+    path = Path(filename).resolve()
+    text = dedent(text)
+    message = f'Writing file: {path}'
     log.info(message)
-    log.debug('=' * len(message) + '\n\n' + (_text or '<nothing>\n'))
-    _path.write_text(_text)
+    log.debug('=' * len(message) + '\n\n' + (text or '<nothing>\n'))
+    path.write_text(text)
 
 
-def read(path: str) -> str:
+def read(filename: str) -> str:
     """Read text from a file with logging."""
-    _path = Path(path).resolve()
-    message = f'Reading file: {_path}'
+    path = Path(filename).resolve()
+    message = f'Reading file: {path}'
     log.info(message)
-    text = _path.read_text()
+    text = path.read_text()
     log.debug('=' * len(message) + '\n\n' + (text or '<nothing>\n'))
     return text
 
