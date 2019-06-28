@@ -71,7 +71,7 @@ class YAML(Formatter):
 
     @classmethod
     def serialize(cls, data):
-        text = yaml.round_trip_dump(data)
+        text = yaml.round_trip_dump(data, block_seq_indent=2)
         return "" if text == "{}\n" else text
 
 

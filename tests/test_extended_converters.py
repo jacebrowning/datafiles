@@ -7,6 +7,7 @@ import pytest
 
 from datafiles import datafile
 from datafiles.converters import Number, Text
+from datafiles.utils import dedent, read, write
 
 
 @datafile('../tmp/sample.yml')
@@ -20,7 +21,7 @@ def describe_number():
     def sample():
         return Sample()
 
-    def with_float_to_integer(sample, expect, read, dedent):
+    def with_float_to_integer(sample, expect):
         sample.number = 1.23
 
         expect(read('tmp/sample.yml')) == dedent(
@@ -38,7 +39,7 @@ def describe_number():
         )
 
     @pytest.mark.flaky
-    def with_integer_to_float(sample, write, expect):
+    def with_integer_to_float(sample, expect):
         write(
             'tmp/sample.yml',
             """
@@ -63,7 +64,7 @@ def describe_text():
     def sample():
         return Sample()
 
-    def with_single_line(sample, expect, read, dedent):
+    def with_single_line(sample, expect):
         sample.text = "Hello, world!"
 
         expect(read('tmp/sample.yml')) == dedent(
@@ -73,7 +74,7 @@ def describe_text():
         )
 
     @pytest.mark.flaky
-    def with_multiple_lines(sample, expect, read, dedent, write):
+    def with_multiple_lines(sample, expect):
         sample.text = '\n'.join(f'Line {i+1}' for i in range(3))
 
         expect(read('tmp/sample.yml')) == dedent(
@@ -97,7 +98,7 @@ def describe_text():
 
         expect(sample.text) == "Line 4\nLine 5\nLine 6\n"
 
-    def with_extra_newlines(sample, expect, read, dedent):
+    def with_extra_newlines(sample, expect):
         sample.text = "\nabc\ndef\n\n"
 
         expect(read('tmp/sample.yml')) == dedent(

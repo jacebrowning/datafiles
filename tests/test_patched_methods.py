@@ -8,6 +8,7 @@ from typing import Dict, List
 import pytest
 
 from datafiles import datafile
+from datafiles.utils import dedent, logbreak, read, write
 
 
 @datafile('../tmp/sample.yml')
@@ -32,7 +33,7 @@ class SampleWithNesting:
 
 def describe_automatic_load():
     @pytest.mark.flaky
-    def with_getattribute(logbreak, write, expect):
+    def with_getattribute(expect):
         sample = Sample()
 
         write(
@@ -48,7 +49,7 @@ def describe_automatic_load():
 
 def describe_automatic_save():
     @pytest.mark.flaky
-    def with_setattr(logbreak, expect, read, dedent):
+    def with_setattr(expect):
         sample = Sample()
 
         logbreak("Setting attribute")
@@ -60,7 +61,7 @@ def describe_automatic_save():
             """
         )
 
-    def with_setattr_on_nested_dataclass(logbreak, expect, read, dedent):
+    def with_setattr_on_nested_dataclass(expect):
         sample = SampleWithNesting(2)
 
         logbreak("Setting nested attribute")
@@ -75,7 +76,7 @@ def describe_automatic_save():
             """
         )
 
-    def with_setitem(expect, read, dedent):
+    def with_setitem(expect):
         sample = Sample()
 
         sample.items[0] = 2
@@ -83,18 +84,23 @@ def describe_automatic_save():
         expect(read('tmp/sample.yml')) == dedent(
             """
             items:
-            - 2
+              - 2
             """
         )
 
-    def with_delitem(expect, read):
+    def with_delitem(expect):
         sample = Sample()
 
         del sample.items[0]
 
-        expect(read('tmp/sample.yml')) == "items:\n- \n"
+        expect(read('tmp/sample.yml')) == dedent(
+            """
+            items:
+              -
+            """
+        )
 
-    def with_append(logbreak, expect, read, dedent):
+    def with_append(expect):
         sample = Sample()
 
         logbreak("Appending to list")
@@ -103,8 +109,8 @@ def describe_automatic_save():
         expect(read('tmp/sample.yml')) == dedent(
             """
             items:
-            - 1
-            - 2
+              - 1
+              - 2
             """
         )
 
@@ -116,13 +122,13 @@ def describe_automatic_save():
         expect(read('tmp/sample.yml')) == dedent(
             """
             items:
-            - 1
-            - 2
-            - 3
+              - 1
+              - 2
+              - 3
             """
         )
 
-    def with_append_on_nested_dataclass(logbreak, expect, read, dedent):
+    def with_append_on_nested_dataclass(expect):
         sample = SampleWithNesting(1)
 
         logbreak("Appending to nested list")
@@ -133,7 +139,7 @@ def describe_automatic_save():
             item: 1
             nested:
               items:
-              - 2
+                - 2
             """
         )
 
@@ -145,12 +151,12 @@ def describe_automatic_save():
             item: 1
             nested:
               items:
-              - 2
-              - 3
+                - 2
+                - 3
             """
         )
 
-    def with_update(logbreak, expect, read, dedent):
+    def with_update(expect):
         sample = Sample()
 
         logbreak()
@@ -181,7 +187,7 @@ def describe_automatic_save():
 
 def describe_automatic_load_before_save():
     @pytest.mark.flaky
-    def with_setattr(write, expect, dedent):
+    def with_setattr(expect):
         sample = Sample()
 
         write(
@@ -201,7 +207,7 @@ def describe_automatic_load_before_save():
 
 
 def describe_automatic_load_after_save():
-    def with_setattr(expect, dedent):
+    def with_setattr(expect):
         sample = Sample()
 
         sample.item = 42  # type: ignore
