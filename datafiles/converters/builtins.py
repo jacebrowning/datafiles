@@ -5,7 +5,7 @@ import log
 from ._bases import Converter
 
 
-class Boolean(Converter):
+class Boolean(Converter, int):
     """Converter for `bool` literals."""
 
     TYPE = bool
@@ -21,14 +21,14 @@ class Boolean(Converter):
         return value
 
 
-class Float(Converter):
+class Float(Converter, float):
     """Converter for `float` literals."""
 
     TYPE = float
     DEFAULT = 0.0
 
 
-class Integer(Converter):
+class Integer(Converter, int):
     """Converter for `int` literals."""
 
     TYPE = int
@@ -50,7 +50,7 @@ class Integer(Converter):
                 return data
 
 
-class String(Converter):
+class String(Converter, str):
     """Converter for `str` literals."""
 
     TYPE = str

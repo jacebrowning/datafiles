@@ -17,12 +17,12 @@ nav:
   - Model: api/model.md
   - Manager: api/manager.md
   - Mapper: api/mapper.md
-- Types:
+- Supported Types:
   - Builtins: types/builtins.md
   - Extensions: types/extensions.md
   - Containers: types/containers.md
   - Custom Types: types/custom.md
-- Formats: formats.md
+- File Formats: formats.md
 - Utilities: utilities.md
 - About:
   - Release Notes: about/changelog.md

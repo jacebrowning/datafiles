@@ -1,10 +1,12 @@
+<h1>Builtin Types</h1>
+
 When Python builtin types are used as type annotations they are automatically mapped to the corresponding type in the chosen file format. Any of these types will accept `None` as a value when made optional.
 
 ```python
 from typing import Optional
 ```
 
-# Booleans
+## Booleans
 
 | Type Annotation | Python Value | YAML Content |
 | --- | --- | --- |
@@ -13,7 +15,7 @@ from typing import Optional
 | `foobar: bool` | `foobar = None` | `foobar: false` |
 | `foobar: Optional[bool]` | `foobar = False` | `foobar: ` |
 
-# Integers
+## Integers
 
 | Type Annotation | Python Value | YAML Content |
 | --- | --- | --- |
@@ -22,7 +24,7 @@ from typing import Optional
 | `foobar: int` | `foobar = None` | `foobar: 0` |
 | `foobar: Optional[int]` | `foobar = None` | `foobar: ` |
 
-# Floats
+## Floats
 
 | Type Annotation | Python Value | YAML Content |
 | --- | --- | --- |
@@ -31,7 +33,7 @@ from typing import Optional
 | `foobar: float` | `foobar = None` | `foobar: 0.0` |
 | `foobar: Optional[float]` | `foobar = None` | `foobar: ` |
 
-# Strings
+## Strings
 
 | Type Annotation | Python Value | YAML Content |
 | --- | --- | --- |

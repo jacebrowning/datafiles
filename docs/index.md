@@ -1,6 +1,8 @@
+<h1>Datafiles</h1>
+
 Datafiles is a bidirectional serialization library for Python [dataclasses](https://docs.python.org/3/library/dataclasses.html) that automatically synchronizes object instances to the filesystem using type annotations. It supports a variety of file formats with round-trip preservation of formatting and comments, where possible.
 
-# Installation
+## Installation
 
 Install it directly into an activated virtual environment:
 
@@ -14,16 +16,16 @@ or add it to your [Poetry](https://poetry.eustace.io/) project:
 $ poetry add datafiles
 ```
 
-# Quick Start
+## Quick Start
 
-Decorate a class with a directory pattern to synchronize instances:
+Decorate a [type-annotated](https://docs.python.org/3/library/typing.html) class with a directory pattern to synchronize instances:
 
 ```python
 from datafiles import datafile
 
 @datafile("samples/{self.key}.yml")
 class Sample:
-    
+
     key: int
     name: str
     value: float = 0.0
@@ -55,7 +57,17 @@ and the following instantiation restores the object:
 Widget
 ```
 
-# Resources
+## Type Checking
+
+If using mypy, enable the plugin via the `mypy.ini` configuration file:
+
+```ini
+[mypy]
+
+plugins = datafiles.plugins:mypy
+```
+
+## Resources
 
 - [Source code](https://github.com/jacebrowning/datafiles)
 - [Issue tracker](https://github.com/jacebrowning/datafiles/issues)

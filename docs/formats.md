@@ -1,6 +1,8 @@
+<h1>File Formats</h1>
+
 The following formats are supported for serialization.
 
-# YAML
+## YAML
 
 By default, datafiles uses the [YAML language](https://yaml.org/) for serialization. Any of the following file extensions will use this format:
 
@@ -24,7 +26,7 @@ my_str: Hello, world!
 
 Where possible, comments and whitespace are preserved in files as shown in this [Jupyter Notebook](https://github.com/jacebrowning/datafiles/blob/develop/notebooks/roundtrip_comments.ipynb).
 
-# JSON
+## JSON
 
 The [JSON language](https://www.json.org/) is also supported. Any of the following file extensions will use this format:
 
@@ -54,7 +56,7 @@ Sample output:
 
 Additional examples can be found in this [Jupyter Notebook](https://github.com/jacebrowning/datafiles/blob/develop/notebooks/format_options.ipynb).
 
-# TOML
+## TOML
 
 The [TOML language](https://github.com/toml-lang/toml) is also supported. Any of the following file extensions will use this format:
 

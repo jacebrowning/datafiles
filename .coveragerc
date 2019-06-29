@@ -8,6 +8,7 @@ omit =
     .venv/*
     */tests/*
     */__main__.py
+    datafiles/plugins.py
 
 [report]
 

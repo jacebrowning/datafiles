@@ -4,14 +4,18 @@
 
 import pytest
 
+from datafiles.utils import dedent, logbreak, read, write
+
 from .samples import (
     Sample,
     SampleWithCustomFields,
     SampleWithDefaults,
     SampleWithList,
+    SampleWithListOfDataclasses,
     SampleWithNesting,
     SampleWithNestingAndDefaults,
     SampleWithOptionals,
+    _NestedSample1,
 )
 
 
@@ -20,7 +24,7 @@ def describe_nominal():
     def sample():
         return Sample(None, None, None, None)
 
-    def without_initial_values(sample, expect, dedent):
+    def without_initial_values(sample, expect):
         sample.datafile.save()
 
         with open('tmp/sample.yml') as f:
@@ -33,7 +37,7 @@ def describe_nominal():
                 """
             )
 
-    def with_convertable_initial_values(expect, dedent):
+    def with_convertable_initial_values(expect):
         sample = Sample(1, 2, 3, 4)
 
         sample.datafile.save()
@@ -56,7 +60,7 @@ def describe_nominal():
         with open('tmp/sample.yml') as f:
             expect(f.read()).excludes('extra')
 
-    def with_custom_fields(expect, dedent):
+    def with_custom_fields(expect):
         sample = SampleWithCustomFields('foo', 'bar')
 
         sample.datafile.save()
@@ -76,9 +80,14 @@ def describe_lists():
         sample.datafile.save()
 
         with open('tmp/sample.yml') as f:
-            expect(f.read()) == "items:\n- \n"
+            expect(f.read()) == dedent(
+                """
+                items:
+                  -
+                """
+            )
 
-    def with_conversion(logbreak, expect, dedent):
+    def with_conversion(expect):
         sample = SampleWithList([1, 2.3, '4.5'])
 
         logbreak("Saving")
@@ -88,15 +97,30 @@ def describe_lists():
             expect(f.read()) == dedent(
                 """
                 items:
-                - 1.0
-                - 2.3
-                - 4.5
+                  - 1.0
+                  - 2.3
+                  - 4.5
+                """
+            )
+
+    def with_dataclasses(expect):
+        sample = SampleWithListOfDataclasses([_NestedSample1('foobar', 42)])
+
+        logbreak("Saving")
+        sample.datafile.save()
+
+        with open('tmp/sample.yml') as f:
+            expect(f.read()) == dedent(
+                """
+                items:
+                  - name: foobar
+                    score: 42.0
                 """
             )
 
 
 def describe_nesting():
-    def without_initial_values(expect, dedent):
+    def without_initial_values(expect):
         sample = SampleWithNesting(None, None, None)
 
         sample.datafile.save()
@@ -112,7 +136,7 @@ def describe_nesting():
                 """
             )
 
-    def with_initial_values(expect, dedent):
+    def with_initial_values(expect):
         sample = SampleWithNesting('foo', 1.2, {'name': 'bar', 'score': 3.4})
 
         sample.datafile.save()
@@ -128,7 +152,7 @@ def describe_nesting():
                 """
             )
 
-    def with_default_values(expect, dedent):
+    def with_default_values(expect):
         sample = SampleWithNestingAndDefaults('a')
 
         sample.datafile.save()
@@ -141,7 +165,7 @@ def describe_nesting():
                 """
             )
 
-    def with_missing_keys(expect, dedent):
+    def with_missing_keys(expect):
         sample = SampleWithNesting('foo', 1.2, {'name': 'bar'})
 
         sample.datafile.save()
@@ -157,7 +181,7 @@ def describe_nesting():
                 """
             )
 
-    def when_manually_setting_none(expect, dedent):
+    def when_manually_setting_none(expect):
         sample = SampleWithNesting('foo', 1.2, {'name': 'bar', 'score': 3.4})
         sample.nested = None
 
@@ -176,7 +200,7 @@ def describe_nesting():
 
 
 def describe_optionals():
-    def with_values(expect, read, dedent):
+    def with_values(expect):
         sample = SampleWithOptionals(1, 2)
 
         sample.datafile.save()
@@ -188,7 +212,7 @@ def describe_optionals():
             """
         )
 
-    def with_nones(expect, read, dedent):
+    def with_nones(expect):
         sample = SampleWithOptionals(None, None)
 
         sample.datafile.save()
@@ -202,7 +226,7 @@ def describe_optionals():
 
 
 def describe_defaults():
-    def with_custom_values(expect, read, dedent):
+    def with_custom_values(expect):
         sample = SampleWithDefaults('a', 'b')
 
         sample.datafile.save()
@@ -214,7 +238,7 @@ def describe_defaults():
             """
         )
 
-    def with_default_values(expect, read, dedent):
+    def with_default_values(expect):
         sample = SampleWithDefaults('a')
 
         sample.datafile.save()
@@ -225,7 +249,7 @@ def describe_defaults():
             """
         )
 
-    def with_default_values_and_full_save(expect, read, dedent):
+    def with_default_values_and_full_save(expect):
         sample = SampleWithDefaults('a', 'foo')
 
         sample.datafile.save(include_default_values=True)
@@ -239,7 +263,7 @@ def describe_defaults():
 
 
 def describe_preservation():
-    def with_extra_lines(write, expect, read, dedent):
+    def with_extra_lines(expect):
         sample = SampleWithOptionals(1, 2)
 
         write(
@@ -263,7 +287,7 @@ def describe_preservation():
             """
         )
 
-    def with_comments(write, expect, read, dedent):
+    def with_comments(expect):
         sample = SampleWithOptionals(1, 2)
 
         write(
@@ -287,7 +311,7 @@ def describe_preservation():
             """
         )
 
-    def with_comments_in_nested_objects(write, logbreak, expect, read, dedent):
+    def with_comments_in_nested_objects(expect):
         sample = SampleWithNestingAndDefaults(None)
 
         write(
@@ -328,7 +352,7 @@ def describe_preservation():
         )
 
     @pytest.mark.xfail(reason="unknown ruamel.yaml bug")
-    def with_comments_on_nested_lines(write, expect, read, dedent):
+    def with_comments_on_nested_lines(expect):
         sample = SampleWithNestingAndDefaults(None)
 
         write(

@@ -1,3 +1,9 @@
+# 0.4 (2019-06-29)
+
+- Fixed ORM methods for datafiles with relative path patterns.
+- Added plugin for `mypy` support.
+- Updated YAML format to indent lists.
+
 # 0.3 (2019-06-09)
 
 - Added ORM method: `all()`

@@ -4,6 +4,7 @@ from dataclasses import dataclass, field
 from typing import List, Optional
 
 from datafiles import datafile
+from datafiles.utils import logbreak
 
 
 def get_sample():
@@ -32,13 +33,13 @@ def test_init():
     get_sample()
 
 
-def test_load(logbreak):
+def test_load():
     sample = get_sample()
     logbreak("Loading")
     sample.datafile.load()  # pylint: disable=no-member
 
 
-def test_save(logbreak):
+def test_save():
     sample = get_sample()
     logbreak("Saving")
     sample.datafile.save()  # pylint: disable=no-member

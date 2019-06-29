@@ -5,6 +5,7 @@
 from dataclasses import dataclass, field
 
 from datafiles import datafile
+from datafiles.utils import write
 
 
 @datafile('../tmp/sample.yml', manual=True)
@@ -44,7 +45,7 @@ class SampleWithComputedDefaults:
 
 
 def describe_existing_file():
-    def it_wins_when_no_init_values(write, expect):
+    def it_wins_when_no_init_values(expect):
         write(
             'tmp/sample.yml',
             """
@@ -58,7 +59,7 @@ def describe_existing_file():
         expect(sample.foo) == 2
         expect(sample.bar) == 'b'
 
-    def it_loses_against_init_values(write, expect):
+    def it_loses_against_init_values(expect):
         write(
             'tmp/sample.yml',
             """
@@ -72,7 +73,7 @@ def describe_existing_file():
         expect(sample.foo) == 4
         expect(sample.bar) == 'd'
 
-    def it_wins_against_default_init_values(write, expect):
+    def it_wins_against_default_init_values(expect):
         write(
             'tmp/sample.yml',
             """
@@ -85,7 +86,7 @@ def describe_existing_file():
         expect(sample.foo) == 5
         expect(sample.bar) == 'e'
 
-    def it_merges_with_nested_value(write, expect):
+    def it_merges_with_nested_value(expect):
         write(
             'tmp/sample.yml',
             """
@@ -130,7 +131,7 @@ def describe_factory_defaults():
         expect(sample.b) == 3.4
         expect(sample.c) == 42.0
 
-    def when_file_exists(write, expect):
+    def when_file_exists(expect):
         write(
             'tmp/sample.yml',
             """
@@ -155,7 +156,7 @@ def describe_computed_defaults():
         expect(sample.b) == 3.4
         expect(sample.c) == 4.6
 
-    def when_file_exists(write, expect):
+    def when_file_exists(expect):
         write(
             'tmp/sample.yml',
             """

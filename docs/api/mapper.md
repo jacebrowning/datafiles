@@ -1,3 +1,5 @@
+<h1>Mapper API</h1>
+
 Instances of datafile models have an additional `datafile` proxy to manually interact with the filesystem. The following sections assume an empty filesystem and use the following sample datafile definition:
 
 ```python
@@ -36,7 +38,7 @@ False
 
 _By default, the file is created automatically. Set `manual=True` to disable this behavior._
 
-# `save` / `load`
+# `save()` / `load()`
 
 Manually synchronize an object with the filesystem:
 

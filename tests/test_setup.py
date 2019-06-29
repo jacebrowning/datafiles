@@ -2,6 +2,7 @@
 
 # pylint: disable=unused-variable
 
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -12,7 +13,7 @@ from datafiles import datafile
 
 
 def describe_automatic():
-    """Tests to create a datafile using the decorator."""
+    """Test creating a datafile using the decorator."""
 
     @pytest.fixture
     def sample():
@@ -42,7 +43,7 @@ def describe_automatic():
 
 
 def describe_automatic_with_defaults():
-    """Tests to create a datafile using the decorator with defaults."""
+    """Test creating a datafile using the decorator with defaults."""
 
     def describe_flat():
         @pytest.fixture
@@ -112,7 +113,7 @@ def describe_automatic_with_defaults():
 
 
 def describe_manual():
-    """Tests to create a datafile using the model class."""
+    """Test creating a datafile using the model class."""
 
     @pytest.fixture
     def sample():
@@ -142,7 +143,7 @@ def describe_manual():
 
 
 def describe_manual_with_attrs():
-    """Tests to create a datafile with explicit attrs."""
+    """Test creating a datafile with explicit attrs."""
 
     @pytest.fixture
     def sample():
@@ -169,7 +170,7 @@ def describe_manual_with_attrs():
 
 
 def describe_manual_with_attrs_and_pattern():
-    """Tests to create a datafile with explicit attrs and pattern."""
+    """Test creating a datafile with explicit attrs and pattern."""
 
     @pytest.fixture
     def sample():
@@ -194,3 +195,21 @@ def describe_manual_with_attrs_and_pattern():
 
     def it_converts_attributes(expect, sample):
         expect(sample.datafile.data) == {'name': "d"}
+
+
+def describe_absolute_pattern():
+    """Test creating a datafile using the decorator with an absolute path."""
+
+    @pytest.fixture
+    def sample():
+        @datafile('/private/tmp/{self.key}.yml')
+        class Sample:
+            key: int
+            name: str
+            score: float = 1 / 2
+
+        return Sample(5, "a")
+
+    @pytest.mark.skipif(sys.platform != 'darwin', reason="Test only valid on macOS")
+    def it_formats_path_from_pattern(expect, sample):
+        expect(sample.datafile.path) == Path('/private/tmp') / '5.yml'
