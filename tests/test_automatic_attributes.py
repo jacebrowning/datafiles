@@ -4,6 +4,7 @@
 import pytest
 
 from datafiles import datafile
+from datafiles.utils import logbreak
 
 
 @datafile('../tmp/{self.name}.yml', auto_attr=True, auto_save=False)
@@ -13,7 +14,7 @@ class Sample:
 
 def describe_auto_attr():
     @pytest.mark.flaky
-    def with_builtin(expect, logbreak):
+    def with_builtin(expect):
         sample = Sample('abc')
 
         sample.datafile.text = "count: 1"
@@ -28,7 +29,7 @@ def describe_auto_attr():
         expect(sample.count) == 4
 
     @pytest.mark.flaky
-    def with_empty_list(expect, logbreak):
+    def with_empty_list(expect):
         sample = Sample('abc')
 
         sample.datafile.text = "empty_items: []"
@@ -44,7 +45,7 @@ def describe_auto_attr():
         expect(sample.empty_items) == [4.2, "abc"]
 
     @pytest.mark.flaky
-    def with_homogeneous_list(expect, logbreak):
+    def with_homogeneous_list(expect):
         sample = Sample('abc')
 
         sample.datafile.text = "same_items: [1, 2]"
@@ -59,7 +60,7 @@ def describe_auto_attr():
         expect(sample.same_items) == [1, 2, 3]
 
     @pytest.mark.flaky
-    def with_heterogeneous_list(expect, logbreak):
+    def with_heterogeneous_list(expect):
         sample = Sample('abc')
 
         sample.datafile.text = "mixed_items: [1, 'abc']"
@@ -74,7 +75,7 @@ def describe_auto_attr():
         expect(sample.mixed_items) == [1, "abc", 3.2]
 
     @pytest.mark.flaky
-    def with_dict(expect, logbreak):
+    def with_dict(expect):
         sample = Sample('abc')
 
         sample.datafile.text = "data: {'a': 1}"

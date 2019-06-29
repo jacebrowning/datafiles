@@ -4,6 +4,8 @@
 
 import pytest
 
+from datafiles.utils import logbreak, write
+
 from .samples import (
     Sample,
     SampleAsJSON,
@@ -21,7 +23,7 @@ def describe_nominal():
     def sample():
         return Sample(None, None, None, None)
 
-    def with_matching_types(write, sample, expect):
+    def with_matching_types(sample, expect):
         write(
             'tmp/sample.yml',
             """
@@ -39,7 +41,7 @@ def describe_nominal():
         expect(sample.float_) == 2.3
         expect(sample.str_) == 'foobar'
 
-    def with_convertable_types(write, sample, expect):
+    def with_convertable_types(sample, expect):
         write(
             'tmp/sample.yml',
             """
@@ -57,7 +59,7 @@ def describe_nominal():
         expect(sample.float_) == 3.0
         expect(sample.str_) == '4'
 
-    def with_extra_fields(write, sample, expect):
+    def with_extra_fields(sample, expect):
         write(
             'tmp/sample.yml',
             """
@@ -80,7 +82,7 @@ def describe_alternate_formats():
     def sample():
         return SampleAsJSON(None, None, None, None)
 
-    def with_json(write, sample, expect):
+    def with_json(sample, expect):
         write(
             'tmp/sample.json',
             """
@@ -106,7 +108,7 @@ def describe_default_values():
     def sample():
         return SampleWithDefaults(None)
 
-    def with_empty_file(write, sample, expect):
+    def with_empty_file(sample, expect):
         write('tmp/sample.yml', "")
 
         sample.datafile.load()
@@ -114,7 +116,7 @@ def describe_default_values():
         expect(sample.with_default) == 'foo'
         expect(sample.without_default) == ''
 
-    def with_partial_file(write, sample, expect):
+    def with_partial_file(sample, expect):
         write(
             'tmp/sample.yml',
             """
@@ -133,7 +135,7 @@ def describe_nesting():
     def sample():
         return SampleWithNesting(None, None, None)
 
-    def with_defaults(write, sample, expect):
+    def with_defaults(sample, expect):
         write(
             'tmp/sample.yml',
             """
@@ -152,7 +154,7 @@ def describe_nesting():
         expect(sample.nested.name) == ''
         expect(sample.nested.score) == 0.0
 
-    def with_convertable_types(write, sample, expect):
+    def with_convertable_types(sample, expect):
         write(
             'tmp/sample.yml',
             """
@@ -171,7 +173,7 @@ def describe_nesting():
         expect(sample.nested.name) == '4'
         expect(sample.nested.score) == 5.6
 
-    def with_missing_keys(write, sample, expect):
+    def with_missing_keys(sample, expect):
         write(
             'tmp/sample.yml',
             """
@@ -188,7 +190,7 @@ def describe_nesting():
         expect(sample.nested.name) == 'bar'
         expect(sample.nested.score) == 0.0
 
-    def with_missing_nested_object(write, sample, expect):
+    def with_missing_nested_object(sample, expect):
         sample.nested = _NestedSample1(name='bar', score=8)
 
         write(
@@ -206,7 +208,7 @@ def describe_nesting():
         expect(sample.nested.name) == 'bar'
         expect(sample.nested.score) == 8.0
 
-    def with_extra_attributes(write, sample, expect):
+    def with_extra_attributes(sample, expect):
         write(
             'tmp/sample.yml',
             """
@@ -229,7 +231,7 @@ def describe_nesting():
 
 
 def describe_lists():
-    def with_matching_types(write, expect):
+    def with_matching_types(expect):
         write(
             'tmp/sample.yml',
             """
@@ -243,7 +245,7 @@ def describe_lists():
 
         expect(sample.items) == [1.2, 3.4]
 
-    def with_conversion(write, expect):
+    def with_conversion(expect):
         write(
             'tmp/sample.yml',
             """
@@ -255,7 +257,7 @@ def describe_lists():
 
         expect(sample.items) == [1.0, 2.3]
 
-    def with_conversion_and_defaults(write, expect):
+    def with_conversion_and_defaults(expect):
         write(
             'tmp/sample.yml',
             """
@@ -267,7 +269,7 @@ def describe_lists():
 
         expect(sample.items) == [1.0, 2.3]
 
-    def with_null_list_value(write, expect):
+    def with_null_list_value(expect):
         write(
             'tmp/sample.yml',
             """
@@ -280,7 +282,7 @@ def describe_lists():
 
         expect(sample.items) == []
 
-    def with_partial_list_value(logbreak, write, expect):
+    def with_partial_list_value(expect):
         write(
             'tmp/sample.yml',
             """

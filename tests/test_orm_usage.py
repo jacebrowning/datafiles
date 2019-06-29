@@ -3,6 +3,7 @@
 from dataclasses import dataclass
 
 from datafiles import datafile
+from datafiles.utils import logbreak
 
 
 # This model is based on the example dataclass from:
@@ -44,7 +45,7 @@ def test_multiple_instances_are_distinct(expect):
     }
 
 
-def test_classes_can_share_a_nested_dataclass(logbreak, expect):
+def test_classes_can_share_a_nested_dataclass(expect):
     @dataclass
     class Nested:
         value: int
