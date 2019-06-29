@@ -1,7 +1,7 @@
 [tool.poetry]
 
 name = "datafiles"
-version = "0.4b6"
+version = "0.4"
 description = "File-based ORM for dataclasses."
 
 license = "MIT"
