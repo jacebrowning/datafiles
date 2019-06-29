@@ -13,7 +13,7 @@ from cached_property import cached_property
 
 from . import config, formats, hooks
 from .converters import Converter, List, map_type
-from .utils import display, recursive_update, write_path as write
+from .utils import display, recursive_update, write
 
 
 Trilean = Optional[bool]

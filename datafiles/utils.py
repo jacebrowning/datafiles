@@ -5,7 +5,7 @@ from functools import lru_cache
 from pathlib import Path
 from pprint import pformat
 from shutil import get_terminal_size
-from typing import Any, Dict
+from typing import Any, Dict, Union
 
 import log
 
@@ -59,18 +59,14 @@ def dedent(text: str) -> str:
     return text.replace('    ' * indent, '')
 
 
-def write(filename: str, text: str) -> None:
-    """Write text to a given filename with logging."""
-    path = Path(filename).resolve()
-    text = dedent(text)
-    message = f'Writing file: {path}'
-    log.info(message)
-    log.debug('=' * len(message) + '\n' + (text or '<nothing>\n'))
-    path.write_text(text)
+def write(filename_or_path: Union[str, Path], text: str) -> None:
+    """Write text to a given file with logging."""
+    if isinstance(filename_or_path, Path):
+        path = filename_or_path
+    else:
+        path = Path(filename_or_path).resolve()
+        text = dedent(text)
 
-
-def write_path(path: Path, text: str) -> None:
-    """Write text to given path object with logging."""
     message = f'Writing file: {path}'
     log.debug(message)
     line = '=' * len(message)
@@ -79,6 +75,7 @@ def write_path(path: Path, text: str) -> None:
     else:
         content = '∅\n'
     log.debug(line + '\n' + content + line)
+
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(text)
 
