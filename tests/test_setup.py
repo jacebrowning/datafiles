@@ -2,6 +2,7 @@
 
 # pylint: disable=unused-variable
 
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -209,5 +210,6 @@ def describe_absolute_pattern():
 
         return Sample(5, "a")
 
+    @pytest.mark.skipif(sys.platform != 'darwin', reason="Test only valid on macOS")
     def it_formats_path_from_pattern(expect, sample):
         expect(sample.datafile.path) == Path('/private/tmp') / '5.yml'
