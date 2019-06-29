@@ -74,7 +74,6 @@ def describe_nominal():
 
 
 def describe_lists():
-    @pytest.mark.xfail(reason="TODO: remove trailing whitespace")
     def when_empty(expect):
         sample = SampleWithList([])
 

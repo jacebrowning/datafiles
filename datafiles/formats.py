@@ -76,7 +76,7 @@ class YAML(Formatter):
         y = yaml.YAML()
         y.indent(mapping=2, sequence=4, offset=2)
         y.dump(data, f)
-        text = f.getvalue()
+        text = f.getvalue().strip() + '\n'
         return "" if text == "{}\n" else text
 
 

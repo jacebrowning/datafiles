@@ -13,7 +13,7 @@ from cached_property import cached_property
 
 from . import config, formats, hooks
 from .converters import Converter, List, map_type
-from .utils import prettify, recursive_update
+from .utils import display, recursive_update, write_path as write
 
 
 Trilean = Optional[bool]
@@ -173,7 +173,7 @@ class Mapper:
 
     @text.setter  # type: ignore
     def text(self, value: str):
-        self._write(value.strip() + '\n')
+        write(self.path, value.strip() + '\n')
 
     def load(self, *, _log=True, _first=False) -> None:
         if self._root:
@@ -188,10 +188,7 @@ class Mapper:
 
         data = formats.deserialize(self.path, self.path.suffix)
         self._last_data = data
-
-        message = f'Data from file: {self.path}'
-        log.debug(message)
-        log.debug('=' * len(message) + '\n\n' + prettify(data) + '\n')
+        display(self.path, data)
 
         with hooks.disabled():
 
@@ -328,16 +325,9 @@ class Mapper:
         with hooks.disabled():
             text = self._get_text(include_default_values=include_default_values)
 
-        self._write(text)
+        write(self.path, text)
 
         self.modified = False
-
-    def _write(self, text: str):
-        message = f'Writing file: {self.path}'
-        log.debug(message)
-        log.debug('=' * len(message) + '\n\n' + (text or '<nothing>\n'))
-        self.path.parent.mkdir(parents=True, exist_ok=True)
-        self.path.write_text(text)
 
 
 def create_mapper(obj, root=None) -> Mapper:

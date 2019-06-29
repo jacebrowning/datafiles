@@ -13,11 +13,13 @@ import log
 cached = lru_cache()
 
 
-def prettify(data: Dict) -> str:
-    return pformat(dictify(data))
+def prettify(value: Any) -> str:
+    """Ensure value is a dictionary pretty-format it."""
+    return pformat(dictify(value))
 
 
 def dictify(value: Any) -> Dict:
+    """Ensure value is a dictionary."""
     with suppress(AttributeError):
         return {k: dictify(v) for k, v in value.items()}
 
@@ -58,12 +60,26 @@ def dedent(text: str) -> str:
 
 
 def write(filename: str, text: str) -> None:
-    """Write text to a file with logging."""
+    """Write text to a given filename with logging."""
     path = Path(filename).resolve()
     text = dedent(text)
     message = f'Writing file: {path}'
     log.info(message)
-    log.debug('=' * len(message) + '\n\n' + (text or '<nothing>\n'))
+    log.debug('=' * len(message) + '\n' + (text or '<nothing>\n'))
+    path.write_text(text)
+
+
+def write_path(path: Path, text: str) -> None:
+    """Write text to given path object with logging."""
+    message = f'Writing file: {path}'
+    log.debug(message)
+    line = '=' * len(message)
+    if text:
+        content = text.replace(' \n', '␠\n')
+    else:
+        content = '∅\n'
+    log.debug(line + '\n' + content + line)
+    path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(text)
 
 
@@ -72,9 +88,22 @@ def read(filename: str) -> str:
     path = Path(filename).resolve()
     message = f'Reading file: {path}'
     log.info(message)
+    line = '=' * len(message)
     text = path.read_text()
-    log.debug('=' * len(message) + '\n\n' + (text or '<nothing>\n'))
+    if text:
+        content = text.replace(' \n', '␠\n')
+    else:
+        content = '∅\n'
+    log.debug(line + '\n' + content + line)
     return text
+
+
+def display(path: Path, data: Dict) -> None:
+    """Display data read from a file."""
+    message = f'Data from file: {path}'
+    log.debug(message)
+    line = '=' * len(message)
+    log.debug(line + '\n' + prettify(data) + '\n' + line)
 
 
 def logbreak(message: str = "") -> None:

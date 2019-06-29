@@ -3,8 +3,6 @@
 from dataclasses import dataclass, field
 from typing import List, Optional
 
-import pytest
-
 from datafiles import datafile
 from datafiles.utils import logbreak
 
@@ -35,7 +33,6 @@ def test_init():
     get_sample()
 
 
-@pytest.mark.xfail
 def test_load():
     sample = get_sample()
     logbreak("Loading")

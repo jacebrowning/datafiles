@@ -88,7 +88,6 @@ def describe_automatic_save():
             """
         )
 
-    @pytest.mark.xfail(reason="TODO: remove trailing whitespace")
     def with_delitem(expect):
         sample = Sample()
 
