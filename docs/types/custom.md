@@ -1,6 +1,6 @@
 <h1>Custom Types</h1>
 
-Finally, it's possible to use any custom types as annotations.
+Additional types are supported though custom type as annotations.
 
 ## Single Inheritance
 
