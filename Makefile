@@ -66,7 +66,7 @@ ifdef CI
 	git diff --exit-code
 endif
 	poetry run mypy $(PACKAGES) --config-file=.mypy.ini
-	poetry run pylint $(PACKAGES) --rcfile=.pylint.ini
+	- poetry run pylint $(PACKAGES) --rcfile=.pylint.ini
 	poetry run pydocstyle $(PACKAGES)
 
 # TESTS #######################################################################
