@@ -1,6 +1,6 @@
 # Datafiles: A file-based ORM for dataclasses
 
-Datafiles is a bidirectional serialization library for Python [dataclasses](https://docs.python.org/3/library/dataclasses.html) to synchronizes objects to the filesystem using type annotations. It supports a variety of file formats with round-trip preservation of formatting and comments, where possible. By default, changes are automatically saved and only include the minimum data needed to restore an object.
+Datafiles is a bidirectional serialization library for Python [dataclasses](https://docs.python.org/3/library/dataclasses.html) to synchronizes objects to the filesystem using type annotations. It supports a variety of file formats with round-trip preservation of formatting and comments, where possible. Object changes are automatically saved to disk and only include the minimum data needed to restore each object.
 
 [![PyPI Version](https://img.shields.io/pypi/v/datafiles.svg)](https://pypi.org/project/datafiles)
 [![PyPI License](https://img.shields.io/pypi/l/datafiles.svg)](https://pypi.org/project/datafiles)
@@ -8,7 +8,14 @@ Datafiles is a bidirectional serialization library for Python [dataclasses](http
 [![AppVeyor](https://img.shields.io/appveyor/ci/jacebrowning/datafiles/develop.svg?label=windows)](https://ci.appveyor.com/project/jacebrowning/datafiles)
 [![Coveralls](https://img.shields.io/coveralls/jacebrowning/datafiles.svg)](https://coveralls.io/r/jacebrowning/datafiles)
 
-## Usage
+Popular use cases include:
+
+- Coercing user-editable files into the proper Python types
+- Storing program configuration and data in version control
+- Loading data fixtures for demonstration or testing purposes
+- Prototyping data models agnostic of persistance backends
+
+## Overview
 
 Take an existing dataclass such as [this example](https://docs.python.org/3/library/dataclasses.html#module-dataclasses) from the documentation:
 

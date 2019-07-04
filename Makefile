@@ -103,8 +103,8 @@ $(MKDOCS_INDEX): docs/requirements.txt mkdocs.yml docs/*.md
 docs/requirements.txt: poetry.lock
 	@ poetry run pip freeze -qqq | grep mkdocs > $@
 
-.PHONY: mkdocs-live
-mkdocs-live: mkdocs
+.PHONY: mkdocs-serve
+mkdocs-serve: mkdocs
 	eval "sleep 3; bin/open http://127.0.0.1:8000" &
 	poetry run mkdocs serve
 

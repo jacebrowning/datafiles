@@ -1,6 +1,13 @@
 <h1>Datafiles</h1>
 
-Datafiles is a bidirectional serialization library for Python [dataclasses](https://docs.python.org/3/library/dataclasses.html) that automatically synchronizes object instances to the filesystem using type annotations. It supports a variety of file formats with round-trip preservation of formatting and comments, where possible.
+Datafiles is a bidirectional serialization library for Python [dataclasses](https://docs.python.org/3/library/dataclasses.html) to synchronizes objects to the filesystem using type annotations. It supports a variety of file formats with round-trip preservation of formatting and comments, where possible. Object changes are automatically saved to disk and only include the minimum data needed to restore each object.
+
+Popular use cases include:
+
+- Coercing user-editable files into the proper Python types
+- Storing program configuration and data in version control
+- Loading data fixtures for demonstration or testing purposes
+- Prototyping data models agnostic of persistance backends
 
 ## Installation
 

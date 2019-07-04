@@ -20,5 +20,12 @@
   "python.linting.pylintArgs": ["--rcfile", ".pylint.ini"],
   "python.linting.mypyEnabled": true,
   "python.linting.mypyArgs": ["--config-file", ".mypy.ini"],
-  "python.linting.pydocstyleEnabled": true
+  "python.linting.pydocstyleEnabled": true,
+  "cSpell.words": [
+    "backends",
+    "dataclass",
+    "dataclasses",
+    "datafile",
+    "datafiles"
+  ]
 }
