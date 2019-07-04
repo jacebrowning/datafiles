@@ -62,7 +62,7 @@ black = "=19.3b0"
 isort = "=4.3.4"
 
 # Linters
-mypy = "^0.701"
+mypy = "*"
 pylint = "^2.1"
 pydocstyle = "*"
 
