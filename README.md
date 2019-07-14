@@ -89,8 +89,10 @@ Objects can also be restored from the filesystem:
 ```python
 >>> from datafiles import Missing
 >>> item = InventoryItem("widget", Missing)
->>> assert item.unit_price == 2.5
->>> assert item.quantity_on_hand == 100
+>>> item.unit_price
+2.5
+>>> item.quantity_on_hand
+100
 ```
 
 Demo: [Jupyter Notebook](https://github.com/jacebrowning/datafiles/blob/develop/notebooks/readme.ipynb)
