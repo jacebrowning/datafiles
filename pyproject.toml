@@ -42,7 +42,7 @@ classifiers = [
 python = "^3.7"
 
 # Formats
-"ruamel.yaml" = "~0.15.96"
+"ruamel.yaml" = "~0.15.100"
 tomlkit = "^0.5.3"
 
 # ORM
