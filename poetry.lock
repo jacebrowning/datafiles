@@ -264,7 +264,7 @@ description = "IPython: Productive Interactive Computing"
 name = "ipython"
 optional = false
 python-versions = ">=3.5"
-version = "7.6.1"
+version = "7.7.0"
 
 [package.dependencies]
 appnope = "*"
@@ -756,8 +756,8 @@ category = "dev"
 description = "Python parsing module"
 name = "pyparsing"
 optional = false
-python-versions = "*"
-version = "2.4.1"
+python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*"
+version = "2.4.1.1"
 
 [[package]]
 category = "dev"
@@ -765,7 +765,7 @@ description = "Persistent/Functional/Immutable data structures"
 name = "pyrsistent"
 optional = false
 python-versions = "*"
-version = "0.15.3"
+version = "0.15.4"
 
 [package.dependencies]
 six = "*"
@@ -1187,7 +1187,7 @@ gprof2dot = ["cebc7aa2782fd813ead415ea1fae3409524343485eadc7fb60ef5bd1e810309e"]
 idna = ["c357b3f628cf53ae2c4c05627ecc484553142ca23264e593d327bcde5e9c3407", "ea8b7f6188e6fa117537c3df7da9fc686d485087abf6ac197f9c46432f7e4a3c"]
 importlib-metadata = ["6dfd58dfe281e8d240937776065dd3624ad5469c835248219bd16cf2e12dbeb7", "cb6ee23b46173539939964df59d3d72c3e0c1b5d54b84f1d8a7e912fe43612db"]
 ipykernel = ["346189536b88859937b5f4848a6fd85d1ad0729f01724a411de5cae9b618819c", "f0e962052718068ad3b1d8bcc703794660858f58803c3798628817f492a8769c"]
-ipython = ["11067ab11d98b1e6c7f0993506f7a5f8a91af420f7e82be6575fcb7a6ca372a0", "60bc55c2c1d287161191cc2469e73c116d9b634cff25fe214a43cba7cec94c79"]
+ipython = ["1d3a1692921e932751bc1a1f7bb96dc38671eeefdc66ed33ee4cbc57e92a410e", "537cd0176ff6abd06ef3e23f2d0c4c2c8a4d9277b7451544c6cbf56d1c79a83d"]
 ipython-genutils = ["72dd37233799e619666c9f639a9da83c34013a73e8bbc79a7a6348d93c61fab8", "eb2e116e75ecef9d4d228fdc66af54269afa26ab4463042e33785b887c628ba8"]
 ipywidgets = ["cb263c6974aca902d00a435711823bb4aaf6614a5f997f517e15fa84151e8fa2", "eab6060f20f7f10d91f6efc8d33f9fd22133406980fcaee2738d836a910402f4"]
 isort = ["1153601da39a25b14ddc54955dbbacbb6b2d19135386699e2ad58517953b34af", "b9c40e9750f3d77e6e4d441d8b0266cf555e7cdabdcff33c4fd06366ca761ef8", "ec9ef8f4a9bc6f71eec99e1806bfa2de401650d996c59330782b89a5555c1497"]
@@ -1229,8 +1229,8 @@ py = ["64f65755aee5b381cea27766a3a147c3f15b9b6b9ac88676de66ba2ae36793fa", "dc639
 pydocstyle = ["58c421dd605eec0bce65df8b8e5371bb7ae421582cdf0ba8d9435ac5b0ffc36a"]
 pygments = ["71e430bc85c88a430f000ac1d9b331d2407f681d6f6aec95e8bcfbc3df5b0127", "881c4c157e45f30af185c1ffe8d549d48ac9127433f2c380c24b84572ad66297"]
 pylint = ["5d77031694a5fb97ea95e828c8d10fc770a1df6eb3906067aaed42201a8a6a09", "723e3db49555abaf9bf79dc474c6b9e2935ad82230b10c1138a71ea41ac0fff1"]
-pyparsing = ["530d8bf8cc93a34019d08142593cf4d78a05c890da8cf87ffa3120af53772238", "f78e99616b6f1a4745c0580e170251ef1bbafc0d0513e270c4bd281bf29d2800"]
-pyrsistent = ["50cffebc87ca91b9d4be2dcc2e479272bcb466b5a0487b6c271f7ddea6917e14"]
+pyparsing = ["43c5486cefefa536c9aab528881c992328f020eefe4f6d06332449c365218580", "d6c5ffe9d0305b9b977f7a642d36b9370954d1da7ada4c62393382cbadad4265"]
+pyrsistent = ["34b47fa169d6006b32e99d4b3c4031f155e6e68ebcc107d6454852e8e0ee6533"]
 pytest = ["6ef6d06de77ce2961156013e9dff62f1b2688aa04d0dc244299fe7d67e09370d", "a736fed91c12681a7b34617c8fcefe39ea04599ca72c608751c31d89579a3f77"]
 pytest-cov = ["2b097cde81a302e1047331b48cadacf23577e431b61e9c6f49a1170bbe3d3da6", "e00ea4fdde970725482f1f35630d12f074e121a23801aabf2ae154ec6bdd343a"]
 pytest-describe = ["569bda96401fe512f4f345f33fd23fa4d718639d42afac62bc03254b5f2b3fdf"]
