@@ -1,3 +1,7 @@
+# 0.4.1 (2019-08-25)
+
+- Fixed a `TypeError` when converting non-builtin attributes.
+
 # 0.4 (2019-06-29)
 
 - Fixed ORM methods for datafiles with relative path patterns.
