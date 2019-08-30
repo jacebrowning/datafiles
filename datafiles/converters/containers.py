@@ -145,7 +145,7 @@ class Dataclass(Converter):
 
         for name, converter in cls.CONVERTERS.items():
             if name not in data:
-                data[name] = converter.to_python_value(None)
+                data[name] = converter.to_python_value(None, target_object=None)
 
         new_value = cls.DATACLASS(**data)  # pylint: disable=not-callable
 

@@ -21,6 +21,8 @@
   "python.linting.mypyEnabled": true,
   "python.linting.mypyArgs": ["--config-file", ".mypy.ini"],
   "python.linting.pydocstyleEnabled": true,
+  "python.formatting.provider": "black",
+  "python.formatting.blackPath": ".venv/bin/black",
   "cSpell.words": [
     "backends",
     "dataclass",
