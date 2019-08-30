@@ -4,6 +4,7 @@ from io import StringIO
 from pathlib import Path
 from typing import IO, Any, Dict, List
 
+import log
 import tomlkit
 from ruamel import yaml
 
@@ -68,7 +69,11 @@ class YAML(Formatter):
 
     @classmethod
     def deserialize(cls, file_object):
-        return yaml.YAML(typ='rt').load(file_object) or {}
+        try:
+            return yaml.YAML(typ='rt').load(file_object) or {}
+        except NotImplementedError as e:
+            log.error(str(e))
+            return {}
 
     @classmethod
     def serialize(cls, data):
