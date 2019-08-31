@@ -87,6 +87,7 @@ class YAML(Formatter):
             text = f.getvalue().strip() + '\n'
         else:
             text = yaml.round_trip_dump(data) or ""
+            text = text.replace('- \n', '-\n')
         return "" if text == "{}\n" else text
 
 

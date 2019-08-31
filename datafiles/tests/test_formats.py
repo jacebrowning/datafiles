@@ -9,7 +9,7 @@ from datafiles.utils import dedent
 def describe_serialize():
     @pytest.fixture
     def data():
-        return {'key': "value", 'items': [1, 2]}
+        return {'key': "value", 'items': [1, 'a', None]}
 
     def describe_yaml():
         def it_indents_blocks_by_default(expect, data):
@@ -19,7 +19,8 @@ def describe_serialize():
             key: value
             items:
               - 1
-              - 2
+              - a
+              -
             """
             )
 
@@ -31,7 +32,8 @@ def describe_serialize():
             key: value
             items:
             - 1
-            - 2
+            - a
+            -
             """
             )
 
