@@ -1,3 +1,7 @@
+# 0.5 (unreleased)
+
+- Added an `INDENT_YAML_BLOCKS` setting to optionally use the old serialization behavior.
+
 # 0.4.1 (2019-08-25)
 
 - Fixed a `TypeError` when converting non-builtin attributes.

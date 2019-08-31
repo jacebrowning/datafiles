@@ -2,7 +2,7 @@
 
 from dataclasses import field
 
-from . import converters
+from . import converters, settings
 from .decorators import auto, datafile
 from .manager import Missing
 from .model import Model

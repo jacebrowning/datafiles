@@ -8,6 +8,8 @@ import log
 import tomlkit
 from ruamel import yaml
 
+from . import settings
+
 
 class Formatter(metaclass=ABCMeta):
     """Base class for object serialization and text deserialization."""
@@ -77,11 +79,14 @@ class YAML(Formatter):
 
     @classmethod
     def serialize(cls, data):
-        f = StringIO()
-        y = yaml.YAML()
-        y.indent(mapping=2, sequence=4, offset=2)
-        y.dump(data, f)
-        text = f.getvalue().strip() + '\n'
+        if settings.INDENT_YAML_BLOCKS:
+            f = StringIO()
+            y = yaml.YAML()
+            y.indent(mapping=2, sequence=4, offset=2)
+            y.dump(data, f)
+            text = f.getvalue().strip() + '\n'
+        else:
+            text = yaml.round_trip_dump(data) or ""
         return "" if text == "{}\n" else text
 
 
