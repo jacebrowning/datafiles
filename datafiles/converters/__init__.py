@@ -14,9 +14,10 @@ from .extensions import *  # pylint: disable=unused-wildcard-import
 _REGISTRY: Dict[Union[type, str], type] = {}
 
 
-def register(cls: type, converter: type):
+def register(cls: Union[type, str], converter: type):
     _REGISTRY[cls] = converter
-    _REGISTRY[cls.__name__] = converter
+    if not isinstance(cls, str):
+        _REGISTRY[cls.__name__] = converter
 
 
 register(Integer.TYPE, Integer)
@@ -81,6 +82,14 @@ def map_type(cls, *, name: str = '', item_cls: Optional[type] = None):
             return converter
 
         raise TypeError(f'Unsupported container type: {cls.__origin__}')
+
+    if isinstance(cls, str):
+        log.debug(f'Searching for class matching {cls!r} annotation')
+        for cls2 in Converter.__subclasses__():
+            if cls2.__name__ == cls:
+                register(cls, cls2)
+                log.debug(f'Registered {cls2} as new converter')
+                return cls2
 
     if not isclass(cls):
         raise TypeError(f'Annotation is not a type: {cls!r}')
