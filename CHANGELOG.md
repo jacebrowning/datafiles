@@ -1,3 +1,7 @@
+# 0.4.2 (2019-09-27)
+
+- Fixed a `TypeError` when converting custom types with `from __future__ import annotations` enabled.
+
 # 0.4.1 (2019-08-25)
 
 - Fixed a `TypeError` when converting non-builtin attributes.
