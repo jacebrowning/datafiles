@@ -4,8 +4,11 @@ from io import StringIO
 from pathlib import Path
 from typing import IO, Any, Dict, List
 
+import log
 import tomlkit
 from ruamel import yaml
+
+from . import settings
 
 
 class Formatter(metaclass=ABCMeta):
@@ -68,15 +71,23 @@ class YAML(Formatter):
 
     @classmethod
     def deserialize(cls, file_object):
-        return yaml.YAML(typ='rt').load(file_object) or {}
+        try:
+            return yaml.YAML(typ='rt').load(file_object) or {}
+        except NotImplementedError as e:
+            log.error(str(e))
+            return {}
 
     @classmethod
     def serialize(cls, data):
-        f = StringIO()
-        y = yaml.YAML()
-        y.indent(mapping=2, sequence=4, offset=2)
-        y.dump(data, f)
-        text = f.getvalue().strip() + '\n'
+        if settings.INDENT_YAML_BLOCKS:
+            f = StringIO()
+            y = yaml.YAML()
+            y.indent(mapping=2, sequence=4, offset=2)
+            y.dump(data, f)
+            text = f.getvalue().strip() + '\n'
+        else:
+            text = yaml.round_trip_dump(data) or ""
+            text = text.replace('- \n', '-\n')
         return "" if text == "{}\n" else text
 
 

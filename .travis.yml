@@ -1,9 +1,9 @@
+dist: xenial
+
 language: python
-matrix:
-  include:
-    - python: 3.7
-      dist: xenial
-      sudo: true
+python:
+  - "3.7"
+  - "3.8-dev"
 
 cache:
   pip: true
@@ -11,8 +11,10 @@ cache:
     - ${VIRTUAL_ENV}
 
 before_install:
-  - curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py | python
-  - source $HOME/.poetry/env
+  # https://github.com/sdispater/poetry/issues/613
+  # - curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py | python
+  # - source $HOME/.poetry/env
+  - pip install poetry
   - make doctor
 
 install:

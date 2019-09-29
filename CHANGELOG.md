@@ -1,3 +1,8 @@
+# 0.5 (2019-09-28)
+
+- Added an `INDENT_YAML_BLOCKS` setting to optionally use the old serialization behavior.
+- Disabled initial file creation when `settings.HOOKS_ENABLED = False` is set.
+
 # 0.4.2 (2019-09-27)
 
 - Fixed a `TypeError` when converting custom types with `from __future__ import annotations` enabled.

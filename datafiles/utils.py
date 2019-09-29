@@ -24,10 +24,10 @@ def dictify(value: Any) -> Dict:
         return {k: dictify(v) for k, v in value.items()}
 
     if isinstance(value, str):
-        return value
+        return value  # type: ignore
 
     with suppress(TypeError):
-        return [dictify(x) for x in value]
+        return [dictify(x) for x in value]  # type: ignore
 
     return value
 

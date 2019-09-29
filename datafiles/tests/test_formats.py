@@ -2,7 +2,40 @@
 
 import pytest
 
-from datafiles import formats
+from datafiles import formats, settings
+from datafiles.utils import dedent
+
+
+def describe_serialize():
+    @pytest.fixture
+    def data():
+        return {'key': "value", 'items': [1, 'a', None]}
+
+    def describe_yaml():
+        def it_indents_blocks_by_default(expect, data):
+            text = formats.YAML.serialize(data)
+            expect(text) == dedent(
+                """
+            key: value
+            items:
+              - 1
+              - a
+              -
+            """
+            )
+
+        def it_can_render_lists_inline(expect, data, monkeypatch):
+            monkeypatch.setattr(settings, 'INDENT_YAML_BLOCKS', False)
+            text = formats.YAML.serialize(data)
+            expect(text) == dedent(
+                """
+            key: value
+            items:
+            - 1
+            - a
+            -
+            """
+            )
 
 
 def describe_deserialize():
