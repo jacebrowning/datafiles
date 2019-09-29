@@ -15,15 +15,13 @@ datafiles.settings.HIDE_TRACEBACK_IN_HOOKS = False
 # `HOOKS_ENABLED`
 
 When running unit tests for a library using `datafiles`,
-it can be helpful to disable automatic loading/saving in patched methods for performance:
+it can be helpful to disable automatic loading/saving of models for performance and to avoid writing files to disk:
 
 ```python
 def pytest_runtest_setup(item):
     """Disable file storage during unit tests."""
     datafiles.settings.HOOKS_ENABLED = False
 ```
-
-
 
 # `INDENT_YAML_BLOCKS`
 

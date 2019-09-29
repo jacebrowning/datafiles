@@ -3,7 +3,7 @@ import dataclasses
 import log
 from classproperties import classproperty
 
-from . import config, hooks
+from . import config, hooks, settings
 from .manager import Manager
 from .mapper import create_mapper
 
@@ -13,25 +13,27 @@ class Model:
     Meta: config.Meta = config.Meta()
 
     def __post_init__(self):
-        with hooks.disabled():
-            log.debug(f'Initializing {self.__class__} object')
+        log.debug(f'Initializing {self.__class__} object')
 
-            self.datafile = create_mapper(self)
+        self.datafile = create_mapper(self)
 
-            path = self.datafile.path
-            exists = self.datafile.exists
-            create = not self.datafile.manual
+        if settings.HOOKS_ENABLED:
+            with hooks.disabled():
 
-            if path:
-                log.debug(f'Datafile path: {path}')
-                log.debug(f'Datafile exists: {exists}')
+                path = self.datafile.path
+                exists = self.datafile.exists
+                create = not self.datafile.manual
 
-                if exists:
-                    self.datafile.load(_first=True)
-                elif path and create:
-                    self.datafile.save()
+                if path:
+                    log.debug(f'Datafile path: {path}')
+                    log.debug(f'Datafile exists: {exists}')
 
-                hooks.apply(self, self.datafile)
+                    if exists:
+                        self.datafile.load(_first=True)
+                    elif path and create:
+                        self.datafile.save()
+
+                    hooks.apply(self, self.datafile)
 
         log.debug(f'Initialized {self.__class__} object')
 
