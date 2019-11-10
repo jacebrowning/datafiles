@@ -4,7 +4,8 @@ The following formats are supported for serialization.
 
 ## YAML
 
-By default, datafiles uses the [YAML language](https://yaml.org/) for serialization. Any of the following file extensions will use this format:
+By default, datafiles uses the [YAML language](https://yaml.org/) for serialization.
+Any of the following file extensions will use this format:
 
 - `.yml`
 - `.yaml`
@@ -16,8 +17,8 @@ Sample output:
 my_dict:
   value: 0
 my_list:
-- value: 1
-- value: 2
+  - value: 1
+  - value: 2
 my_bool: true
 my_float: 1.23
 my_int: 42
@@ -28,7 +29,8 @@ Where possible, comments and whitespace are preserved in files as shown in this 
 
 ## JSON
 
-The [JSON language](https://www.json.org/) is also supported. Any of the following file extensions will use this format:
+The [JSON language](https://www.json.org/) is also supported.
+Any of the following file extensions will use this format:
 
 - `.json`
 
@@ -58,7 +60,8 @@ Additional examples can be found in this [Jupyter Notebook](https://github.com/j
 
 ## TOML
 
-The [TOML language](https://github.com/toml-lang/toml) is also supported. Any of the following file extensions will use this format:
+The [TOML language](https://github.com/toml-lang/toml) is also supported.
+Any of the following file extensions will use this format:
 
 - `.toml`
 
@@ -81,3 +84,21 @@ value = 0
 ```
 
 Additional examples can be found in this [Jupyter Notebook](https://github.com/jacebrowning/datafiles/blob/develop/notebooks/format_options.ipynb).
+
+## Custom Formats
+
+Additional formats are supported through a registration system.
+Either extend the `datafiles.formats.Formatter` base class or map one of the existing formatter classes:
+
+```
+#!python hl_lines="4"
+from datafile import datafile, formats
+
+
+formats.register('.conf', formats.YAML)
+
+
+@datafile("my-file-path.conf")
+class MyConfig:
+    ...
+```
