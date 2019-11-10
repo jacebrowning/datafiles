@@ -15,6 +15,7 @@ _REGISTRY: Dict[Union[type, str], type] = {}
 
 
 def register(cls: Union[type, str], converter: type):
+    """Associate the given type signature with a converter class."""
     _REGISTRY[cls] = converter
     if not isinstance(cls, str):
         _REGISTRY[cls.__name__] = converter

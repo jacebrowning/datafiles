@@ -1,3 +1,7 @@
+# 0.6 (unreleased)
+
+- Added a registration system for custom formatter classes.
+
 # 0.5 (2019-09-28)
 
 - Added an `INDENT_YAML_BLOCKS` setting to optionally use the old serialization behavior.
@@ -28,9 +32,9 @@
 
 - Added an option to automatically resave files after loading.
 - Added an option to automatically reload files after saving.
-- Added registration system for custom class converters.
+- Added a registration system for custom converter classes.
 - Added initial support for file inference via `auto(filename)`.
 
 # 0.1 (2019-01-13)
 
- - Initial release.
+- Initial release.
