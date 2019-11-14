@@ -1,3 +1,7 @@
+# 0.5.1 (2019-11-14)
+
+- Removed unnecessary warning when loading objects.
+
 # 0.5 (2019-09-28)
 
 - Added an `INDENT_YAML_BLOCKS` setting to optionally use the old serialization behavior.
