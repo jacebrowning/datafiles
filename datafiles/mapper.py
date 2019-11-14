@@ -248,12 +248,7 @@ class Mapper:
                     nested_data[field.name] = None  # type: ignore
             dataclass = converter.to_python_value(nested_data, target_object=dataclass)
 
-        try:
-            mapper = dataclass.datafile
-        except AttributeError:
-            log.warn(f"{dataclass} has not yet been patched to have 'datafile'")
-            mapper = create_mapper(dataclass)
-
+        mapper = create_mapper(dataclass)
         for name2, converter2 in mapper.attrs.items():
             _value = nested_data.get(  # type: ignore
                 name2, mapper._get_default_field_value(name2)
