@@ -41,8 +41,6 @@ classifiers = [
 
 python = "^3.7"
 
-importlib-metadata = { version = "*", python = "3.8" } # workaround for  https://bugs.python.org/issue34632
-
 # Formats
 "ruamel.yaml" = "^0.16.5"
 tomlkit = "^0.5.3"

@@ -1,7 +1,11 @@
 environment:
+  global:
+    POETRY_PREVIEW: 1
   matrix:
     - PYTHON_MAJOR: 3
       PYTHON_MINOR: 7
+    - PYTHON_MAJOR: 3
+      PYTHON_MINOR: 8
 
 cache:
   - .venv -> poetry.lock
