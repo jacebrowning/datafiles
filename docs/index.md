@@ -7,7 +7,7 @@ Popular use cases include:
 - Coercing user-editable files into the proper Python types
 - Storing program configuration and data in version control
 - Loading data fixtures for demonstration or testing purposes
-- Prototyping data models agnostic of persistance backends
+- Prototyping data models agnostic of persistence backends
 
 ## Installation
 
