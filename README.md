@@ -13,7 +13,7 @@ Popular use cases include:
 - Coercing user-editable files into the proper Python types
 - Storing program configuration and data in version control
 - Loading data fixtures for demonstration or testing purposes
-- Prototyping data models agnostic of persistance backends
+- Prototyping data models agnostic of persistence backends
 
 ## Overview
 
@@ -34,7 +34,7 @@ class InventoryItem:
         return self.unit_price * self.quantity_on_hand
 ```
 
-and decorate it with directory pattern to synchronize instances:
+and decorate it with a directory pattern to synchronize instances:
 
 ```python
 from datafiles import datafile
@@ -113,4 +113,4 @@ $ poetry add datafiles
 
 ## Documentation
 
-To see additional syncrhonization and formatting options, please consult the [full documentation](https://datafiles.readthedocs.io).
+To see additional synchronization and formatting options, please consult the [full documentation](https://datafiles.readthedocs.io).

@@ -17,7 +17,7 @@ class Item:
     available: bool
 ```
 
-Synchronization is enabled by add the `@datafile(<pattern>)` decorator:
+Synchronization is enabled by adding the `@datafile(<pattern>)` decorator:
 
 ```
 #!python hl_lines="5"

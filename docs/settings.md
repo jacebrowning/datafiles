@@ -1,6 +1,6 @@
 <h1>Settings</h1>
 
-For libraries that wish to temporarly alter any of the previosly described behavior, a handful of settings can be set at the module level. All boolean settings default to `True` unless otherwise noted.
+For libraries that wish to temporarily alter any of the previously described behavior, a handful of settings can be set at the module level. All boolean settings default to `True` unless otherwise noted.
 
 # `HIDE_TRACEBACK_IN_HOOKS`
 
