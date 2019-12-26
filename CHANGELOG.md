@@ -1,6 +1,7 @@
 # 0.6 (unreleased)
 
 - Added a registration system for custom formatter classes.
+- Fixed loading of missing attribute from disk for ORM methods.
 
 # 0.5.1 (2019-11-14)
 

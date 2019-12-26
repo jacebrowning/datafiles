@@ -23,19 +23,18 @@ Trilean = Optional[bool]
 Missing = dataclasses._MISSING_TYPE
 
 
+class HasDatafile(Protocol):
+    datafile: Mapper
+
+
+class Splats:
+    def __getattr__(self, name):
+        return '*'
+
+
 class Manager:
     def __init__(self, cls):
         self.model = cls
-
-    def all(self) -> Iterator[HasDatafile]:
-        root = Path(inspect.getfile(self.model)).parent
-        pattern = str(root / self.model.Meta.datafile_pattern)
-        splatted = pattern.format(self=Splats())
-        log.info(f'Finding files matching pattern: {splatted}')
-        for filename in iglob(splatted):
-            log.debug(f'Found matching path: {filename}')
-            results = parse(pattern, filename)
-            yield self.get(*results.named.values())
 
     def get(self, *args, **kwargs) -> HasDatafile:
         fields = dataclasses.fields(self.model)
@@ -62,6 +61,16 @@ class Manager:
             log.info(f"File not found, creating '{self.model.__name__}' object")
             return self.model(*args, **kwargs)
 
+    def all(self) -> Iterator[HasDatafile]:
+        root = Path(inspect.getfile(self.model)).parent
+        pattern = str(root / self.model.Meta.datafile_pattern)
+        splatted = pattern.format(self=Splats())
+        log.info(f'Finding files matching pattern: {splatted}')
+        for filename in iglob(splatted):
+            log.debug(f'Found matching path: {filename}')
+            results = parse(pattern, filename)
+            yield self.get(*results.named.values())
+
     def filter(self, **query):
         for item in self.all():
             match = True
@@ -70,12 +79,3 @@ class Manager:
                     match = False
             if match:
                 yield item
-
-
-class HasDatafile(Protocol):
-    datafile: Mapper
-
-
-class Splats:
-    def __getattr__(self, name):
-        return '*'

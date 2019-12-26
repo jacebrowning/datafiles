@@ -71,7 +71,7 @@ def test_classes_can_share_a_nested_dataclass(expect):
     expect(bar.nested.value) == 2
 
 
-@pytest.mark.xfail(reason='https://github.com/jacebrowning/datafiles/issues/139')
+@pytest.mark.xfail(reason='https://github.com/jacebrowning/datafiles/issues/147')
 def test_values_are_filled_from_disk(expect):
     InventoryItem.objects.get_or_create(42, "Things", 0.99)
 

@@ -21,12 +21,6 @@ def describe_manager():
         model = create_model(MyClass, pattern='files/{self.foo}.yml')
         return Manager(model)
 
-    def describe_all():
-        @patch('datafiles.mapper.Mapper.exists', False)
-        def when_no_files_exist(expect, manager):
-            items = list(manager.all())
-            expect(items) == []
-
     def describe_get_or_none():
         @patch('datafiles.mapper.Mapper.load')
         @patch('datafiles.mapper.Mapper.exists', True)
@@ -54,6 +48,12 @@ def describe_manager():
         def when_file_missing(mock_save, expect, manager):
             expect(manager.get_or_create(foo=1, bar=2)) == MyClass(foo=1, bar=2)
             expect(mock_save.called) == True
+
+    def describe_all():
+        @patch('datafiles.mapper.Mapper.exists', False)
+        def when_no_files_exist(expect, manager):
+            items = list(manager.all())
+            expect(items) == []
 
     def describe_filter():
         @patch('datafiles.mapper.Mapper.exists', False)
