@@ -34,13 +34,10 @@ class Manager:
             log.debug(f'Found matching path: {filename}')
             results = parse(pattern, filename)
             args = list(results.named.values())
-            for _ in range(9):
-                try:
-                    yield self.model(*args)
-                except TypeError:
-                    args.append(Missing)
-                else:
-                    break
+            fields = dataclasses.fields(self.model)
+            for _ in range(len(fields) - len(args)):
+                args.append(Missing)
+            yield self.model(*args)
 
     def get_or_none(self, *args, **kwargs) -> Optional[HasDatafile]:
         original_manual = self.model.Meta.datafile_manual
