@@ -159,9 +159,10 @@ def enabled(mapper, args) -> bool:
 @contextmanager
 def disabled():
     """Globally disable method hooks, temporarily."""
-    if settings.HOOKS_ENABLED:
+    enabled = settings.HOOKS_ENABLED
+    if enabled:
         settings.HOOKS_ENABLED = False
+    try:
         yield
-        settings.HOOKS_ENABLED = True
-    else:
-        yield
+    finally:
+        settings.HOOKS_ENABLED = enabled
