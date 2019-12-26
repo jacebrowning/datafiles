@@ -2,6 +2,8 @@
 
 from dataclasses import dataclass
 
+import pytest
+
 from datafiles import datafile
 from datafiles.utils import logbreak
 
@@ -67,3 +69,12 @@ def test_classes_can_share_a_nested_dataclass(expect):
     bar = Bar(Nested(2))
 
     expect(bar.nested.value) == 2
+
+
+@pytest.mark.xfail(reason='https://github.com/jacebrowning/datafiles/issues/139')
+def test_values_are_filled_from_disk(expect):
+    InventoryItem.objects.get_or_create(42, "Things", 0.99)
+
+    items = list(InventoryItem.objects.all())
+
+    expect(items[0]) == InventoryItem(42, "Things", 0.99)
