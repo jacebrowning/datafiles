@@ -68,7 +68,7 @@ pylint = "^2.1"
 pydocstyle = "*"
 
 # Testing
-pytest = "^5.0"
+pytest = "^5.3.2"
 pytest-describe = "*"
 pytest-expecter = "*"
 pytest-mock = "*"
