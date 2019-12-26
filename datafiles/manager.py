@@ -33,10 +33,9 @@ class Manager:
         for filename in iglob(splatted):
             log.debug(f'Found matching path: {filename}')
             results = parse(pattern, filename)
-            args = list(results.named.values())
             fields = dataclasses.fields(self.model)
-            for _ in range(len(fields) - len(args)):
-                args.append(Missing)
+            args = list(results.named.values())
+            args += [Missing] * (len(fields) - len(args))
             yield self.model(*args)
 
     def get_or_none(self, *args, **kwargs) -> Optional[HasDatafile]:
