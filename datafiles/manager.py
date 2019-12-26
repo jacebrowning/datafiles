@@ -33,14 +33,10 @@ class Manager:
         for filename in iglob(splatted):
             log.debug(f'Found matching path: {filename}')
             results = parse(pattern, filename)
+            fields = dataclasses.fields(self.model)
             args = list(results.named.values())
-            for _ in range(9):
-                try:
-                    yield self.model(*args)
-                except TypeError:
-                    args.append(Missing)
-                else:
-                    break
+            args += [Missing] * (len(fields) - len(args))
+            yield self.model(*args)
 
     def get_or_none(self, *args, **kwargs) -> Optional[HasDatafile]:
         original_manual = self.model.Meta.datafile_manual
