@@ -39,8 +39,8 @@ class Manager:
 
     def get(self, *args, **kwargs) -> HasDatafile:
         fields = dataclasses.fields(self.model)
-        args = list(args)
-        args += [Missing] * (len(fields) - len(args) - len(kwargs))
+        missing_args = [Missing] * (len(fields) - len(args) - len(kwargs))
+        args = (*args, *missing_args)
 
         with hooks.disabled():
             instance = self.model(*args, **kwargs)
