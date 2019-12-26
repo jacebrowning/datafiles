@@ -52,12 +52,14 @@ class Manager:
         try:
             return self.get(*args, **kwargs)
         except FileNotFoundError:
+            log.info("File not found")
             return None
 
     def get_or_create(self, *args, **kwargs) -> HasDatafile:
         try:
             return self.get(*args, **kwargs)
         except FileNotFoundError:
+            log.info(f"File not found, creating '{self.model.__name__}' object")
             return self.model(*args, **kwargs)
 
     def filter(self, **query):
