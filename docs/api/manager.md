@@ -14,6 +14,26 @@ class MyModel:
 
 Many of the following examples are also shown in this [Jupyter Notebook](https://github.com/jacebrowning/datafiles/blob/develop/notebooks/manager_api.ipynb).
 
+# `get()`
+
+Instantiate an object from an existing file. If no matching file exist, or if any other problem occurs, an appropriate exception will be raised.
+
+```python
+>>> MyModel.objects.get('foobar')
+Traceback (most recent call last):
+  ...
+FileNotFoundError: [Errno 2] No such file or directory: 'foobar.yml'
+```
+
+```python
+>>> m = MyModel('foobar', 42)
+```
+
+```python
+>>> MyModel.objects.get('foobar')
+MyModel(my_key='foobar', my_value=42)
+```
+
 # `get_or_none()`
 
 Instantiate an object from an existing file or return `None` if no matching file exists:
