@@ -56,20 +56,24 @@ Item("def")  # <=> items/def.yml
 ```
 
 Attributes included in the filename pattern are automatically excluded from the file contents.
-Filename patterns are relative to the file in which models are defined unless `<pattern>` is an absolute path.
+Filename patterns are relative to the file in which models are defined unless `<pattern>` is an absolute path or explicitly relative to the current directory:
+
+- Absolute: `/tmp/items/{self.name}.yaml`
+- Relative to model: `items/{self.name}.yaml`
+- Relative to current directory: `./items/{self.name}.yaml`
 
 <h3>Options</h3>
 
 The following options can be passed to the `@datafile()` decorator:
 
-| Name | Type | Description | Default
-| --- | --- | --- | --- |
-| `attrs` | `dict` | Attributes to synchronize mapped to `datafile.converters` classes for serialization. | `{}` <sup>1</sup> |
-| `manual` | `bool` | Synchronize object and file changes manually. | `False` |
-| `defaults` | `bool` | Include default values in files. | `False` |
-| `auto_load` | `bool` | Load automatically after saving.<br>If `manual=True` this option is ignored. | `True` |
-| `auto_save` | `bool` | Save automatically after loading.<br>If `manual=True` this option is ignored. | `True` |
-| `auto_attr` | `bool` | Automatically infer new attributes from the file. | `False` |
+| Name        | Type   | Description                                                                          | Default           |
+| ----------- | ------ | ------------------------------------------------------------------------------------ | ----------------- |
+| `attrs`     | `dict` | Attributes to synchronize mapped to `datafile.converters` classes for serialization. | `{}` <sup>1</sup> |
+| `manual`    | `bool` | Synchronize object and file changes manually.                                        | `False`           |
+| `defaults`  | `bool` | Include default values in files.                                                     | `False`           |
+| `auto_load` | `bool` | Load automatically after saving.<br>If `manual=True` this option is ignored.         | `True`            |
+| `auto_save` | `bool` | Save automatically after loading.<br>If `manual=True` this option is ignored.        | `True`            |
+| `auto_attr` | `bool` | Automatically infer new attributes from the file.                                    | `False`           |
 
 <sup>1</sup> _By default, synchronized attributes are inferred from the type annotations._
 

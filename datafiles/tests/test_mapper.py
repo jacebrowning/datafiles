@@ -1,5 +1,6 @@
 # pylint: disable=unused-variable
 
+import platform
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -38,10 +39,26 @@ def describe_mapper():
         def is_none_when_no_pattern(expect, mapper):
             expect(mapper.path) == None
 
-        def is_absolute_based_on_the_file(expect, mapper):
+        def is_relative_to_file_by_default(expect, mapper):
             mapper._pattern = '../../tmp/sample.yml'
             root = Path(__file__).parents[2]
             expect(mapper.path) == root / 'tmp' / 'sample.yml'
+
+        def is_absolute_when_specified(expect, mapper):
+            mapper._pattern = '/private/tmp/sample.yml'
+            if platform.system() == 'Windows':
+                path = Path('C:/private/tmp/sample.yml')
+            else:
+                path = Path('/private/tmp/sample.yml')
+            expect(mapper.path) == path
+
+        def is_relative_to_cwd_when_specified(expect, mapper):
+            mapper._pattern = './foobar/sample.yml'
+            if platform.system() == 'Windows':
+                path = Path('foobar/sample.yml')
+            else:
+                path = Path.cwd() / 'foobar' / 'sample.yml'
+            expect(mapper.path) == path
 
     def describe_relpath():
         def when_cwd_is_parent(expect, mapper):

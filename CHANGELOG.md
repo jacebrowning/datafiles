@@ -2,6 +2,7 @@
 
 - Added a registration system for custom formatter classes.
 - Fixed loading of missing attribute from disk for ORM methods.
+- Added support for file patterns relative to the current directory.
 
 # 0.5.1 (2019-11-14)
 
