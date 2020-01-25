@@ -1,4 +1,4 @@
-# 0.6 (unreleased)
+# 0.6 (2020-01-25)
 
 - Added a registration system for custom formatter classes.
 - Fixed loading of missing attribute from disk for ORM methods.
