@@ -44,7 +44,7 @@ Manually synchronize an object with the filesystem:
 
 ```python
 >>> model.datafile.save()
->>> model.adtafile.load()
+>>> model.datafile.load()
 ```
 
 _By default, these methods are called automatically. Set `manual=True` to disable this behavior._

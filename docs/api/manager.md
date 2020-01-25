@@ -14,27 +14,24 @@ class MyModel:
 
 Many of the following examples are also shown in this [Jupyter Notebook](https://github.com/jacebrowning/datafiles/blob/develop/notebooks/manager_api.ipynb).
 
-# `all()`
+# `get()`
 
-Iterate over all objects matching the pattern:
+Instantiate an object from an existing file. If no matching file exist, or if any other problem occurs, an appropriate exception will be raised.
 
 ```python
->>> generator = MyModel.objects.all()
->>> list(generator)
-[]
+>>> MyModel.objects.get('foobar')
+Traceback (most recent call last):
+  ...
+FileNotFoundError: [Errno 2] No such file or directory: 'foobar.yml'
 ```
 
 ```python
->>> m1 = MyModel('foo')
->>> m2 = MyModel('bar', 42)
+>>> m = MyModel('foobar', 42)
 ```
 
 ```python
->>> for m in MyModel.objects.all():
-...     print(m)
-...
-MyModel(my_key='foo' my_value=0)
-MyModel(my_key='bar', my_value=42)
+>>> MyModel.objects.get('foobar')
+MyModel(my_key='foobar', my_value=42)
 ```
 
 # `get_or_none()`
@@ -71,6 +68,29 @@ MyModel(my_key='foo', my_value=42)
 ```python
 >>> MyModel.objects.get_or_create('bar')
 MyModel(my_key='bar', my_value=0)
+```
+
+# `all()`
+
+Iterate over all objects matching the pattern:
+
+```python
+>>> generator = MyModel.objects.all()
+>>> list(generator)
+[]
+```
+
+```python
+>>> m1 = MyModel('foo')
+>>> m2 = MyModel('bar', 42)
+```
+
+```python
+>>> for m in MyModel.objects.all():
+...     print(m)
+...
+MyModel(my_key='foo' my_value=0)
+MyModel(my_key='bar', my_value=42)
 ```
 
 # `filter()`

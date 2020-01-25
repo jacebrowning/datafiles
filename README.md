@@ -2,18 +2,19 @@
 
 Datafiles is a bidirectional serialization library for Python [dataclasses](https://docs.python.org/3/library/dataclasses.html) to synchronizes objects to the filesystem using type annotations. It supports a variety of file formats with round-trip preservation of formatting and comments, where possible. Object changes are automatically saved to disk and only include the minimum data needed to restore each object.
 
-[![PyPI Version](https://img.shields.io/pypi/v/datafiles.svg)](https://pypi.org/project/datafiles)
-[![PyPI License](https://img.shields.io/pypi/l/datafiles.svg)](https://pypi.org/project/datafiles)
 [![Travis CI](https://img.shields.io/travis/jacebrowning/datafiles/develop.svg?label=unix)](https://travis-ci.org/jacebrowning/datafiles)
 [![AppVeyor](https://img.shields.io/appveyor/ci/jacebrowning/datafiles/develop.svg?label=windows)](https://ci.appveyor.com/project/jacebrowning/datafiles)
 [![Coveralls](https://img.shields.io/coveralls/jacebrowning/datafiles.svg)](https://coveralls.io/r/jacebrowning/datafiles)
+[![PyPI License](https://img.shields.io/pypi/l/datafiles.svg)](https://pypi.org/project/datafiles)
+[![PyPI Version](https://img.shields.io/pypi/v/datafiles.svg)](https://pypi.org/project/datafiles)
+[![Gitter](https://img.shields.io/gitter/room/jacebrowning/datafiles?color=blue)](https://gitter.im/jacebrowning/datafiles)
 
 Popular use cases include:
 
 - Coercing user-editable files into the proper Python types
 - Storing program configuration and data in version control
 - Loading data fixtures for demonstration or testing purposes
-- Prototyping data models agnostic of persistance backends
+- Prototyping data models agnostic of persistence backends
 
 ## Overview
 
@@ -34,7 +35,7 @@ class InventoryItem:
         return self.unit_price * self.quantity_on_hand
 ```
 
-and decorate it with directory pattern to synchronize instances:
+and decorate it with a directory pattern to synchronize instances:
 
 ```python
 from datafiles import datafile
@@ -113,4 +114,4 @@ $ poetry add datafiles
 
 ## Documentation
 
-To see additional syncrhonization and formatting options, please consult the [full documentation](https://datafiles.readthedocs.io).
+To see additional synchronization and formatting options, please consult the [full documentation](https://datafiles.readthedocs.io).

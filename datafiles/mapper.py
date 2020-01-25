@@ -57,6 +57,10 @@ class Mapper:
         if not self._pattern:
             return None
 
+        path = Path(self._pattern.format(self=self._instance))
+        if path.is_absolute() or self._pattern.startswith('./'):
+            return path.resolve()
+
         cls = self._instance.__class__
         try:
             root = Path(inspect.getfile(cls)).parent
@@ -65,8 +69,7 @@ class Mapper:
             log.log(level, f'Unable to determine module for {cls}')
             root = Path.cwd()
 
-        relpath = self._pattern.format(self=self._instance)
-        return (root / relpath).resolve()
+        return (root / path).resolve()
 
     @property
     def relpath(self) -> Path:

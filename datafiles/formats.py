@@ -1,5 +1,6 @@
 import json
 from abc import ABCMeta, abstractmethod
+from contextlib import suppress
 from io import StringIO
 from pathlib import Path
 from typing import IO, Any, Dict, List
@@ -9,6 +10,14 @@ import tomlkit
 from ruamel import yaml
 
 from . import settings
+
+
+_REGISTRY: Dict[str, type] = {}
+
+
+def register(extension: str, formatter: type):
+    """Associate the given file extension with a formatter class."""
+    _REGISTRY[extension] = formatter
 
 
 class Formatter(metaclass=ABCMeta):
@@ -92,17 +101,22 @@ class YAML(Formatter):
 
 
 def deserialize(path: Path, extension: str) -> Dict:
-    for formatter in Formatter.__subclasses__():
-        if extension in formatter.extensions():
-            with path.open('r') as file_object:
-                return formatter.deserialize(file_object)
-
-    raise ValueError(f'Unsupported file extension: {extension}')
+    formatter = _get_formatter(extension)
+    with path.open('r') as file_object:
+        return formatter.deserialize(file_object)
 
 
 def serialize(data: Dict, extension: str = '.yml') -> str:
+    formatter = _get_formatter(extension)
+    return formatter.serialize(data)
+
+
+def _get_formatter(extension: str):
+    with suppress(KeyError):
+        return _REGISTRY[extension]
+
     for formatter in Formatter.__subclasses__():
         if extension in formatter.extensions():
-            return formatter.serialize(data)
+            return formatter
 
     raise ValueError(f'Unsupported file extension: {extension!r}')

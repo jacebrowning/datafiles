@@ -1,6 +1,6 @@
 <h1>Settings</h1>
 
-For libraries that wish to temporarly alter any of the previosly described behavior, a handful of settings can be set at the module level. All boolean settings default to `True` unless otherwise noted.
+For libraries that wish to temporarily alter any of the previously described behavior, a handful of settings can be set at the module level. All boolean settings default to `True` unless otherwise noted.
 
 # `HIDE_TRACEBACK_IN_HOOKS`
 
@@ -18,6 +18,8 @@ When running unit tests for a library using `datafiles`,
 it can be helpful to disable automatic loading/saving of models for performance and to avoid writing files to disk:
 
 ```python
+import datafiles
+
 def pytest_runtest_setup(item):
     """Disable file storage during unit tests."""
     datafiles.settings.HOOKS_ENABLED = False

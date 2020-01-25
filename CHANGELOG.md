@@ -1,3 +1,9 @@
+# 0.6 (2020-01-25)
+
+- Added a registration system for custom formatter classes.
+- Fixed loading of missing attribute from disk for ORM methods.
+- Added support for file patterns relative to the current directory.
+
 # 0.5.1 (2019-11-14)
 
 - Removed unnecessary warning when loading objects.
@@ -32,9 +38,9 @@
 
 - Added an option to automatically resave files after loading.
 - Added an option to automatically reload files after saving.
-- Added registration system for custom class converters.
+- Added a registration system for custom converter classes.
 - Added initial support for file inference via `auto(filename)`.
 
 # 0.1 (2019-01-13)
 
- - Initial release.
+- Initial release.

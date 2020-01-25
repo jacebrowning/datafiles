@@ -12,6 +12,8 @@ from typing_extensions import Protocol
 import log
 from parse import parse
 
+from . import hooks
+
 
 if TYPE_CHECKING:
     from .mapper import Mapper
@@ -21,9 +23,43 @@ Trilean = Optional[bool]
 Missing = dataclasses._MISSING_TYPE
 
 
+class HasDatafile(Protocol):
+    datafile: Mapper
+
+
+class Splats:
+    def __getattr__(self, name):
+        return '*'
+
+
 class Manager:
     def __init__(self, cls):
         self.model = cls
+
+    def get(self, *args, **kwargs) -> HasDatafile:
+        fields = dataclasses.fields(self.model)
+        missing_args = [Missing] * (len(fields) - len(args) - len(kwargs))
+        args = (*args, *missing_args)
+
+        with hooks.disabled():
+            instance = self.model(*args, **kwargs)
+            instance.datafile.load()
+
+        return instance
+
+    def get_or_none(self, *args, **kwargs) -> Optional[HasDatafile]:
+        try:
+            return self.get(*args, **kwargs)
+        except FileNotFoundError:
+            log.info("File not found")
+            return None
+
+    def get_or_create(self, *args, **kwargs) -> HasDatafile:
+        try:
+            return self.get(*args, **kwargs)
+        except FileNotFoundError:
+            log.info(f"File not found, creating '{self.model.__name__}' object")
+            return self.model(*args, **kwargs)
 
     def all(self) -> Iterator[HasDatafile]:
         root = Path(inspect.getfile(self.model)).parent
@@ -33,35 +69,7 @@ class Manager:
         for filename in iglob(splatted):
             log.debug(f'Found matching path: {filename}')
             results = parse(pattern, filename)
-            args = list(results.named.values())
-            for _ in range(9):
-                try:
-                    yield self.model(*args)
-                except TypeError:
-                    args.append(Missing)
-                else:
-                    break
-
-    def get_or_none(self, *args, **kwargs) -> Optional[HasDatafile]:
-        original_manual = self.model.Meta.datafile_manual
-
-        self.model.Meta.datafile_manual = True
-        instance = self.model(*args, **kwargs)
-        self.model.Meta.datafile_manual = original_manual
-
-        if instance.datafile.exists:
-            instance.datafile._manual = original_manual
-            return instance
-
-        return None
-
-    def get_or_create(self, *args, **kwargs) -> HasDatafile:
-        instance = self.model(*args, **kwargs)
-
-        if not instance.datafile.exists:
-            instance.datafile.save()
-
-        return instance
+            yield self.get(*results.named.values())
 
     def filter(self, **query):
         for item in self.all():
@@ -71,12 +79,3 @@ class Manager:
                     match = False
             if match:
                 yield item
-
-
-class HasDatafile(Protocol):
-    datafile: Mapper
-
-
-class Splats:
-    def __getattr__(self, name):
-        return '*'
