@@ -79,7 +79,7 @@ pytest-cov = "*"
 pytest-profiling = "*"
 
 # Coverage
-coveragespace = "^2.1"
+coveragespace = "^3.1"
 
 # Documentation
 mkdocs = "^1.0.4"
