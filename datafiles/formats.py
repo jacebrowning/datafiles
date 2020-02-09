@@ -1,3 +1,5 @@
+# pylint: disable=import-outside-toplevel
+
 import json
 from abc import ABCMeta, abstractmethod
 from contextlib import suppress
@@ -6,8 +8,6 @@ from pathlib import Path
 from typing import IO, Any, Dict, List
 
 import log
-import tomlkit
-from ruamel import yaml
 
 from . import settings
 
@@ -64,15 +64,19 @@ class TOML(Formatter):
 
     @classmethod
     def deserialize(cls, file_object):
+        import tomlkit
+
         return tomlkit.loads(file_object.read()) or {}
 
     @classmethod
     def serialize(cls, data):
+        import tomlkit
+
         return tomlkit.dumps(data)
 
 
-class YAML(Formatter):
-    """Formatter for (safe, round-trip) YAML Ain't Markup Language."""
+class RuamelYAML(Formatter):
+    """Formatter for (round-trip) YAML Ain't Markup Language."""
 
     @classmethod
     def extensions(cls):
@@ -80,6 +84,8 @@ class YAML(Formatter):
 
     @classmethod
     def deserialize(cls, file_object):
+        from ruamel import yaml
+
         try:
             return yaml.YAML(typ='rt').load(file_object) or {}
         except NotImplementedError as e:
@@ -88,6 +94,8 @@ class YAML(Formatter):
 
     @classmethod
     def serialize(cls, data):
+        from ruamel import yaml
+
         if settings.INDENT_YAML_BLOCKS:
             f = StringIO()
             y = yaml.YAML()
@@ -98,6 +106,44 @@ class YAML(Formatter):
             text = yaml.round_trip_dump(data) or ""
             text = text.replace('- \n', '-\n')
         return "" if text == "{}\n" else text
+
+
+class PyYAML(Formatter):
+    """Formatter for YAML Ain't Markup Language."""
+
+    @classmethod
+    def extensions(cls):
+        return {'.yml', '.yaml'}
+
+    @classmethod
+    def deserialize(cls, file_object):
+        import yaml
+
+        data = yaml.safe_load(file_object)
+
+        return data
+
+    @classmethod
+    def serialize(cls, data):
+        import yaml
+
+        def represent_none(self, _):
+            return self.represent_scalar('tag:yaml.org,2002:null', '')
+
+        yaml.add_representer(type(None), represent_none)
+
+        class Dumper(yaml.Dumper):
+            def increase_indent(self, flow=False, indentless=False):
+                return super().increase_indent(
+                    flow=flow,
+                    indentless=False if settings.INDENT_YAML_BLOCKS else indentless,
+                )
+
+        text = yaml.dump(  # type: ignore
+            data, Dumper=Dumper, sort_keys=False, default_flow_style=False
+        )
+
+        return text
 
 
 def deserialize(path: Path, extension: str) -> Dict:
@@ -112,6 +158,9 @@ def serialize(data: Dict, extension: str = '.yml') -> str:
 
 
 def _get_formatter(extension: str):
+    if settings.YAML_LIBRARY == 'PyYAML':
+        register('.yml', PyYAML)
+
     with suppress(KeyError):
         return _REGISTRY[extension]
 

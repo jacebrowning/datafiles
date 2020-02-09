@@ -1,3 +1,7 @@
+# 0.7 (unreleased)
+
+- Added a `YAML_LIBRARY` setting to control the underlying YAML library.
+
 # 0.6 (2020-01-25)
 
 - Added a registration system for custom formatter classes.
