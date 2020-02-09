@@ -119,7 +119,7 @@ class PyYAML(Formatter):
     def deserialize(cls, file_object):
         import yaml
 
-        data = yaml.safe_load(file_object)
+        data = yaml.safe_load(file_object) or {}
 
         return data
 

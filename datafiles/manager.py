@@ -62,8 +62,13 @@ class Manager:
             return self.model(*args, **kwargs)
 
     def all(self) -> Iterator[HasDatafile]:
-        root = Path(inspect.getfile(self.model)).parent
-        pattern = str(root / self.model.Meta.datafile_pattern)
+        path = Path(self.model.Meta.datafile_pattern)
+        if path.is_absolute() or self.model.Meta.datafile_pattern.startswith('./'):
+            pattern = str(path.resolve())
+        else:
+            root = Path(inspect.getfile(self.model)).parent
+            pattern = str(root / self.model.Meta.datafile_pattern)
+
         splatted = pattern.format(self=Splats())
         log.info(f'Finding files matching pattern: {splatted}')
         for filename in iglob(splatted):

@@ -1,6 +1,7 @@
 # 0.7 (unreleased)
 
 - Added a `YAML_LIBRARY` setting to control the underlying YAML library.
+- Fixed ORM methods to handle relative file patterns.
 
 # 0.6 (2020-01-25)
 
