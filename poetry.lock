@@ -477,8 +477,8 @@ category = "dev"
 description = "Python implementation of Markdown."
 name = "markdown"
 optional = false
-python-versions = ">=2.7,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*"
-version = "3.1.1"
+python-versions = ">=3.5"
+version = "3.2"
 
 [package.dependencies]
 setuptools = ">=36"
@@ -835,40 +835,6 @@ mccabe = ">=0.6,<0.7"
 
 [[package]]
 category = "dev"
-description = "Python<->ObjC Interoperability Module"
-marker = "sys_platform == \"darwin\""
-name = "pyobjc-core"
-optional = false
-python-versions = ">=3.6"
-version = "6.1"
-
-[[package]]
-category = "dev"
-description = "Wrappers for the Cocoa frameworks on macOS"
-marker = "sys_platform == \"darwin\""
-name = "pyobjc-framework-cocoa"
-optional = false
-python-versions = ">=3.6"
-version = "6.1"
-
-[package.dependencies]
-pyobjc-core = ">=6.1"
-
-[[package]]
-category = "dev"
-description = "Wrappers for the framework FSEvents on macOS"
-marker = "sys_platform == \"darwin\""
-name = "pyobjc-framework-fsevents"
-optional = false
-python-versions = ">=3.6"
-version = "6.1"
-
-[package.dependencies]
-pyobjc-core = ">=6.1"
-pyobjc-framework-Cocoa = ">=6.1"
-
-[[package]]
-category = "dev"
 description = "Python parsing module"
 name = "pyparsing"
 optional = false
@@ -943,8 +909,8 @@ category = "dev"
 description = "Better testing with expecter and pytest."
 name = "pytest-expecter"
 optional = false
-python-versions = "*"
-version = "1.3"
+python-versions = ">=3.6,<4.0"
+version = "2.0"
 
 [[package]]
 category = "dev"
@@ -1042,7 +1008,7 @@ python-versions = "*"
 version = "0.5.7"
 
 [[package]]
-category = "dev"
+category = "main"
 description = "YAML parser and emitter for Python"
 name = "pyyaml"
 optional = false
@@ -1277,12 +1243,10 @@ description = "Filesystem events monitoring"
 name = "watchdog"
 optional = false
 python-versions = "*"
-version = "0.10.1"
+version = "0.10.2"
 
 [package.dependencies]
 pathtools = ">=0.1.1"
-pyobjc-framework-Cocoa = ">=4.2.2"
-pyobjc-framework-FSEvents = ">=4.2.2"
 
 [package.extras]
 watchmedo = ["PyYAML (>=3.10)", "argh (>=0.24.1)"]
@@ -1329,14 +1293,14 @@ marker = "python_version < \"3.8\""
 name = "zipp"
 optional = false
 python-versions = ">=3.6"
-version = "2.1.0"
+version = "2.2.0"
 
 [package.extras]
 docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["jaraco.itertools"]
 
 [metadata]
-content-hash = "927789bb0ffbf79cdfd1bac2742dd9f090be7bb45562277a343d91bf75a1d95a"
+content-hash = "3fdb18d6cbf96a5fab0400a3e3164738d490faa70ef78c92371c07d96c038d64"
 python-versions = "^3.7"
 
 [metadata.files]
@@ -1543,8 +1507,8 @@ livereload = [
     {file = "livereload-2.6.1.tar.gz", hash = "sha256:89254f78d7529d7ea0a3417d224c34287ebfe266b05e67e51facaf82c27f0f66"},
 ]
 markdown = [
-    {file = "Markdown-3.1.1-py2.py3-none-any.whl", hash = "sha256:56a46ac655704b91e5b7e6326ce43d5ef72411376588afa1dd90e881b83c7e8c"},
-    {file = "Markdown-3.1.1.tar.gz", hash = "sha256:2e50876bcdd74517e7b71f3e7a76102050edec255b3983403f1a63e7c8a41e7a"},
+    {file = "Markdown-3.2-py2.py3-none-any.whl", hash = "sha256:9c71241ec237505535eabff7a38b1307250f16cea174bb1e505c3e032f108867"},
+    {file = "Markdown-3.2.tar.gz", hash = "sha256:5ad7180c3ec16422a764568ad6409ec82460c40d1631591fa53d597033cc98bf"},
 ]
 markupsafe = [
     {file = "MarkupSafe-1.1.1-cp27-cp27m-macosx_10_6_intel.whl", hash = "sha256:09027a7803a62ca78792ad89403b1b7a73a01c8cb65909cd876f7fcebd79b161"},
@@ -1694,24 +1658,6 @@ pylint = [
     {file = "pylint-2.4.4-py3-none-any.whl", hash = "sha256:886e6afc935ea2590b462664b161ca9a5e40168ea99e5300935f6591ad467df4"},
     {file = "pylint-2.4.4.tar.gz", hash = "sha256:3db5468ad013380e987410a8d6956226963aed94ecb5f9d3a28acca6d9ac36cd"},
 ]
-pyobjc-core = [
-    {file = "pyobjc-core-6.1.tar.gz", hash = "sha256:1a0fbf012fb575e0adf8c18cfd4453e657cc2c0deb2660c529bf524ba4c9149a"},
-    {file = "pyobjc_core-6.1-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:470ccd754efb468a59426942673dfc3c5c59f33a5b8cae8a7fc1be975c2d4128"},
-    {file = "pyobjc_core-6.1-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:751cdeb436cb181af2e2413015b072075590577c410c7f345080a38dd028b8ec"},
-    {file = "pyobjc_core-6.1-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:8ccf44511cbe438fa6562c423c0c5f1dad7cfc0eadd6d8f112840f8845b44fda"},
-]
-pyobjc-framework-cocoa = [
-    {file = "pyobjc-framework-Cocoa-6.1.tar.gz", hash = "sha256:c4077d2e6f96e4f3fd9780d66778cf51d27f414822498b24410e9df7a6a4d531"},
-    {file = "pyobjc_framework_Cocoa-6.1-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:32ba4d0ce811e2088bf0fc360c9545c06586934e895f7133655b8f2182e7019a"},
-    {file = "pyobjc_framework_Cocoa-6.1-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:245e19156739f8068db474ad9561079cc698f08ef525e299b8eedc5531e02801"},
-    {file = "pyobjc_framework_Cocoa-6.1-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:1dc428f867d35007ddf9de5b24eff5bfdf65c58b1d610abcb08bebd94c343312"},
-]
-pyobjc-framework-fsevents = [
-    {file = "pyobjc-framework-FSEvents-6.1.tar.gz", hash = "sha256:7a635c86af744a1d17f0c6c3913bef87b5fd146e0311c03229eba9e512b81520"},
-    {file = "pyobjc_framework_FSEvents-6.1-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:94c6953774b6d69e59d9781951f05ef57e352b3c530d4c236f463444852c3a88"},
-    {file = "pyobjc_framework_FSEvents-6.1-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:3a403ce5997cc01f23f1a70f8b4c919311b9a6b1fdd3c3d02d19079d711f954c"},
-    {file = "pyobjc_framework_FSEvents-6.1-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:d2ae8748d1791dc9e3d19b41d3873283ac34ed17ff8fca70f1a199336a0477b5"},
-]
 pyparsing = [
     {file = "pyparsing-2.4.6-py2.py3-none-any.whl", hash = "sha256:c342dccb5250c08d45fd6f8b4a559613ca603b57498511740e65cd11a2e7dcec"},
     {file = "pyparsing-2.4.6.tar.gz", hash = "sha256:4c830582a84fb022400b85429791bc551f1f4871c33f23e44f353119e92f969f"},
@@ -1731,8 +1677,8 @@ pytest-describe = [
     {file = "pytest-describe-0.12.0.tar.gz", hash = "sha256:569bda96401fe512f4f345f33fd23fa4d718639d42afac62bc03254b5f2b3fdf"},
 ]
 pytest-expecter = [
-    {file = "pytest-expecter-1.3.tar.gz", hash = "sha256:1c8e9ab98ddd576436b61a7ba61ea11cfa5a3fc6b00288ce9e91e9dd770daf19"},
-    {file = "pytest_expecter-1.3-py2-none-any.whl", hash = "sha256:27c93dfe87e2f4d28c525031be68d3f89457e3315241d97ee15f7689544e0e37"},
+    {file = "pytest-expecter-2.0.tar.gz", hash = "sha256:cd73b4af7dc6f29ed55460036174c1f78b8c8cc24d8aed2f7db2eb446211643c"},
+    {file = "pytest_expecter-2.0-py3-none-any.whl", hash = "sha256:5fd076dad393eacf6588d8a2bc92dd73e447c7990904abb2c2572b6e913a3721"},
 ]
 pytest-mock = [
     {file = "pytest-mock-2.0.0.tar.gz", hash = "sha256:b35eb281e93aafed138db25c8772b95d3756108b601947f89af503f8c629413f"},
@@ -1947,7 +1893,7 @@ urllib3 = [
     {file = "urllib3-1.25.8.tar.gz", hash = "sha256:87716c2d2a7121198ebcb7ce7cccf6ce5e9ba539041cfbaeecfb641dc0bf6acc"},
 ]
 watchdog = [
-    {file = "watchdog-0.10.1.tar.gz", hash = "sha256:d64786787b14c8c6a71a8cc014056776ba6b52e85d1164ef2ab50aec02723a3d"},
+    {file = "watchdog-0.10.2.tar.gz", hash = "sha256:c560efb643faed5ef28784b2245cf8874f939569717a4a12826a173ac644456b"},
 ]
 wcwidth = [
     {file = "wcwidth-0.1.8-py2.py3-none-any.whl", hash = "sha256:8fd29383f539be45b20bd4df0dc29c20ba48654a41e661925e612311e9f3c603"},
@@ -1965,6 +1911,6 @@ wrapt = [
     {file = "wrapt-1.11.2.tar.gz", hash = "sha256:565a021fd19419476b9362b05eeaa094178de64f8361e44468f9e9d7843901e1"},
 ]
 zipp = [
-    {file = "zipp-2.1.0-py3-none-any.whl", hash = "sha256:ccc94ed0909b58ffe34430ea5451f07bc0c76467d7081619a454bf5c98b89e28"},
-    {file = "zipp-2.1.0.tar.gz", hash = "sha256:feae2f18633c32fc71f2de629bfb3bd3c9325cd4419642b1f1da42ee488d9b98"},
+    {file = "zipp-2.2.0-py36-none-any.whl", hash = "sha256:d65287feb793213ffe11c0f31b81602be31448f38aeb8ffc2eb286c4f6f6657e"},
+    {file = "zipp-2.2.0.tar.gz", hash = "sha256:5c56e330306215cd3553342cfafc73dda2c60792384117893f3a83f8a1209f50"},
 ]

@@ -52,3 +52,10 @@ items:
 - 2
 - 3
 ```
+
+# `YAML_LIBRARY`
+
+This setting controls the underlying YAML library used to read and write files. The following options are available:
+
+- `'ruamel.yaml'` (default)
+- `'PyYAML'`
