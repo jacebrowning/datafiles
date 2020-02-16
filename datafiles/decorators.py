@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import dataclasses
 from pathlib import Path
-from typing import TYPE_CHECKING, Dict, Optional
+from typing import TYPE_CHECKING, Callable, Dict, Optional, Union
 
 from .config import Meta
 from .model import create_model
@@ -13,7 +13,7 @@ if TYPE_CHECKING:
 
 
 def datafile(
-    pattern: str,
+    pattern: Union[str, Callable],
     attrs: Optional[Dict[str, Converter]] = None,
     manual: bool = Meta.datafile_manual,
     defaults: bool = Meta.datafile_defaults,
@@ -23,7 +23,7 @@ def datafile(
 ):
     """Synchronize a data class to the specified path."""
 
-    def decorator(cls):
+    def decorator(cls=None):
         if dataclasses.is_dataclass(cls):
             dataclass = cls
         else:
@@ -39,6 +39,9 @@ def datafile(
             auto_save=auto_save,
             auto_attr=auto_attr,
         )
+
+    if callable(pattern):
+        return dataclasses.dataclass(pattern)  # type: ignore
 
     return decorator
 

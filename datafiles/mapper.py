@@ -154,7 +154,7 @@ class Mapper:
                 value == self._get_default_field_value(name)
                 and not include_default_values
             ):
-                log.debug(f"Skipped default value for '{name}' attribute")
+                log.debug(f"Skipped default value of {value!r} for {name!r} attribute")
                 data.pop(name)
 
             else:

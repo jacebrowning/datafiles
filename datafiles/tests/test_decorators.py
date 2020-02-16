@@ -10,7 +10,7 @@ def describe_datafile():
         class Normal:
             pass
 
-        cls = decorators.datafile("")(Normal)
+        cls = decorators.datafile("<pattern>")(Normal)
 
         expect(is_dataclass(cls)) == True
 
@@ -22,3 +22,11 @@ def describe_datafile():
         cls = decorators.datafile("")(Existing)
 
         expect(id(cls)) == id(Existing)
+
+    def it_maps_to_dataclass_without_paranthesis(expect):
+        class Sample:
+            pass
+
+        cls = decorators.datafile(Sample)
+
+        expect(is_dataclass(cls)) == True

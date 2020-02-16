@@ -178,7 +178,9 @@ class Dataclass(Converter):
 
             with suppress(AttributeError):
                 if value == getattr(default_to_skip, name):
-                    log.debug(f"Skipped default value for '{name}' attribute")
+                    log.debug(
+                        f"Skipped default value of {value!r} for {name!r} attribute"
+                    )
                     continue
 
             data[name] = converter.to_preserialization_data(value)
