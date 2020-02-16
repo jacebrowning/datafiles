@@ -72,4 +72,16 @@ bar:
   qux: Hello, world!
 ```
 
+For convenience, `@datafile` can also be used in place of `@dataclass`:
+
+```
+#!python hl_lines="4"
+from datafiles import datafile
+
+
+@datafile
+class Nested:
+    qux: str
+```
+
 More examples can be found in this [Jupyter Notebook](https://github.com/jacebrowning/datafiles/blob/develop/notebooks/nested_dataclass.ipynb).
