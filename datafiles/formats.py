@@ -87,7 +87,7 @@ class RuamelYAML(Formatter):
         from ruamel import yaml
 
         try:
-            return yaml.YAML(typ='rt').load(file_object) or {}
+            return yaml.round_trip_load(file_object, preserve_quotes=True) or {}
         except NotImplementedError as e:
             log.error(str(e))
             return {}

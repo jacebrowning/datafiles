@@ -3,6 +3,7 @@
 - Added a `YAML_LIBRARY` setting to control the underlying YAML library.
 - Fixed ORM methods to handle relative file patterns.
 - Updated the `@datafile` decorator to be able to be called without parentheses to act as `@dataclass`.
+- Updated YAML serialization to preserve quotation marks in files.
 
 # 0.6 (2020-01-25)
 
