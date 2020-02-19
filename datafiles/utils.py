@@ -5,7 +5,7 @@ from functools import lru_cache
 from pathlib import Path
 from pprint import pformat
 from shutil import get_terminal_size
-from typing import Any, Dict, Union
+from typing import Dict, Union
 
 import log
 
@@ -13,21 +13,21 @@ import log
 cached = lru_cache()
 
 
-def prettify(value: Any) -> str:
+def prettify(value) -> str:
     """Ensure value is a dictionary pretty-format it."""
     return pformat(dictify(value))
 
 
-def dictify(value: Any) -> Dict:
+def dictify(value):
     """Ensure value is a dictionary."""
     with suppress(AttributeError):
         return {k: dictify(v) for k, v in value.items()}
 
     if isinstance(value, str):
-        return value  # type: ignore
+        return value
 
     with suppress(TypeError):
-        return [dictify(x) for x in value]  # type: ignore
+        return [dictify(x) for x in value]
 
     return value
 

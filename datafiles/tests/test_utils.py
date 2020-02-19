@@ -1,11 +1,13 @@
 # pylint: disable=unused-variable
 
+from typing import Dict
+
 from datafiles.utils import recursive_update
 
 
 def describe_recursive_update():
     def it_preserves_root_id(expect):
-        old = {}  # type: ignore
+        old: Dict = {}
         new = {'a': 1}
         id_ = id(old)
 
@@ -35,7 +37,7 @@ def describe_recursive_update():
         expect(id(old['a'])) == id_
 
     def it_adds_missing_dict(expect):
-        old = {}  # type: ignore
+        old: Dict = {}
         new = {'a': {'b': 2}}
 
         old = recursive_update(old, new)
@@ -43,7 +45,7 @@ def describe_recursive_update():
         expect(old) == new
 
     def it_adds_missing_list(expect):
-        old = {}  # type: ignore
+        old: Dict = {}
         new = {'a': [1]}
 
         old = recursive_update(old, new)

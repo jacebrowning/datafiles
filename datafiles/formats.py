@@ -139,9 +139,7 @@ class PyYAML(Formatter):
                     indentless=False if settings.INDENT_YAML_BLOCKS else indentless,
                 )
 
-        text = yaml.dump(  # type: ignore
-            data, Dumper=Dumper, sort_keys=False, default_flow_style=False
-        )
+        text = yaml.dump(data, Dumper=Dumper, sort_keys=False, default_flow_style=False)
 
         return text
 

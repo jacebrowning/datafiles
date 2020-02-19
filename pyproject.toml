@@ -1,7 +1,7 @@
 [tool.poetry]
 
 name = "datafiles"
-version = "0.7b5"
+version = "0.7b6"
 description = "File-based ORM for dataclasses."
 
 license = "MIT"
@@ -64,7 +64,7 @@ black = "=19.3b0"
 isort = "=4.3.4"
 
 # Linters
-mypy = "~0.730"
+mypy = "^0.761"
 pylint = "^2.1"
 pydocstyle = "*"
 
