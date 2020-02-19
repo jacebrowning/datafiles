@@ -1,7 +1,7 @@
 from collections.abc import Iterable
 from contextlib import suppress
 from dataclasses import _MISSING_TYPE as Missing
-from typing import Dict
+from typing import Callable, Dict
 
 import log
 
@@ -11,11 +11,11 @@ from ._bases import Converter
 class List(Converter):
     """Base converter for homogeneous lists of another converter."""
 
-    CONVERTER = None
+    CONVERTER: Converter = None  # type: ignore
 
     @classmethod
     def subclass(cls, converter: type):
-        name = f'{converter.__name__}List'  # type: ignore
+        name = f'{converter.__name__}List'
         bases = (cls,)
         attributes = {'CONVERTER': converter}
         return type(name, bases, attributes)
@@ -23,7 +23,7 @@ class List(Converter):
     @classmethod
     def to_python_value(cls, deserialized_data, *, target_object):
         if target_object is None or target_object is Missing:
-            value = []  # type: ignore
+            value = []
         else:
             value = target_object
             value.clear()
@@ -121,8 +121,8 @@ class Dictionary(Converter):
 class Dataclass(Converter):
     """Base converter for dataclasses."""
 
-    DATACLASS = None
-    CONVERTERS = None
+    DATACLASS: Callable = None  # type: ignore
+    CONVERTERS: Dict = None  # type: ignore
 
     @classmethod
     def subclass(cls, dataclass, converters: Dict[str, type]):

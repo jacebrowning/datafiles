@@ -25,13 +25,13 @@ def datafile_class_maker_callback(ctx: ClassDefContext) -> None:
     var = Var('objects', AnyType(TypeOfAny.unannotated))
     var.info = ctx.cls.info
     var.is_property = True
-    ctx.cls.info.names[var.name()] = SymbolTableNode(MDEF, var)
+    ctx.cls.info.names[var.name] = SymbolTableNode(MDEF, var)
 
     # Define 'datafile' as an instance property
     var = Var('datafile', AnyType(TypeOfAny.unannotated))
     var.info = ctx.cls.info
     var.is_property = True
-    ctx.cls.info.names[var.name()] = SymbolTableNode(MDEF, var)
+    ctx.cls.info.names[var.name] = SymbolTableNode(MDEF, var)
 
 
 def mypy(version: str):
