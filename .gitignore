@@ -1,9 +1,10 @@
 # Temporary Python files
 *.pyc
-*.egg-info
-__pycache__
-.ipynb_checkpoints
 setup.py
+*.egg-info/
+__pycache__/
+.ipynb_checkpoints/
+pip-wheel-metadata/
 
 # Temporary OS files
 Icon*

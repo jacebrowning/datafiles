@@ -386,3 +386,25 @@ def describe_preservation():
               score: 4.0  # Nested line
             """
         )
+
+    def with_quotations(expect):
+        sample = Sample(None, None, None, "42")
+
+        write(
+            'tmp/sample.yml',
+            """
+            str_: "42"
+            """,
+        )
+
+        sample.datafile.load()
+        sample.datafile.save()
+
+        expect(read('tmp/sample.yml')) == dedent(
+            """
+            str_: "42"
+            bool_: false
+            int_: 0
+            float_: 0.0
+            """
+        )

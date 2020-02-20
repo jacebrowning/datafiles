@@ -11,9 +11,9 @@ def describe_serialize():
     def data():
         return {'key': "value", 'items': [1, 'a', None]}
 
-    def describe_yaml():
+    def describe_ruamel_yaml():
         def it_indents_blocks_by_default(expect, data):
-            text = formats.YAML.serialize(data)
+            text = formats.RuamelYAML.serialize(data)
             expect(text) == dedent(
                 """
             key: value
@@ -26,7 +26,33 @@ def describe_serialize():
 
         def it_can_render_lists_inline(expect, data, monkeypatch):
             monkeypatch.setattr(settings, 'INDENT_YAML_BLOCKS', False)
-            text = formats.YAML.serialize(data)
+            text = formats.RuamelYAML.serialize(data)
+            expect(text) == dedent(
+                """
+            key: value
+            items:
+            - 1
+            - a
+            -
+            """
+            )
+
+    def describe_pyyaml():
+        def it_indents_blocks_by_default(expect, data):
+            text = formats.PyYAML.serialize(data)
+            expect(text) == dedent(
+                """
+            key: value
+            items:
+              - 1
+              - a
+              -
+            """
+            )
+
+        def it_can_render_lists_inline(expect, data, monkeypatch):
+            monkeypatch.setattr(settings, 'INDENT_YAML_BLOCKS', False)
+            text = formats.PyYAML.serialize(data)
             expect(text) == dedent(
                 """
             key: value

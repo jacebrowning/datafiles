@@ -154,7 +154,7 @@ class Mapper:
                 value == self._get_default_field_value(name)
                 and not include_default_values
             ):
-                log.debug(f"Skipped default value for '{name}' attribute")
+                log.debug(f"Skipped default value of {value!r} for {name!r} attribute")
                 data.pop(name)
 
             else:
@@ -247,15 +247,13 @@ class Mapper:
         dataclass = getattr(self._instance, name)
         if dataclass is None:
             for field in dataclasses.fields(converter.DATACLASS):
-                if field.name not in nested_data:  # type: ignore
-                    nested_data[field.name] = None  # type: ignore
+                if field.name not in nested_data:
+                    nested_data[field.name] = None
             dataclass = converter.to_python_value(nested_data, target_object=dataclass)
 
         mapper = create_mapper(dataclass)
         for name2, converter2 in mapper.attrs.items():
-            _value = nested_data.get(  # type: ignore
-                name2, mapper._get_default_field_value(name2)
-            )
+            _value = nested_data.get(name2, mapper._get_default_field_value(name2))
             value = converter2.to_python_value(
                 _value, target_object=getattr(dataclass, name2)
             )
