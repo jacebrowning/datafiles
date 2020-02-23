@@ -8,11 +8,11 @@ Given an arbitrary file, this library can attempt to map its structure into a Py
 
 ```yaml
 names:
-- Alice
-- Bob
+  - Alice
+  - Bob
 numbers:
-- 1
-- 2
+  - 1
+  - 2
 ```
 
 can be loaded into an object:
@@ -37,12 +37,12 @@ are automatically reflected in the file:
 $ cat sample.yml
 
 names:
-- Alice
-- Bob
+  - Alice
+  - Bob
 numbers:
-- 1
-- 2
-- 3
+  - 1
+  - 2
+  - 3
 ```
 
 Additional examples can be found in this [Jupyter Notebook](https://github.com/jacebrowning/datafiles/blob/develop/notebooks/file_inference.ipynb).
