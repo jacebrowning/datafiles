@@ -102,6 +102,7 @@ $(MKDOCS_INDEX): docs/requirements.txt mkdocs.yml docs/*.md
 
 docs/requirements.txt: poetry.lock
 	@ poetry run pip freeze -qqq | grep mkdocs > $@
+	@ poetry run pip freeze -qqq | grep Pygments >> $@
 
 .PHONY: mkdocs-serve
 mkdocs-serve: mkdocs

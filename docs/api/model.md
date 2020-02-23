@@ -6,8 +6,7 @@ A model is created by either extending the `Model` class or using the `datafile(
 
 Given this example dataclass:
 
-```
-#!python"
+```python
 from dataclasses import dataclass
 
 @dataclass
@@ -19,8 +18,7 @@ class Item:
 
 Synchronization is enabled by adding the `@datafile(<pattern>)` decorator:
 
-```
-#!python hl_lines="5"
+```python hl_lines="5"
 from dataclasses import dataclass
 
 from datafiles import datafile
@@ -35,8 +33,7 @@ class Item:
 
 or by replacing the `@dataclass` decorator entirely:
 
-```
-#!python hl_lines="3"
+```python hl_lines="3"
 from datafiles import datafile
 
 @datafile("items/{self.name}.yml")
@@ -79,8 +76,7 @@ The following options can be passed to the `@datafile()` decorator:
 
 For example:
 
-```
-#!python hl_lines="3 9"
+```python hl_lines="3 9"
 from datafiles import datafile
 
 @datafile("items/{self.name}.yml", manual=True, defaults=True)
@@ -98,8 +94,7 @@ class Config:
 
 Alternatively, any of the above options can be configured through code by setting `datafile_<option>` in a `Meta` class:
 
-```
-#!python hl_lines="9 10 11 12 13 14"
+```python hl_lines="9 10 11 12 13 14"
 from datafiles import datafile, converters
 
 @datafile("items/{self.name}.yml")
@@ -120,8 +115,7 @@ class Item:
 
 Finally, a datafile can explicitly extend `datafiles.Model` and set the pattern in the `Meta` class:
 
-```
-#!python hl_lines="11 12 13 14 15"
+```python hl_lines="11 12 13 14 15"
 from dataclasses import dataclass
 
 from datafiles import Model, converters

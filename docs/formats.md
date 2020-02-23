@@ -90,8 +90,7 @@ Additional examples can be found in this [Jupyter Notebook](https://github.com/j
 Additional formats are supported through a registration system.
 Either extend the `datafiles.formats.Formatter` base class or map one of the existing formatter classes:
 
-```
-#!python hl_lines="4"
+```python hl_lines="4"
 from datafile import datafile, formats
 
 
