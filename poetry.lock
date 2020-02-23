@@ -211,6 +211,14 @@ version = "0.3"
 
 [[package]]
 category = "dev"
+description = "Clean single-source support for Python 3 and 2"
+name = "future"
+optional = false
+python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*"
+version = "0.18.2"
+
+[[package]]
+category = "dev"
 description = "Generate a dot graph from the output of several profilers."
 name = "gprof2dot"
 optional = false
@@ -466,6 +474,25 @@ tornado = "*"
 
 [[package]]
 category = "dev"
+description = "A Python implementation of Lunr.js"
+name = "lunr"
+optional = false
+python-versions = "*"
+version = "0.5.6"
+
+[package.dependencies]
+future = ">=0.16.0"
+six = ">=1.11.0"
+
+[package.dependencies.nltk]
+optional = true
+version = ">=3.2.5"
+
+[package.extras]
+languages = ["nltk (>=3.2.5)"]
+
+[[package]]
+category = "dev"
 description = "Python implementation of Markdown."
 name = "markdown"
 optional = false
@@ -515,16 +542,20 @@ category = "dev"
 description = "Project documentation with Markdown."
 name = "mkdocs"
 optional = false
-python-versions = ">=2.7.9,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*"
-version = "1.0.4"
+python-versions = ">=3.5"
+version = "1.1"
 
 [package.dependencies]
-Jinja2 = ">=2.7.1"
-Markdown = ">=2.3.1"
+Jinja2 = ">=2.10.1"
+Markdown = ">=3.2.1"
 PyYAML = ">=3.10"
 click = ">=3.3"
 livereload = ">=2.5.1"
 tornado = ">=5.0"
+
+[package.dependencies.lunr]
+extras = ["languages"]
+version = "0.5.6"
 
 [[package]]
 category = "dev"
@@ -630,6 +661,25 @@ version = "0.3.7"
 
 [package.dependencies]
 nbformat = "*"
+
+[[package]]
+category = "dev"
+description = "Natural Language Toolkit"
+name = "nltk"
+optional = false
+python-versions = "*"
+version = "3.4.5"
+
+[package.dependencies]
+six = "*"
+
+[package.extras]
+all = ["pyparsing", "scikit-learn", "python-crfsuite", "matplotlib", "scipy", "gensim", "requests", "twython", "numpy"]
+corenlp = ["requests"]
+machine_learning = ["gensim", "numpy", "python-crfsuite", "scikit-learn", "scipy"]
+plot = ["matplotlib"]
+tgrep = ["pyparsing"]
+twitter = ["twython"]
 
 [[package]]
 category = "dev"
@@ -1312,7 +1362,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["jaraco.itertools", "func-timeout"]
 
 [metadata]
-content-hash = "e9e3ff3a7b81ddc2959ed0acb55e424e9bf05877252573e94214b77803541a55"
+content-hash = "98095e56b222214b8eebf46ebc433ff3441951d42d11d91de3c640d205cad721"
 python-versions = "^3.7"
 
 [metadata.files]
@@ -1349,6 +1399,7 @@ black = [
     {file = "black-19.3b0.tar.gz", hash = "sha256:68950ffd4d9169716bcb8719a56c07a2f4485354fec061cdd5910aa07369731c"},
 ]
 bleach = [
+    {file = "bleach-3.1.1-py2.py3-none-any.whl", hash = "sha256:44f69771e2ac81ff30d929d485b7f9919f3ad6d019b6b20c74f3b8687c3f70df"},
     {file = "bleach-3.1.1.tar.gz", hash = "sha256:aa8b870d0f46965bac2c073a93444636b0e1ca74e9777e34f03dd494b8a59d48"},
 ]
 cached-property = [
@@ -1425,6 +1476,9 @@ docopt = [
 entrypoints = [
     {file = "entrypoints-0.3-py2.py3-none-any.whl", hash = "sha256:589f874b313739ad35be6e0cd7efde2a4e9b6fea91edcc34e58ecbb8dbe56d19"},
     {file = "entrypoints-0.3.tar.gz", hash = "sha256:c70dd71abe5a8c85e55e12c19bd91ccfeec11a6e99044204511f9ed547d48451"},
+]
+future = [
+    {file = "future-0.18.2.tar.gz", hash = "sha256:b1bead90b70cf6ec3f0710ae53a525360fa360d306a86583adc6bf83a4db537d"},
 ]
 gprof2dot = [
     {file = "gprof2dot-2019.11.30.tar.gz", hash = "sha256:b43fe04ebb3dfe181a612bbfc69e90555b8957022ad6a466f0308ed9c7f22e99"},
@@ -1514,6 +1568,10 @@ livereload = [
     {file = "livereload-2.6.1-py2.py3-none-any.whl", hash = "sha256:78d55f2c268a8823ba499305dcac64e28ddeb9a92571e12d543cd304faf5817b"},
     {file = "livereload-2.6.1.tar.gz", hash = "sha256:89254f78d7529d7ea0a3417d224c34287ebfe266b05e67e51facaf82c27f0f66"},
 ]
+lunr = [
+    {file = "lunr-0.5.6-py2.py3-none-any.whl", hash = "sha256:1208622930c915a07e6f8e8640474357826bad48534c0f57969b6fca9bffc88e"},
+    {file = "lunr-0.5.6.tar.gz", hash = "sha256:7be69d7186f65784a4f2adf81e5c58efd6a9921aa95966babcb1f2f2ada75c20"},
+]
 markdown = [
     {file = "Markdown-3.2.1-py2.py3-none-any.whl", hash = "sha256:e4795399163109457d4c5af2183fbe6b60326c17cfdf25ce6e7474c6624f725d"},
     {file = "Markdown-3.2.1.tar.gz", hash = "sha256:90fee683eeabe1a92e149f7ba74e5ccdc81cd397bd6c516d93a8da0ef90b6902"},
@@ -1566,8 +1624,8 @@ mistune = [
     {file = "mistune-0.8.4.tar.gz", hash = "sha256:59a3429db53c50b5c6bcc8a07f8848cb00d7dc8bdb431a4ab41920d201d4756e"},
 ]
 mkdocs = [
-    {file = "mkdocs-1.0.4-py2.py3-none-any.whl", hash = "sha256:8cc8b38325456b9e942c981a209eaeb1e9f3f77b493ad755bfef889b9c8d356a"},
-    {file = "mkdocs-1.0.4.tar.gz", hash = "sha256:17d34329aad75d5de604b9ed4e31df3a4d235afefdc46ce7b1964fddb2e1e939"},
+    {file = "mkdocs-1.1-py2.py3-none-any.whl", hash = "sha256:1e385a70aea8a9dedb731aea4fd5f3704b2074801c4f96f06b2920999babda8a"},
+    {file = "mkdocs-1.1.tar.gz", hash = "sha256:9243291392f59e20b655e4e46210233453faf97787c2cf72176510e868143174"},
 ]
 more-itertools = [
     {file = "more-itertools-8.2.0.tar.gz", hash = "sha256:b1ddb932186d8a6ac451e1d95844b382f55e12686d51ca0c68b6f61f2ab7a507"},
@@ -1608,6 +1666,10 @@ nbformat = [
 nbstripout = [
     {file = "nbstripout-0.3.7-py2.py3-none-any.whl", hash = "sha256:cf745ae8c49fccdb3068b73fc3b783898d5d62ee929429e9af37a6dfefba34b7"},
     {file = "nbstripout-0.3.7.tar.gz", hash = "sha256:62f1b1fe9c7c298061089fd9bd5d297eb6209f7fbef0758631dbe58d38fc828f"},
+]
+nltk = [
+    {file = "nltk-3.4.5.win32.exe", hash = "sha256:a08bdb4b8a1c13de16743068d9eb61c8c71c2e5d642e8e08205c528035843f82"},
+    {file = "nltk-3.4.5.zip", hash = "sha256:bed45551259aa2101381bbdd5df37d44ca2669c5c3dad72439fa459b29137d94"},
 ]
 notebook = [
     {file = "notebook-6.0.3-py3-none-any.whl", hash = "sha256:3edc616c684214292994a3af05eaea4cc043f6b4247d830f3a2f209fa7639a80"},
