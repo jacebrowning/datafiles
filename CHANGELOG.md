@@ -1,3 +1,7 @@
+# 0.8 (unreleased)
+
+- Updated the `@datafile(...)` decorator to be used as a drop-in replacement for `@dataclass(...)`.
+
 # 0.7 (2020-02-20)
 
 - Added a `YAML_LIBRARY` setting to control the underlying YAML library.
