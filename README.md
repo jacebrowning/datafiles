@@ -96,8 +96,6 @@ Objects can also be restored from the filesystem:
 100
 ```
 
-Demo: [Jupyter Notebook](https://github.com/jacebrowning/datafiles/blob/develop/notebooks/readme.ipynb)
-
 ## Installation
 
 Because datafiles relies on dataclasses and type annotations, Python 3.7+ is required. Install this library directly into an activated virtual environment:
