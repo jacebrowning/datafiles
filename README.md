@@ -16,6 +16,8 @@ Popular use cases include:
 - Loading data fixtures for demonstration or testing purposes
 - Prototyping data models agnostic of persistence backends
 
+Watch my latest: [lightning talk](https://www.youtube.com/watch?v=moYkuNrmc1I&feature=youtu.be&t=1225)
+
 ## Overview
 
 Take an existing dataclass such as [this example](https://docs.python.org/3/library/dataclasses.html#module-dataclasses) from the documentation:
