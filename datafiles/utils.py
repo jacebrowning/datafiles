@@ -68,13 +68,12 @@ def write(filename_or_path: Union[str, Path], text: str) -> None:
         text = dedent(text)
 
     message = f'Writing file: {path}'
-    log.debug(message)
-    line = '=' * len(message)
+    line = '=' * (31 + len(message))
     if text:
         content = text.replace(' \n', '␠\n')
     else:
         content = '∅\n'
-    log.debug(line + '\n' + content + line)
+    log.debug(message + '\n' + line + '\n' + content + line)
 
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(text)
@@ -84,23 +83,22 @@ def read(filename: str) -> str:
     """Read text from a file with logging."""
     path = Path(filename).resolve()
     message = f'Reading file: {path}'
-    log.info(message)
-    line = '=' * len(message)
+    line = '=' * (31 + len(message))
     text = path.read_text()
     if text:
         content = text.replace(' \n', '␠\n')
     else:
         content = '∅\n'
-    log.debug(line + '\n' + content + line)
+    log.debug(message + '\n' + line + '\n' + content + line)
     return text
 
 
 def display(path: Path, data: Dict) -> None:
     """Display data read from a file."""
     message = f'Data from file: {path}'
-    log.debug(message)
-    line = '=' * len(message)
-    log.debug(line + '\n' + prettify(data) + '\n' + line)
+    line = '=' * (31 + len(message))
+    content = prettify(data)
+    log.debug(message + '\n' + line + '\n' + content + '\n' + line)
 
 
 def logbreak(message: str = "") -> None:
