@@ -147,11 +147,11 @@ class Mapper:
                     value,
                     default_to_skip=Missing
                     if include_default_values
-                    else self._get_default_field_value(name),
+                    else self._get_default_field_value(self, name),
                 )
 
             elif (
-                value == self._get_default_field_value(name)
+                value == self._get_default_field_value(self, name)
                 and not include_default_values
             ):
                 log.debug(f"Skipped default value of {value!r} for {name!r} attribute")
@@ -227,22 +227,23 @@ class Mapper:
                 log.debug(f"Converting '{name}' data with {converter}")
 
                 if getattr(converter, 'DATACLASS', None):
-                    self._set_dataclass_value(data, name, converter)
+                    self._set_dataclass_value(self._instance, data, name, converter)
                 else:
-                    self._set_attribute_value(data, name, converter, _first)
+                    self._set_attribute_value(self, data, name, converter, _first)
 
             hooks.apply(self._instance, self)
 
         self.modified = False
 
-    def _set_dataclass_value(self, data, name, converter):
+    @staticmethod
+    def _set_dataclass_value(instance, data, name, converter):
         nested_data = data.get(name)
         if nested_data is None:
             return
 
         log.debug(f'Converting nested data to Python: {nested_data}')
 
-        dataclass = getattr(self._instance, name)
+        dataclass = getattr(instance, name)
         if dataclass is None:
             for field in dataclasses.fields(converter.DATACLASS):
                 if field.name not in nested_data:
@@ -251,20 +252,28 @@ class Mapper:
 
         mapper = create_mapper(dataclass)
         for name2, converter2 in mapper.attrs.items():
-            _value = nested_data.get(name2, mapper._get_default_field_value(name2))
-            value = converter2.to_python_value(
-                _value, target_object=getattr(dataclass, name2)
-            )
-            log.debug(f"'{name2}' as Python: {value!r}")
-            setattr(dataclass, name2, value)
+
+            if getattr(converter2, 'DATACLASS', None):
+                log.c(converter2)
+                # instance2 = getattr(instance, name2)
+                mapper._set_dataclass_value(instance, nested_data, name2, converter2)
+            else:
+
+                _value = nested_data.get(name2, mapper._get_default_field_value(mapper, name2))
+                value = converter2.to_python_value(
+                    _value, target_object=getattr(dataclass, name2)
+                )
+                log.debug(f"'{name2}' as Python: {value!r}")
+                setattr(dataclass, name2, value)
 
         log.debug(f"Setting '{name}' value: {dataclass!r}")
-        setattr(self._instance, name, dataclass)
+        setattr(instance, name, dataclass)
 
-    def _set_attribute_value(self, data, name, converter, first_load):
+    @staticmethod
+    def _set_attribute_value(mapper, data, name, converter, first_load):
         file_value = data.get(name, Missing)
-        init_value = getattr(self._instance, name, Missing)
-        default_value = self._get_default_field_value(name)
+        init_value = getattr(mapper._instance, name, Missing)
+        default_value = mapper._get_default_field_value(mapper, name)
 
         if first_load:
             log.debug(
@@ -289,10 +298,11 @@ class Mapper:
             value = converter.to_python_value(file_value, target_object=init_value)
 
         log.debug(f"Setting '{name}' value: {value!r}")
-        setattr(self._instance, name, value)
+        setattr(mapper._instance, name, value)
 
-    def _get_default_field_value(self, name):
-        for field in dataclasses.fields(self._instance):
+    @staticmethod
+    def _get_default_field_value(mapper, name):
+        for field in dataclasses.fields(mapper._instance):
             if field.name == name:
                 if not isinstance(field.default, Missing):
                     return field.default
@@ -300,8 +310,8 @@ class Mapper:
                 if not isinstance(field.default_factory, Missing):  # type: ignore
                     return field.default_factory()  # type: ignore
 
-                if not field.init and hasattr(self._instance, '__post_init__'):
-                    return getattr(self._instance, name)
+                if not field.init and hasattr(mapper._instance, '__post_init__'):
+                    return getattr(mapper._instance, name)
 
         return Missing
 

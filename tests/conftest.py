@@ -14,6 +14,8 @@ xfail_on_ci = pytest.mark.xfail(bool(os.getenv('CI')), reason="Flaky on CI")
 
 
 def pytest_configure(config):
+    # import log
+    # log.init(debug=True)
     terminal = config.pluginmanager.getplugin('terminal')
     terminal.TerminalReporter.showfspath = False
 

@@ -116,7 +116,7 @@ def test_unlimited_nesting(expect):
         """
     )
 
-    logbreak()
+    logbreak("Modifying attribute")
     sample.a.b.c.d.level = 99
 
     expect(read('tmp/sample.toml')) == dedent(
@@ -156,10 +156,11 @@ def test_unlimited_nesting(expect):
         """,
     )
 
-    logbreak()
+    logbreak("Reading attribute")
     expect(sample.a.level) == 10
     expect(sample.a.b.level) == 20
     expect(sample.a.b.c.level) == 30
+
     expect(sample.a.b.c.d.level) == 40
 
 
