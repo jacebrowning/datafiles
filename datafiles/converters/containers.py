@@ -146,12 +146,16 @@ class Dataclass(Converter):
         for name, converter in cls.CONVERTERS.items():
             log.debug(f"Converting '{name}' data with {converter}")
             if name in data:
-                data[name] = converter.to_python_value(data[name], target_object=None)
+                converted = converter.to_python_value(data[name], target_object=None)
             else:
                 if target_object is None:
-                    data[name] = converter.to_python_value(None, target_object=None)
+                    converted = converter.to_python_value(None, target_object=None)
                 else:
-                    data[name] = get_default_field_value(target_object, name)
+                    converted = get_default_field_value(target_object, name)
+                    if converted is Missing:
+                        converted = getattr(target_object, name)
+
+            data[name] = converted
 
         new_value = cls.DATACLASS(**data)  # pylint: disable=not-callable
 
