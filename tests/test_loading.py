@@ -232,6 +232,7 @@ def describe_nesting():
         expect(sample.nested.score) == 3.4
         expect(hasattr(sample.nested, 'extra')) == False
 
+    @pytest.mark.flaky
     def with_multiple_levels(expect):
         @dataclass
         class Bottom:
