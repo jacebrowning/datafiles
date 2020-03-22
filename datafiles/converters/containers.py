@@ -144,7 +144,10 @@ class Dataclass(Converter):
                 data.pop(name)
 
         for name, converter in cls.CONVERTERS.items():
-            if name not in data:
+            log.debug(f"Converting '{name}' data with {converter}")
+            if name in data:
+                data[name] = converter.to_python_value(data[name], target_object=None)
+            else:
                 data[name] = converter.to_python_value(None, target_object=None)
 
         new_value = cls.DATACLASS(**data)  # pylint: disable=not-callable

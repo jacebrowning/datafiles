@@ -15,11 +15,17 @@ class MyDataclass:
     flag: bool = False
 
 
+@dataclass
+class MyNestedDataclass:
+    name: str
+    dc: MyDataclass
+
+
 class MyNonDataclass:
     pass
 
 
-class MyNonDataclass2:
+class MyCustomString:
     pass
 
 
@@ -28,6 +34,7 @@ StringList = converters.List.subclass(converters.String)
 MyDict = converters.Dictionary.subclass(converters.String, converters.Integer)
 MyDataclassConverter = converters.map_type(MyDataclass)
 MyDataclassConverterList = converters.map_type(List[MyDataclass])
+MyNestedDataclassConverter = converters.map_type(MyNestedDataclass)
 
 
 def describe_map_type():
@@ -139,6 +146,11 @@ def describe_converter():
                 (MyDataclassConverter, None, MyDataclass(foobar=0)),
                 (MyDataclassConverterList, None, []),
                 (MyDataclassConverterList, 42, [MyDataclass(foobar=0)]),
+                (
+                    MyNestedDataclassConverter,
+                    None,
+                    MyNestedDataclass(name='', dc=MyDataclass(foobar=0, flag=False)),
+                ),
             ],
         )
         def when_mutable(expect, converter, data, value):
@@ -284,6 +296,6 @@ def describe_converter():
 
 def describe_register():
     def with_new_type(expect):
-        converters.register(MyNonDataclass2, converters.String)
-        converter = converters.map_type(MyNonDataclass2)
+        converters.register(MyCustomString, converters.String)
+        converter = converters.map_type(MyCustomString)
         expect(converter) == converters.String
