@@ -1,16 +1,36 @@
 """Internal helper functions."""
 
+import dataclasses
 from contextlib import suppress
 from functools import lru_cache
 from pathlib import Path
 from pprint import pformat
 from shutil import get_terminal_size
-from typing import Dict, Union
+from typing import Dict, Optional, Union
 
 import log
 
 
+Trilean = Optional[bool]
+Missing = dataclasses._MISSING_TYPE
+
+
 cached = lru_cache()
+
+
+def get_default_field_value(instance, name):
+    for field in dataclasses.fields(instance):
+        if field.name == name:
+            if not isinstance(field.default, Missing):
+                return field.default
+
+            if not isinstance(field.default_factory, Missing):  # type: ignore
+                return field.default_factory()  # type: ignore
+
+            if not field.init and hasattr(instance, '__post_init__'):
+                return getattr(instance, name)
+
+    return Missing
 
 
 def prettify(value) -> str:
@@ -108,4 +128,4 @@ def logbreak(message: str = "") -> None:
         line = '-' * (width - len(message) - 1) + ' ' + message
     else:
         line = '-' * width
-    log.info(line)
+    log.critical(line)

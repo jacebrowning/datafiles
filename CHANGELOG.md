@@ -1,6 +1,7 @@
 # 0.8 (unreleased)
 
 - Updated the `@datafile(...)` decorator to be used as a drop-in replacement for `@dataclass(...)`.
+- Added support for loading unlimited levels of nested objects.
 
 # 0.7 (2020-02-20)
 

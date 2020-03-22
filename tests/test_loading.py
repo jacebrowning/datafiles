@@ -2,9 +2,12 @@
 
 # pylint: disable=unused-variable
 
+from dataclasses import dataclass
+
 import pytest
 
-from datafiles.utils import logbreak, write
+from datafiles import datafile
+from datafiles.utils import dedent, logbreak, read, write
 
 from .samples import (
     Sample,
@@ -228,6 +231,99 @@ def describe_nesting():
         expect(sample.nested.name) == 'b'
         expect(sample.nested.score) == 3.4
         expect(hasattr(sample.nested, 'extra')) == False
+
+    @pytest.mark.flaky
+    def with_multiple_levels(expect):
+        @dataclass
+        class Bottom:
+            level: int = 4
+
+        @dataclass
+        class C:
+            level: int = 3
+            d: Bottom = Bottom()
+
+        @dataclass
+        class B:
+            level: int = 2
+            c: C = C()
+
+        @dataclass
+        class A:
+            level: int = 1
+            b: B = B()
+
+        @datafile('../tmp/sample.toml', defaults=True, auto_save=False)
+        class Top:
+            level: int = 0
+            a: A = A()
+
+        sample = Top()
+
+        expect(read('tmp/sample.toml')) == dedent(
+            """
+            level = 0
+
+            [a]
+            level = 1
+
+            [a.b]
+            level = 2
+
+            [a.b.c]
+            level = 3
+
+            [a.b.c.d]
+            level = 4
+            """
+        )
+
+        logbreak("Modifying attribute")
+        sample.a.b.c.d.level = 99
+
+        expect(read('tmp/sample.toml')) == dedent(
+            """
+            level = 0
+
+            [a]
+            level = 1
+
+            [a.b]
+            level = 2
+
+            [a.b.c]
+            level = 3
+
+            [a.b.c.d]
+            level = 99
+            """
+        )
+
+        write(
+            'tmp/sample.toml',
+            """
+            level = 0
+
+            [a]
+            level = 10
+
+            [a.b]
+            level = 20
+
+            [a.b.c]
+            level = 30
+
+            [a.b.c.d]
+            level = 40
+            """,
+        )
+
+        logbreak("Reading attribute")
+        expect(sample.a.level) == 10
+        expect(sample.a.b.level) == 20
+        expect(sample.a.b.c.level) == 30
+
+        expect(sample.a.b.c.d.level) == 40
 
 
 def describe_lists():
