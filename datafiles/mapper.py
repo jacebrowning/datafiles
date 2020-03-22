@@ -13,26 +13,14 @@ from cached_property import cached_property
 
 from . import config, formats, hooks
 from .converters import Converter, List, map_type
-from .utils import display, recursive_update, write
-
-
-Trilean = Optional[bool]
-Missing = dataclasses._MISSING_TYPE
-
-
-def get_default_field_value(instance, name):
-    for field in dataclasses.fields(instance):
-        if field.name == name:
-            if not isinstance(field.default, Missing):
-                return field.default
-
-            if not isinstance(field.default_factory, Missing):  # type: ignore
-                return field.default_factory()  # type: ignore
-
-            if not field.init and hasattr(instance, '__post_init__'):
-                return getattr(instance, name)
-
-    return Missing
+from .utils import (
+    Missing,
+    Trilean,
+    display,
+    get_default_field_value,
+    recursive_update,
+    write,
+)
 
 
 class Mapper:

@@ -1,10 +1,10 @@
 from collections.abc import Iterable
 from contextlib import suppress
-from dataclasses import _MISSING_TYPE as Missing
 from typing import Callable, Dict
 
 import log
 
+from ..utils import Missing, get_default_field_value
 from ._bases import Converter
 
 
@@ -148,7 +148,10 @@ class Dataclass(Converter):
             if name in data:
                 data[name] = converter.to_python_value(data[name], target_object=None)
             else:
-                data[name] = converter.to_python_value(None, target_object=None)
+                if target_object is None:
+                    data[name] = converter.to_python_value(None, target_object=None)
+                else:
+                    data[name] = get_default_field_value(target_object, name)
 
         new_value = cls.DATACLASS(**data)  # pylint: disable=not-callable
 
