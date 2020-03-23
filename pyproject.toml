@@ -78,6 +78,7 @@ pytest-repeat = "*"
 pytest-watch = "*"
 pytest-cov = "^2.8.1"
 pytest-profiling = "*"
+coverage = "=5.0.3"
 
 # Coverage
 coveragespace = "^3.1.1"
