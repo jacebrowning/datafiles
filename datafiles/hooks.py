@@ -1,5 +1,5 @@
-import dataclasses
 from contextlib import contextmanager, suppress
+from dataclasses import is_dataclass
 from functools import wraps
 
 import log
@@ -52,21 +52,25 @@ def apply(instance, mapper):
             modified_method = save_after(cls, method)
             setattr(cls, method_name, modified_method)
 
-    if dataclasses.is_dataclass(instance):
+    if is_dataclass(instance):
         for attr_name in instance.datafile.attrs:
             attr = getattr(instance, attr_name)
-            if not dataclasses.is_dataclass(attr):
-                # pylint: disable=unidiomatic-typecheck
-                if type(attr) == list:
-                    attr = List(attr)
-                    setattr(instance, attr_name, attr)
-                elif type(attr) == dict:
-                    attr = Dict(attr)
-                    setattr(instance, attr_name, attr)
-                else:
-                    continue
+            if isinstance(attr, list):
+                attr = List(attr)
+                setattr(instance, attr_name, attr)
+            elif isinstance(attr, dict):
+                attr = Dict(attr)
+                setattr(instance, attr_name, attr)
+            elif not is_dataclass(attr):
+                continue
             attr.datafile = create_mapper(attr, root=mapper)
             apply(attr, mapper)
+
+    elif isinstance(instance, list):
+        for item in instance:
+            if is_dataclass(item):
+                item.datafile = create_mapper(item, root=mapper)
+                apply(item, mapper)
 
 
 def load_before(cls, method):

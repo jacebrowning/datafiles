@@ -1,7 +1,7 @@
 [tool.poetry]
 
 name = "datafiles"
-version = "0.8b2"
+version = "0.8b3"
 description = "File-based ORM for dataclasses."
 
 license = "MIT"
@@ -78,7 +78,6 @@ pytest-repeat = "*"
 pytest-watch = "*"
 pytest-cov = "^2.8.1"
 pytest-profiling = "*"
-coverage = "=5.0.3"
 
 # Coverage
 coveragespace = "^3.1.1"
