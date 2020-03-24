@@ -1,19 +1,38 @@
-# pylint: disable=unused-variable
+# pylint: disable=unused-variable,unsubscriptable-object
 
-from datafiles import hooks, settings
+from typing import List
+
+from datafiles import datafile, field, hooks, settings
 
 
+@datafile
+class Item:
+    name: str
+
+
+@datafile
 class Sample:
-    foobar = 1
+    key: int = 1
+    items: List[Item] = field(default_factory=list)
 
 
 def describe_apply():
-    def it_can_be_called_twice(mocker):
+    def it_can_be_called_twice(expect, mocker):
         instance = Sample()
-        setattr(instance, 'datafile', mocker.Mock())
+        setattr(instance, 'datafile', mocker.MagicMock(attrs=['key', 'items']))
 
         hooks.apply(instance, None)
+        expect(hasattr(instance.__setattr__, '_patched')) == True
+
         hooks.apply(instance, None)
+        expect(hasattr(instance.__setattr__, '_patched')) == True
+
+    def it_patches_list_elements(expect, mocker):
+        instance = Sample(items=[Item('a'), Item('b')])
+        setattr(instance, 'datafile', mocker.MagicMock(attrs=['key', 'items']))
+
+        hooks.apply(instance, None)
+        expect(hasattr(instance.items[0].__setattr__, '_patched')) == True
 
 
 def describe_disabled():
