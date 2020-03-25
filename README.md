@@ -16,7 +16,7 @@ Popular use cases include:
 - Loading data fixtures for demonstration or testing purposes
 - Prototyping data models agnostic of persistence backends
 
-Watch my latest: [lightning talk](https://www.youtube.com/watch?v=moYkuNrmc1I&feature=youtu.be&t=1225)
+Watch [my lightning talk](https://www.youtube.com/watch?v=moYkuNrmc1I&feature=youtu.be&t=1225) for a demo of this in action!
 
 ## Overview
 
