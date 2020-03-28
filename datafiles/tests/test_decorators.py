@@ -30,3 +30,11 @@ def describe_datafile():
         cls = decorators.datafile(Sample)
 
         expect(is_dataclass(cls)) == True
+
+    def it_forwards_arguments_dataclass_decorator(expect):
+        class Sample:
+            pass
+
+        cls = decorators.datafile(order=True)(Sample)
+
+        expect(is_dataclass(cls)) == True

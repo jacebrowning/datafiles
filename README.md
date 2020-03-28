@@ -16,6 +16,8 @@ Popular use cases include:
 - Loading data fixtures for demonstration or testing purposes
 - Prototyping data models agnostic of persistence backends
 
+Watch [my lightning talk](https://www.youtube.com/watch?v=moYkuNrmc1I&feature=youtu.be&t=1225) for a demo of this in action!
+
 ## Overview
 
 Take an existing dataclass such as [this example](https://docs.python.org/3/library/dataclasses.html#module-dataclasses) from the documentation:
@@ -95,8 +97,6 @@ Objects can also be restored from the filesystem:
 >>> item.quantity_on_hand
 100
 ```
-
-Demo: [Jupyter Notebook](https://github.com/jacebrowning/datafiles/blob/develop/notebooks/readme.ipynb)
 
 ## Installation
 

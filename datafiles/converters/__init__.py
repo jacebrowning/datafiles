@@ -3,6 +3,7 @@ from inspect import isclass
 from typing import Any, Dict, Optional, Union
 
 import log
+from ruamel.yaml.scalarfloat import ScalarFloat
 
 from ..utils import cached
 from ._bases import Converter
@@ -23,6 +24,7 @@ def register(cls: Union[type, str], converter: type):
 
 register(Integer.TYPE, Integer)
 register(Float.TYPE, Float)
+register(ScalarFloat, Float)
 register(Boolean.TYPE, Boolean)
 register(String.TYPE, String)
 

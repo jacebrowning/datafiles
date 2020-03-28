@@ -66,7 +66,12 @@ class Manager:
         if path.is_absolute() or self.model.Meta.datafile_pattern.startswith('./'):
             pattern = str(path.resolve())
         else:
-            root = Path(inspect.getfile(self.model)).parent
+            try:
+                root = Path(inspect.getfile(self.model)).parent
+            except TypeError:
+                level = log.DEBUG if '__main__' in str(self.model) else log.WARNING
+                log.log(level, f'Unable to determine module for {self.model}')
+                root = Path.cwd()
             pattern = str(root / self.model.Meta.datafile_pattern)
 
         splatted = pattern.format(self=Splats())

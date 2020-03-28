@@ -38,16 +38,25 @@ False
 
 _By default, the file is created automatically. Set `manual=True` to disable this behavior._
 
-# `save()` / `load()`
+# `save()`
 
-Manually synchronize an object with the filesystem:
+Manually save an object to the filesystem:
 
 ```python
 >>> model.datafile.save()
+```
+
+_By default, this method is called automatically. Set `manual=True` to disable this behavior._
+
+# `load()`
+
+Manually load an object from the filesystem:
+
+```python
 >>> model.datafile.load()
 ```
 
-_By default, these methods are called automatically. Set `manual=True` to disable this behavior._
+_By default, this method is called automatically. Set `manual=True` to disable this behavior._
 
 # `modified`
 

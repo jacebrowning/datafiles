@@ -331,7 +331,6 @@ def describe_preservation():
         logbreak("Loading")
         sample.datafile.load()
 
-        logbreak("Modifying")
         sample.score = 3
         sample.nested.score = 4
 
@@ -351,7 +350,7 @@ def describe_preservation():
             """
         )
 
-    @pytest.mark.xfail(reason="unknown ruamel.yaml bug")
+    @pytest.mark.xfail(reason="Unknown ruamel.yaml bug")
     def with_comments_on_nested_lines(expect):
         sample = SampleWithNestingAndDefaults(None)
 
@@ -369,9 +368,13 @@ def describe_preservation():
             """,
         )
 
+        logbreak("Loading")
         sample.datafile.load()
+
         sample.score = 3
         sample.nested.score = 4
+
+        logbreak("Saving")
         sample.datafile.save()
 
         expect(read('tmp/sample.yml')) == dedent(

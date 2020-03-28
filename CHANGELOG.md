@@ -1,3 +1,8 @@
+# 0.8 (2020-03-28)
+
+- Updated the `@datafile(...)` decorator to be used as a drop-in replacement for `@dataclass(...)`.
+- Added support for loading unlimited levels of nested objects.
+
 # 0.7 (2020-02-20)
 
 - Added a `YAML_LIBRARY` setting to control the underlying YAML library.

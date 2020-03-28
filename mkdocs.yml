@@ -8,24 +8,23 @@ edit_uri: https://github.com/jacebrowning/datafiles/edit/develop/docs
 theme: readthedocs
 
 markdown_extensions:
-  - codehilite:
-      linenums: True
+  - codehilite
 
 nav:
-- Overview: index.md
-- API:
-  - Model: api/model.md
-  - Manager: api/manager.md
-  - Mapper: api/mapper.md
-- Supported Types:
-  - Builtins: types/builtins.md
-  - Extensions: types/extensions.md
-  - Containers: types/containers.md
-  - Custom Types: types/custom.md
-- File Formats: formats.md
-- Utilities: utilities.md
-- Settings: settings.md
-- About:
-  - Release Notes: about/changelog.md
-  - Contributing: about/contributing.md
-  - License: about/license.md
+  - Overview: index.md
+  - API:
+      - Model: api/model.md
+      - Manager: api/manager.md
+      - Mapper: api/mapper.md
+  - Supported Types:
+      - Builtins: types/builtins.md
+      - Extensions: types/extensions.md
+      - Containers: types/containers.md
+      - Custom Types: types/custom.md
+  - File Formats: formats.md
+  - Utilities: utilities.md
+  - Settings: settings.md
+  - About:
+      - Release Notes: about/changelog.md
+      - Contributing: about/contributing.md
+      - License: about/license.md

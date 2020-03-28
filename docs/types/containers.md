@@ -10,12 +10,12 @@ The `List` annotation can be used to define a homogeneous collection of any othe
 from typing import List, Optional
 ```
 
-| Type Annotation | Python Value | YAML Content |
-| --- | --- | --- |
-| `foobar: List[int]` | `foobar = []` | `foobar:`<br>&nbsp;&nbsp;&nbsp;&nbsp;`-` |
-| `foobar: List[int]` | `foobar = [1.23]` | `foobar:`<br>&nbsp;&nbsp;&nbsp;&nbsp;`- 1` |
-| `foobar: List[int]` | `foobar = None` | `foobar:`<br>&nbsp;&nbsp;&nbsp;&nbsp;`-` |
-| `foobar: Optional[List[int]]` | `foobar = None` | `foobar: ` |
+| Type Annotation               | Python Value      | YAML Content                               |
+| ----------------------------- | ----------------- | ------------------------------------------ |
+| `foobar: List[int]`           | `foobar = []`     | `foobar:`<br>&nbsp;&nbsp;&nbsp;&nbsp;`-`   |
+| `foobar: List[int]`           | `foobar = [1.23]` | `foobar:`<br>&nbsp;&nbsp;&nbsp;&nbsp;`- 1` |
+| `foobar: List[int]`           | `foobar = None`   | `foobar:`<br>&nbsp;&nbsp;&nbsp;&nbsp;`-`   |
+| `foobar: Optional[List[int]]` | `foobar = None`   | `foobar:`                                  |
 
 More examples can be found in this [Jupyter Notebook](https://github.com/jacebrowning/datafiles/blob/develop/notebooks/patched_containers.ipynb).
 
@@ -27,12 +27,12 @@ The `Dict` annotation can be used to define a loose mapping of multiple types.
 from typing import Dict, Optional
 ```
 
-| Type Annotation | Python Value | YAML Content |
-| --- | --- | --- |
-| `foobar: Dict[str, int]` | `foobar = {}` | `foobar: {}` |
-| `foobar: Dict[str, int]` | `foobar = {'a': 42}` | `foobar:`<br>&nbsp;&nbsp;&nbsp;&nbsp;`a: 42` |
-| `foobar: Dict[str, int]` | `foobar = None` | `foobar: {}` |
-| `foobar: Optional[Dict[str, int]]` | `foobar = None` | `foobar: ` |
+| Type Annotation                    | Python Value         | YAML Content                                 |
+| ---------------------------------- | -------------------- | -------------------------------------------- |
+| `foobar: Dict[str, int]`           | `foobar = {}`        | `foobar: {}`                                 |
+| `foobar: Dict[str, int]`           | `foobar = {'a': 42}` | `foobar:`<br>&nbsp;&nbsp;&nbsp;&nbsp;`a: 42` |
+| `foobar: Dict[str, int]`           | `foobar = None`      | `foobar: {}`                                 |
+| `foobar: Optional[Dict[str, int]]` | `foobar = None`      | `foobar:`                                    |
 
 _Schema enforcement is not available with the `Dict` annotation._
 
@@ -40,8 +40,7 @@ _Schema enforcement is not available with the `Dict` annotation._
 
 Other dataclasses can serve as the annotation for an attribute to create nested structure:
 
-```
-#!python hl_lines="14"
+```python hl_lines="14"
 from dataclasses import dataclass
 
 from datafiles import datafile
@@ -74,8 +73,7 @@ bar:
 
 For convenience, `@datafile` can also be used in place of `@dataclass`:
 
-```
-#!python hl_lines="4"
+```python hl_lines="4"
 from datafiles import datafile
 
 

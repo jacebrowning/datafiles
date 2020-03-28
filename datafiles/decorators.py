@@ -13,15 +13,22 @@ if TYPE_CHECKING:
 
 
 def datafile(
-    pattern: Union[str, Callable],
+    pattern: Union[str, Callable, None] = None,
     attrs: Optional[Dict[str, Converter]] = None,
     manual: bool = Meta.datafile_manual,
     defaults: bool = Meta.datafile_defaults,
     auto_load: bool = Meta.datafile_auto_load,
     auto_save: bool = Meta.datafile_auto_save,
     auto_attr: bool = Meta.datafile_auto_attr,
+    **kwargs,
 ):
     """Synchronize a data class to the specified path."""
+
+    if pattern is None:
+        return dataclasses.dataclass(**kwargs)
+
+    if callable(pattern):
+        return dataclasses.dataclass(pattern)  # type: ignore
 
     def decorator(cls=None):
         if dataclasses.is_dataclass(cls):
@@ -39,9 +46,6 @@ def datafile(
             auto_save=auto_save,
             auto_attr=auto_attr,
         )
-
-    if callable(pattern):
-        return dataclasses.dataclass(pattern)  # type: ignore
 
     return decorator
 

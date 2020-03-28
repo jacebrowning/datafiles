@@ -6,18 +6,17 @@ Additional types are supported though custom type as annotations.
 
 Custom types can be saved and loaded by extending one of the included converter classes:
 
-| Class | Description |
-| --- | --- |
-| `converters.Converter` | Base class for all converters. |
-| `converters.Boolean` | Converts to `bool` before serialization. |
-| `converters.Integer` | Converts to `int` before serialization. |
-| `converters.Float` | Converts to `float` before serialization. |
-| `converters.String` | Converts to `str` before serialization. |
+| Class                  | Description                               |
+| ---------------------- | ----------------------------------------- |
+| `converters.Converter` | Base class for all converters.            |
+| `converters.Boolean`   | Converts to `bool` before serialization.  |
+| `converters.Integer`   | Converts to `int` before serialization.   |
+| `converters.Float`     | Converts to `float` before serialization. |
+| `converters.String`    | Converts to `str` before serialization.   |
 
 For example, here is a custom converter that ensures floating point numbers are always rounded to two decimal places:
 
-```
-#!python hl_lines="7"
+```python hl_lines="7"
 from datafiles import converters
 
 
@@ -58,8 +57,7 @@ that can be loaded as follows:
 
 It's also possible to extend an existing class in order to have instances inherit the functionality of that class. For example, here is a custom converter based on the `datetime` class that serializes using the ISO format:
 
-```
-#!python hl_lines="9 14"
+```python hl_lines="9 14"
 from datetime import datetime
 
 from datafiles import converters, datafile
@@ -109,8 +107,7 @@ datetime.datetime(2019, 1, 30, 23, 17, 45)
 
 Finally, if you'd rather not have to modify your own classes (or don't have control over the source of a class), you can also register a custom converter for any class:
 
-```
-#!python hl_lines="9 14"
+```python hl_lines="9 14"
 from datetime import datetime
 
 from datafiles import converters, datafile
