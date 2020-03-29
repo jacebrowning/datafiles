@@ -70,8 +70,8 @@ pydocstyle = "*"
 
 # Testing
 pytest = "^5.3.2"
-pytest-describe = "*"
-pytest-expecter = "^2.0"
+pytest-describe = { git = "https://github.com/jacebrowning/pytest-describe", branch = "pytest-5.4-support" }
+pytest-expecter = "^2.1"
 pytest-mock = "*"
 pytest-random = "*"
 pytest-repeat = "*"

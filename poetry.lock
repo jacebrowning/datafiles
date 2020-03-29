@@ -499,7 +499,7 @@ description = "Minimalistic wrapper for Python logging."
 name = "minilog"
 optional = false
 python-versions = ">=3.6,<4.0"
-version = "1.4.1"
+version = "1.5"
 
 [[package]]
 category = "dev"
@@ -919,13 +919,17 @@ version = "0.12.0"
 [package.dependencies]
 pytest = ">=2.6.0"
 
+[package.source]
+reference = "43245ecfc3c432c4bfb5b12f8868790c7f2ebe5d"
+type = "git"
+url = "https://github.com/jacebrowning/pytest-describe"
 [[package]]
 category = "dev"
 description = "Better testing with expecter and pytest."
 name = "pytest-expecter"
 optional = false
 python-versions = ">=3.6,<4.0"
-version = "2.0"
+version = "2.1"
 
 [[package]]
 category = "dev"
@@ -1212,7 +1216,7 @@ description = "Fast, Extensible Progress Meter"
 name = "tqdm"
 optional = false
 python-versions = ">=2.6, !=3.0.*, !=3.1.*"
-version = "4.44.0"
+version = "4.44.1"
 
 [package.extras]
 dev = ["py-make (>=0.1.0)", "twine", "argopt", "pydoc-markdown"]
@@ -1325,7 +1329,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["jaraco.itertools", "func-timeout"]
 
 [metadata]
-content-hash = "98f1afc1fb2314c5d660a2d8fa7f0e25c7f6af2bde1459dafe39283d5a692d1c"
+content-hash = "5ebca61ab0622aa67fa9d2ef537061382e5893a70435bb833acc1ad7e828ca80"
 python-versions = "^3.7"
 
 [metadata.files]
@@ -1572,8 +1576,8 @@ mccabe = [
     {file = "mccabe-0.6.1.tar.gz", hash = "sha256:dd8d182285a0fe56bace7f45b5e7d1a6ebcbf524e8f3bd87eb0f125271b8831f"},
 ]
 minilog = [
-    {file = "minilog-1.4.1-py3-none-any.whl", hash = "sha256:b16be0ba7e5b2a1a10286b86e3ea1645f99ee4c5edfde97765a4f625654f2a64"},
-    {file = "minilog-1.4.1.tar.gz", hash = "sha256:ca695a822099e99d53b0528fc9b6ff12f483669dd3ce1796f0a5038be878a9cc"},
+    {file = "minilog-1.5-py3-none-any.whl", hash = "sha256:545cacd6a3db3b5b2fa9743acfc3c413c262ada2ea98ab6fe81a9ca56d4163f3"},
+    {file = "minilog-1.5.tar.gz", hash = "sha256:1670d6d2d28b0957ed1b89b4808c966127be118f989463cbcf3e7fb1335e427b"},
 ]
 mistune = [
     {file = "mistune-0.8.4-py2.py3-none-any.whl", hash = "sha256:88a1051873018da288eee8538d476dffe1262495144b33ecb586c4ab266bb8d4"},
@@ -1699,12 +1703,10 @@ pytest-cov = [
     {file = "pytest-cov-2.8.1.tar.gz", hash = "sha256:cc6742d8bac45070217169f5f72ceee1e0e55b0221f54bcf24845972d3a47f2b"},
     {file = "pytest_cov-2.8.1-py2.py3-none-any.whl", hash = "sha256:cdbdef4f870408ebdbfeb44e63e07eb18bb4619fae852f6e760645fa36172626"},
 ]
-pytest-describe = [
-    {file = "pytest-describe-0.12.0.tar.gz", hash = "sha256:569bda96401fe512f4f345f33fd23fa4d718639d42afac62bc03254b5f2b3fdf"},
-]
+pytest-describe = []
 pytest-expecter = [
-    {file = "pytest-expecter-2.0.tar.gz", hash = "sha256:cd73b4af7dc6f29ed55460036174c1f78b8c8cc24d8aed2f7db2eb446211643c"},
-    {file = "pytest_expecter-2.0-py3-none-any.whl", hash = "sha256:5fd076dad393eacf6588d8a2bc92dd73e447c7990904abb2c2572b6e913a3721"},
+    {file = "pytest-expecter-2.1.tar.gz", hash = "sha256:70b05fec2a9ae5ec6f15d5c5467c1e2cb9aa2fd85ec9c4783b26e2cf68e66f96"},
+    {file = "pytest_expecter-2.1-py3-none-any.whl", hash = "sha256:ab66120671a22be41f7df4c29d76c02d62e3420b8277b1455d2e683a042a0608"},
 ]
 pytest-mock = [
     {file = "pytest-mock-2.0.0.tar.gz", hash = "sha256:b35eb281e93aafed138db25c8772b95d3756108b601947f89af503f8c629413f"},
@@ -1885,8 +1887,8 @@ tornado = [
     {file = "tornado-6.0.4.tar.gz", hash = "sha256:0fe2d45ba43b00a41cd73f8be321a44936dc1aba233dee979f17a042b83eb6dc"},
 ]
 tqdm = [
-    {file = "tqdm-4.44.0-py2.py3-none-any.whl", hash = "sha256:f0fc945df434e5e612fb7eb93bf29e924940913590450c3760f198dd75a2cd19"},
-    {file = "tqdm-4.44.0.tar.gz", hash = "sha256:4f882b23c492e7060f50d83af86f163b67e4cfbe35dfe12077e748c56282f438"},
+    {file = "tqdm-4.44.1-py2.py3-none-any.whl", hash = "sha256:be5ddeec77d78ba781ea41eacb2358a77f74cc2407f54b82222d7ee7dc8c8ccf"},
+    {file = "tqdm-4.44.1.tar.gz", hash = "sha256:03d2366c64d44c7f61e74c700d9b202d57e9efe355ea5c28814c52bfe7a50b8c"},
 ]
 traitlets = [
     {file = "traitlets-4.3.3-py2.py3-none-any.whl", hash = "sha256:70b4c6a1d9019d7b4f6846832288f86998aa3b9207c6821f3578a6a6a467fe44"},

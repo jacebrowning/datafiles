@@ -22,29 +22,29 @@ def describe_apply():
         setattr(instance, 'datafile', mocker.MagicMock(attrs=['key', 'items']))
 
         hooks.apply(instance, None)
-        expect(hasattr(instance.__setattr__, '_patched')) == True
+        expect(hasattr(instance.__setattr__, '_patched')).is_(True)
 
         hooks.apply(instance, None)
-        expect(hasattr(instance.__setattr__, '_patched')) == True
+        expect(hasattr(instance.__setattr__, '_patched')).is_(True)
 
     def it_patches_list_elements(expect, mocker):
         instance = Sample(items=[Item('a'), Item('b')])
         setattr(instance, 'datafile', mocker.MagicMock(attrs=['key', 'items']))
 
         hooks.apply(instance, None)
-        expect(hasattr(instance.items[0].__setattr__, '_patched')) == True
+        expect(hasattr(instance.items[0].__setattr__, '_patched')).is_(True)
 
 
 def describe_disabled():
     def when_nested(expect):
-        expect(settings.HOOKS_ENABLED) == True
+        expect(settings.HOOKS_ENABLED).is_(True)
 
         with hooks.disabled():
-            expect(settings.HOOKS_ENABLED) == False
+            expect(settings.HOOKS_ENABLED).is_(False)
 
             with hooks.disabled():
-                expect(settings.HOOKS_ENABLED) == False
+                expect(settings.HOOKS_ENABLED).is_(False)
 
-            expect(settings.HOOKS_ENABLED) == False
+            expect(settings.HOOKS_ENABLED).is_(False)
 
-        expect(settings.HOOKS_ENABLED) == True
+        expect(settings.HOOKS_ENABLED).is_(True)

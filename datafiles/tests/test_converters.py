@@ -72,7 +72,7 @@ def describe_map_type():
         converter = converters.map_type(Optional[str])
         expect(converter.__name__) == 'OptionalString'
         expect(converter.TYPE) == str
-        expect(converter.DEFAULT) == None
+        expect(converter.DEFAULT).is_(None)
 
     def it_handles_string_type_annotations(expect):
         converter = converters.map_type('float')

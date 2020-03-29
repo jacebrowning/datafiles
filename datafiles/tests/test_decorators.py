@@ -12,7 +12,7 @@ def describe_datafile():
 
         cls = decorators.datafile("<pattern>")(Normal)
 
-        expect(is_dataclass(cls)) == True
+        expect(is_dataclass(cls)).is_(True)
 
     def it_can_reuse_existing_dataclass(expect):
         @dataclass
@@ -29,7 +29,7 @@ def describe_datafile():
 
         cls = decorators.datafile(Sample)
 
-        expect(is_dataclass(cls)) == True
+        expect(is_dataclass(cls)).is_(True)
 
     def it_forwards_arguments_dataclass_decorator(expect):
         class Sample:
@@ -37,4 +37,4 @@ def describe_datafile():
 
         cls = decorators.datafile(order=True)(Sample)
 
-        expect(is_dataclass(cls)) == True
+        expect(is_dataclass(cls)).is_(True)

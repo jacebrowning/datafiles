@@ -133,7 +133,7 @@ def describe_manual():
         }
 
     def it_has_no_path(expect, sample):
-        expect(sample.datafile.path) == None
+        expect(sample.datafile.path).is_(None)
 
     def it_converts_attributes(expect, sample):
         expect(sample.key) == 2
@@ -163,7 +163,7 @@ def describe_manual_with_attrs():
         expect(sample.datafile.attrs) == {'name': datafiles.converters.String}
 
     def it_has_no_path(expect, sample):
-        expect(sample.datafile.path) == None
+        expect(sample.datafile.path).is_(None)
 
     def it_converts_attributes(expect, sample):
         expect(sample.datafile.data) == {'name': "c"}

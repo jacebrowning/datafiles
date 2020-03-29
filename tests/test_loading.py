@@ -39,7 +39,7 @@ def describe_nominal():
 
         sample.datafile.load()
 
-        expect(sample.bool_) == True
+        expect(sample.bool_).is_(True)
         expect(sample.int_) == 1
         expect(sample.float_) == 2.3
         expect(sample.str_) == 'foobar'
@@ -57,7 +57,7 @@ def describe_nominal():
 
         sample.datafile.load()
 
-        expect(sample.bool_) == True
+        expect(sample.bool_).is_(True)
         expect(sample.int_) == 2
         expect(sample.float_) == 3.0
         expect(sample.str_) == '4'
@@ -77,7 +77,7 @@ def describe_nominal():
 
         sample.datafile.load()
 
-        expect(hasattr(sample, 'extra')) == False
+        expect(hasattr(sample, 'extra')).is_(False)
 
 
 def describe_alternate_formats():
@@ -100,7 +100,7 @@ def describe_alternate_formats():
 
         sample.datafile.load()
 
-        expect(sample.bool_) == True
+        expect(sample.bool_).is_(True)
         expect(sample.int_) == 1
         expect(sample.float_) == 2.3
         expect(sample.str_) == 'foobar'
@@ -230,7 +230,7 @@ def describe_nesting():
         expect(sample.score) == 1.2
         expect(sample.nested.name) == 'b'
         expect(sample.nested.score) == 3.4
-        expect(hasattr(sample.nested, 'extra')) == False
+        expect(hasattr(sample.nested, 'extra')).is_(False)
 
     @pytest.mark.flaky
     def with_multiple_levels(expect):
