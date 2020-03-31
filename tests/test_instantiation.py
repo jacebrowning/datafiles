@@ -4,8 +4,8 @@
 
 from dataclasses import dataclass, field
 
-from datafiles import datafile
-from datafiles.utils import write
+from datafiles import Missing, datafile
+from datafiles.utils import logbreak, write
 
 
 @datafile('../tmp/sample.yml', manual=True)
@@ -171,3 +171,26 @@ def describe_computed_defaults():
         expect(sample.a) == 1.2
         expect(sample.b) == 3.4
         expect(sample.c) == 9.9
+
+
+def describe_missing_attributes():
+    def when_dataclass(expect):
+        @dataclass
+        class Name:
+            value: str
+
+        @datafile("../tmp/samples/{self.key}.yml")
+        @dataclass
+        class Sample:
+
+            key: int
+            name: Name
+            value: float = 0.0
+
+        sample = Sample(42, Name("Widget"))
+
+        logbreak("Loading missing 'name' dataclass")
+
+        sample2 = Sample(42, Missing)  # type: ignore
+
+        expect(sample2.name.value) == "Widget"
