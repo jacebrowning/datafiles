@@ -159,7 +159,7 @@ class Dataclass(Converter):
 
         new_value = cls.DATACLASS(**data)  # pylint: disable=not-callable
 
-        if target_object is None:
+        if target_object is None or target_object is Missing:
             value = new_value
         else:
             value = target_object
