@@ -1,3 +1,7 @@
+# 0.8.1 (2020-03-30)
+
+- Fixed loading of `Missing` nested dataclasses attributes.
+
 # 0.8 (2020-03-28)
 
 - Updated the `@datafile(...)` decorator to be used as a drop-in replacement for `@dataclass(...)`.
