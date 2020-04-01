@@ -7,7 +7,7 @@ class Converter:
     """Base class for immutable attribute conversion."""
 
     TYPE: type = object
-    DEFAULT: Any = None
+    DEFAULT: Any = NotImplemented
 
     @classmethod
     def as_optional(cls):

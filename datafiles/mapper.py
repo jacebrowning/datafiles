@@ -138,14 +138,6 @@ class Mapper:
 
             if getattr(converter, 'DATACLASS', None):
                 log.debug(f"Converting '{name}' dataclass with {converter}")
-                if value is None:
-                    value = {}
-
-                for field in dataclasses.fields(converter.DATACLASS):
-                    if field.name not in value:
-                        log.debug(f'Added missing nested attribute: {field.name}')
-                        value[field.name] = None
-
                 data[name] = converter.to_preserialization_data(
                     value,
                     default_to_skip=Missing

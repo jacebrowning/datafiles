@@ -171,19 +171,22 @@ class Dataclass(Converter):
     def to_preserialization_data(cls, python_value, *, default_to_skip=None):
         data = {}
 
+        if python_value is None and cls.DEFAULT is None:
+            return None
+
         for name, converter in cls.CONVERTERS.items():
 
             if isinstance(python_value, dict):
                 try:
                     value = python_value[name]
-                except KeyError as e:
-                    log.debug(e)
+                except KeyError:
+                    log.debug(f'Added missing nested attribute: {name}')
                     value = None
             else:
                 try:
                     value = getattr(python_value, name)
-                except AttributeError as e:
-                    log.debug(e)
+                except AttributeError:
+                    log.debug(f'Added missing nested attribute: {name}')
                     value = None
 
             with suppress(AttributeError):
