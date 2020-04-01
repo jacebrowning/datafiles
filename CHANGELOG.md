@@ -1,3 +1,7 @@
+# 0.9 (beta)
+
+- Fixed serialization of optional nested dataclasses with a value of `None`.
+
 # 0.8.1 (2020-03-30)
 
 - Fixed loading of `Missing` nested dataclasses attributes.

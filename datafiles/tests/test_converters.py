@@ -146,11 +146,6 @@ def describe_converter():
                 (MyDataclassConverter, None, MyDataclass(foobar=0)),
                 (MyDataclassConverterList, None, []),
                 (MyDataclassConverterList, 42, [MyDataclass(foobar=0)]),
-                (
-                    MyNestedDataclassConverter,
-                    None,
-                    MyNestedDataclass(name='', dc=MyDataclass(foobar=0, flag=False)),
-                ),
             ],
         )
         def when_mutable(expect, converter, data, value):

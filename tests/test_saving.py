@@ -2,8 +2,11 @@
 
 # pylint: disable=unused-variable,assigning-non-slot
 
+from typing import Optional
+
 import pytest
 
+from datafiles import datafile
 from datafiles.utils import dedent, logbreak, read, write
 
 from .samples import (
@@ -221,6 +224,26 @@ def describe_optionals():
             """
             required: 0.0
             optional:
+            """
+        )
+
+    def when_nested_dataclass_is_none(expect):
+        @datafile
+        class Name:
+            value: str
+
+        @datafile("../tmp/samples/{self.key}.yml")
+        class Sample:
+
+            key: int
+            name: Optional[Name]
+            value: float = 0.0
+
+        sample = Sample(42, None)
+
+        expect(read('tmp/samples/42.yml')) == dedent(
+            """
+            name:
             """
         )
 
