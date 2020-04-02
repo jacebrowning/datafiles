@@ -1,6 +1,6 @@
 """Tests that represent usage as an ORM."""
 
-from dataclasses import dataclass
+from typing import Optional
 
 import pytest
 
@@ -48,7 +48,7 @@ def test_multiple_instances_are_distinct(expect):
 
 
 def test_classes_can_share_a_nested_dataclass(expect):
-    @dataclass
+    @datafile
     class Nested:
         value: int
 
@@ -78,3 +78,22 @@ def test_values_are_filled_from_disk(expect):
     items = list(InventoryItem.objects.all())
 
     expect(items[0]) == InventoryItem(42, "Things", 0.99)
+
+
+def test_missing_optional_fields_are_loaded(expect):
+    @datafile
+    class Name:
+        value: str
+
+    @datafile("../tmp/samples/{self.key}.json")
+    class Sample:
+
+        key: int
+        name: Optional[Name]
+        value: float = 0.0
+
+    sample = Sample(42, None)
+
+    logbreak("get key=42")
+    sample2 = Sample.objects.get(42)
+    expect(sample2.name) == sample.name
