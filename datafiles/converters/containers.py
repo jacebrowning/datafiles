@@ -138,6 +138,9 @@ class Dataclass(Converter):
         else:
             data = {}
 
+        if deserialized_data is None and cls.DEFAULT is None:
+            return None
+
         for name, value in list(data.items()):
             if name not in cls.CONVERTERS:
                 log.debug(f'Removed unmapped nested file attribute: {name}')
