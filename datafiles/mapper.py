@@ -138,12 +138,13 @@ class Mapper:
 
             if getattr(converter, 'DATACLASS', None):
                 log.debug(f"Converting '{name}' dataclass with {converter}")
-                data[name] = converter.to_preserialization_data(
+                new_value = converter.to_preserialization_data(
                     value,
                     default_to_skip=Missing
                     if include_default_values
                     else get_default_field_value(self._instance, name),
                 )
+                data[name] = recursive_update(value, new_value)
 
             elif (
                 value == get_default_field_value(self._instance, name)
@@ -171,7 +172,7 @@ class Mapper:
 
     @text.setter  # type: ignore
     def text(self, value: str):
-        write(self.path, value.strip() + '\n')
+        write(self.path, value.strip() + '\n', display=True)
 
     def load(self, *, _log=True, _first_load=False) -> None:
         if self._root:
@@ -274,7 +275,7 @@ class Mapper:
         with hooks.disabled():
             text = self._get_text(include_default_values=include_default_values)
 
-        write(self.path, text)
+        write(self.path, text, display=True)
 
         self.modified = False
 

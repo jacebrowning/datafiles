@@ -1,6 +1,6 @@
 """Tests for saving to a file."""
 
-# pylint: disable=unused-variable,assigning-non-slot
+# pylint: disable=unused-variable,assigning-non-slot,unsubscriptable-object
 
 from typing import Optional
 
@@ -316,8 +316,8 @@ def describe_preservation():
         write(
             'tmp/sample.yml',
             """
-            # Heading
-            required: 1.0  # Line
+            # Header
+            required: 1.0       # Line
             optional: 2.0
             """,
         )
@@ -328,8 +328,8 @@ def describe_preservation():
 
         expect(read('tmp/sample.yml')) == dedent(
             """
-            # Heading
-            required: 3.0  # Line
+            # Header
+            required: 3.0       # Line
             optional: 2.0
             """
         )
@@ -340,76 +340,120 @@ def describe_preservation():
         write(
             'tmp/sample.yml',
             """
-            # Heading
+            # Header
             name: a
-            score: 1.0  # Line
+            score: 1.0      # Line
 
             nested:
-              # Nested heading
+              # Nested header
               name: n
               score: 2
             """,
         )
 
-        logbreak("Loading")
         sample.datafile.load()
-
         sample.score = 3
         sample.nested.score = 4
-
-        logbreak("Saving")
         sample.datafile.save()
 
         expect(read('tmp/sample.yml')) == dedent(
             """
-            # Heading
+            # Header
             name: a
-            score: 3.0  # Line
+            score: 3.0      # Line
 
             nested:
-              # Nested heading
+              # Nested header
               name: n
               score: 4.0
             """
         )
 
-    @pytest.mark.xfail(reason="Unknown ruamel.yaml bug")
     def with_comments_on_nested_lines(expect):
         sample = SampleWithNestingAndDefaults(None)
 
         write(
             'tmp/sample.yml',
             """
-            # Heading
+            # Header
             name: a
-            score: 1  # Line
+            score: 1        # Line
 
             nested:
-              # Nested heading
+              # Nested header
               name: n
-              score: 2  # Nested line
+              score: 2      # Nested line
             """,
         )
 
-        logbreak("Loading")
         sample.datafile.load()
-
         sample.score = 3
         sample.nested.score = 4
-
-        logbreak("Saving")
         sample.datafile.save()
 
         expect(read('tmp/sample.yml')) == dedent(
             """
-            # Heading
+            # Header
             name: a
-            score: 3.0  # Line
+            score: 3.0      # Line
 
             nested:
-              # Nested heading
+              # Nested header
               name: n
-              score: 4.0  # Nested line
+              score: 4.0    # Nested line
+            """
+        )
+
+    @pytest.mark.xfail(reason="TODO: support comments on list items")
+    def with_comments_on_list_items(expect):
+        sample = SampleWithListOfDataclasses()
+
+        write(
+            'tmp/sample.yml',
+            """
+            # Header
+
+            items:  # Subheader
+
+              # Section
+
+              - name: a     # Item
+                score: 1
+
+              # Section
+
+              - name: b     # Item
+                score: 2
+
+              # Section
+
+            # Footer
+            """,
+        )
+
+        sample.datafile.load()
+        sample.items[1].name = 'c'
+        sample.datafile.save()
+
+        expect(read('tmp/sample.yml')) == dedent(
+            """
+            # Header
+
+            items:  # Subheader
+
+              # Section
+
+              - name: a     # Item
+                score: 1
+
+              # Section
+
+              - name: c     # Item
+                score: 2
+
+              # Section
+
+            # Footer
             """
         )
 
@@ -424,6 +468,7 @@ def describe_preservation():
         )
 
         sample.datafile.load()
+        sample.float_ = 1
         sample.datafile.save()
 
         expect(read('tmp/sample.yml')) == dedent(
@@ -431,6 +476,6 @@ def describe_preservation():
             str_: "42"
             bool_: false
             int_: 0
-            float_: 0.0
+            float_: 1.0
             """
         )

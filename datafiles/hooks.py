@@ -3,6 +3,7 @@ from dataclasses import is_dataclass
 from functools import wraps
 
 import log
+from ruamel.yaml.comments import CommentedMap, CommentedSeq
 
 from . import settings
 from .mapper import create_mapper
@@ -27,14 +28,6 @@ SAVE_AFTER_METHODS = [
 FLAG = '_patched'
 
 
-class List(list):
-    """Patchable `list` type."""
-
-
-class Dict(dict):
-    """Patchable `dict` type."""
-
-
 def apply(instance, mapper):
     """Path methods that get or set attributes."""
     cls = instance.__class__
@@ -56,10 +49,10 @@ def apply(instance, mapper):
         for attr_name in instance.datafile.attrs:
             attr = getattr(instance, attr_name)
             if isinstance(attr, list):
-                attr = List(attr)
+                attr = CommentedSeq(attr)
                 setattr(instance, attr_name, attr)
             elif isinstance(attr, dict):
-                attr = Dict(attr)
+                attr = CommentedMap(attr)
                 setattr(instance, attr_name, attr)
             elif not is_dataclass(attr):
                 continue

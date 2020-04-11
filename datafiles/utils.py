@@ -6,7 +6,7 @@ from functools import lru_cache
 from pathlib import Path
 from pprint import pformat
 from shutil import get_terminal_size
-from typing import Dict, Optional, Union
+from typing import Any, Dict, Optional, Union
 
 import log
 
@@ -52,24 +52,43 @@ def dictify(value):
     return value
 
 
-def recursive_update(old: Dict, new: Dict):
-    """Recursively update a dictionary."""
+def recursive_update(old: Dict, new: Dict) -> Dict:
+    """Recursively update a dictionary, keeping equivalent objects."""
+    return _merge(old, new)
 
-    for key, value in new.items():
-        if isinstance(value, dict):
-            if key in old:
-                recursive_update(old[key], value)
-            else:
-                old[key] = value
-        elif isinstance(value, list):
-            if key in old:
-                old[key][:] = value
-            else:
-                old[key] = value
-        else:
-            old[key] = value
 
-    return old
+def _merge(old: Any, new: Any) -> Any:
+    if old is None:
+        return new
+
+    if isinstance(new, dict):
+        for key, value in new.items():
+            old[key] = _merge(old.get(key), value)
+
+        for key in list(old.keys()):
+            if key not in new:
+                old.pop(key)
+
+        return old
+
+    if isinstance(new, list):
+        for index, new_item in enumerate(new):
+            try:
+                old_item = old[index]
+            except IndexError:
+                old_item = None
+                old.append(old_item)
+            old[index] = _merge(old_item, new_item)
+
+        while len(old) > len(new):
+            old.pop()
+
+        return old
+
+    if new == old and isinstance(new, type(old)):
+        return old
+
+    return new
 
 
 def dedent(text: str) -> str:
@@ -79,8 +98,8 @@ def dedent(text: str) -> str:
     return text.replace('    ' * indent, '')
 
 
-def write(filename_or_path: Union[str, Path], text: str) -> None:
-    """Write text to a given file with logging."""
+def write(filename_or_path: Union[str, Path], text: str, *, display=False) -> None:
+    """Write text to a given file and optionally log it."""
     if isinstance(filename_or_path, Path):
         path = filename_or_path
     else:
@@ -93,14 +112,17 @@ def write(filename_or_path: Union[str, Path], text: str) -> None:
         content = text.replace(' \n', '␠\n')
     else:
         content = '∅\n'
-    log.debug(message + '\n' + line + '\n' + content + line)
+    if display:
+        log.debug(message + '\n' + line + '\n' + content + line)
+    else:
+        log.critical(message)
 
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(text)
 
 
-def read(filename: str) -> str:
-    """Read text from a file with logging."""
+def read(filename: str, *, display=False) -> str:
+    """Read text from a file and optionally log it."""
     path = Path(filename).resolve()
     message = f'Reading file: {path}'
     line = '=' * (31 + len(message))
@@ -109,7 +131,10 @@ def read(filename: str) -> str:
         content = text.replace(' \n', '␠\n')
     else:
         content = '∅\n'
-    log.debug(message + '\n' + line + '\n' + content + line)
+    if display:
+        log.debug(message + '\n' + line + '\n' + content + line)
+    else:
+        log.critical(message)
     return text
 
 
