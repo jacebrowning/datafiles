@@ -21,6 +21,7 @@ install:
 script:
   - make test-repeat
   - make check
+  - make notebooks
   - make mkdocs
 
 after_success:
