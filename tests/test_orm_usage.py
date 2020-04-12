@@ -1,11 +1,11 @@
 """Tests that represent usage as an ORM."""
 
-from typing import Optional
+from typing import List, Optional
 
 import pytest
 
 from datafiles import datafile
-from datafiles.utils import logbreak
+from datafiles.utils import logbreak, write
 
 
 # This model is based on the example dataclass from:
@@ -97,3 +97,39 @@ def test_missing_optional_fields_are_loaded(expect):
     logbreak("get key=42")
     sample2 = Sample.objects.get(42)
     expect(sample2.name) == sample.name
+
+
+def test_comments_in_matched_files(expect):
+    @datafile("../tmp/templates/{self.key}/config.yml")
+    class LegacyTemplate:
+        key: str
+        name: str
+        link: str
+        default: List[str]
+        aliases: List[str]
+
+    write(
+        'tmp/templates/foo/config.yml',
+        """
+        link: # placeholder
+        default:
+          - # placeholder
+          - # placeholder
+        aliases:
+          - # placeholder
+        """,
+    )
+    write(
+        'tmp/templates/bar/config.yml',
+        """
+        link: http://example.com
+        default:
+          - abc
+          - def
+        aliases:
+          - qux
+        """,
+    )
+
+    items = list(LegacyTemplate.objects.all())
+    expect(len(items)) == 2
