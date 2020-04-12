@@ -57,9 +57,8 @@ def map_type(cls, *, name: str = '', item_cls: Optional[type] = None):
             try:
                 converter = map_type(item_cls or cls.__args__[0])
             except TypeError as e:
-                if '~T' in str(e):
-                    e = TypeError(f"Type is required with 'List' annotation")
-                raise e from None
+                assert '~T' in str(e), f'Unhandled error: ' + str(e)
+                raise TypeError("Type is required with 'List' annotation") from None
             else:
                 converter = List.subclass(converter)
 

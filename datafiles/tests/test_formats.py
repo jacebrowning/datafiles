@@ -13,7 +13,7 @@ def describe_serialize():
 
     def describe_ruamel_yaml():
         def it_indents_blocks_by_default(expect, data):
-            text = formats.RuamelYAML.serialize(data)
+            text = formats.serialize(data, '.yaml')
             expect(text) == dedent(
                 """
             key: value
@@ -26,7 +26,7 @@ def describe_serialize():
 
         def it_can_render_lists_inline(expect, data, monkeypatch):
             monkeypatch.setattr(settings, 'INDENT_YAML_BLOCKS', False)
-            text = formats.RuamelYAML.serialize(data)
+            text = formats.serialize(data, '.yaml')
             expect(text) == dedent(
                 """
             key: value
@@ -39,7 +39,7 @@ def describe_serialize():
 
     def describe_pyyaml():
         def it_indents_blocks_by_default(expect, data):
-            text = formats.PyYAML.serialize(data)
+            text = formats.serialize(data, '.yaml', formatter=formats.PyYAML)
             expect(text) == dedent(
                 """
             key: value
@@ -52,7 +52,7 @@ def describe_serialize():
 
         def it_can_render_lists_inline(expect, data, monkeypatch):
             monkeypatch.setattr(settings, 'INDENT_YAML_BLOCKS', False)
-            text = formats.PyYAML.serialize(data)
+            text = formats.serialize(data, '.yaml', formatter=formats.PyYAML)
             expect(text) == dedent(
                 """
             key: value
@@ -71,18 +71,26 @@ def describe_deserialize():
         path.write_text("")
         return path
 
-    def with_empty_yaml_file(expect, path):
-        data = formats.deserialize(path, '.yaml')
-        expect(data) == {}
+    def describe_ruamel_yaml():
+        def with_empty_file(expect, path):
+            data = formats.deserialize(path, '.yaml')
+            expect(data) == {}
 
-    def with_empty_json_file(expect, path):
-        path.write_text("{}")
-        data = formats.deserialize(path, '.json')
-        expect(data) == {}
+    def describe_pyyaml():
+        def with_empty_file(expect, path):
+            data = formats.deserialize(path, '.yaml', formatter=formats.PyYAML)
+            expect(data) == {}
 
-    def with_empty_toml_file(expect, path):
-        data = formats.deserialize(path, '.toml')
-        expect(data) == {}
+    def describe_json():
+        def with_empty_file(expect, path):
+            path.write_text("{}")
+            data = formats.deserialize(path, '.json')
+            expect(data) == {}
+
+    def describe_toml():
+        def with_empty_file(expect, path):
+            data = formats.deserialize(path, '.toml')
+            expect(data) == {}
 
     def with_unknown_extension(expect, path):
         with expect.raises(ValueError):
