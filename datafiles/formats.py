@@ -9,7 +9,7 @@ from typing import IO, Any, Dict, List
 
 import log
 
-from . import settings
+from . import settings, types
 
 
 _REGISTRY: Dict[str, type] = {}
@@ -95,6 +95,13 @@ class RuamelYAML(Formatter):
     @classmethod
     def serialize(cls, data):
         from ruamel import yaml
+
+        yaml.representer.RoundTripRepresenter.add_representer(
+            types.List, yaml.representer.RoundTripRepresenter.represent_list
+        )
+        yaml.representer.RoundTripRepresenter.add_representer(
+            types.Dict, yaml.representer.RoundTripRepresenter.represent_dict
+        )
 
         if settings.INDENT_YAML_BLOCKS:
             f = StringIO()

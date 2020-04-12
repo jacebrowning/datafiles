@@ -6,13 +6,11 @@ from functools import lru_cache
 from pathlib import Path
 from pprint import pformat
 from shutil import get_terminal_size
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, Union
 
 import log
 
-
-Trilean = Optional[bool]
-Missing = dataclasses._MISSING_TYPE
+from .types import Missing
 
 
 cached = lru_cache()
@@ -85,7 +83,7 @@ def _merge(old: Any, new: Any) -> Any:
 
         return old
 
-    if new == old and isinstance(new, type(old)):
+    if repr(new) == repr(old):
         return old
 
     return new

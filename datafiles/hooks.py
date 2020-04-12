@@ -3,9 +3,8 @@ from dataclasses import is_dataclass
 from functools import wraps
 
 import log
-from ruamel.yaml.comments import CommentedMap, CommentedSeq
 
-from . import settings
+from . import settings, types
 from .mapper import create_mapper
 
 
@@ -49,10 +48,10 @@ def apply(instance, mapper):
         for attr_name in instance.datafile.attrs:
             attr = getattr(instance, attr_name)
             if isinstance(attr, list):
-                attr = CommentedSeq(attr)
+                attr = types.List(attr)
                 setattr(instance, attr_name, attr)
             elif isinstance(attr, dict):
-                attr = CommentedMap(attr)
+                attr = types.Dict(attr)
                 setattr(instance, attr_name, attr)
             elif not is_dataclass(attr):
                 continue

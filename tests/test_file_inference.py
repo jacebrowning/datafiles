@@ -6,17 +6,13 @@ def test_auto_with_sample_file(expect):
     write(
         'tmp/sample.yml',
         """
-
         homogeneous_list:
           - 1
           - 2
-
         heterogeneous_list:
           - 1
           - 'abc'
-
         empty_list: []
-
         """,
     )
 
@@ -36,7 +32,6 @@ def test_auto_with_sample_file(expect):
     logbreak("Reading file")
     expect(read('tmp/sample.yml')) == dedent(
         """
-
         homogeneous_list:
           - 1
           - 2

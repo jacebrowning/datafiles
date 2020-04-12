@@ -13,14 +13,8 @@ from cached_property import cached_property
 
 from . import config, formats, hooks
 from .converters import Converter, List, map_type
-from .utils import (
-    Missing,
-    Trilean,
-    display,
-    get_default_field_value,
-    recursive_update,
-    write,
-)
+from .types import Missing, Trilean
+from .utils import display, get_default_field_value, recursive_update, write
 
 
 class Mapper:
