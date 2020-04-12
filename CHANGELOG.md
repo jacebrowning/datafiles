@@ -1,6 +1,7 @@
 # 0.9 (beta)
 
 - Fixed serialization of optional nested dataclasses with a value of `None`.
+- Fixed preservation of comments on nested dataclass attributes.
 
 # 0.8.1 (2020-03-30)
 
