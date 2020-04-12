@@ -404,7 +404,7 @@ def describe_preservation():
             """
         )
 
-    @pytest.mark.xfail(reason="TODO: support comments on list items")
+    @pytest.mark.xfail(reason="https://github.com/jacebrowning/datafiles/issues/171")
     def with_comments_on_list_items(expect):
         sample = SampleWithListOfDataclasses()
 
@@ -424,10 +424,6 @@ def describe_preservation():
 
               - name: b     # Item
                 score: 2
-
-              # Section
-
-            # Footer
             """,
         )
 
@@ -450,10 +446,6 @@ def describe_preservation():
 
               - name: c     # Item
                 score: 2
-
-              # Section
-
-            # Footer
             """
         )
 
