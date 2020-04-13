@@ -7,6 +7,8 @@ from io import StringIO
 from pathlib import Path
 from typing import IO, Any, Dict, List
 
+import log
+
 from . import settings, types
 
 
@@ -84,7 +86,13 @@ class RuamelYAML(Formatter):
     def deserialize(cls, file_object):
         from ruamel import yaml
 
-        return yaml.round_trip_load(file_object, preserve_quotes=True) or {}
+        try:
+            data = yaml.round_trip_load(file_object, preserve_quotes=True)
+        except NotImplementedError as e:
+            log.error(str(e))
+            return {}
+        else:
+            return data or {}
 
     @classmethod
     def serialize(cls, data):
@@ -105,8 +113,11 @@ class RuamelYAML(Formatter):
             text = f.getvalue().strip() + '\n'
         else:
             text = yaml.round_trip_dump(data) or ""
-        text = text.replace('- \n', '-\n')
-        return "" if text == "{}\n" else text
+
+        if text == "{}\n":
+            return ""
+
+        return text.replace('- \n', '-\n')
 
 
 class PyYAML(Formatter):
