@@ -89,7 +89,7 @@ test-profile: install
 MKDOCS_INDEX := site/index.html
 
 .PHONY: docs
-docs: mkdocs uml papermill  ## Generate documentation and UML
+docs: mkdocs uml notebooks  ## Generate documentation and UML
 
 .PHONY: mkdocs
 mkdocs: install $(MKDOCS_INDEX)
@@ -116,12 +116,12 @@ docs/*.png: $(MODULES)
 	- mv -f classes_$(PACKAGE).png docs/classes.png
 	- mv -f packages_$(PACKAGE).png docs/packages.png
 
-.PHONY: papermill
-papermill: install
+.PHONY: notebooks
+notebooks: install
 	@ cd notebooks; for filename in *.ipynb; do \
 	  poetry run papermill $$filename $$filename; \
 	done
-	git config filter.nbstripout.extrakeys 'metadata.papermill cell.metadata.papermill'
+	git config filter.nbstripout.extrakeys 'cell.metadata.execution cell.metadata.papermill metadata.papermill'
 	poetry run nbstripout --keep-output notebooks/*.ipynb
 
 # RELEASE #####################################################################

@@ -115,12 +115,12 @@ def describe_nonexisting_file():
     def it_is_created_automatically_by_default(expect):
         sample = SampleAutomatic()
 
-        expect(sample.datafile.exists) == True
+        expect(sample.datafile.exists).is_(True)
 
     def it_is_not_created_automatically_when_manual(expect):
         sample = SampleManual()
 
-        expect(sample.datafile.exists) == False
+        expect(sample.datafile.exists).is_(False)
 
 
 def describe_factory_defaults():

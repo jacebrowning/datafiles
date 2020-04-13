@@ -4,7 +4,7 @@ from functools import wraps
 
 import log
 
-from . import settings
+from . import settings, types
 from .mapper import create_mapper
 
 
@@ -25,14 +25,6 @@ SAVE_AFTER_METHODS = [
     'update',
 ]
 FLAG = '_patched'
-
-
-class List(list):
-    """Patchable `list` type."""
-
-
-class Dict(dict):
-    """Patchable `dict` type."""
 
 
 def apply(instance, mapper):
@@ -56,10 +48,10 @@ def apply(instance, mapper):
         for attr_name in instance.datafile.attrs:
             attr = getattr(instance, attr_name)
             if isinstance(attr, list):
-                attr = List(attr)
+                attr = types.List(attr)
                 setattr(instance, attr_name, attr)
             elif isinstance(attr, dict):
-                attr = Dict(attr)
+                attr = types.Dict(attr)
                 setattr(instance, attr_name, attr)
             elif not is_dataclass(attr):
                 continue

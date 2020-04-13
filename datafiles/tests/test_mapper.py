@@ -37,7 +37,7 @@ def describe_mapper():
 
     def describe_path():
         def is_none_when_no_pattern(expect, mapper):
-            expect(mapper.path) == None
+            expect(mapper.path).is_(None)
 
         def is_relative_to_file_by_default(expect, mapper):
             mapper._pattern = '../../tmp/sample.yml'

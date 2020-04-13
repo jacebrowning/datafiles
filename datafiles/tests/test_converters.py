@@ -1,6 +1,7 @@
 # pylint: disable=unused-variable
 
 from dataclasses import dataclass
+from enum import Enum
 from typing import ByteString, Dict, List, Optional
 
 import pytest
@@ -29,12 +30,17 @@ class MyCustomString:
     pass
 
 
-IntegerList = converters.List.subclass(converters.Integer)
-StringList = converters.List.subclass(converters.String)
-MyDict = converters.Dictionary.subclass(converters.String, converters.Integer)
+class Color(Enum):
+    RED = 1
+    GREEN = 2
+    BLUE = 3
+
+
+IntegerList = converters.List.of_type(converters.Integer)
+StringList = converters.List.of_type(converters.String)
+MyDict = converters.Dictionary.of_mapping(converters.String, converters.Integer)
 MyDataclassConverter = converters.map_type(MyDataclass)
 MyDataclassConverterList = converters.map_type(List[MyDataclass])
-MyNestedDataclassConverter = converters.map_type(MyNestedDataclass)
 
 
 def describe_map_type():
@@ -68,11 +74,15 @@ def describe_map_type():
             'flag': converters.Boolean,
         }
 
+    def it_handles_enums(expect):
+        converter = converters.map_type(Color)
+        expect(converter.__name__) == 'ColorConverter'
+
     def it_handles_optionals(expect):
         converter = converters.map_type(Optional[str])
         expect(converter.__name__) == 'OptionalString'
         expect(converter.TYPE) == str
-        expect(converter.DEFAULT) == None
+        expect(converter.DEFAULT).is_(None)
 
     def it_handles_string_type_annotations(expect):
         converter = converters.map_type('float')
@@ -146,11 +156,6 @@ def describe_converter():
                 (MyDataclassConverter, None, MyDataclass(foobar=0)),
                 (MyDataclassConverterList, None, []),
                 (MyDataclassConverterList, 42, [MyDataclass(foobar=0)]),
-                (
-                    MyNestedDataclassConverter,
-                    None,
-                    MyNestedDataclass(name='', dc=MyDataclass(foobar=0, flag=False)),
-                ),
             ],
         )
         def when_mutable(expect, converter, data, value):
@@ -166,6 +171,12 @@ def describe_converter():
             expect(convert("")) == ""
             expect(convert("Hello, world!")) == "Hello, world!"
             expect(convert("Line 1\nLine 2\n")) == "Line 1\nLine 2\n"
+
+        def when_enum(expect):
+            convert = converters.map_type(Color).to_python_value
+            expect(convert(1)).is_(Color.RED)
+            with expect.raises(ValueError):
+                convert(42)
 
         def when_invalid(expect):
             message = "invalid literal for int() with base 10: 'a'"
@@ -244,6 +255,10 @@ def describe_converter():
             expect(convert("Hello, world!")) == "Hello, world!"
             expect(convert("Line 1\nLine 2")) == "Line 1\nLine 2\n"
             expect(convert("Line 1\nLine 2")).isinstance(LiteralScalarString)
+
+        def when_enum(expect):
+            convert = converters.map_type(Color).to_preserialization_data
+            expect(convert(Color.RED)) == 1
 
         def when_invalid(expect):
             message = "invalid literal for int() with base 10: 'a'"

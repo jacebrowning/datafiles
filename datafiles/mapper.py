@@ -13,14 +13,8 @@ from cached_property import cached_property
 
 from . import config, formats, hooks
 from .converters import Converter, List, map_type
-from .utils import (
-    Missing,
-    Trilean,
-    display,
-    get_default_field_value,
-    recursive_update,
-    write,
-)
+from .types import Missing, Trilean
+from .utils import display, get_default_field_value, recursive_update, write
 
 
 class Mapper:
@@ -138,20 +132,13 @@ class Mapper:
 
             if getattr(converter, 'DATACLASS', None):
                 log.debug(f"Converting '{name}' dataclass with {converter}")
-                if value is None:
-                    value = {}
-
-                for field in dataclasses.fields(converter.DATACLASS):
-                    if field.name not in value:
-                        log.debug(f'Added missing nested attribute: {field.name}')
-                        value[field.name] = None
-
-                data[name] = converter.to_preserialization_data(
+                new_value = converter.to_preserialization_data(
                     value,
                     default_to_skip=Missing
                     if include_default_values
                     else get_default_field_value(self._instance, name),
                 )
+                data[name] = recursive_update(value, new_value)
 
             elif (
                 value == get_default_field_value(self._instance, name)
@@ -171,15 +158,15 @@ class Mapper:
     def text(self) -> str:
         return self._get_text()
 
+    @text.setter
+    def text(self, value: str):
+        write(self.path, value.strip() + '\n', display=True)
+
     def _get_text(self, **kwargs) -> str:
         data = self._get_data(**kwargs)
         if self.path and self.path.suffix:
             return formats.serialize(data, self.path.suffix)
         return formats.serialize(data)
-
-    @text.setter  # type: ignore
-    def text(self, value: str):
-        write(self.path, value.strip() + '\n')
 
     def load(self, *, _log=True, _first_load=False) -> None:
         if self._root:
@@ -282,7 +269,7 @@ class Mapper:
         with hooks.disabled():
             text = self._get_text(include_default_values=include_default_values)
 
-        write(self.path, text)
+        write(self.path, text, display=True)
 
         self.modified = False
 

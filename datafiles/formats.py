@@ -9,7 +9,7 @@ from typing import IO, Any, Dict, List
 
 import log
 
-from . import settings
+from . import settings, types
 
 
 _REGISTRY: Dict[str, type] = {}
@@ -87,14 +87,23 @@ class RuamelYAML(Formatter):
         from ruamel import yaml
 
         try:
-            return yaml.round_trip_load(file_object, preserve_quotes=True) or {}
+            data = yaml.round_trip_load(file_object, preserve_quotes=True)
         except NotImplementedError as e:
             log.error(str(e))
             return {}
+        else:
+            return data or {}
 
     @classmethod
     def serialize(cls, data):
         from ruamel import yaml
+
+        yaml.representer.RoundTripRepresenter.add_representer(
+            types.List, yaml.representer.RoundTripRepresenter.represent_list
+        )
+        yaml.representer.RoundTripRepresenter.add_representer(
+            types.Dict, yaml.representer.RoundTripRepresenter.represent_dict
+        )
 
         if settings.INDENT_YAML_BLOCKS:
             f = StringIO()
@@ -104,8 +113,11 @@ class RuamelYAML(Formatter):
             text = f.getvalue().strip() + '\n'
         else:
             text = yaml.round_trip_dump(data) or ""
-            text = text.replace('- \n', '-\n')
-        return "" if text == "{}\n" else text
+
+        if text == "{}\n":
+            return ""
+
+        return text.replace('- \n', '-\n')
 
 
 class PyYAML(Formatter):
@@ -144,19 +156,21 @@ class PyYAML(Formatter):
         return text
 
 
-def deserialize(path: Path, extension: str) -> Dict:
-    formatter = _get_formatter(extension)
+def deserialize(path: Path, extension: str, *, formatter=None) -> Dict:
+    if formatter is None:
+        formatter = _get_formatter(extension)
     with path.open('r') as file_object:
         return formatter.deserialize(file_object)
 
 
-def serialize(data: Dict, extension: str = '.yml') -> str:
-    formatter = _get_formatter(extension)
+def serialize(data: Dict, extension: str = '.yml', *, formatter=None) -> str:
+    if formatter is None:
+        formatter = _get_formatter(extension)
     return formatter.serialize(data)
 
 
 def _get_formatter(extension: str):
-    if settings.YAML_LIBRARY == 'PyYAML':
+    if settings.YAML_LIBRARY == 'PyYAML':  # pragma: no cover
         register('.yml', PyYAML)
 
     with suppress(KeyError):

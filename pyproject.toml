@@ -1,7 +1,7 @@
 [tool.poetry]
 
 name = "datafiles"
-version = "0.8.1"
+version = "0.9"
 description = "File-based ORM for dataclasses."
 
 license = "MIT"
@@ -43,8 +43,8 @@ python = "^3.7"
 
 # Formats
 PyYAML = "^5.2"
-"ruamel.yaml" = "^0.16.7"
-tomlkit = "^0.5.3"
+"ruamel.yaml" = "~0.16.10"
+tomlkit = "~0.5.3"
 
 # ORM
 parse = "^1.12"
@@ -64,14 +64,14 @@ black = "=19.3b0"
 isort = "=4.3.4"
 
 # Linters
-mypy = "^0.761"
+mypy = "~0.770"
 pylint = { git = "https://github.com/PyCQA/pylint", rev = "e169e83e52fedc6624235d45e8e8737294a0fedf" } # 2.4.5 has not yet been released
 pydocstyle = "*"
 
 # Testing
 pytest = "^5.3.2"
-pytest-describe = "*"
-pytest-expecter = "^2.0"
+pytest-describe = { git = "https://github.com/jacebrowning/pytest-describe", branch = "pytest-5.4-support" }
+pytest-expecter = "^2.1"
 pytest-mock = "*"
 pytest-random = "*"
 pytest-repeat = "*"
