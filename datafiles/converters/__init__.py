@@ -1,4 +1,5 @@
 import dataclasses
+from enum import Enum
 from inspect import isclass
 from typing import Any, Dict, Optional, Union
 
@@ -9,6 +10,7 @@ from ..utils import cached
 from ._bases import Converter
 from .builtins import Boolean, Float, Integer, String
 from .containers import Dataclass, Dictionary, List
+from .enumerations import Enumeration
 from .extensions import *  # pylint: disable=unused-wildcard-import
 
 
@@ -99,5 +101,8 @@ def map_type(cls, *, name: str = '', item_cls: Optional[type] = None):
     if issubclass(cls, Converter):
         log.debug(f'Mapped {cls!r} to existing converter (itself)')
         return cls
+
+    if issubclass(cls, Enum):
+        return Enumeration.of_type(cls)
 
     raise TypeError(f'Could not map type: {cls}')

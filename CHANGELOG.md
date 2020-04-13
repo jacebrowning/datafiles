@@ -2,6 +2,7 @@
 
 - Fixed serialization of optional nested dataclasses with a value of `None`.
 - Fixed preservation of comments on nested dataclass attributes.
+- Added support for using `enum.Enum` subclasses as type annotations.
 
 # 0.8.1 (2020-03-30)
 
