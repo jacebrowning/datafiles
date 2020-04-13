@@ -18,8 +18,8 @@ nav:
       - Mapper: api/mapper.md
   - Supported Types:
       - Builtins: types/builtins.md
-      - Extensions: types/extensions.md
       - Containers: types/containers.md
+      - Extended Types: types/extensions.md
       - Custom Types: types/custom.md
   - File Formats: formats.md
   - Utilities: utilities.md

@@ -1,7 +1,7 @@
 [tool.poetry]
 
 name = "datafiles"
-version = "0.9b6"
+version = "0.9b7"
 description = "File-based ORM for dataclasses."
 
 license = "MIT"
@@ -64,7 +64,7 @@ black = "=19.3b0"
 isort = "=4.3.4"
 
 # Linters
-mypy = "^0.761"
+mypy = "~0.770"
 pylint = { git = "https://github.com/PyCQA/pylint", rev = "e169e83e52fedc6624235d45e8e8737294a0fedf" } # 2.4.5 has not yet been released
 pydocstyle = "*"
 

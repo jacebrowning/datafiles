@@ -11,10 +11,10 @@ from ._bases import Converter
 class List(Converter):
     """Base converter for homogeneous lists of another converter."""
 
-    CONVERTER: Converter = None  # type: ignore
+    CONVERTER: Converter = NotImplemented
 
     @classmethod
-    def subclass(cls, converter: type):
+    def of_type(cls, converter: type):
         name = f'{converter.__name__}List'
         bases = (cls,)
         attributes = {'CONVERTER': converter}
@@ -87,7 +87,7 @@ class Dictionary(Converter):
     """Base converter for raw dictionaries."""
 
     @classmethod
-    def subclass(cls, key: type, value: type):
+    def of_mapping(cls, key: type, value: type):
         name = f'{key.__name__}{value.__name__}Dict'
         bases = (cls,)
         return type(name, bases, {})
@@ -121,11 +121,11 @@ class Dictionary(Converter):
 class Dataclass(Converter):
     """Base converter for dataclasses."""
 
-    DATACLASS: Callable = None  # type: ignore
-    CONVERTERS: Dict = None  # type: ignore
+    DATACLASS: Callable = NotImplemented
+    CONVERTERS: Dict = NotImplemented
 
     @classmethod
-    def subclass(cls, dataclass, converters: Dict[str, type]):
+    def of_mappings(cls, dataclass, converters: Dict[str, type]):
         name = f'{dataclass.__name__}Converter'
         bases = (cls,)
         attributes = {'DATACLASS': dataclass, 'CONVERTERS': converters}

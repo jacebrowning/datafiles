@@ -1,4 +1,5 @@
 import dataclasses
+from enum import Enum
 from inspect import isclass
 from typing import Any, Dict, Optional, Union
 
@@ -9,6 +10,7 @@ from ..utils import cached
 from ._bases import Converter
 from .builtins import Boolean, Float, Integer, String
 from .containers import Dataclass, Dictionary, List
+from .enumerations import Enumeration
 from .extensions import *  # pylint: disable=unused-wildcard-import
 
 
@@ -46,7 +48,7 @@ def map_type(cls, *, name: str = '', item_cls: Optional[type] = None):
         converters = {}
         for field in dataclasses.fields(cls):
             converters[field.name] = map_type(field.type, name=field.name)
-        converter = Dataclass.subclass(cls, converters)
+        converter = Dataclass.of_mappings(cls, converters)
         log.debug(f'Mapped {cls!r} to new converter: {converter}')
         return converter
 
@@ -60,7 +62,7 @@ def map_type(cls, *, name: str = '', item_cls: Optional[type] = None):
                 assert '~T' in str(e), f'Unhandled error: ' + str(e)
                 raise TypeError("Type is required with 'List' annotation") from None
             else:
-                converter = List.subclass(converter)
+                converter = List.of_type(converter)
 
         elif cls.__origin__ == dict:
             if item_cls:
@@ -71,7 +73,7 @@ def map_type(cls, *, name: str = '', item_cls: Optional[type] = None):
                 key = map_type(cls.__args__[0])
                 value = map_type(cls.__args__[1])
 
-            converter = Dictionary.subclass(key, value)
+            converter = Dictionary.of_mapping(key, value)
 
         elif cls.__origin__ == Union:
             converter = map_type(cls.__args__[0])
@@ -99,5 +101,8 @@ def map_type(cls, *, name: str = '', item_cls: Optional[type] = None):
     if issubclass(cls, Converter):
         log.debug(f'Mapped {cls!r} to existing converter (itself)')
         return cls
+
+    if issubclass(cls, Enum):
+        return Enumeration.of_type(cls)
 
     raise TypeError(f'Could not map type: {cls}')

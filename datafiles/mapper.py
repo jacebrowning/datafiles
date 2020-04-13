@@ -158,15 +158,15 @@ class Mapper:
     def text(self) -> str:
         return self._get_text()
 
+    @text.setter
+    def text(self, value: str):
+        write(self.path, value.strip() + '\n', display=True)
+
     def _get_text(self, **kwargs) -> str:
         data = self._get_data(**kwargs)
         if self.path and self.path.suffix:
             return formats.serialize(data, self.path.suffix)
         return formats.serialize(data)
-
-    @text.setter  # type: ignore
-    def text(self, value: str):
-        write(self.path, value.strip() + '\n', display=True)
 
     def load(self, *, _log=True, _first_load=False) -> None:
         if self._root:
