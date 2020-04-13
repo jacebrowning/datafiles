@@ -83,9 +83,6 @@ def _merge(old: Any, new: Any) -> Any:
 
         return old
 
-    if repr(new) == repr(old):
-        return old
-
     return new
 
 

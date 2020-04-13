@@ -57,39 +57,6 @@ def describe_recursive_update():
             expect(old) == new
             expect(id(old['my_dict']['my_list'][0])) == previous_id
 
-        def with_unchanged_immutables(expect):
-            hello = "hello"
-            world = "world"
-
-            old = {'my_dict': {'my_str': hello + world}}
-            new = {'my_dict': {'my_str': "helloworld"}}
-            previous_id = id(old['my_dict']['my_str'])
-
-            recursive_update(old, new)
-
-            expect(old) == new
-            expect(id(old['my_dict']['my_str'])) == previous_id
-
-        def with_updated_numeric_types(expect):
-            old = {'value': 1}
-            new = {'value': 1.0}
-            previous_id = id(old['value'])
-
-            recursive_update(old, new)
-
-            expect(old) == new
-            expect(id(old['value'])) != previous_id
-
-        def with_updated_boolean_types(expect):
-            old = {'value': 1}
-            new = {'value': True}
-            previous_id = id(old['value'])
-
-            recursive_update(old, new)
-
-            expect(old) == new
-            expect(id(old['value'])) != previous_id
-
     def describe_merge():
         def with_shoreter_list_into_longer(expect):
             old = {'my_list': [1, 2, 3]}
