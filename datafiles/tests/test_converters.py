@@ -36,9 +36,9 @@ class Color(Enum):
     BLUE = 3
 
 
-IntegerList = converters.List.subclass(converters.Integer)
-StringList = converters.List.subclass(converters.String)
-MyDict = converters.Dictionary.subclass(converters.String, converters.Integer)
+IntegerList = converters.List.of_type(converters.Integer)
+StringList = converters.List.of_type(converters.String)
+MyDict = converters.Dictionary.of_mapping(converters.String, converters.Integer)
 MyDataclassConverter = converters.map_type(MyDataclass)
 MyDataclassConverterList = converters.map_type(List[MyDataclass])
 

@@ -5,7 +5,7 @@ from ._bases import Converter
 
 class Enumeration(Converter):
 
-    ENUM: type = None  # type: ignore
+    ENUM: type = NotImplemented
 
     @classmethod
     def of_type(cls, enum: type):
