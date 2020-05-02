@@ -1,3 +1,7 @@
+# 0.10 (beta)
+
+- Added support for recursively matching arbitrary depth paths of files.
+
 # 0.9 (2020-04-13)
 
 - Fixed serialization of optional nested dataclasses with a value of `None`.
