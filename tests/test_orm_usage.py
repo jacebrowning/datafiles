@@ -133,3 +133,26 @@ def test_comments_in_matched_files(expect):
 
     items = list(LegacyTemplate.objects.all())
     expect(len(items)) == 2
+
+
+def test_paths_in_pattern(expect):
+    @datafile("../tmp/routes/{self.path}/config.yml")
+    class LegacyTemplate:
+        path: str
+        value: int
+
+    write(
+        'tmp/routes/foo/config.yml',
+        """
+        value: 2
+        """,
+    )
+    write(
+        'tmp/routes/foo/bar/config.yml',
+        """
+        value: 2
+        """,
+    )
+
+    items = list(LegacyTemplate.objects.all())
+    expect(len(items)) == 2
