@@ -23,6 +23,7 @@ nav:
       - Custom Types: types/custom.md
   - File Formats: formats.md
   - Utilities: utilities.md
+  - Logging: logging.md
   - Settings: settings.md
   - About:
       - Release Notes: about/changelog.md
