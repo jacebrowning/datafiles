@@ -9,11 +9,12 @@ Datafiles is a bidirectional serialization library for Python [dataclasses](http
 [![PyPI Version](https://img.shields.io/pypi/v/datafiles.svg)](https://pypi.org/project/datafiles)
 [![Gitter](https://img.shields.io/gitter/room/jacebrowning/datafiles?color=blue)](https://gitter.im/jacebrowning/datafiles)
 
-Popular use cases include:
+Some common use cases include:
 
 - Coercing user-editable files into the proper Python types
 - Storing program configuration and data in version control
 - Loading data fixtures for demonstration or testing purposes
+- Synchronizing application state using file sharing services
 - Prototyping data models agnostic of persistence backends
 
 Watch [my lightning talk](https://www.youtube.com/watch?v=moYkuNrmc1I&feature=youtu.be&t=1225) for a demo of this in action!
@@ -78,7 +79,7 @@ Changes to the filesystem are automatically reflected in the object:
 ```yaml
 # inventory/items/widget.yml
 
-unit_price: 2.5  # <= manually changed from "3.0"
+unit_price: 2.5 # <= manually changed from "3.0"
 quantity_on_hand: 100
 ```
 
