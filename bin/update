@@ -13,7 +13,7 @@ TMP = tempfile.gettempdir()
 CONFIG = {
     "full_name": "Jace Browning",
     "email": "jacebrowning@gmail.com",
-    "github_username": "datafiles",
+    "github_username": "jacebrowning",
     "github_repo": "datafiles",
     "default_branch": "develop",
     "project_name": "datafiles",
