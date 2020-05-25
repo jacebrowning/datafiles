@@ -510,7 +510,7 @@ description = "Minimalistic wrapper for Python logging."
 name = "minilog"
 optional = false
 python-versions = ">=3.6,<4.0"
-version = "1.6b6"
+version = "1.6"
 
 [[package]]
 category = "dev"
@@ -917,15 +917,15 @@ category = "dev"
 description = "Pytest plugin for measuring coverage."
 name = "pytest-cov"
 optional = false
-python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
-version = "2.8.1"
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
+version = "2.9.0"
 
 [package.dependencies]
 coverage = ">=4.4"
 pytest = ">=3.6"
 
 [package.extras]
-testing = ["fields", "hunter", "process-tests (2.0.2)", "six", "virtualenv"]
+testing = ["fields", "hunter", "process-tests (2.0.2)", "six", "pytest-xdist", "virtualenv"]
 
 [[package]]
 category = "dev"
@@ -1344,7 +1344,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["jaraco.itertools", "func-timeout"]
 
 [metadata]
-content-hash = "25d5d6bc982f476ec4aebb060f0c41ea7c1263020df32a8fa0b3fe9937b1410b"
+content-hash = "ba833b0950523178d28a2534aab827778d60f3f4d14ecc3acdf2f18eb53a81f4"
 python-versions = "^3.7"
 
 [metadata.files]
@@ -1595,8 +1595,8 @@ mccabe = [
     {file = "mccabe-0.6.1.tar.gz", hash = "sha256:dd8d182285a0fe56bace7f45b5e7d1a6ebcbf524e8f3bd87eb0f125271b8831f"},
 ]
 minilog = [
-    {file = "minilog-1.6b6-py3-none-any.whl", hash = "sha256:a172435e08ab2f50a1771fe721ede6cf42dc550ea1bd6221523cd9b33719c8af"},
-    {file = "minilog-1.6b6.tar.gz", hash = "sha256:d1a7a6bbe8afff56ddadbb12bcecc6c37526dc877a9b409e4751bdc8aec65db6"},
+    {file = "minilog-1.6-py3-none-any.whl", hash = "sha256:e999fffce1912560974e9360b1aa0b970f0a2f3dba3b50ffacd5ffa68b27d84c"},
+    {file = "minilog-1.6.tar.gz", hash = "sha256:0dbbe6d8db9e45b3fb1e1975cf8d7f6b8a22446a6e6879992d0dbda3c7431da7"},
 ]
 mistune = [
     {file = "mistune-0.8.4-py2.py3-none-any.whl", hash = "sha256:88a1051873018da288eee8538d476dffe1262495144b33ecb586c4ab266bb8d4"},
@@ -1723,8 +1723,8 @@ pytest = [
     {file = "pytest-5.4.2.tar.gz", hash = "sha256:eb2b5e935f6a019317e455b6da83dd8650ac9ffd2ee73a7b657a30873d67a698"},
 ]
 pytest-cov = [
-    {file = "pytest-cov-2.8.1.tar.gz", hash = "sha256:cc6742d8bac45070217169f5f72ceee1e0e55b0221f54bcf24845972d3a47f2b"},
-    {file = "pytest_cov-2.8.1-py2.py3-none-any.whl", hash = "sha256:cdbdef4f870408ebdbfeb44e63e07eb18bb4619fae852f6e760645fa36172626"},
+    {file = "pytest-cov-2.9.0.tar.gz", hash = "sha256:b6a814b8ed6247bd81ff47f038511b57fe1ce7f4cc25b9106f1a4b106f1d9322"},
+    {file = "pytest_cov-2.9.0-py2.py3-none-any.whl", hash = "sha256:c87dfd8465d865655a8213859f1b4749b43448b5fae465cb981e16d52a811424"},
 ]
 pytest-describe = [
     {file = "pytest-describe-1.0.0.tar.gz", hash = "sha256:3e2ea0e77efa09edb98cf90423bf1da21a462ed90bd3120f8f98fe7519a167d5"},
