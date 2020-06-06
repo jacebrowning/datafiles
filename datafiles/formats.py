@@ -5,7 +5,7 @@ from abc import ABCMeta, abstractmethod
 from contextlib import suppress
 from io import StringIO
 from pathlib import Path
-from typing import IO, Any, Dict, List
+from typing import IO, Dict, List
 
 import log
 
@@ -30,7 +30,7 @@ class Formatter(metaclass=ABCMeta):
 
     @classmethod
     @abstractmethod
-    def deserialize(cls, file_object: IO[Any]) -> Dict:
+    def deserialize(cls, file_object: IO) -> Dict:
         raise NotImplementedError
 
     @classmethod
@@ -48,7 +48,7 @@ class JSON(Formatter):
 
     @classmethod
     def deserialize(cls, file_object):
-        return json.load(file_object) or {}
+        return json.load(file_object)
 
     @classmethod
     def serialize(cls, data):
@@ -66,7 +66,7 @@ class TOML(Formatter):
     def deserialize(cls, file_object):
         import tomlkit
 
-        return tomlkit.loads(file_object.read()) or {}
+        return tomlkit.loads(file_object.read())
 
     @classmethod
     def serialize(cls, data):
@@ -87,12 +87,10 @@ class RuamelYAML(Formatter):
         from ruamel import yaml
 
         try:
-            data = yaml.round_trip_load(file_object, preserve_quotes=True)
+            return yaml.round_trip_load(file_object, preserve_quotes=True)
         except NotImplementedError as e:
             log.error(str(e))
             return {}
-        else:
-            return data or {}
 
     @classmethod
     def serialize(cls, data):
@@ -131,9 +129,7 @@ class PyYAML(Formatter):
     def deserialize(cls, file_object):
         import yaml
 
-        data = yaml.safe_load(file_object) or {}
-
-        return data
+        return yaml.safe_load(file_object)
 
     @classmethod
     def serialize(cls, data):
@@ -160,7 +156,14 @@ def deserialize(path: Path, extension: str, *, formatter=None) -> Dict:
     if formatter is None:
         formatter = _get_formatter(extension)
     with path.open('r') as file_object:
-        return formatter.deserialize(file_object)
+        data = formatter.deserialize(file_object)
+        if data is None:
+            log.debug(f"No data in {path}")
+            data = {}
+        elif not isinstance(data, dict):
+            log.error(f"Invalid data in {path}: {data!r}")
+            data = {}
+        return data
 
 
 def serialize(data: Dict, extension: str = '.yml', *, formatter=None) -> str:
