@@ -79,6 +79,19 @@ def describe_nominal():
 
         expect(hasattr(sample, 'extra')).is_(False)
 
+    def with_invalid_data(sample, expect):
+        write(
+            'tmp/sample.yml',
+            """
+            - foo
+            - bar
+            """,
+        )
+
+        sample.datafile.load()
+
+        expect(sample.int_) == 0
+
 
 def describe_alternate_formats():
     @pytest.fixture
