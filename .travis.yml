@@ -25,7 +25,7 @@ script:
   - make mkdocs
 
 after_success:
-  - pip install coveralls
+  - pip install coveralls "coverage<5"
   - coveralls
 
 notifications:
