@@ -1,5 +1,6 @@
 """Tests that represent usage as an ORM."""
 
+import platform
 from typing import List, Optional
 
 import pytest
@@ -136,6 +137,9 @@ def test_comments_in_matched_files(expect):
 
 
 def test_paths_in_pattern(expect):
+    if platform.system() == 'Windows':
+        pytest.skip("TODO: Support Windows")
+
     @datafile("../tmp/routes/{self.path}/{self.variant}.yml")
     class LegacyTemplate:
         path: str
