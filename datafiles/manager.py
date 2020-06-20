@@ -74,14 +74,22 @@ class Manager:
                 root = Path.cwd()
             pattern = str(root / self.model.Meta.datafile_pattern)
 
-        splatted = pattern.format(self=Splats())
-        splatted = splatted.replace('/*/', '/**/').replace('\\*\\', '\\**\\')
+        splatted = (
+            pattern.format(self=Splats())
+            .replace('/*/', '/**/')
+            .replace('\\*\\', '\\**\\')
+        )
         log.info(f'Finding files matching pattern: {splatted}')
         for filename in iglob(splatted, recursive=True):
             log.debug(f'Found matching path: {filename}')
             result = parse(pattern, filename)
             if result:
-                yield self.get(*result.named.values())
+                values = list(result.named.values())
+                if '**' in splatted and len(values) > 1 and '/' in values[-1]:
+                    parts = values[-1].rsplit('/', 1)
+                    values[-2] = values[-2] + '/' + parts[0]
+                    values[-1] = parts[1]
+                yield self.get(*values)
 
     def filter(self, **query):
         for item in self.all():
