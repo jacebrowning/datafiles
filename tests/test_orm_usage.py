@@ -1,5 +1,6 @@
 """Tests that represent usage as an ORM."""
 
+import platform
 from typing import List, Optional
 
 import pytest
@@ -163,4 +164,7 @@ def test_paths_in_pattern(expect):
 
     items = list(LegacyTemplate.objects.all())
     expect(len(items)) == 3
-    expect(items[-1].path) == 'foo/bar'
+    if platform.system() == 'Windows':
+        expect(items[-1].path) == 'foo\\bar'
+    else:
+        expect(items[-1].path) == 'foo/bar'

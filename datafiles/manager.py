@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import dataclasses
 import inspect
+import os
 from glob import iglob
 from pathlib import Path
 from typing import TYPE_CHECKING, Iterator, Optional
@@ -63,6 +64,7 @@ class Manager:
 
     def all(self) -> Iterator[HasDatafile]:
         path = Path(self.model.Meta.datafile_pattern)
+
         if path.is_absolute() or self.model.Meta.datafile_pattern.startswith('./'):
             pattern = str(path.resolve())
         else:
@@ -74,10 +76,8 @@ class Manager:
                 root = Path.cwd()
             pattern = str(root / self.model.Meta.datafile_pattern)
 
-        splatted = (
-            pattern.format(self=Splats())
-            .replace('/*/', '/**/')
-            .replace('\\*\\', '\\**\\')
+        splatted = pattern.format(self=Splats()).replace(
+            f'{os.sep}*{os.sep}', f'{os.sep}**{os.sep}'
         )
         log.info(f'Finding files matching pattern: {splatted}')
         for filename in iglob(splatted, recursive=True):
@@ -85,9 +85,9 @@ class Manager:
             result = parse(pattern, filename)
             if result:
                 values = list(result.named.values())
-                if '**' in splatted and len(values) > 1 and '/' in values[-1]:
-                    parts = values[-1].rsplit('/', 1)
-                    values[-2] = values[-2] + '/' + parts[0]
+                if len(values) > 1 and os.sep in values[-1]:
+                    parts = values[-1].rsplit(os.sep, 1)
+                    values[-2] = values[-2] + os.sep + parts[0]
                     values[-1] = parts[1]
                 yield self.get(*values)
 
