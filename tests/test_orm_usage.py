@@ -137,9 +137,6 @@ def test_comments_in_matched_files(expect):
 
 
 def test_paths_in_pattern(expect):
-    if platform.system() == 'Windows':
-        pytest.skip("TODO: Support Windows")
-
     @datafile("../tmp/routes/{self.path}/{self.variant}.yml")
     class LegacyTemplate:
         path: str
@@ -167,4 +164,7 @@ def test_paths_in_pattern(expect):
 
     items = list(LegacyTemplate.objects.all())
     expect(len(items)) == 3
-    expect(items[-1].path) == 'foo/bar'
+    if platform.system() == 'Windows':
+        expect(items[-1].path) == 'foo\\bar'
+    else:
+        expect(items[-1].path) == 'foo/bar'

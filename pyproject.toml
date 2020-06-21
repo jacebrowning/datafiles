@@ -80,6 +80,7 @@ pytest-cov = "^2.8.1"
 pytest-profiling = "*"
 
 # Coverage
+coverage = "<5"
 coveragespace = "^3.1.1"
 
 # Documentation
