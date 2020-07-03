@@ -1,4 +1,4 @@
-# 0.10 (beta)
+# 0.10 (2020-07-03)
 
 - Added support for recursively matching arbitrary depth paths of files.
 - Fixed `AttributeError` when attempting to load malformed YAML files.
