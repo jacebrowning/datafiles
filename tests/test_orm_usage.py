@@ -1,5 +1,6 @@
 """Tests that represent usage as an ORM."""
 
+import platform
 from typing import List, Optional
 
 import pytest
@@ -133,3 +134,37 @@ def test_comments_in_matched_files(expect):
 
     items = list(LegacyTemplate.objects.all())
     expect(len(items)) == 2
+
+
+def test_paths_in_pattern(expect):
+    @datafile("../tmp/routes/{self.path}/{self.variant}.yml")
+    class LegacyTemplate:
+        path: str
+        variant: str
+        value: int
+
+    write(
+        'tmp/routes/foo/public.yml',
+        """
+        value: 2
+        """,
+    )
+    write(
+        'tmp/routes/foo/bar/public.yml',
+        """
+        value: 2
+        """,
+    )
+    write(
+        'tmp/routes/foo/bar/private.yml',
+        """
+        value: 2
+        """,
+    )
+
+    items = list(LegacyTemplate.objects.all())
+    expect(len(items)) == 3
+    if platform.system() == 'Windows':
+        expect(items[-1].path) == 'foo\\bar'
+    else:
+        expect(items[-1].path) == 'foo/bar'

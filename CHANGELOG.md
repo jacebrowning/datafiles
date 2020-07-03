@@ -1,3 +1,8 @@
+# 0.10 (2020-07-03)
+
+- Added support for recursively matching arbitrary depth paths of files.
+- Fixed `AttributeError` when attempting to load malformed YAML files.
+
 # 0.9 (2020-04-13)
 
 - Fixed serialization of optional nested dataclasses with a value of `None`.
