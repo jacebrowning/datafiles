@@ -79,4 +79,4 @@ plugins = datafiles.plugins:mypy
 
 - [Source code](https://github.com/jacebrowning/datafiles)
 - [Issue tracker](https://github.com/jacebrowning/datafiles/issues)
-- [Release history](https://github.com/jacebrowning/datafiles/blob/develop/CHANGELOG.md)
+- [Release history](https://github.com/jacebrowning/datafiles/blob/main/CHANGELOG.md)
