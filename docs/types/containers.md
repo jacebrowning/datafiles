@@ -17,7 +17,7 @@ from typing import List, Optional
 | `foobar: List[int]`           | `foobar = None`   | `foobar:`<br>&nbsp;&nbsp;&nbsp;&nbsp;`-`   |
 | `foobar: Optional[List[int]]` | `foobar = None`   | `foobar:`                                  |
 
-More examples can be found in this [Jupyter Notebook](https://github.com/jacebrowning/datafiles/blob/develop/notebooks/patched_containers.ipynb).
+More examples can be found in this [Jupyter Notebook](https://github.com/jacebrowning/datafiles/blob/main/notebooks/patched_containers.ipynb).
 
 ## Dictionaries
 
@@ -82,4 +82,4 @@ class Nested:
     qux: str
 ```
 
-More examples can be found in this [Jupyter Notebook](https://github.com/jacebrowning/datafiles/blob/develop/notebooks/nested_dataclass.ipynb).
+More examples can be found in this [Jupyter Notebook](https://github.com/jacebrowning/datafiles/blob/main/notebooks/nested_dataclass.ipynb).

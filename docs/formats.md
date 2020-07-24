@@ -25,7 +25,7 @@ my_int: 42
 my_str: Hello, world!
 ```
 
-Where possible, comments and whitespace are preserved in files as shown in this [Jupyter Notebook](https://github.com/jacebrowning/datafiles/blob/develop/notebooks/roundtrip_comments.ipynb).
+Where possible, comments and whitespace are preserved in files as shown in this [Jupyter Notebook](https://github.com/jacebrowning/datafiles/blob/main/notebooks/roundtrip_comments.ipynb).
 
 ## JSON
 
@@ -56,7 +56,7 @@ Sample output:
 }
 ```
 
-Additional examples can be found in this [Jupyter Notebook](https://github.com/jacebrowning/datafiles/blob/develop/notebooks/format_options.ipynb).
+Additional examples can be found in this [Jupyter Notebook](https://github.com/jacebrowning/datafiles/blob/main/notebooks/format_options.ipynb).
 
 ## TOML
 
@@ -83,7 +83,7 @@ value = 2
 value = 0
 ```
 
-Additional examples can be found in this [Jupyter Notebook](https://github.com/jacebrowning/datafiles/blob/develop/notebooks/format_options.ipynb).
+Additional examples can be found in this [Jupyter Notebook](https://github.com/jacebrowning/datafiles/blob/main/notebooks/format_options.ipynb).
 
 ## Custom Formats
 
