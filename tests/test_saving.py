@@ -449,25 +449,34 @@ def describe_preservation():
             """
         )
 
-    def with_quotations(expect):
-        sample = Sample(None, None, None, "42")
+    def with_quotes(expect):
+        @datafile('../tmp/sample.yml', manual=True)
+        class Sample:
+            s1: str = ''
+            s2: str = ''
+            s3: str = ''
+
+        sample = Sample()
 
         write(
             'tmp/sample.yml',
             """
-            str_: "42"
+            s1: a
+            s2: 'b'
+            s3: "c"
             """,
         )
 
         sample.datafile.load()
-        sample.float_ = 1
+        sample.s1 = 'd'
+        sample.s2 = 'e'
+        sample.s3 = 'f'
         sample.datafile.save()
 
         expect(read('tmp/sample.yml')) == dedent(
             """
-            str_: "42"
-            bool_: false
-            int_: 0
-            float_: 1.0
+            s1: d
+            s2: 'e'
+            s3: "f"
             """
         )
