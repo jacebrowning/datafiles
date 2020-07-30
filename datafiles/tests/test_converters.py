@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass
 from enum import Enum
-from typing import ByteString, Dict, List, Optional
+from typing import ByteString, Dict, List, Mapping, Optional
 
 import pytest
 from ruamel.yaml.scalarstring import LiteralScalarString
@@ -64,6 +64,10 @@ def describe_map_type():
 
     def it_handles_dict_annotations(expect):
         converter = converters.map_type(Dict[str, int])
+        expect(converter.__name__) == 'StringIntegerDict'
+
+    def it_handles_abstract_mapping_types(expect):
+        converter = converters.map_type(Mapping[str, int])
         expect(converter.__name__) == 'StringIntegerDict'
 
     def it_handles_dataclasses(expect):

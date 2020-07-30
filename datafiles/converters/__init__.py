@@ -1,7 +1,7 @@
 import dataclasses
 from enum import Enum
 from inspect import isclass
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, Mapping, Optional, Union
 
 import log
 from ruamel.yaml.scalarfloat import ScalarFloat
@@ -64,7 +64,7 @@ def map_type(cls, *, name: str = '', item_cls: Optional[type] = None):
             else:
                 converter = List.of_type(converter)
 
-        elif cls.__origin__ == dict:
+        elif isclass(cls.__origin__) and issubclass(cls.__origin__, Mapping):
             if item_cls:
                 key = map_type(str)
                 value = map_type(item_cls)
