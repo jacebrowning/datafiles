@@ -1,3 +1,7 @@
+# 0.11 (beta)
+
+- Added support to treat `Mapping` type annotations as dictionaries.
+
 # 0.10 (2020-07-03)
 
 - Added support for recursively matching arbitrary depth paths of files.
