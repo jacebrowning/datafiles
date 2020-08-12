@@ -158,6 +158,7 @@ def describe_converter():
                 (MyDict, {}, {}),
                 (MyDict, {'a': 1}, {'a': 1}),
                 (MyDataclassConverter, None, MyDataclass(foobar=0)),
+                (MyDataclassConverter, MyDataclass(42), MyDataclass(foobar=42)),
                 (MyDataclassConverterList, None, []),
                 (MyDataclassConverterList, 42, [MyDataclass(foobar=0)]),
             ],

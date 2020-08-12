@@ -1,3 +1,4 @@
+import dataclasses
 from collections.abc import Iterable
 from contextlib import suppress
 from typing import Callable, Dict
@@ -133,7 +134,9 @@ class Dataclass(Converter):
 
     @classmethod
     def to_python_value(cls, deserialized_data, *, target_object):
-        if isinstance(deserialized_data, dict):
+        if dataclasses.is_dataclass(deserialized_data):
+            data = dataclasses.asdict(deserialized_data)
+        elif isinstance(deserialized_data, dict):
             data = deserialized_data.copy()
         else:
             data = {}

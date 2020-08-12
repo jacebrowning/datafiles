@@ -1,6 +1,7 @@
 # 0.11 (beta)
 
 - Added support to treat `Mapping` type annotations as dictionaries.
+- Fixed handling of default values for `dataclass` attributes.
 
 # 0.10 (2020-07-03)
 
