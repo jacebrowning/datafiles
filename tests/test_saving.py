@@ -14,6 +14,7 @@ from .samples import (
     SampleWithCustomFields,
     SampleWithDefaults,
     SampleWithList,
+    SampleWithListAndJson,
     SampleWithListOfDataclasses,
     SampleWithNesting,
     SampleWithNestingAndDefaults,
@@ -88,6 +89,21 @@ def describe_lists():
                 items:
                   -
                 """
+            )
+
+    def when_empty_and_json(expect):
+        sample = SampleWithListAndJson([])
+
+        sample.datafile.save()
+
+        with open('tmp/sample.json') as f:
+            expect(f.read()) == dedent(
+                """
+                {
+                  "items": [
+                    null
+                  ]
+                }"""
             )
 
     def with_conversion(expect):

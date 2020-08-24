@@ -67,6 +67,11 @@ class SampleWithList:
     items: List[float]
 
 
+@datafile('../tmp/sample.json', manual=True)
+class SampleWithListAndJson:
+    items: List[float]
+
+
 @datafile('../tmp/sample.yml', manual=True)
 class SampleWithListAndDefaults:
     items: List[float] = field(default_factory=list)
