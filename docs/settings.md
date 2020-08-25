@@ -1,6 +1,6 @@
 <h1>Settings</h1>
 
-For libraries that wish to temporarily alter any of the previously described behavior, a handful of settings can be set at the module level. All boolean settings default to `True` unless otherwise noted.
+For clients that wish to temporarily alter any of the previously described behaviors, a handful of settings can be controlled at the module level. All values default to `True` unless otherwise noted.
 
 # `HIDE_TRACEBACK_IN_HOOKS`
 
@@ -14,7 +14,7 @@ datafiles.settings.HIDE_TRACEBACK_IN_HOOKS = False
 
 # `HOOKS_ENABLED`
 
-When running unit tests for a library using `datafiles`,
+When running unit tests for a client using `datafiles`,
 it can be helpful to disable automatic loading/saving of models for performance and to avoid writing files to disk:
 
 ```python
@@ -36,7 +36,7 @@ items:
   - 3
 ```
 
-To make it easier to upgrade to this version, a library can disable this functionality:
+To make it easier to upgrade to this version, a client can disable this functionality:
 
 ```python
 import datafiles
@@ -51,6 +51,26 @@ items:
 - 1
 - 2
 - 3
+
+# `MINIMIZE_LIST_DIFFS`
+
+When serializing lists, `datafiles` intentionally deviates from the semantic representation of an empty list to optimize for the use case of storing YAML files in version control.
+
+By storing any empty list of `items` as:
+
+```yaml
+items:
+  -
+```
+
+adding or removing an item always results in a one-line change. Where as adding items to `items: []` produces a noisier diff and requires knowledge of the YAML specification to edit files by hand.
+
+To disable this behavior:
+
+```python
+import datafiles
+
+datafiles.settings.MINIMIZE_LIST_DIFFS = False
 ```
 
 # `YAML_LIBRARY`
