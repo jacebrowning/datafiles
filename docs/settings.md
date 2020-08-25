@@ -51,6 +51,7 @@ items:
 - 1
 - 2
 - 3
+```
 
 # `MINIMIZE_LIST_DIFFS`
 
