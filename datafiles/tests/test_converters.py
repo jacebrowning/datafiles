@@ -7,7 +7,7 @@ from typing import ByteString, Dict, List, Mapping, Optional
 import pytest
 from ruamel.yaml.scalarstring import LiteralScalarString
 
-from datafiles import converters
+from datafiles import converters, settings
 
 
 @dataclass
@@ -312,6 +312,11 @@ def describe_converter():
                 MyDataclass(1, flag=True), default_to_skip=MyDataclass(1)
             )
             expect(data) == {'flag': True}
+
+        def when_empty_list_and_diff_minimization_disabled(expect, monkeypatch):
+            monkeypatch.setattr(settings, 'MINIMIZE_LIST_DIFFS', False)
+            data = StringList.to_preserialization_data([])
+            expect(data) == []
 
 
 def describe_register():

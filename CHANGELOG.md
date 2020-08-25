@@ -2,6 +2,7 @@
 
 - Added support to treat `Mapping` type annotations as dictionaries.
 - Fixed handling of default values for `dataclass` attributes.
+- Added `MINIMIZE_LIST_DIFFS` setting to control the semantic representation of empty lists.
 
 # 0.10 (2020-07-03)
 

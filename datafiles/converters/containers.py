@@ -5,6 +5,7 @@ from typing import Callable, Dict
 
 import log
 
+from .. import settings
 from ..utils import Missing, get_default_field_value
 from ._bases import Converter
 
@@ -81,7 +82,10 @@ class List(Converter):
         if data == default_to_skip:
             data.clear()
 
-        return data or [None]
+        if settings.MINIMIZE_LIST_DIFFS:
+            return data or [None]
+
+        return data
 
 
 class Dictionary(Converter):
