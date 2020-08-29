@@ -1,9 +1,21 @@
 # pylint: disable=unused-variable
 
+from pathlib import Path
+
 import pytest
 
 from datafiles import formats, settings
 from datafiles.utils import dedent
+
+
+@pytest.fixture(autouse=True, scope='session')
+def format_example():
+    path = Path.cwd() / 'docs' / 'settings.md'
+    example = path.read_text()
+    example = example.replace("  - 4", "- 4")
+    example = example.replace("  - 5", "- 5")
+    example = example.replace("  - 6", "- 6")
+    path.write_text(example)
 
 
 def describe_serialize():
