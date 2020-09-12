@@ -85,10 +85,13 @@ value = 0
 
 Additional examples can be found in this [Jupyter Notebook](https://github.com/jacebrowning/datafiles/blob/main/notebooks/format_options.ipynb).
 
-## Custom Formats
+## Custom
 
 Additional formats are supported through a registration system.
-Either extend the `datafiles.formats.Formatter` base class or map one of the existing formatter classes:
+
+### Map Exiting
+
+To map one of the existing formatter classes to a new file extension:
 
 ```python hl_lines="4"
 from datafile import datafile, formats
@@ -98,6 +101,38 @@ formats.register('.conf', formats.YAML)
 
 
 @datafile("my-file-path.conf")
+class MyConfig:
+    ...
+```
+### New Format
+
+To support new formats, extend the `datafiles.formats.Formatter` base class:
+
+```python hl_lines="4"
+from datafile import datafile, formats
+
+
+class MyFormat(formats.Format):
+
+    @classmethod
+    def extensions(cls) -> List[str]:
+        return ['.my_ext']
+
+    @classmethod
+    @abstractmethod
+    def deserialize(cls, file_object: IO) -> Dict:
+        # Read `file_object` and return a dictionary
+
+    @classmethod
+    @abstractmethod
+    def serialize(cls, data: Dict) -> str:
+        # Convert `data` to a string
+
+
+formats.register('.my_ext', MyFormat)
+
+
+@datafile("my-file-path.my_ext")
 class MyConfig:
     ...
 ```

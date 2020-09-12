@@ -9,6 +9,8 @@ theme: readthedocs
 
 markdown_extensions:
   - codehilite
+  - toc:
+      toc_depth: 2
 
 nav:
   - Overview: index.md
