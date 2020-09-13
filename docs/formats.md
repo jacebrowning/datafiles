@@ -85,7 +85,7 @@ value = 0
 
 Additional examples can be found in this [Jupyter Notebook](https://github.com/jacebrowning/datafiles/blob/main/notebooks/format_options.ipynb).
 
-## Custom
+## Custom Formats
 
 Additional formats are supported through a registration system.
 
