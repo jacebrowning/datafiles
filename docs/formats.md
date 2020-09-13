@@ -89,7 +89,7 @@ Additional examples can be found in this [Jupyter Notebook](https://github.com/j
 
 Additional formats are supported through a registration system.
 
-### Map Exiting
+### Map Existing
 
 To map one of the existing formatter classes to a new file extension:
 
