@@ -1,3 +1,7 @@
+# 0.11.1 (2020-09-12)
+
+- Fixed error message for `Dict` annotations lacking types.
+
 # 0.11 (2020-09-10)
 
 - Added support to treat `Mapping` type annotations as dictionaries.

@@ -66,6 +66,10 @@ def describe_map_type():
         converter = converters.map_type(Dict[str, int])
         expect(converter.__name__) == 'StringIntegerDict'
 
+    def it_requires_dict_annotations_to_have_types(expect):
+        with expect.raises(TypeError, "Types are required with 'Dict' annotation"):
+            converters.map_type(Dict)
+
     def it_handles_abstract_mapping_types(expect):
         converter = converters.map_type(Mapping[str, int])
         expect(converter.__name__) == 'StringIntegerDict'

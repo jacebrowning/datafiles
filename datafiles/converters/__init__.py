@@ -70,8 +70,14 @@ def map_type(cls, *, name: str = '', item_cls: Optional[type] = None):
                 value = map_type(item_cls)
             else:
                 log.warn("Schema enforcement not possible with 'Dict' annotation")
-                key = map_type(cls.__args__[0])
-                value = map_type(cls.__args__[1])
+                try:
+                    key = map_type(cls.__args__[0])
+                    value = map_type(cls.__args__[1])
+                except TypeError as e:
+                    assert '~' in str(e), f'Unhandled error: ' + str(e)
+                    raise TypeError(
+                        "Types are required with 'Dict' annotation"
+                    ) from None
 
             converter = Dictionary.of_mapping(key, value)
 
