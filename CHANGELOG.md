@@ -1,3 +1,7 @@
+# 0.12 (beta)
+
+- Added `_exclude` parameter to `all()` and `filter()` manager methods to exclude certain objects from loading as a performance optimization.
+
 # 0.11.1 (2020-09-12)
 
 - Fixed error message for `Dict` annotations lacking types.

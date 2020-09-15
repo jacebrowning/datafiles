@@ -62,11 +62,12 @@ class Manager:
             log.info(f"File not found, creating '{self.model.__name__}' object")
             return self.model(*args, **kwargs)
 
-    def all(self) -> Iterator[HasDatafile]:
+    def all(self, *, _exclude: str = '') -> Iterator[HasDatafile]:
         path = Path(self.model.Meta.datafile_pattern)
-
-        if path.is_absolute() or self.model.Meta.datafile_pattern.startswith('./'):
-            pattern = str(path.resolve())
+        if path.is_absolute():
+            log.debug(f"Detected absolute pattern: {path}")
+        elif self.model.Meta.datafile_pattern[:2] == './':
+            log.debug(f"Detected relative pattern: {path}")
         else:
             try:
                 root = Path(inspect.getfile(self.model)).parent
@@ -74,25 +75,34 @@ class Manager:
                 level = log.DEBUG if '__main__' in str(self.model) else log.WARNING
                 log.log(level, f'Unable to determine module for {self.model}')
                 root = Path.cwd()
-            pattern = str(root / self.model.Meta.datafile_pattern)
+            path = root / self.model.Meta.datafile_pattern
 
+        pattern = str(path.resolve())
         splatted = pattern.format(self=Splats()).replace(
             f'{os.sep}*{os.sep}', f'{os.sep}**{os.sep}'
         )
+
         log.info(f'Finding files matching pattern: {splatted}')
-        for filename in iglob(splatted, recursive=True):
-            log.debug(f'Found matching path: {filename}')
+        for index, filename in enumerate(iglob(splatted, recursive=True)):
+
+            log.debug(f'Found matching path {index + 1}: {filename}')
             result = parse(pattern, filename)
             if result:
                 values = list(result.named.values())
+
                 if len(values) > 1 and os.sep in values[-1]:
                     parts = values[-1].rsplit(os.sep, 1)
                     values[-2] = values[-2] + os.sep + parts[0]
                     values[-1] = parts[1]
+
+                if _exclude and values[0].startswith(_exclude):
+                    log.debug(f'Skipped loading of excluded value: {values[0]}')
+                    continue
+
                 yield self.get(*values)
 
-    def filter(self, **query):
-        for item in self.all():
+    def filter(self, *, _exclude: str = '', **query):
+        for item in self.all(_exclude=_exclude):
             match = True
             for key, value in query.items():
                 if getattr(item, key) != value:

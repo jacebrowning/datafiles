@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 from shutil import rmtree
 
+import log
 import pytest
 
 from datafiles import settings
@@ -16,6 +17,7 @@ xfail_on_ci = pytest.mark.xfail(bool(os.getenv('CI')), reason="Flaky on CI")
 def pytest_configure(config):
     terminal = config.pluginmanager.getplugin('terminal')
     terminal.TerminalReporter.showfspath = False
+    log.init()  # TODO: determine why the 'relpath' filter wasn't added automatically
 
 
 def pytest_collection_modifyitems(items):
