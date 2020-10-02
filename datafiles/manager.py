@@ -8,10 +8,10 @@ import os
 from glob import iglob
 from pathlib import Path
 from typing import TYPE_CHECKING, Iterator, Optional
-from typing_extensions import Protocol
 
 import log
 from parse import parse
+from typing_extensions import Protocol
 
 from . import hooks
 
