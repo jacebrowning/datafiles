@@ -264,7 +264,7 @@ class Mapper:
             if _log:
                 log.info(f"Saving '{self.classname}' object to '{self.relpath}'")
         else:
-            raise RuntimeError(f"'pattern' must be set to save the model")
+            raise RuntimeError("'pattern' must be set to save the model")
 
         with hooks.disabled():
             text = self._get_text(include_default_values=include_default_values)

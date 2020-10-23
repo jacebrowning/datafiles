@@ -46,7 +46,7 @@ $(DEPENDENCIES): poetry.lock
 	@ touch $@
 
 poetry.lock: pyproject.toml
-	poetry lock
+	poetry lock --no-update
 	@ touch $@
 
 .cache:
