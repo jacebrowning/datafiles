@@ -47,7 +47,7 @@ def map_type(cls, *, name: str = '', item_cls: Optional[type] = None):
     if dataclasses.is_dataclass(cls):
         converters = {}
         for field in dataclasses.fields(cls):
-            converters[field.name] = map_type(field.type, name=field.name)
+            converters[field.name] = map_type(field.type, name=field.name)  # type: ignore
         converter = Dataclass.of_mappings(cls, converters)
         log.debug(f'Mapped {cls!r} to new converter: {converter}')
         return converter
