@@ -58,8 +58,11 @@ def map_type(cls, *, name: str = '', item_cls: Optional[type] = None):
         if cls.__origin__ == list:
             try:
                 converter = map_type(item_cls or cls.__args__[0])
-            except TypeError as e:
+            except TypeError as e:  # Python 3.8 behavior
                 assert '~T' in str(e), f'Unhandled error: {e}'
+                raise TypeError("Type is required with 'List' annotation") from None
+            except AttributeError as e:  # Python 3.9 behavior
+                assert '__args__' in str(e), f'Unhandled error: {e}'
                 raise TypeError("Type is required with 'List' annotation") from None
             else:
                 converter = List.of_type(converter)
@@ -73,8 +76,13 @@ def map_type(cls, *, name: str = '', item_cls: Optional[type] = None):
                 try:
                     key = map_type(cls.__args__[0])
                     value = map_type(cls.__args__[1])
-                except TypeError as e:
+                except TypeError as e:  # Python 3.8 behavior
                     assert '~' in str(e), f'Unhandled error: {e}'
+                    raise TypeError(
+                        "Types are required with 'Dict' annotation"
+                    ) from None
+                except AttributeError as e:  # Python 3.9 behavior
+                    assert '__args__' in str(e), f'Unhandled error: {e}'
                     raise TypeError(
                         "Types are required with 'Dict' annotation"
                     ) from None
