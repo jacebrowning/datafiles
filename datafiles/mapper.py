@@ -212,7 +212,7 @@ class Mapper:
                 log.warn(f'{name!r} list type cannot be inferred')
                 item_cls = Converter
             log.debug(f'Inferring {name!r} type: {cls} of {item_cls}')
-            return map_type(cls, name=name, item_cls=item_cls)
+            return map_type(cls, name=name, item_cls=item_cls)  # type: ignore
 
         if issubclass(cls, dict):
             cls.__origin__ = dict
@@ -290,7 +290,7 @@ def create_mapper(obj, root=None) -> Mapper:
         for field in dataclasses.fields(obj):
             self_name = f'self.{field.name}'
             if pattern is None or self_name not in pattern:
-                attrs[field.name] = map_type(field.type, name=field.name)
+                attrs[field.name] = map_type(field.type, name=field.name)  # type: ignore
 
     return Mapper(
         obj,
