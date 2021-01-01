@@ -1,2 +1,2 @@
-mkdocs==1.0.4
-Pygments==2.7.1
+mkdocs @ file:///Users/Browning/Library/Caches/pypoetry/artifacts/e5/99/40/ea12a1537f1ac078ea1e60daddb6e0146998f05524ac67801841df7912/mkdocs-1.0.4-py2.py3-none-any.whl
+Pygments @ file:///Users/Browning/Library/Caches/pypoetry/artifacts/55/19/01/03c29b8b02ada7deea787fb6022cc1a5fe851e0916c1512823fc3e2059/Pygments-2.7.1-py3-none-any.whl

@@ -82,7 +82,7 @@ pytest-profiling = "*"
 
 # Coverage
 coverage = "<5"
-coveragespace = "^3.1.1"
+coveragespace = "^4.0"
 
 # Documentation
 mkdocs = "~1.0"

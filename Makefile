@@ -1,14 +1,5 @@
-# Project settings
-PROJECT := Datafiles
 PACKAGE := datafiles
-REPOSITORY := jacebrowning/datafiles
-
-# Project paths
-PACKAGES := $(PACKAGE) tests
 MODULES := $(wildcard $(PACKAGE)/*.py)
-
-# Virtual environment paths
-VIRTUAL_ENV ?= .venv
 
 # MAIN TASKS ##################################################################
 
@@ -35,6 +26,7 @@ doctor:  ## Confirm system dependencies are available
 
 # PROJECT DEPENDENCIES ########################################################
 
+VIRTUAL_ENV ?= .venv
 DEPENDENCIES := $(VIRTUAL_ENV)/.poetry-$(shell bin/checksum pyproject.toml poetry.lock)
 
 .PHONY: install
@@ -56,8 +48,8 @@ poetry.lock: pyproject.toml
 
 .PHONY: format
 format: install
-	poetry run isort $(PACKAGES)
-	poetry run black $(PACKAGES)
+	poetry run isort $(PACKAGE) tests
+	poetry run black $(PACKAGE) tests
 	@ echo
 
 .PHONY: check
@@ -65,16 +57,16 @@ check: install format  ## Run formaters, linters, and static analysis
 ifdef CI
 	git diff --exit-code
 endif
-	poetry run mypy $(PACKAGES) --config-file=.mypy.ini
-	- poetry run pylint $(PACKAGES) --rcfile=.pylint.ini
-	poetry run pydocstyle $(PACKAGES)
+	poetry run mypy $(PACKAGE) tests --config-file=.mypy.ini
+	poetry run pylint $(PACKAGE) tests --rcfile=.pylint.ini
+	poetry run pydocstyle $(PACKAGE) tests
 
 # TESTS #######################################################################
 
 .PHONY: test
 test: install  ## Run unit and integration tests
 	poetry run pytest --random
-	poetry run coveragespace $(REPOSITORY) overall
+	poetry run coveragespace update overall
 
 .PHONY: test-repeat
 test-repeat: install
