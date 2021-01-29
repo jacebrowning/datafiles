@@ -187,6 +187,13 @@ def describe_converter():
             with expect.raises(ValueError):
                 convert(42)
 
+        @pytest.mark.xfail(
+            reason='https://github.com/jacebrowning/datafiles/issues/194'
+        )
+        def when_optional_enum(expect):
+            convert = converters.map_type(Optional[Color]).to_python_value
+            expect(convert(None)).is_(None)
+
         def when_invalid(expect):
             message = "invalid literal for int() with base 10: 'a'"
             with expect.raises(ValueError, message):
@@ -268,6 +275,13 @@ def describe_converter():
         def when_enum(expect):
             convert = converters.map_type(Color).to_preserialization_data
             expect(convert(Color.RED)) == 1
+
+        @pytest.mark.xfail(
+            reason='https://github.com/jacebrowning/datafiles/issues/194'
+        )
+        def when_optional_enum(expect):
+            convert = converters.map_type(Optional[Color]).to_preserialization_data
+            expect(convert(None)).is_(None)
 
         def when_invalid(expect):
             message = "invalid literal for int() with base 10: 'a'"
