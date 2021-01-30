@@ -3,6 +3,24 @@
 from typing import Any
 
 
+class Optional:
+    """Class to mixin for Optional[] types."""
+
+    @classmethod
+    def to_python_value(cls, deserialized_data, **kwargs):
+        if deserialized_data is None:
+            return None
+
+        return super().to_python_value(deserialized_data, **kwargs)
+
+    @classmethod
+    def to_preserialization_data(cls, python_value, **kwargs):
+        if python_value is None:
+            return None
+
+        return super().to_preserialization_data(python_value, **kwargs)
+
+
 class Converter:
     """Base class for immutable attribute conversion."""
 
@@ -12,7 +30,7 @@ class Converter:
     @classmethod
     def as_optional(cls):
         name = 'Optional' + cls.__name__
-        bases = (cls,)
+        bases = (Optional, cls)
         attributes = {'DEFAULT': None}
         return type(name, bases, attributes)
 

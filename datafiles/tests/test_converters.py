@@ -187,9 +187,6 @@ def describe_converter():
             with expect.raises(ValueError):
                 convert(42)
 
-        @pytest.mark.xfail(
-            reason='https://github.com/jacebrowning/datafiles/issues/194'
-        )
         def when_optional_enum(expect):
             convert = converters.map_type(Optional[Color]).to_python_value
             expect(convert(None)).is_(None)
@@ -276,9 +273,6 @@ def describe_converter():
             convert = converters.map_type(Color).to_preserialization_data
             expect(convert(Color.RED)) == 1
 
-        @pytest.mark.xfail(
-            reason='https://github.com/jacebrowning/datafiles/issues/194'
-        )
         def when_optional_enum(expect):
             convert = converters.map_type(Optional[Color]).to_preserialization_data
             expect(convert(None)).is_(None)
