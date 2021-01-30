@@ -38,7 +38,6 @@ def describe_number():
             """
         )
 
-    @pytest.mark.flaky
     def with_integer_to_float(sample, expect):
         write(
             'tmp/sample.yml',
@@ -73,7 +72,6 @@ def describe_text():
             """
         )
 
-    @pytest.mark.flaky
     def with_multiple_lines(sample, expect):
         sample.text = '\n'.join(f'Line {i+1}' for i in range(3))
 

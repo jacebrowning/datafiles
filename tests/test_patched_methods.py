@@ -5,8 +5,6 @@
 from dataclasses import dataclass, field
 from typing import Dict, List
 
-import pytest
-
 from datafiles import datafile
 from datafiles.utils import dedent, logbreak, read, write
 
@@ -32,7 +30,6 @@ class SampleWithNesting:
 
 
 def describe_automatic_load():
-    @pytest.mark.flaky
     def with_getattribute(expect):
         sample = Sample()
 
@@ -48,7 +45,6 @@ def describe_automatic_load():
 
 
 def describe_automatic_save():
-    @pytest.mark.flaky
     def with_setattr(expect):
         sample = Sample()
 
@@ -186,7 +182,6 @@ def describe_automatic_save():
 
 
 def describe_automatic_load_before_save():
-    @pytest.mark.flaky
     def with_setattr(expect):
         sample = Sample()
 

@@ -2,8 +2,6 @@
 
 from datetime import datetime
 
-import pytest
-
 from datafiles import Missing, converters, datafile
 
 
@@ -31,7 +29,6 @@ class DateTimeConverter(converters.Converter):
         return datetime.fromisoformat(deserialized_data)
 
 
-@pytest.mark.flaky
 def test_extension(expect):
     @datafile("../tmp/sample.yml")
     class Timestamp:
@@ -47,7 +44,6 @@ def test_extension(expect):
     expect(ts.dt.day) == 11
 
 
-@pytest.mark.flaky
 def test_extension_with_default(expect):
     @datafile("../tmp/sample.yml")
     class Timestamp:
@@ -63,7 +59,6 @@ def test_extension_with_default(expect):
     expect(ts.dt.day) == 11
 
 
-@pytest.mark.flaky
 def test_registration(expect):
 
     converters.register(datetime, DateTimeConverter)
@@ -82,7 +77,6 @@ def test_registration(expect):
     expect(ts.dt.day) == 22
 
 
-@pytest.mark.flaky
 def test_registration_with_default(expect):
 
     converters.register(datetime, DateTimeConverter)
