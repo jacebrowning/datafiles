@@ -1,5 +1,3 @@
-# pylint: disable=unused-argument
-
 from typing import Any
 
 
@@ -11,17 +9,17 @@ class Optional:
         if deserialized_data is None:
             return None
 
-        return super().to_python_value(deserialized_data, **kwargs)
+        return super().to_python_value(deserialized_data, **kwargs)  # type: ignore
 
     @classmethod
     def to_preserialization_data(cls, python_value, **kwargs):
         if python_value is None:
             return None
 
-        return super().to_preserialization_data(python_value, **kwargs)
+        return super().to_preserialization_data(python_value, **kwargs)  # type: ignore
 
 
-class Converter:
+class Converter:  # pylint: disable=unused-argument
     """Base class for immutable attribute conversion."""
 
     TYPE: type = object

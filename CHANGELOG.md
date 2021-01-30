@@ -2,6 +2,7 @@
 
 - Added `_exclude` parameter to `all()` and `filter()` manager methods to exclude certain objects from loading as a performance optimization.
 - Fixed handling of untyped `List`/`Dict` annotations in Python 3.9.
+- Fixed `ValueError` when setting an `Optional[<enum>]` to `None`.
 
 # 0.11.1 (2020-09-12)
 
