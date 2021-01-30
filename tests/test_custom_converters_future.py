@@ -11,7 +11,6 @@ from datafiles import datafile
 from .test_custom_converters import MyDateTime
 
 
-@pytest.mark.flaky
 def test_extension(expect):
     @datafile("../tmp/sample.yml")
     class MyObject:

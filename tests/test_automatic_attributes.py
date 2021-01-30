@@ -1,8 +1,6 @@
 # pylint: disable=unused-variable
 
 
-import pytest
-
 from datafiles import datafile
 from datafiles.utils import logbreak
 
@@ -13,7 +11,6 @@ class Sample:
 
 
 def describe_auto_attr():
-    @pytest.mark.flaky
     def with_builtin(expect):
         sample = Sample('abc')
 
@@ -28,7 +25,6 @@ def describe_auto_attr():
         logbreak("Getting attribute")
         expect(sample.count) == 4
 
-    @pytest.mark.flaky
     def with_empty_list(expect):
         sample = Sample('abc')
 
@@ -44,7 +40,6 @@ def describe_auto_attr():
         logbreak("Getting attribute")
         expect(sample.empty_items) == [4.2, "abc"]
 
-    @pytest.mark.flaky
     def with_homogeneous_list(expect):
         sample = Sample('abc')
 
@@ -59,7 +54,6 @@ def describe_auto_attr():
         logbreak("Getting attribute")
         expect(sample.same_items) == [1, 2, 3]
 
-    @pytest.mark.flaky
     def with_heterogeneous_list(expect):
         sample = Sample('abc')
 
@@ -74,7 +68,6 @@ def describe_auto_attr():
         logbreak("Getting attribute")
         expect(sample.mixed_items) == [1, "abc", 3.2]
 
-    @pytest.mark.flaky
     def with_dict(expect):
         sample = Sample('abc')
 
