@@ -42,6 +42,7 @@ def describe_automatic_load():
             item: b
             """,
         )
+        sample.datafile._last_load = 0.0
 
         logbreak("Getting attribute")
         expect(sample.item) == 'b'
@@ -196,6 +197,7 @@ def describe_automatic_load_before_save():
             item: 42
             """,
         )
+        sample.datafile._last_load = 0.0
 
         expect(sample.item) == '42'
 

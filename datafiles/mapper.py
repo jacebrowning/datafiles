@@ -161,6 +161,7 @@ class Mapper:
     @text.setter
     def text(self, value: str):
         write(self.path, value.strip() + '\n', display=True)
+        self._last_load = 0.0
 
     def _get_text(self, **kwargs) -> str:
         data = self._get_data(**kwargs)

@@ -46,6 +46,7 @@ def describe_number():
             number: 5
             """,
         )
+        sample.datafile._last_load = 0.0
 
         expect(sample.number) == 5
 
@@ -55,6 +56,7 @@ def describe_number():
             number: 6.78
             """,
         )
+        sample.datafile._last_load = 0.0
 
         sample.number = 6.7
 
@@ -95,6 +97,7 @@ def describe_text():
               Line 6
             """,
         )
+        sample.datafile._last_load = 0.0
 
         expect(sample.text) == "Line 4\nLine 5\nLine 6\n"
 
