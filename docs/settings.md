@@ -80,3 +80,15 @@ This setting controls the underlying YAML library used to read and write files. 
 
 - `'ruamel.yaml'` (default)
 - `'PyYAML'`
+
+# `WRITE_DELAY`
+
+One some file systems, the modification time of a file ([`st_mtime`](https://docs.python.org/3/library/os.html#os.stat_result.st_mtime)) is unchanged if a file is read immediately after writing. This may cause intermittent issues if your use case involves rapidly changing files.
+
+To compensate for this, a short delay can be inserted after `datafiles` writes to the file system:
+
+```python
+import datafiles
+
+datafiles.settings.WRITE_DELAY = 0.01  # seconds
+```

@@ -8,6 +8,7 @@ from datafiles import settings
 
 
 settings.HIDE_TRACEBACK_IN_HOOKS = False
+settings.WRITE_DELAY = 0.1
 
 
 def pytest_configure(config):
