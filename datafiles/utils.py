@@ -1,6 +1,7 @@
 """Internal helper functions."""
 
 import dataclasses
+import time
 from contextlib import suppress
 from functools import lru_cache
 from pathlib import Path
@@ -114,6 +115,7 @@ def write(filename_or_path: Union[str, Path], text: str, *, display=False) -> No
 
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(text)
+    time.sleep(0.01)  # ensure the file modification time changes
 
 
 def read(filename: str, *, display=False) -> str:
