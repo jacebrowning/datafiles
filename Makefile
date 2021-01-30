@@ -130,7 +130,7 @@ $(DIST_FILES): $(MODULES) pyproject.toml
 upload: dist  ## Upload the current version to PyPI
 	git diff --name-only --exit-code
 	poetry publish
-	bin/open https://pypi.org/project/$(PROJECT)
+	bin/open https://pypi.org/project/$(PACKAGE)
 
 # CLEANUP #####################################################################
 
