@@ -1,2 +1,3 @@
-mkdocs @ file:///Users/Browning/Library/Caches/pypoetry/artifacts/e5/99/40/ea12a1537f1ac078ea1e60daddb6e0146998f05524ac67801841df7912/mkdocs-1.0.4-py2.py3-none-any.whl
-Pygments @ file:///Users/Browning/Library/Caches/pypoetry/artifacts/55/19/01/03c29b8b02ada7deea787fb6022cc1a5fe851e0916c1512823fc3e2059/Pygments-2.7.1-py3-none-any.whl
+mkdocs==1.0.4; (python_full_version >= "2.7.9" and python_full_version < "3.0.0") or (python_full_version >= "3.4.0")
+jupyterlab-pygments==0.1.2; python_version >= "3.6"
+pygments==2.7.1; python_version >= "3.5"
