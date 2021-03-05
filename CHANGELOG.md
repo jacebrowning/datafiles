@@ -1,4 +1,4 @@
-# 0.12 (beta)
+# 0.12 (2021-03-05)
 
 - Added `_exclude` parameter to `all()` and `filter()` manager methods to exclude certain objects from loading as a performance optimization.
 - Fixed handling of untyped `List`/`Dict` annotations in Python 3.9.
