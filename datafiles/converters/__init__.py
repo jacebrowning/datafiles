@@ -95,6 +95,10 @@ def map_type(cls, *, name: str = '', item_cls: Optional[type] = None):
             assert cls.__args__[1] == type(None)
             converter = converter.as_optional()
 
+        elif issubclass(cls.__origin__, Converter):
+            subtypes = [map_type(t) for t in cls.__args__]
+            converter = cls.__origin__.as_generic(subtypes)
+
         if converter:
             log.debug(f'Mapped {cls!r} to new converter: {converter}')
             return converter
