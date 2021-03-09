@@ -23,6 +23,7 @@ nav:
       - Containers: types/containers.md
       - Extended Types: types/extensions.md
       - Custom Types: types/custom.md
+      - Generic Types: types/generics.md
   - File Formats: formats.md
   - Utilities: utilities.md
   - Settings: settings.md

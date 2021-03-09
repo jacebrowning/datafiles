@@ -1,6 +1,5 @@
 # pylint: disable=arguments-differ
 
-from dataclasses import dataclass
 from typing import Generic, List, TypeVar
 
 from datafiles import Missing, converters, datafile
@@ -55,7 +54,7 @@ def test_generic_converters(expect):
     d.datafile.text = dedent(
         """
         contents:
-         -    - degrees
+          -   - degrees
               - 360
         """
     )

@@ -1,6 +1,5 @@
 # pylint: disable=unused-variable
 
-from dataclasses import dataclass
 from typing import Generic, List, Optional, TypeVar
 
 import pytest
