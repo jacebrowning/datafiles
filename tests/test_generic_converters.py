@@ -1,4 +1,4 @@
-# pylint: disable=arguments-differ
+# pylint: disable=arguments-differ,unused-argument
 
 from typing import Generic, List, TypeVar
 
@@ -20,25 +20,21 @@ def test_generic_converters(expect):
 
         @classmethod
         def to_python_value(cls, deserialized_data, *, target_object=None):
-            paired = zip(cls.CONVERTERS, deserialized_data)
+            paired = zip(cls.CONVERTERS, deserialized_data)  # type: ignore
             values = [convert.to_python_value(val) for convert, val in paired]
             return cls(*values)
 
         @classmethod
         def to_preserialization_data(cls, python_value, *, default_to_skip=None):
             values = [python_value.first, python_value.second]
-            paired = zip(cls.CONVERTERS, values)
-            return [
-                convert.to_preserialization_data(val)
-                for convert, val in paired
-            ]
-
+            paired = zip(cls.CONVERTERS, values)  # type: ignore
+            return [convert.to_preserialization_data(val) for convert, val in paired]
 
     @datafile("../tmp/sample.yml")
     class Dictish:
         contents: List[Pair[str, converters.Number]]
 
-    d = Dictish([Pair[str, converters.Number]("pi", 3.14)])
+    d = Dictish([Pair[str, converters.Number]("pi", 3.14)])  # type: ignore
     expect(d.datafile.text) == dedent(
         """
         contents:
@@ -47,7 +43,7 @@ def test_generic_converters(expect):
         """
     )
 
-    d = Dictish(Missing)
+    d = Dictish(Missing)  # type: ignore
     expect(d.contents[0].first) == "pi"
     expect(d.contents[0].second) == 3.14
 

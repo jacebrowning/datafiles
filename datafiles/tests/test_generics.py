@@ -1,11 +1,8 @@
-# pylint: disable=unused-variable
+# pylint: disable=unused-variable,unused-argument
 
-from typing import Generic, List, Optional, TypeVar
+from typing import Generic, List, TypeVar
 
-import pytest
-from ruamel.yaml.scalarstring import LiteralScalarString
-
-from datafiles import converters, settings
+from datafiles import converters
 
 
 T = TypeVar("T")
@@ -17,7 +14,7 @@ class Fibonacci(Generic[T], converters.Converter):
         self.second = second
 
     def next(self) -> T:
-        self.first, self.second = self.second, self.first + self.second
+        self.first, self.second = self.second, self.first + self.second  # type: ignore
         return self.second
 
     @classmethod
@@ -58,5 +55,7 @@ def describe_converter():
 
     def describe_to_preserialization_data():
         def when_generic(expect):
-            convert = Fibonacci.as_generic([converters.Integer]).to_preserialization_data
+            convert = Fibonacci.as_generic(
+                [converters.Integer]
+            ).to_preserialization_data
             expect(convert(Fibonacci[int](1, 2))) == [1, 2]

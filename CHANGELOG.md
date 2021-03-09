@@ -1,3 +1,7 @@
+# 0.13 (beta)
+
+- Added support for generic types.
+
 # 0.12 (2021-03-05)
 
 - Added `_exclude` parameter to `all()` and `filter()` manager methods to exclude certain objects from loading as a performance optimization.
