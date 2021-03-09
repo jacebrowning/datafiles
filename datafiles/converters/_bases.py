@@ -26,6 +26,16 @@ class Converter:  # pylint: disable=unused-argument
     DEFAULT: Any = NotImplemented
 
     @classmethod
+    def as_generic(cls, subtypes):
+        name = "Generic"
+        for t in subtypes:
+            name += t.__name__
+        name += cls.__name__
+        bases = (cls,)
+        attributes = {'CONVERTERS': subtypes}
+        return type(name, bases, attributes)
+
+    @classmethod
     def as_optional(cls):
         name = 'Optional' + cls.__name__
         bases = (Optional, cls)
