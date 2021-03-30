@@ -55,6 +55,9 @@ cached_property = "^1.5"
 classproperties = "~0.1.3"
 minilog = "^2.0"
 
+# Async
+aiopath = "~0.4.6"
+
 # Typing
 typing-extensions = "^3.7"
 

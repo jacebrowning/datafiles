@@ -4,7 +4,7 @@ import log
 from classproperties import classproperty
 
 from . import config, hooks, settings
-from .manager import Manager
+from .manager import AsyncManager, Manager
 from .mapper import create_mapper
 
 
@@ -40,6 +40,10 @@ class Model:
     @classproperty
     def objects(cls) -> Manager:  # pylint: disable=no-self-argument
         return Manager(cls)
+
+    @classproperty
+    def async_objects(cls) -> AsyncManager:  # pylint: disable=no-self-argument
+        return AsyncManager(cls)
 
 
 def create_model(
@@ -84,6 +88,7 @@ def create_model(
     # Patch manager
 
     cls.objects = Manager(cls)
+    cls.async_objects = AsyncManager(cls)
 
     # Patch __init__
 
