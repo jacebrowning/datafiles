@@ -71,7 +71,7 @@ bar:
   qux: Hello, world!
 ```
 
-For convenience, `@datafile` can also be used in place of `@dataclass`:
+For convenience, `@datafile` can also be used in place of `@dataclass` to minimize the number of imports:
 
 ```python hl_lines="4"
 from datafiles import datafile

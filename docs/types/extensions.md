@@ -35,3 +35,20 @@ from datafiles.converters import Text
 | `foobar: Text`           | `foobar = "First\nSecond\n"` | `foobar: |`<br>&nbsp;&nbsp;&nbsp;&nbsp;`First`<br>&nbsp;&nbsp;&nbsp;&nbsp;`Second` |
 | `foobar: Text`           | `foobar = None`              | `foobar: ''`                                                                       |
 | `foobar: Optional[Text]` | `foobar = None`              | `foobar:`                                                                          |
+
+## Enumerations
+
+Subclasses of `enum.Enum` can also be used as type annotations:
+
+```python
+from enum import Enum
+
+class Color:
+    RED = 1
+    GREEN = 2
+    BLUE = 3
+```
+
+| Type Annotation | Python Value         | YAML Content |
+| --------------- | -------------------- | ------------ |
+| `color: Color`  | `color = Color.BLUE` | `color: 3`   |

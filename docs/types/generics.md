@@ -45,11 +45,13 @@ class Dictish:
     contents: List[Pair[str, converters.Number]]
 ```
 
+which can be constructed like so:
+
 ```python
 dictish = Dictish([Pair("a", 1), Pair("pi", 3.14)])
 ```
 
-yields a serialized yaml of:
+to save this `sample.yml` file:
 
 ```yaml
 contents:
@@ -58,3 +60,5 @@ contents:
   -   - pi
       - 3.14
 ```
+
+An example of using generic types can be found in this [Jupyter Notebook](https://github.com/jacebrowning/datafiles/blob/main/notebooks/generic_types.ipynb).

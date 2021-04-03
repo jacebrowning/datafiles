@@ -44,7 +44,6 @@ and decorate it with a directory pattern to synchronize instances:
 from datafiles import datafile
 
 @datafile("inventory/items/{self.name}.yml")
-@dataclass
 class InventoryItem:
     ...
 ```
