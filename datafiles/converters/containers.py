@@ -92,8 +92,36 @@ class Set(List):
     """Base converter for sets."""
 
     @classmethod
-    def to_python_value(cls, deserialized_data, **kwargs):
-        return set(super().to_python_value(deserialized_data, **kwargs))
+    def to_python_value(cls, deserialized_data, *, target_object):
+        if target_object is None or target_object is Missing:
+            value = set()
+        else:
+            value = target_object
+            value.clear()
+
+        convert = cls.CONVERTER.to_python_value
+
+        if deserialized_data is None:
+            pass
+
+        elif isinstance(deserialized_data, Iterable) and all(
+            (item is None for item in deserialized_data)
+        ):
+            pass
+
+        elif isinstance(deserialized_data, str):
+            for item in deserialized_data.split(','):
+                value.add(convert(item))
+        else:
+            try:
+                items = iter(deserialized_data)
+            except TypeError:
+                value.add(convert(deserialized_data, target_object=None))
+            else:
+                for item in items:
+                    value.add(convert(item, target_object=None))
+
+        return value
 
 
 class Dictionary(Converter):

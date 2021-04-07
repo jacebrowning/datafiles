@@ -90,12 +90,12 @@ class SampleWithSet:
 
 @datafile('../tmp/sample.yml', manual=True)
 class SampleWithSetAndDefaults:
-    items: Set[float] = field(default_factory=list)
+    items: Set[float] = field(default_factory=set)
 
 
 @datafile('../tmp/sample.yml', manual=True)
 class SampleWithSetOfDataclasses:
-    items: Set[_FrozenNestedSample1] = field(default_factory=list)
+    items: Set[_FrozenNestedSample1] = field(default_factory=set)
 
 
 @datafile('../tmp/sample.yml', manual=True)

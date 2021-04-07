@@ -1,6 +1,7 @@
 # 0.13 (beta)
 
 - Added support for generic types.
+- Added support for sets.
 
 # 0.12 (2021-03-05)
 
