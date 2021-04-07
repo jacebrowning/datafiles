@@ -178,7 +178,7 @@ def describe_converter():
                 (MyDict, {}, {}),
                 (MyDict, {'a': 1}, {'a': 1}),
                 (IntegerSet, set(), set()),
-                (IntegerSet, '1, 2.3', {1, 2}),
+                (IntegerSet, '1, 1.1, 1.9, 2.3, 3', {1, 2, 3}),
                 (IntegerSet, '42', {42}),
                 (IntegerSet, 42, {42}),
                 (IntegerSet, None, set()),
