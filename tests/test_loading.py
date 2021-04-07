@@ -17,6 +17,10 @@ from .samples import (
     SampleWithListAndDefaults,
     SampleWithListOfDataclasses,
     SampleWithNesting,
+    SampleWithSet,
+    SampleWithSetAndDefaults,
+    SampleWithSetOfDataclasses,
+    _FrozenNestedSample1,
     _NestedSample1,
 )
 
@@ -404,3 +408,71 @@ def describe_lists():
         logbreak()
 
         expect(sample.items) == [_NestedSample1(name='abc', score=0.0)]
+
+
+def describe_sets():
+    def with_matching_types(expect):
+        write(
+            'tmp/sample.yml',
+            """
+            items:
+            - 1.2
+            - 3.4
+            """,
+        )
+
+        sample = SampleWithSet(None)
+
+        expect(sample.items) == {1.2, 3.4}
+
+    def with_conversion(expect):
+        write(
+            'tmp/sample.yml',
+            """
+            items: 1, 2.3
+            """,
+        )
+
+        sample = SampleWithSet(None)
+
+        expect(sample.items) == {1.0, 2.3}
+
+    def with_conversion_and_defaults(expect):
+        write(
+            'tmp/sample.yml',
+            """
+            items: 1, 2.3
+            """,
+        )
+
+        sample = SampleWithSetAndDefaults()
+
+        expect(sample.items) == {1.0, 2.3}
+
+    def with_null_set_value(expect):
+        write(
+            'tmp/sample.yml',
+            """
+            items:
+            -
+            """,
+        )
+
+        sample = SampleWithSetOfDataclasses()
+
+        expect(sample.items) == set()
+
+    def with_partial_set_value(expect):
+        write(
+            'tmp/sample.yml',
+            """
+            items:
+            - name: abc
+            """,
+        )
+
+        logbreak()
+        sample = SampleWithSetOfDataclasses()
+        logbreak()
+
+        expect(sample.items) == {_FrozenNestedSample1(name='abc', score=0.0)}

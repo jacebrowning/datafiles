@@ -9,7 +9,7 @@ from ruamel.yaml.scalarfloat import ScalarFloat
 from ..utils import cached
 from ._bases import Converter
 from .builtins import Boolean, Float, Integer, String
-from .containers import Dataclass, Dictionary, List
+from .containers import Dataclass, Dictionary, List, Set
 from .enumerations import Enumeration
 from .extensions import *  # pylint: disable=unused-wildcard-import
 
@@ -66,6 +66,18 @@ def map_type(cls, *, name: str = '', item_cls: Optional[type] = None):
                 raise TypeError("Type is required with 'List' annotation") from None
             else:
                 converter = List.of_type(converter)
+
+        elif cls.__origin__ == set:
+            try:
+                converter = map_type(item_cls or cls.__args__[0])
+            except TypeError as e:  # Python 3.8 behavior
+                assert '~T' in str(e), f'Unhandled error: {e}'
+                raise TypeError("Type is required with 'Set' annotation") from None
+            except AttributeError as e:  # Python 3.9 behavior
+                assert '__args__' in str(e), f'Unhandled error: {e}'
+                raise TypeError("Type is required with 'Set' annotation") from None
+            else:
+                converter = Set.of_type(converter)
 
         elif isclass(cls.__origin__) and issubclass(cls.__origin__, Mapping):
             if item_cls:

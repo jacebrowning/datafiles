@@ -17,7 +17,7 @@ class List(Converter):
 
     @classmethod
     def of_type(cls, converter: type):
-        name = f'{converter.__name__}List'
+        name = f'{converter.__name__}{cls.__name__}'
         bases = (cls,)
         attributes = {'CONVERTER': converter}
         return type(name, bases, attributes)
@@ -86,6 +86,14 @@ class List(Converter):
             return data or [None]
 
         return data
+
+
+class Set(List):
+    """Base converter for sets."""
+
+    @classmethod
+    def to_python_value(cls, deserialized_data, **kwargs):
+        return set(super().to_python_value(deserialized_data, **kwargs))
 
 
 class Dictionary(Converter):

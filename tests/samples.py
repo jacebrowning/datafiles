@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import List, Optional
+from typing import List, Optional, Set
 
 from datafiles import datafile
 from datafiles.converters import String
@@ -42,6 +42,12 @@ class _NestedSample1:
     score: float
 
 
+@dataclass(frozen=True)
+class _FrozenNestedSample1:
+    name: str
+    score: float
+
+
 @datafile('../tmp/sample.yml', manual=True)
 class SampleWithNesting:
     name: str
@@ -75,6 +81,21 @@ class SampleWithListAndDefaults:
 @datafile('../tmp/sample.yml', manual=True)
 class SampleWithListOfDataclasses:
     items: List[_NestedSample1] = field(default_factory=list)
+
+
+@datafile('../tmp/sample.yml', manual=True)
+class SampleWithSet:
+    items: Set[float]
+
+
+@datafile('../tmp/sample.yml', manual=True)
+class SampleWithSetAndDefaults:
+    items: Set[float] = field(default_factory=list)
+
+
+@datafile('../tmp/sample.yml', manual=True)
+class SampleWithSetOfDataclasses:
+    items: Set[_FrozenNestedSample1] = field(default_factory=list)
 
 
 @datafile('../tmp/sample.yml', manual=True)
