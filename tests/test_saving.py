@@ -18,6 +18,9 @@ from .samples import (
     SampleWithNesting,
     SampleWithNestingAndDefaults,
     SampleWithOptionals,
+    SampleWithSet,
+    SampleWithSetOfDataclasses,
+    _FrozenNestedSample1,
     _NestedSample1,
 )
 
@@ -108,6 +111,52 @@ def describe_lists():
 
     def with_dataclasses(expect):
         sample = SampleWithListOfDataclasses([_NestedSample1('foobar', 42)])
+
+        logbreak("Saving")
+        sample.datafile.save()
+
+        with open('tmp/sample.yml') as f:
+            expect(f.read()) == dedent(
+                """
+                items:
+                  - name: foobar
+                    score: 42.0
+                """
+            )
+
+
+def describe_sets():
+    def when_empty(expect):
+        sample = SampleWithSet({})
+
+        sample.datafile.save()
+
+        with open('tmp/sample.yml') as f:
+            expect(f.read()) == dedent(
+                """
+                items:
+                  -
+                """
+            )
+
+    def with_conversion(expect):
+        sample = SampleWithSet({1, 2.3, '4.5'})
+
+        logbreak("Saving")
+        sample.datafile.save()
+
+        with open('tmp/sample.yml') as f:
+            expect(f.read()) == dedent(
+                """
+                items:
+                  - 1.0
+                  - 2.3
+                  - 4.5
+                """
+            )
+
+    def with_dataclasses(expect):
+        sample = SampleWithSetOfDataclasses({_FrozenNestedSample1('foobar', 42)})
 
         logbreak("Saving")
         sample.datafile.save()

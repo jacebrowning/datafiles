@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass
 from enum import Enum
-from typing import ByteString, Dict, List, Mapping, Optional
+from typing import ByteString, Dict, List, Mapping, Optional, Set
 
 import pytest
 from ruamel.yaml.scalarstring import LiteralScalarString
@@ -39,6 +39,8 @@ class Color(Enum):
 IntegerList = converters.List.of_type(converters.Integer)
 StringList = converters.List.of_type(converters.String)
 MyDict = converters.Dictionary.of_mapping(converters.String, converters.Integer)
+IntegerSet = converters.Set.of_type(converters.Integer)
+StringSet = converters.Set.of_type(converters.String)
 MyDataclassConverter = converters.map_type(MyDataclass)
 MyDataclassConverterList = converters.map_type(List[MyDataclass])
 
@@ -61,6 +63,20 @@ def describe_map_type():
     def it_requires_list_annotations_to_have_a_type(expect):
         with expect.raises(TypeError, "Type is required with 'List' annotation"):
             converters.map_type(List)
+
+    def it_handles_set_annotations(expect):
+        converter = converters.map_type(Set[str])
+        expect(converter.__name__) == 'StringSet'
+        expect(converter.CONVERTER) == converters.String
+
+    def it_handles_set_annotations_of_dataclasses(expect):
+        converter = converters.map_type(Set[MyDataclass])
+        expect(converter.__name__) == 'MyDataclassConverterSet'
+        expect(converter.CONVERTER.__name__) == 'MyDataclassConverter'
+
+    def it_requires_set_annotations_to_have_a_type(expect):
+        with expect.raises(TypeError, "Type is required with 'Set' annotation"):
+            converters.map_type(Set)
 
     def it_handles_dict_annotations(expect):
         converter = converters.map_type(Dict[str, int])
@@ -161,6 +177,12 @@ def describe_converter():
                 (MyDict, None, {}),
                 (MyDict, {}, {}),
                 (MyDict, {'a': 1}, {'a': 1}),
+                (IntegerSet, set(), set()),
+                (IntegerSet, '1, 2.3', {1, 2}),
+                (IntegerSet, '42', {42}),
+                (IntegerSet, 42, {42}),
+                (IntegerSet, None, set()),
+                (IntegerSet, [None], set()),
                 (MyDataclassConverter, None, MyDataclass(foobar=0)),
                 (MyDataclassConverter, MyDataclass(42), MyDataclass(foobar=42)),
                 (MyDataclassConverterList, None, []),
@@ -247,6 +269,14 @@ def describe_converter():
                 (StringList, [123, True, False], ['123', 'True', 'False']),
                 (StringList, [], [None]),
                 (StringList, None, [None]),
+                # Sets
+                (StringSet, 'ab', ['ab']),
+                (StringSet, ('b', 1, 'A'), ['b', '1', 'A']),
+                (StringSet, {'b', 1, 'A'}, ['1', 'A', 'b']),
+                (StringSet, 42, ['42']),
+                (StringSet, [123, True, False], ['123', 'True', 'False']),
+                (StringSet, [], [None]),
+                (StringSet, None, [None]),
                 # Dataclasses
                 (MyDataclassConverter, None, {'foobar': 0, 'flag': False}),
                 (MyDataclassConverter, {'foobar': 42}, {'foobar': 42, 'flag': False}),
@@ -302,6 +332,13 @@ def describe_converter():
             data = IntegerList.to_preserialization_data([2], default_to_skip=[1])
             expect(data) == [2]
 
+        def when_Set_with_default(expect):
+            data = IntegerSet.to_preserialization_data([1], default_to_skip=[1])
+            expect(data) == [None]
+
+            data = IntegerSet.to_preserialization_data([2], default_to_skip=[1])
+            expect(data) == [2]
+
         def when_dict_with_default(expect):
             data = MyDict.to_preserialization_data({'a': 1}, default_to_skip={'a': 1})
             expect(data) == {}
@@ -328,6 +365,11 @@ def describe_converter():
         def when_empty_list_and_diff_minimization_disabled(expect, monkeypatch):
             monkeypatch.setattr(settings, 'MINIMIZE_LIST_DIFFS', False)
             data = StringList.to_preserialization_data([])
+            expect(data) == []
+
+        def when_empty_set_and_diff_minimization_disabled(expect, monkeypatch):
+            monkeypatch.setattr(settings, 'MINIMIZE_LIST_DIFFS', False)
+            data = StringSet.to_preserialization_data([])
             expect(data) == []
 
 
