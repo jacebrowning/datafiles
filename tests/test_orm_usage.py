@@ -81,6 +81,20 @@ def test_values_are_filled_from_disk(expect):
     expect(items[0]) == InventoryItem(42, "Things", 0.99)
 
 
+def test_partial_load_from_disk(expect):
+    write(
+        'tmp/inventory/42.yml',
+        """
+        name: Things"
+        """,
+    )
+
+    items = list(InventoryItem.objects.all())
+
+    expect(items[0].unit_price) == 0
+    expect(items[0].quantity_on_hand) == 0
+
+
 def test_missing_optional_fields_are_loaded(expect):
     @datafile
     class Name:
