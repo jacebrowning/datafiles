@@ -148,31 +148,6 @@ def describe_factory_defaults():
         expect(sample.c) == 9.9
 
 
-def describe_computed_defaults():
-    def when_no_file(expect):
-        sample = SampleWithComputedDefaults(1.2, 3.4)
-
-        expect(sample.a) == 1.2
-        expect(sample.b) == 3.4
-        expect(sample.c) == 4.6
-
-    def when_file_exists(expect):
-        write(
-            'tmp/sample.yml',
-            """
-            a: 1.0
-            b: 2.0
-            c: 9.9
-            """,
-        )
-
-        sample = SampleWithComputedDefaults(1.2, 3.4)
-
-        expect(sample.a) == 1.2
-        expect(sample.b) == 3.4
-        expect(sample.c) == 9.9
-
-
 def describe_missing_attributes():
     def when_dataclass(expect):
         @dataclass
