@@ -287,7 +287,7 @@ def create_mapper(obj, root=None) -> Mapper:
     if attrs is None and dataclasses.is_dataclass(obj):
         attrs = {}
         log.debug(f'Mapping attributes for {obj.__class__} object')
-        for field in dataclasses.fields(obj):
+        for field in [field for field in dataclasses.fields(obj) if field.init]:
             self_name = f'self.{field.name}'
             if pattern is None or self_name not in pattern:
                 attrs[field.name] = map_type(field.type, name=field.name)  # type: ignore
