@@ -73,3 +73,40 @@ def test_float_inference(expect):
           - 4.0
         """
     )
+
+
+def test_nested_mutables(expect):
+    write(
+        'tmp/sample.yml',
+        """
+        name: Test
+        roles:
+          category1:
+            - value1
+            - value2
+          category2:
+            - something
+            - else
+        """,
+    )
+
+    logbreak("Inferring object")
+    sample = auto('tmp/sample.yml')
+
+    logbreak("Updating attributes")
+    sample.roles['category1'].append('value3')
+
+    logbreak("Reading file")
+    expect(read('tmp/sample.yml')) == dedent(
+        """
+        name: Test
+        roles:
+          category1:
+            - value1
+            - value2
+            - value3
+          category2:
+            - something
+            - else
+        """
+    )

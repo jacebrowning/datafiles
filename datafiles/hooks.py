@@ -64,6 +64,12 @@ def apply(instance, mapper):
                 item.datafile = create_mapper(item, root=mapper)
                 apply(item, mapper)
 
+    elif isinstance(instance, dict):
+        for value in instance.values():
+            with suppress(AttributeError):
+                value.datafile = create_mapper(value, root=mapper)
+                apply(value, mapper)
+
 
 def load_before(cls, method):
     """Decorate methods that should load before call."""
