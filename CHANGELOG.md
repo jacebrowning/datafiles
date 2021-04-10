@@ -3,6 +3,9 @@
 - Added support for generic types.
 - Added support for sets.
 - Updated default `attrs` to exclude computed properties, i.e. `field(init=False)`.
+- Fixed automatic save when modifying nested dictionary values.
+- Fixed initialization for non-compliant `None` default values.
+
 
 # 0.12 (2021-03-05)
 

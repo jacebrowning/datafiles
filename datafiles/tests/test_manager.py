@@ -34,20 +34,22 @@ def describe_manager():
             expect(manager.get_or_none(foo=3, bar=4)).is_(None)
 
     def describe_get_or_create():
-        @patch('datafiles.mapper.Mapper.load')
         @patch('datafiles.mapper.Mapper.save')
+        @patch('datafiles.mapper.Mapper.load')
         @patch('datafiles.mapper.Mapper.exists', True)
         @patch('datafiles.mapper.Mapper.modified', False)
-        def when_file_exists(mock_load, mock_save, expect, manager):
+        def when_file_exists(mock_save, mock_load, expect, manager):
             expect(manager.get_or_create(foo=1, bar=2)) == MyClass(foo=1, bar=2)
-            expect(mock_load.called).is_(False)
             expect(mock_save.called).is_(True)
+            expect(mock_load.called).is_(False)
 
         @patch('datafiles.mapper.Mapper.save')
+        @patch('datafiles.mapper.Mapper.load')
         @patch('datafiles.mapper.Mapper.exists', False)
-        def when_file_missing(mock_save, expect, manager):
+        def when_file_missing(mock_save, mock_load, expect, manager):
             expect(manager.get_or_create(foo=1, bar=2)) == MyClass(foo=1, bar=2)
             expect(mock_save.called).is_(True)
+            expect(mock_load.called).is_(True)
 
     def describe_all():
         @patch('datafiles.mapper.Mapper.exists', False)
