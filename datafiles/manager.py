@@ -60,7 +60,9 @@ class Manager:
             return self.get(*args, **kwargs)
         except FileNotFoundError:
             log.info(f"File not found, creating '{self.model.__name__}' object")
-            return self.model(*args, **kwargs)
+            instance = self.model(*args, **kwargs)
+            instance.datafile.load()
+            return instance
 
     def all(self, *, _exclude: str = '') -> Iterator[HasDatafile]:
         path = Path(self.model.Meta.datafile_pattern)

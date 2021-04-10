@@ -3,6 +3,7 @@
 # pylint: disable=unused-variable
 
 from dataclasses import dataclass, field
+from typing import Dict
 
 from datafiles import Missing, datafile
 from datafiles.utils import logbreak, write
@@ -169,3 +170,13 @@ def describe_missing_attributes():
         sample2 = Sample(42, Missing)  # type: ignore
 
         expect(sample2.name.value) == "Widget"
+
+    def with_none_defaults(expect):
+        @datafile("../tmp/sample.yml")
+        class Config:
+            name: str = None  # type: ignore
+            channels: Dict[str, str] = None  # type: ignore
+
+        config = Config.objects.get_or_create()
+        expect(config.name) == ""
+        expect(config.channels) == {}
