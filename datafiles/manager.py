@@ -11,21 +11,17 @@ from typing import TYPE_CHECKING, Iterator, Optional
 
 import log
 from parse import parse
-from typing_extensions import Protocol
 
 from . import hooks
 
 
 if TYPE_CHECKING:
     from .mapper import Mapper
+    from .model import Model
 
 
 Trilean = Optional[bool]
 Missing = dataclasses._MISSING_TYPE
-
-
-class HasDatafile(Protocol):
-    datafile: Mapper
 
 
 class Splats:
@@ -37,7 +33,7 @@ class Manager:
     def __init__(self, cls):
         self.model = cls
 
-    def get(self, *args, **kwargs) -> HasDatafile:
+    def get(self, *args, **kwargs) -> Model:
         fields = dataclasses.fields(self.model)
         missing_args = [Missing] * (len(fields) - len(args) - len(kwargs))
         args = (*args, *missing_args)
@@ -48,23 +44,28 @@ class Manager:
 
         return instance
 
-    def get_or_none(self, *args, **kwargs) -> Optional[HasDatafile]:
+    def get_or_none(self, *args, **kwargs) -> Optional[Model]:
         try:
             return self.get(*args, **kwargs)
         except FileNotFoundError:
             log.info("File not found")
             return None
 
-    def get_or_create(self, *args, **kwargs) -> HasDatafile:
+    def get_or_create(self, *args, **kwargs) -> Model:
         try:
             return self.get(*args, **kwargs)
         except FileNotFoundError:
             log.info(f"File not found, creating '{self.model.__name__}' object")
             instance = self.model(*args, **kwargs)
-            instance.datafile.load()
+            if instance.datafile.manual:
+                instance.datafile.save()
+                instance.datafile.load()
+                instance.datafile.path.unlink()
+            else:
+                instance.datafile.load()
             return instance
 
-    def all(self, *, _exclude: str = '') -> Iterator[HasDatafile]:
+    def all(self, *, _exclude: str = '') -> Iterator[Model]:
         path = Path(self.model.Meta.datafile_pattern)
         if path.is_absolute():
             log.debug(f"Detected absolute pattern: {path}")
