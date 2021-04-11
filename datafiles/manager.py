@@ -57,12 +57,8 @@ class Manager:
         except FileNotFoundError:
             log.info(f"File not found, creating '{self.model.__name__}' object")
             instance = self.model(*args, **kwargs)
-            if instance.datafile.manual:
-                instance.datafile.save()
-                instance.datafile.load()
-                instance.datafile.path.unlink()
-            else:
-                instance.datafile.load()
+            instance.datafile.save()
+            instance.datafile.load()
             return instance
 
     def all(self, *, _exclude: str = '') -> Iterator[Model]:
