@@ -1,6 +1,6 @@
 """Tests for instantiating new synchronized objects."""
 
-# pylint: disable=unused-variable
+# pylint: disable=unused-variable,singleton-comparison
 
 from dataclasses import dataclass, field
 from typing import Dict
@@ -180,3 +180,15 @@ def describe_missing_attributes():
         config = Config.objects.get_or_create()
         expect(config.name) == ""
         expect(config.channels) == {}
+        expect(config.datafile.path.exists()) == True
+
+    def with_none_defaults_and_manual(expect):
+        @datafile("../tmp/sample.yml", manual=True)
+        class Config:
+            name: str = None  # type: ignore
+            channels: Dict[str, str] = None  # type: ignore
+
+        config = Config.objects.get_or_create()
+        expect(config.name) == ""
+        expect(config.channels) == {}
+        expect(config.datafile.path.exists()) == False
