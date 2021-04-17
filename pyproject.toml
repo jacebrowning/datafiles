@@ -71,7 +71,7 @@ astroid = "*" # missing pylint dependency
 pydocstyle = "*"
 
 # Testing
-pytest = "^5.3.2"
+pytest = "^6.2.3"
 pytest-describe = "^1.0"
 pytest-expecter = "^2.1"
 pytest-mock = "*"
