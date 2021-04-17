@@ -1150,14 +1150,14 @@ socks = ["PySocks (>=1.5.6,!=1.5.7)", "win-inet-pton"]
 
 [[package]]
 name = "ruamel.yaml"
-version = "0.16.12"
+version = "0.17.4"
 description = "ruamel.yaml is a YAML parser/emitter that supports roundtrip preservation of comments, seq/map flow style, and map key order"
 category = "main"
 optional = false
-python-versions = "*"
+python-versions = ">=3"
 
 [package.dependencies]
-"ruamel.yaml.clib" = {version = ">=0.1.2", markers = "platform_python_implementation == \"CPython\" and python_version < \"3.9\""}
+"ruamel.yaml.clib" = {version = ">=0.1.2", markers = "platform_python_implementation == \"CPython\" and python_version < \"3.10\""}
 
 [package.extras]
 docs = ["ryd"]
@@ -1383,7 +1383,7 @@ testing = ["pytest (>=3.5,!=3.7.3)", "pytest-checkdocs (>=1.2.3)", "pytest-flake
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "d4b6e12ab77da9ec6cbed1b6ddd023c29c3c3aac32842c0fc3f3d817deb4592f"
+content-hash = "dd99d52e9677afef4346fc011c497009c5d39dbdeababc1f1489f0257db309f7"
 
 [metadata.files]
 ansiwrap = [
@@ -1998,8 +1998,8 @@ requests = [
     {file = "requests-2.24.0.tar.gz", hash = "sha256:b3559a131db72c33ee969480840fff4bb6dd111de7dd27c8ee1f820f4f00231b"},
 ]
 "ruamel.yaml" = [
-    {file = "ruamel.yaml-0.16.12-py2.py3-none-any.whl", hash = "sha256:012b9470a0ea06e4e44e99e7920277edf6b46eee0232a04487ea73a7386340a5"},
-    {file = "ruamel.yaml-0.16.12.tar.gz", hash = "sha256:076cc0bc34f1966d920a49f18b52b6ad559fbe656a0748e3535cf7b3f29ebf9e"},
+    {file = "ruamel.yaml-0.17.4-py3-none-any.whl", hash = "sha256:ac79fb25f5476e8e9ed1c53b8a2286d2c3f5dde49eb37dbcee5c7eb6a8415a22"},
+    {file = "ruamel.yaml-0.17.4.tar.gz", hash = "sha256:44bc6b54fddd45e4bc0619059196679f9e8b79c027f4131bb072e6a22f4d5e28"},
 ]
 "ruamel.yaml.clib" = [
     {file = "ruamel.yaml.clib-0.2.2-cp27-cp27m-macosx_10_9_x86_64.whl", hash = "sha256:28116f204103cb3a108dfd37668f20abe6e3cafd0d3fd40dba126c732457b3cc"},
