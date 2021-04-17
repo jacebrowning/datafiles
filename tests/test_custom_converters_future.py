@@ -27,4 +27,4 @@ def test_optional(expect):
         value: Optional[int]
 
     x = MyObject(42)
-    expect(x.datafile.text) == "value: 42'\n"
+    expect(x.datafile.text) == "value: 42\n"
