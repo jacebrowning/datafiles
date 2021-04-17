@@ -14,7 +14,7 @@ settings.WRITE_DELAY = 0.1
 def pytest_configure(config):
     terminal = config.pluginmanager.getplugin('terminal')
     terminal.TerminalReporter.showfspath = False
-    log.init()  # TODO: determine why the 'relpath' filter wasn't added automatically
+    log.init(debug=True)
 
 
 @pytest.fixture(autouse=True)
