@@ -1,6 +1,7 @@
-# pylint: disable=arguments-differ,no-member
+"""Tests demonstrating failures caused by the PEP 563 behavior."""
 
-from __future__ import annotations  # this breaks custom converter lookup
+
+from __future__ import annotations
 
 from typing import Optional
 
@@ -8,23 +9,32 @@ import pytest
 
 from datafiles import datafile
 
-from .test_custom_converters import MyDateTime
 
-
-def test_extension(expect):
+@pytest.mark.xfail(reason='https://github.com/jacebrowning/datafiles/issues/131')
+def test_optional_type(expect):
     @datafile("../tmp/sample.yml")
     class MyObject:
-        value: MyDateTime
 
-    x = MyObject(MyDateTime(2019, 1, 29))
-    expect(x.datafile.text) == "value: '2019-01-29T00:00:00'\n"
+        # This will fail because the annotation is evaluated as 'Optional[int]'
+        # rather than `Union[int, None]` like when evaluated eagerly.
+        value1: Optional[int]
+
+    x = MyObject(42)
+    expect(x.datafile.text) == "value1: 42\n"
 
 
 @pytest.mark.xfail(reason='https://github.com/jacebrowning/datafiles/issues/131')
-def test_optional(expect):
+def test_nested_type(expect):
+    class Nested:
+        pass
+
     @datafile("../tmp/sample.yml")
     class MyObject:
-        value: Optional[int]
+        value1: int
+
+        # This will fail even if `get_type_hints()`` is provided this module
+        # as `globals` because `Nested` is defined below module scope.
+        value2: Nested = Nested()
 
     x = MyObject(42)
-    expect(x.datafile.text) == "value: 42\n"
+    expect(x.datafile.text) == "value1: 42\n"
