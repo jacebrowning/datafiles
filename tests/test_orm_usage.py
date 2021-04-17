@@ -8,6 +8,8 @@ import pytest
 from datafiles import datafile
 from datafiles.utils import logbreak, write
 
+from . import xfail_on_latest
+
 
 # This model is based on the example dataclass from:
 # https://docs.python.org/3/library/dataclasses.html
@@ -48,6 +50,7 @@ def test_multiple_instances_are_distinct(expect):
     }
 
 
+@xfail_on_latest
 def test_classes_can_share_a_nested_dataclass(expect):
     @datafile
     class Nested:
@@ -95,6 +98,7 @@ def test_partial_load_from_disk(expect):
     expect(items[0].quantity_on_hand) == 0
 
 
+@xfail_on_latest
 def test_missing_optional_fields_are_loaded(expect):
     @datafile
     class Name:
