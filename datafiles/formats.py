@@ -84,33 +84,29 @@ class RuamelYAML(Formatter):
 
     @classmethod
     def deserialize(cls, file_object):
-        from ruamel import yaml
+        from ruamel.yaml import YAML
 
+        yaml = YAML()
+        yaml.preserve_quotes = True  # type: ignore
         try:
-            return yaml.round_trip_load(file_object, preserve_quotes=True)
+            return yaml.load(file_object)
         except NotImplementedError as e:
             log.error(str(e))
             return {}
 
     @classmethod
     def serialize(cls, data):
-        from ruamel import yaml
+        from ruamel.yaml import YAML
 
-        yaml.representer.RoundTripRepresenter.add_representer(
-            types.List, yaml.representer.RoundTripRepresenter.represent_list
-        )
-        yaml.representer.RoundTripRepresenter.add_representer(
-            types.Dict, yaml.representer.RoundTripRepresenter.represent_dict
-        )
-
+        yaml = YAML()
+        yaml.register_class(types.List)
+        yaml.register_class(types.Dict)
         if settings.INDENT_YAML_BLOCKS:
-            f = StringIO()
-            y = yaml.YAML()
-            y.indent(mapping=2, sequence=4, offset=2)
-            y.dump(data, f)
-            text = f.getvalue().strip() + '\n'
-        else:
-            text = yaml.round_trip_dump(data) or ""
+            yaml.indent(mapping=2, sequence=4, offset=2)
+
+        stream = StringIO()
+        yaml.dump(data, stream)
+        text = stream.getvalue().strip() + '\n'
 
         if text == "{}\n":
             return ""

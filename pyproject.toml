@@ -44,7 +44,7 @@ python = "^3.7"
 
 # Formats
 PyYAML = "^5.2"
-"ruamel.yaml" = "~0.16.10"
+"ruamel.yaml" = "~0.17.4"
 tomlkit = "~0.5.3"
 
 # ORM
