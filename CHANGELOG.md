@@ -6,7 +6,6 @@
 - Fixed automatic save when modifying nested dictionary values.
 - Fixed initialization for non-compliant `None` default values.
 
-
 # 0.12 (2021-03-05)
 
 - Added `_exclude` parameter to `all()` and `filter()` manager methods to exclude certain objects from loading as a performance optimization.
