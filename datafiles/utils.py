@@ -18,6 +18,12 @@ from .types import Missing
 cached = lru_cache()
 
 
+def subclasses(cls):
+    return set(cls.__subclasses__()).union(
+        [s for c in cls.__subclasses__() for s in subclasses(c)]
+    )
+
+
 def get_default_field_value(instance, name):
     for field in dataclasses.fields(instance):
         if field.name == name:

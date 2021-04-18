@@ -1,3 +1,7 @@
+# 0.13.1 (2021-04-18)
+
+- Fixed handling of string annotations for extended types.
+
 # 0.13 (2021-04-17)
 
 - Added support for generic types.
