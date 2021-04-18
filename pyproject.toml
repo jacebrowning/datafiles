@@ -66,8 +66,7 @@ isort = "=5.5.1"
 
 # Linters
 mypy = "~0.790"
-pylint = "~2.6.0"
-astroid = "*" # missing pylint dependency
+pylint = "~2.7.4"
 pydocstyle = "*"
 
 # Testing
