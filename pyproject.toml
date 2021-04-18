@@ -1,7 +1,7 @@
 [tool.poetry]
 
 name = "datafiles"
-version = "0.13b8"
+version = "0.13"
 description = "File-based ORM for dataclasses."
 
 license = "MIT"
@@ -43,16 +43,16 @@ classifiers = [
 python = "^3.7"
 
 # Formats
-PyYAML = "^5.2"
-"ruamel.yaml" = "~0.17.4"
-tomlkit = "~0.5.3"
+PyYAML = "^5.4.1"
+"ruamel.yaml" = "^0.17.4"
+tomlkit = "^0.7"
 
 # ORM
 parse = "^1.12"
 
 # Utilities
 cached_property = "^1.5"
-classproperties = "~0.1.3"
+classproperties = "^0.2"
 minilog = "^2.0"
 
 # Typing
@@ -102,5 +102,5 @@ skip-string-normalization = true
 
 [build-system]
 
-requires = ["poetry>=0.12"]
-build-backend = "poetry.masonry.api"
+requires = ["poetry-core>=1.0"]
+build-backend = "poetry.core.masonry.api"

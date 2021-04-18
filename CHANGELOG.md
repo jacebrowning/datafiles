@@ -1,4 +1,4 @@
-# 0.13 (beta)
+# 0.13 (2021-04-17)
 
 - Added support for generic types.
 - Added support for sets.
