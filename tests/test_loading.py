@@ -9,6 +9,7 @@ import pytest
 from datafiles import datafile
 from datafiles.utils import dedent, logbreak, read, write
 
+from . import xfail_on_latest
 from .samples import (
     Sample,
     SampleAsJSON,
@@ -249,6 +250,7 @@ def describe_nesting():
         expect(sample.nested.score) == 3.4
         expect(hasattr(sample.nested, 'extra')).is_(False)
 
+    @xfail_on_latest
     def with_multiple_levels(expect):
         @dataclass
         class Bottom:

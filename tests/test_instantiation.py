@@ -8,6 +8,8 @@ from typing import Dict
 from datafiles import Missing, datafile
 from datafiles.utils import logbreak, write
 
+from . import xfail_on_latest
+
 
 @datafile('../tmp/sample.yml', manual=True)
 class SampleWithDefaults:
@@ -150,6 +152,7 @@ def describe_factory_defaults():
 
 
 def describe_missing_attributes():
+    @xfail_on_latest
     def when_dataclass(expect):
         @dataclass
         class Name:

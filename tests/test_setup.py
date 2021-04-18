@@ -11,6 +11,8 @@ import pytest
 import datafiles
 from datafiles import datafile
 
+from . import xfail_on_latest
+
 
 def describe_automatic():
     """Test creating a datafile using the decorator."""
@@ -76,6 +78,7 @@ def describe_automatic_with_defaults():
 
             return Sample(1, Nested(name="b"), "a")
 
+        @xfail_on_latest
         def it_converts_attributes(expect, sample):
             expect(sample.datafile.data) == {
                 'name': "a",
