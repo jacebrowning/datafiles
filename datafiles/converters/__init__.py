@@ -6,7 +6,7 @@ from typing import Any, Dict, Mapping, Optional, Union
 import log
 from ruamel.yaml.scalarfloat import ScalarFloat
 
-from ..utils import cached
+from ..utils import cached, subclasses
 from ._bases import Converter
 from .builtins import Boolean, Float, Integer, String
 from .containers import Dataclass, Dictionary, List, Set
@@ -119,7 +119,7 @@ def map_type(cls, *, name: str = '', item_cls: Optional[type] = None):
 
     if isinstance(cls, str):
         log.debug(f'Searching for class matching {cls!r} annotation')
-        for cls2 in Converter.__subclasses__():
+        for cls2 in subclasses(Converter):
             if cls2.__name__ == cls:
                 register(cls, cls2)
                 log.debug(f'Registered {cls2} as new converter')

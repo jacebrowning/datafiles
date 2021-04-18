@@ -112,6 +112,11 @@ def describe_map_type():
         converter = converters.map_type('float')
         expect(converter.TYPE) == float
 
+    def it_handles_string_type_annotations_for_extensions(expect):
+        converter = converters.map_type('Number')
+        expect(converter.TYPE) == float
+        expect(converter.__name__) == 'Number'
+
     def it_rejects_unknown_types(expect):
         with expect.raises(
             TypeError,
