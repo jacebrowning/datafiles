@@ -88,12 +88,12 @@ coveragespace = "^4.0"
 # Documentation
 mkdocs = "~1.0"
 pygments = "^2.7.4"
-papermill = "*"
 
 # Notebooks
 ipython = "^7.4"
 jupyter = "^1.0"
-nbstripout ="*"
+nbstripout ="~0.3.9"
+papermill = "^2.2"
 
 [tool.black]
 
