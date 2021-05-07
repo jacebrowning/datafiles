@@ -91,7 +91,7 @@ mkdocs = "~1.0"
 pygments = "^2.7.4"
 
 # Notebooks
-ipython = "^7.4"
+ipython = { version = "^7.4", python = "^3.7" }
 jupyter = "^1.0"
 nbstripout ="~0.3.9"
 papermill = "^2.2"
