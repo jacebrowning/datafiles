@@ -1,3 +1,7 @@
+# 0.13.2 (2021-05-06)
+
+- Added support for Python 3.6 using the `dataclasses` backport.
+
 # 0.13.1 (2021-04-18)
 
 - Fixed handling of string annotations for extended types.

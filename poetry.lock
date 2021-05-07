@@ -104,6 +104,7 @@ python-versions = ">=3.6"
 [package.dependencies]
 appdirs = "*"
 click = ">=7.1.2"
+dataclasses = {version = ">=0.6", markers = "python_version < \"3.7\""}
 mypy-extensions = ">=0.4.3"
 pathspec = ">=0.6,<1"
 regex = ">=2020.1.8"
@@ -212,6 +213,14 @@ coverage = ">=4.0"
 docopt = ">=0.6"
 minilog = ">=2.0,<3.0"
 requests = ">=2.0,<3.0"
+
+[[package]]
+name = "dataclasses"
+version = "0.8"
+description = "A backport of the dataclasses module for Python 3.6"
+category = "main"
+optional = false
+python-versions = ">=3.6, <3.7"
 
 [[package]]
 name = "decorator"
@@ -1397,8 +1406,8 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pyt
 
 [metadata]
 lock-version = "1.1"
-python-versions = "^3.7"
-content-hash = "f168f875aad41b5a0e858e774d3b3174fa0772a97d10e143fc5fc891cc9cc58e"
+python-versions = "^3.6"
+content-hash = "add7c4d24b2ebc91bdf764204dd3a81ebeabe8ec86896b2962cf9cdaf42d5b30"
 
 [metadata.files]
 ansiwrap = [
@@ -1579,6 +1588,10 @@ coverage = [
 coveragespace = [
     {file = "coveragespace-4.1-py3-none-any.whl", hash = "sha256:a59fa4227166406f74c0fd89ad871b6d699d35de5468eeca96bf556838af0f0c"},
     {file = "coveragespace-4.1.tar.gz", hash = "sha256:6dcdee802be5cdaa9820538203ad0e182a1ea56c679cdf65b36d4b85937d2e38"},
+]
+dataclasses = [
+    {file = "dataclasses-0.8-py3-none-any.whl", hash = "sha256:0201d89fa866f68c8ebd9d08ee6ff50c0b255f8ec63a71c16fda7af82bb887bf"},
+    {file = "dataclasses-0.8.tar.gz", hash = "sha256:8479067f342acf957dc82ec415d355ab5edb7e7646b90dc6e2fd1d96ad084c97"},
 ]
 decorator = [
     {file = "decorator-5.0.7-py3-none-any.whl", hash = "sha256:945d84890bb20cc4a2f4a31fc4311c0c473af65ea318617f13a7257c9a58bc98"},
