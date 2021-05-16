@@ -68,6 +68,20 @@ class SampleWithNestingAndDefaults:
     nested: _NestedSample2 = field(default_factory=_NestedSample2)
 
 
+@dataclass
+class _NestedSample3:
+    name: str
+    score: float
+    weight: Optional[int]
+
+
+@datafile('../tmp/sample.yml', manual=True)
+class SampleWithNestingAndOptionals:
+    name: str
+    score: float
+    nested: _NestedSample3
+
+
 @datafile('../tmp/sample.yml', manual=True)
 class SampleWithList:
     items: List[float]

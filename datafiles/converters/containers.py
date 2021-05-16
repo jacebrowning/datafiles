@@ -194,7 +194,7 @@ class Dataclass(Converter):
             if name in data:
                 converted = converter.to_python_value(data[name], target_object=None)
             else:
-                if target_object is None:
+                if target_object is None or target_object is Missing:
                     converted = converter.to_python_value(None, target_object=None)
                 else:
                     converted = get_default_field_value(target_object, name)
