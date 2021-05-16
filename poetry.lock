@@ -682,7 +682,7 @@ test = ["check-manifest", "fastjsonschema", "testpath", "pytest", "pytest-cov"]
 
 [[package]]
 name = "nbstripout"
-version = "0.3.9"
+version = "0.4.0"
 description = "Strips outputs from Jupyter and IPython notebooks"
 category = "dev"
 optional = false
@@ -1398,7 +1398,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pyt
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "f168f875aad41b5a0e858e774d3b3174fa0772a97d10e143fc5fc891cc9cc58e"
+content-hash = "5f5d2202edfbeb530e9a2265c5db45b163239670203e51bd5b67e4ca8663e31a"
 
 [metadata.files]
 ansiwrap = [
@@ -1801,8 +1801,8 @@ nbformat = [
     {file = "nbformat-5.1.3.tar.gz", hash = "sha256:b516788ad70771c6250977c1374fcca6edebe6126fd2adb5a69aa5c2356fd1c8"},
 ]
 nbstripout = [
-    {file = "nbstripout-0.3.9-py2.py3-none-any.whl", hash = "sha256:261dcbb993bdcf194d61f2804bdc69fb437f2f3d250ffa3dcd49184189e9fb95"},
-    {file = "nbstripout-0.3.9.tar.gz", hash = "sha256:b46dddbf78b8b137176bc72729124e378242ef9ce93af63f6e0a8c4850c972e7"},
+    {file = "nbstripout-0.4.0-py2.py3-none-any.whl", hash = "sha256:ca0f33925944d72ee62a49e42c6e578b12ac0a3bf07d2ce4cd67b149b815a5fa"},
+    {file = "nbstripout-0.4.0.tar.gz", hash = "sha256:995eadfd38815cff8a7bf9e922ac0d8a9a6a302efe82fb0e93ccdb4273f55aa7"},
 ]
 nest-asyncio = [
     {file = "nest_asyncio-1.5.1-py3-none-any.whl", hash = "sha256:76d6e972265063fe92a90b9cc4fb82616e07d586b346ed9d2c89a4187acea39c"},

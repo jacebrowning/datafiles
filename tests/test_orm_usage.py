@@ -9,6 +9,7 @@ from datafiles import datafile
 from datafiles.utils import logbreak, write
 
 from . import xfail_on_latest
+from .samples import SampleWithNestingAndOptionals
 
 
 # This model is based on the example dataclass from:
@@ -96,6 +97,24 @@ def test_partial_load_from_disk(expect):
 
     expect(items[0].unit_price) == 0
     expect(items[0].quantity_on_hand) == 0
+
+
+def test_partial_nested_load_from_disk(expect):
+    write(
+        'tmp/sample.yml',
+        """
+            name: foo
+            score: 7
+            nested:
+                name: bar
+            """,
+    )
+
+    items = list(SampleWithNestingAndOptionals.objects.all())
+
+    expect(items[0].nested.name) == 'bar'
+    expect(items[0].nested.score) == 0.0
+    expect(items[0].nested.weight).is_(None)
 
 
 @xfail_on_latest

@@ -1,7 +1,7 @@
 [tool.poetry]
 
 name = "datafiles"
-version = "0.13.1"
+version = "0.13.2"
 description = "File-based ORM for dataclasses."
 
 license = "MIT"
@@ -91,8 +91,8 @@ pygments = "^2.7.4"
 # Notebooks
 ipython = "^7.4"
 jupyter = "^1.0"
-nbstripout ="~0.3.9"
-papermill = "^2.2"
+nbstripout ="~0.4"
+papermill = "^2.3"
 
 [tool.black]
 

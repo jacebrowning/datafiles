@@ -1,3 +1,7 @@
+# 0.13.2 (2021-05-16)
+
+- Fixed loading of partially defined nested objects with optional attributes.
+
 # 0.13.1 (2021-04-18)
 
 - Fixed handling of string annotations for extended types.
