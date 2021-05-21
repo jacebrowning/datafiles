@@ -5,6 +5,7 @@ from __future__ import annotations
 import dataclasses
 import inspect
 import os
+from functools import reduce
 from glob import iglob
 from pathlib import Path
 from typing import TYPE_CHECKING, Iterator, Optional
@@ -104,7 +105,8 @@ class Manager:
         for item in self.all(_exclude=_exclude):
             match = True
             for key, value in query.items():
-                if getattr(item, key) != value:
+                # The use of reduce helps to handle nested attribute queries
+                if reduce(getattr, [item] + key.split('__')) != value:  # type: ignore
                     match = False
             if match:
                 yield item
