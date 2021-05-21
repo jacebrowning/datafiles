@@ -19,7 +19,7 @@ def datafile(
     defaults: bool = Meta.datafile_defaults,
     auto_load: bool = Meta.datafile_auto_load,
     auto_save: bool = Meta.datafile_auto_save,
-    auto_attr: bool = Meta.datafile_auto_attr,
+    infer: bool = Meta.datafile_infer,
     **kwargs,
 ):
     """Synchronize a data class to the specified path."""
@@ -44,14 +44,14 @@ def datafile(
             defaults=defaults,
             auto_load=auto_load,
             auto_save=auto_save,
-            auto_attr=auto_attr,
+            infer=infer,
         )
 
     return decorator
 
 
 def auto(filename: str, **kwargs):
-    kwargs['auto_attr'] = True
+    kwargs['infer'] = True
 
     path = Path.cwd() / filename
 

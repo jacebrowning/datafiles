@@ -32,7 +32,7 @@ def describe_mapper():
             defaults=Meta.datafile_defaults,
             auto_load=Meta.datafile_auto_load,
             auto_save=Meta.datafile_auto_save,
-            auto_attr=Meta.datafile_auto_attr,
+            infer=Meta.datafile_infer,
         )
 
     def describe_path():

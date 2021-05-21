@@ -5,12 +5,12 @@ from datafiles import datafile
 from datafiles.utils import logbreak
 
 
-@datafile('../tmp/{self.name}.yml', auto_attr=True, auto_save=False)
+@datafile('../tmp/{self.name}.yml', infer=True, auto_save=False)
 class Sample:
     name: str
 
 
-def describe_auto_attr():
+def describe_infer():
     def with_builtin(expect):
         sample = Sample('abc')
 

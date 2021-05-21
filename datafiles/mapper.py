@@ -5,6 +5,7 @@ from __future__ import annotations
 import dataclasses
 import inspect
 import os
+import warnings
 from pathlib import Path
 from typing import Any, Dict, Optional
 
@@ -28,11 +29,19 @@ class Mapper:
         defaults: bool,
         auto_load: bool,
         auto_save: bool,
-        auto_attr: bool,
+        infer: bool,
         root: Optional[Mapper] = None,
     ) -> None:
         assert manual is not None
         assert defaults is not None
+        if auto_load is not None:
+            warnings.warn(
+                "'auto_load' is deprecated, use 'manual' instead", DeprecationWarning
+            )
+        if auto_save is not None:
+            warnings.warn(
+                "'auto_save' is deprecated, use 'manual' instead", DeprecationWarning
+            )
         self._instance = instance
         self.attrs = attrs
         self._pattern = pattern
@@ -40,7 +49,7 @@ class Mapper:
         self.defaults = defaults
         self._auto_load = auto_load
         self._auto_save = auto_save
-        self._auto_attr = auto_attr
+        self._infer = infer
         self._last_load = 0.0
         self._last_data: Dict = {}
         self._root = root
@@ -105,8 +114,8 @@ class Mapper:
         return self._root.auto_save if self._root else self._auto_save
 
     @property
-    def auto_attr(self) -> bool:
-        return self._root.auto_attr if self._root else self._auto_attr
+    def infer(self) -> bool:
+        return self._root.infer if self._root else self._infer
 
     @property
     def data(self) -> Dict:
@@ -117,7 +126,7 @@ class Mapper:
         if include_default_values is None:
             include_default_values = self.defaults
 
-        if self.auto_attr:
+        if self.infer:
             data = recursive_update(self._last_data, self._instance.__dict__)
         else:
             data = recursive_update(self._last_data, dataclasses.asdict(self._instance))
@@ -186,7 +195,7 @@ class Mapper:
         with hooks.disabled():
 
             for name, value in data.items():
-                if name not in self.attrs and self.auto_attr:
+                if name not in self.attrs and self.infer:
                     self.attrs[name] = self._infer_attr(name, value)
 
             for name, converter in self.attrs.items():
@@ -300,6 +309,6 @@ def create_mapper(obj, root=None) -> Mapper:
         defaults=meta.datafile_defaults,
         auto_load=meta.datafile_auto_load,
         auto_save=meta.datafile_auto_save,
-        auto_attr=meta.datafile_auto_attr,
+        infer=meta.datafile_infer,
         root=root,
     )
