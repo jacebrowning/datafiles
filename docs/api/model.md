@@ -63,14 +63,12 @@ Filename patterns are relative to the file in which models are defined unless `<
 
 The following options can be passed to the `@datafile()` decorator:
 
-| Name        | Type   | Description                                                                          | Default           |
-| ----------- | ------ | ------------------------------------------------------------------------------------ | ----------------- |
-| `attrs`     | `dict` | Attributes to synchronize mapped to `datafile.converters` classes for serialization. | `{}` <sup>1</sup> |
-| `manual`    | `bool` | Synchronize object and file changes manually.                                        | `False`           |
-| `defaults`  | `bool` | Include default values in files.                                                     | `False`           |
-| `auto_load` | `bool` | Load automatically after saving.<br>If `manual=True` this option is ignored.         | `True`            |
-| `auto_save` | `bool` | Save automatically after loading.<br>If `manual=True` this option is ignored.        | `True`            |
-| `auto_attr` | `bool` | Automatically infer new attributes from the file.                                    | `False`           |
+| Name       | Type   | Description                                                           | Default           |
+| ---------- | ------ | --------------------------------------------------------------------- | ----------------- |
+| `attrs`    | `dict` | Map of attributes to `datafile.converters` classes for serialization. | `{}` <sup>1</sup> |
+| `manual`   | `bool` | Synchronize object and file changes manually.                         | `False`           |
+| `defaults` | `bool` | Include attributes with default values when serializing.              | `False`           |
+| `infer`    | `bool` | Automatically infer new attributes from the file.                     | `False`           |
 
 <sup>1</sup> _By default, synchronized attributes are inferred from the type annotations._
 
@@ -85,7 +83,7 @@ class Item:
     count: int
     available: bool
 
-@datafile("config.yml", auto_save=False)
+@datafile("config.yml", infer=True)
 class Config:
     default_count: int = 42
 ```
@@ -107,8 +105,6 @@ class Item:
         datafile_attrs = {'count': converters.Integer}
         datafile_manual = True
         datafile_defaults = True
-        datafiles_auto_load = False
-        datafiles_auto_save = False
 ```
 
 ## Base class

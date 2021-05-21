@@ -1,3 +1,12 @@
+# 0.14 (2021-05-21)
+
+- Renamed model option `auto_attr` to `infer`.
+- Deprecated `auto_load`/`auto_save` in favor of `manual`.
+
+# 0.13.3 (2021-05-20)
+
+- Added support for filtering on nested attributes.
+
 # 0.13.2 (2021-05-16)
 
 - Fixed loading of partially defined nested objects with optional attributes.
