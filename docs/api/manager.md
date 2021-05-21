@@ -114,3 +114,9 @@ Exclude objects from ever being loaded and returned with `_exclude`:
 ```python
 >>> generator = MyModel.objects.filter(_exclude='foo')
 ```
+
+Nested dataclass values can be queried using `__` as a delimiter:
+
+```python
+>>> generator = NestedModel.objects.filter(foo__bar__qux=42)
+```

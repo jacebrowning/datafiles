@@ -36,7 +36,8 @@ class Manager:
 
     def get(self, *args, **kwargs) -> Model:
         fields = dataclasses.fields(self.model)
-        missing_args = [Missing] * (len(fields) - len(args) - len(kwargs))
+        required = sum(1 for field in fields if isinstance(field.default, Missing))
+        missing_args = [Missing] * (required - len(args) - len(kwargs))
         args = (*args, *missing_args)
 
         with hooks.disabled():
