@@ -25,34 +25,6 @@ def pytest_runtest_setup(item):
     datafiles.settings.HOOKS_ENABLED = False
 ```
 
-# `INDENT_YAML_BLOCKS`
-
-In `datafiles >= 0.4`, YAML blocks are now indented by default, like so:
-
-```yaml
-items:
-  - 1
-  - 2
-  - 3
-```
-
-To make it easier to upgrade to this version, a client can disable this functionality:
-
-```python
-import datafiles
-
-datafiles.settings.INDENT_YAML_BLOCKS = False
-```
-
-to produce YAML like:
-
-```yaml
-items:
-- 4
-- 5
-- 6
-```
-
 # `MINIMIZE_LIST_DIFFS`
 
 When serializing lists, `datafiles` intentionally deviates from the semantic representation of an empty list to optimize for the use case of storing YAML files in version control.
