@@ -1,15 +1,10 @@
-from __future__ import annotations
-
 import dataclasses
 from pathlib import Path
-from typing import TYPE_CHECKING, Callable, Dict, Optional, Union
+from typing import Callable, Dict, Optional, Union
 
 from .config import Meta
+from .converters import Converter
 from .model import create_model
-
-
-if TYPE_CHECKING:
-    from .converters import Converter
 
 
 def datafile(
@@ -17,8 +12,6 @@ def datafile(
     attrs: Optional[Dict[str, Converter]] = None,
     manual: bool = Meta.datafile_manual,
     defaults: bool = Meta.datafile_defaults,
-    auto_load: bool = Meta.datafile_auto_load,
-    auto_save: bool = Meta.datafile_auto_save,
     infer: bool = Meta.datafile_infer,
     **kwargs,
 ):
@@ -42,8 +35,6 @@ def datafile(
             pattern=pattern,
             manual=manual,
             defaults=defaults,
-            auto_load=auto_load,
-            auto_save=auto_save,
             infer=infer,
         )
 

@@ -1,4 +1,3 @@
-import warnings
 from contextlib import contextmanager, suppress
 from dataclasses import is_dataclass
 from functools import wraps
@@ -9,7 +8,11 @@ from . import settings, types
 from .mapper import create_mapper
 
 
-LOAD_BEFORE_METHODS = ['__getattribute__', '__getitem__', '__iter__']
+LOAD_BEFORE_METHODS = [
+    '__getattribute__',
+    '__getitem__',
+    '__iter__',
+]
 SAVE_AFTER_METHODS = [
     '__setattr__',
     '__setitem__',
@@ -87,14 +90,7 @@ def load_before(cls, method):
             if mapper.exists and mapper.modified:
                 log.debug(f"Loading automatically before '{method.__name__}' call")
                 mapper.load()
-                if mapper.auto_save:
-                    log.debug("Saving automatically after load")
-                    mapper.save(_log=False)
-                else:
-                    warnings.warn(
-                        "'auto_save' is deprecated, use 'manual' instead",
-                        DeprecationWarning,
-                    )
+                mapper.save(_log=False)
 
         return method(self, *args, **kwargs)
 
@@ -125,14 +121,7 @@ def save_after(cls, method):
         if enabled(mapper, args):
             log.debug(f"Saving automatically after '{method.__name__}' call")
             mapper.save()
-            if mapper.auto_load:
-                log.debug("Loading automatically after save")
-                mapper.load(_log=False)
-            else:
-                warnings.warn(
-                    "'auto_load' is deprecated, use 'manual' instead",
-                    DeprecationWarning,
-                )
+            mapper.load(_log=False)
 
         return result
 

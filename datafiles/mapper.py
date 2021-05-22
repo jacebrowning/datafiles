@@ -26,8 +26,6 @@ class Mapper:
         pattern: Optional[str],
         manual: bool,
         defaults: bool,
-        auto_load: bool,
-        auto_save: bool,
         infer: bool,
         root: Optional[Mapper] = None,
     ) -> None:
@@ -38,8 +36,6 @@ class Mapper:
         self._pattern = pattern
         self._manual = manual
         self.defaults = defaults
-        self._auto_load = auto_load
-        self._auto_save = auto_save
         self._infer = infer
         self._last_load = 0.0
         self._last_data: Dict = {}
@@ -95,14 +91,6 @@ class Mapper:
     @property
     def manual(self) -> bool:
         return self._root.manual if self._root else self._manual
-
-    @property
-    def auto_load(self) -> bool:
-        return self._root.auto_load if self._root else self._auto_load
-
-    @property
-    def auto_save(self) -> bool:
-        return self._root.auto_save if self._root else self._auto_save
 
     @property
     def infer(self) -> bool:
@@ -298,8 +286,6 @@ def create_mapper(obj, root=None) -> Mapper:
         pattern=pattern,
         manual=meta.datafile_manual,
         defaults=meta.datafile_defaults,
-        auto_load=meta.datafile_auto_load,
-        auto_save=meta.datafile_auto_save,
         infer=meta.datafile_infer,
         root=root,
     )
