@@ -1,7 +1,11 @@
+# 0.15 (alpha)
+
+- Removed `auto_load`/`auto_save` model options.
+
 # 0.14 (2021-05-21)
 
 - Renamed model option `auto_attr` to `infer`.
-- Deprecated `auto_load`/`auto_save` in favor of `manual`.
+- Deprecated `auto_load`/`auto_save` model options in favor of `manual`.
 
 # 0.13.3 (2021-05-20)
 

@@ -17,8 +17,6 @@ def datafile(
     attrs: Optional[Dict[str, Converter]] = None,
     manual: bool = Meta.datafile_manual,
     defaults: bool = Meta.datafile_defaults,
-    auto_load: bool = Meta.datafile_auto_load,
-    auto_save: bool = Meta.datafile_auto_save,
     infer: bool = Meta.datafile_infer,
     **kwargs,
 ):
@@ -42,8 +40,6 @@ def datafile(
             pattern=pattern,
             manual=manual,
             defaults=defaults,
-            auto_load=auto_load,
-            auto_save=auto_save,
             infer=infer,
         )
 

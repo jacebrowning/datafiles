@@ -30,8 +30,6 @@ def describe_mapper():
             pattern=None,
             manual=Meta.datafile_manual,
             defaults=Meta.datafile_defaults,
-            auto_load=Meta.datafile_auto_load,
-            auto_save=Meta.datafile_auto_save,
             infer=Meta.datafile_infer,
         )
 

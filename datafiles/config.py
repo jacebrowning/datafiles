@@ -18,8 +18,6 @@ class Meta:
 
     datafile_manual: bool = False
     datafile_defaults: bool = False
-    datafile_auto_load: bool = True
-    datafile_auto_save: bool = True
     datafile_infer: bool = False
 
 
@@ -34,10 +32,6 @@ def load(obj) -> Meta:
         meta.datafile_manual = obj.Meta.datafile_manual
     with suppress(AttributeError):
         meta.datafile_defaults = obj.Meta.datafile_defaults
-    with suppress(AttributeError):
-        meta.datafile_auto_load = obj.Meta.datafile_auto_load
-    with suppress(AttributeError):
-        meta.datafile_auto_save = obj.Meta.datafile_auto_save
     with suppress(AttributeError):
         meta.datafile_infer = obj.Meta.datafile_infer
 

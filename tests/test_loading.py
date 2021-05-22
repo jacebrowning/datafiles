@@ -271,7 +271,7 @@ def describe_nesting():
             level: int = 1
             b: B = B()
 
-        @datafile('../tmp/sample.toml', defaults=True, auto_save=False)
+        @datafile('../tmp/sample.toml', defaults=True)
         class Top:
             level: int = 0
             a: A = A()
