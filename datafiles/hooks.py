@@ -1,3 +1,4 @@
+import warnings
 from contextlib import contextmanager, suppress
 from dataclasses import is_dataclass
 from functools import wraps
@@ -89,6 +90,11 @@ def load_before(cls, method):
                 if mapper.auto_save:
                     log.debug("Saving automatically after load")
                     mapper.save(_log=False)
+                else:
+                    warnings.warn(
+                        "'auto_save' is deprecated, use 'manual' instead",
+                        DeprecationWarning,
+                    )
 
         return method(self, *args, **kwargs)
 
@@ -122,6 +128,11 @@ def save_after(cls, method):
             if mapper.auto_load:
                 log.debug("Loading automatically after save")
                 mapper.load(_log=False)
+            else:
+                warnings.warn(
+                    "'auto_load' is deprecated, use 'manual' instead",
+                    DeprecationWarning,
+                )
 
         return result
 

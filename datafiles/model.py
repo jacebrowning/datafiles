@@ -1,5 +1,4 @@
 import dataclasses
-import warnings
 
 import log
 from classproperties import classproperty
@@ -74,14 +73,8 @@ def create_model(
     if not hasattr(cls, 'Meta') and defaults is not None:
         m.datafile_defaults = defaults
     if not hasattr(cls, 'Meta') and auto_load is not None:
-        warnings.warn(
-            "'auto_load' is deprecated, use 'manual' instead", DeprecationWarning
-        )
         m.datafile_auto_load = auto_load
     if not hasattr(cls, 'Meta') and auto_save is not None:
-        warnings.warn(
-            "'auto_save' is deprecated, use 'manual' instead", DeprecationWarning
-        )
         m.datafile_auto_save = auto_save
     if not hasattr(cls, 'Meta') and infer is not None:
         m.datafile_infer = infer

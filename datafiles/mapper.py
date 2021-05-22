@@ -5,7 +5,6 @@ from __future__ import annotations
 import dataclasses
 import inspect
 import os
-import warnings
 from pathlib import Path
 from typing import Any, Dict, Optional
 
@@ -34,14 +33,6 @@ class Mapper:
     ) -> None:
         assert manual is not None
         assert defaults is not None
-        if auto_load is not None:
-            warnings.warn(
-                "'auto_load' is deprecated, use 'manual' instead", DeprecationWarning
-            )
-        if auto_save is not None:
-            warnings.warn(
-                "'auto_save' is deprecated, use 'manual' instead", DeprecationWarning
-            )
         self._instance = instance
         self.attrs = attrs
         self._pattern = pattern
