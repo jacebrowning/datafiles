@@ -15,7 +15,7 @@ def test_optional_type(expect):
     class MyObject:
 
         # This will fail because the annotation is evaluated as 'Optional[int]'
-        # rather than `Union[int, None]` like when evaluated eagerly.
+        # rather than `Union[int, None]` as when evaluated eagerly.
         value1: Optional[int]
 
     x = MyObject(42)
