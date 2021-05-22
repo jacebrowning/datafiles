@@ -101,8 +101,7 @@ class RuamelYAML(Formatter):
         yaml = YAML()
         yaml.register_class(types.List)
         yaml.register_class(types.Dict)
-        if settings.INDENT_YAML_BLOCKS:
-            yaml.indent(mapping=2, sequence=4, offset=2)
+        yaml.indent(mapping=2, sequence=4, offset=2)
 
         stream = StringIO()
         yaml.dump(data, stream)
@@ -138,10 +137,7 @@ class PyYAML(Formatter):
 
         class Dumper(yaml.Dumper):
             def increase_indent(self, flow=False, indentless=False):
-                return super().increase_indent(
-                    flow=flow,
-                    indentless=False if settings.INDENT_YAML_BLOCKS else indentless,
-                )
+                return super().increase_indent(flow=flow, indentless=False)
 
         text = yaml.dump(data, Dumper=Dumper, sort_keys=False, default_flow_style=False)
 

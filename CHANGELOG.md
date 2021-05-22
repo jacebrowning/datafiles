@@ -1,6 +1,7 @@
 # 0.15 (alpha)
 
 - Removed `auto_load`/`auto_save` model options.
+- Removed `INDENT_YAML_BLOCKS` setting.
 
 # 0.14 (2021-05-21)
 

@@ -1,21 +1,10 @@
 # pylint: disable=unused-variable
 
-from pathlib import Path
 
 import pytest
 
-from datafiles import formats, settings
+from datafiles import formats
 from datafiles.utils import dedent
-
-
-@pytest.fixture(autouse=True, scope='session')
-def format_example():
-    path = Path.cwd() / 'docs' / 'settings.md'
-    example = path.read_text()
-    example = example.replace("  - 4", "- 4")
-    example = example.replace("  - 5", "- 5")
-    example = example.replace("  - 6", "- 6")
-    path.write_text(example)
 
 
 def describe_serialize():
@@ -36,19 +25,6 @@ def describe_serialize():
             """
             )
 
-        def it_can_render_lists_inline(expect, data, monkeypatch):
-            monkeypatch.setattr(settings, 'INDENT_YAML_BLOCKS', False)
-            text = formats.serialize(data, '.yaml')
-            expect(text) == dedent(
-                """
-            key: value
-            items:
-            - 1
-            - a
-            -
-            """
-            )
-
     def describe_pyyaml():
         def it_indents_blocks_by_default(expect, data):
             text = formats.serialize(data, '.yaml', formatter=formats.PyYAML)
@@ -59,19 +35,6 @@ def describe_serialize():
               - 1
               - a
               -
-            """
-            )
-
-        def it_can_render_lists_inline(expect, data, monkeypatch):
-            monkeypatch.setattr(settings, 'INDENT_YAML_BLOCKS', False)
-            text = formats.serialize(data, '.yaml', formatter=formats.PyYAML)
-            expect(text) == dedent(
-                """
-            key: value
-            items:
-            - 1
-            - a
-            -
             """
             )
 
