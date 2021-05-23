@@ -6,6 +6,4 @@ HOOKS_ENABLED = True
 
 MINIMIZE_LIST_DIFFS = True
 
-YAML_LIBRARY = 'ruamel.yaml'
-
 WRITE_DELAY = 0.0  # seconds
