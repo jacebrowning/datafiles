@@ -2,6 +2,7 @@
 
 - Removed `auto_load`/`auto_save` model options.
 - Removed `INDENT_YAML_BLOCKS` setting.
+- Removed `YAML_LIBRARY` setting.
 
 # 0.14 (2021-05-21)
 
