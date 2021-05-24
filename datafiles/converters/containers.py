@@ -82,7 +82,7 @@ class List(Converter):
         if data == default_to_skip:
             data.clear()
 
-        if settings.MINIMIZE_LIST_DIFFS:
+        if settings.MINIMAL_DIFFS:
             return data or [None]
 
         return data

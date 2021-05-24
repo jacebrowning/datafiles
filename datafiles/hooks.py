@@ -83,7 +83,7 @@ def load_before(cls, method):
 
     @wraps(method)
     def wrapped(self, *args, **kwargs):
-        __tracebackhide__ = settings.HIDE_TRACEBACK_IN_HOOKS
+        __tracebackhide__ = settings.HIDDEN_TRACEBACK
 
         mapper = get_mapper(self)
         if enabled(mapper, args):
@@ -108,7 +108,7 @@ def save_after(cls, method):
 
     @wraps(method)
     def wrapped(self, *args, **kwargs):
-        __tracebackhide__ = settings.HIDE_TRACEBACK_IN_HOOKS
+        __tracebackhide__ = settings.HIDDEN_TRACEBACK
 
         mapper = get_mapper(self)
         if enabled(mapper, args):

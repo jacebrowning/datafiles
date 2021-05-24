@@ -7,7 +7,7 @@ import pytest
 from datafiles import settings
 
 
-settings.HIDE_TRACEBACK_IN_HOOKS = False
+settings.HIDDEN_TRACEBACK = False
 settings.WRITE_DELAY = 0.1
 
 

@@ -368,12 +368,12 @@ def describe_converter():
             expect(data) == {'flag': True}
 
         def when_empty_list_and_diff_minimization_disabled(expect, monkeypatch):
-            monkeypatch.setattr(settings, 'MINIMIZE_LIST_DIFFS', False)
+            monkeypatch.setattr(settings, 'MINIMAL_DIFFS', False)
             data = StringList.to_preserialization_data([])
             expect(data) == []
 
         def when_empty_set_and_diff_minimization_disabled(expect, monkeypatch):
-            monkeypatch.setattr(settings, 'MINIMIZE_LIST_DIFFS', False)
+            monkeypatch.setattr(settings, 'MINIMAL_DIFFS', False)
             data = StringSet.to_preserialization_data([])
             expect(data) == []
 

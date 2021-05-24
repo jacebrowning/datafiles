@@ -1,9 +1,9 @@
 """Shared configuration flags."""
 
-HIDE_TRACEBACK_IN_HOOKS = True
+HIDDEN_TRACEBACK = True
 
 HOOKS_ENABLED = True
 
-MINIMIZE_LIST_DIFFS = True
+MINIMAL_DIFFS = True
 
 WRITE_DELAY = 0.0  # seconds

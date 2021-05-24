@@ -2,14 +2,14 @@
 
 For clients that wish to temporarily alter any of the previously described behaviors, a handful of settings can be controlled at the module level. All values default to `True` unless otherwise noted.
 
-# `HIDE_TRACEBACK_IN_HOOKS`
+# `HIDDEN_TRACEBACK`
 
 When an exception occurs in patched method, this traceback is hidden by default for `pytest`. If this information is required to debug a complex issue enable it as follows:
 
 ```python
 import datafiles
 
-datafiles.settings.HIDE_TRACEBACK_IN_HOOKS = False
+datafiles.settings.HIDDEN_TRACEBACK = False
 ```
 
 # `HOOKS_ENABLED`
@@ -25,7 +25,7 @@ def pytest_runtest_setup(item):
     datafiles.settings.HOOKS_ENABLED = False
 ```
 
-# `MINIMIZE_LIST_DIFFS`
+# `MINIMAL_DIFFS`
 
 When serializing lists, `datafiles` intentionally deviates from the semantic representation of an empty list to optimize for the use case of storing YAML files in version control.
 
@@ -43,7 +43,7 @@ To disable this behavior:
 ```python
 import datafiles
 
-datafiles.settings.MINIMIZE_LIST_DIFFS = False
+datafiles.settings.MINIMAL_DIFFS = False
 ```
 
 # `WRITE_DELAY`

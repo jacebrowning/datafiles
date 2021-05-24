@@ -3,6 +3,8 @@
 - Removed `auto_load`/`auto_save` model options.
 - Removed `INDENT_YAML_BLOCKS` setting.
 - Removed `YAML_LIBRARY` setting.
+- Renamed `HIDE_TRACEBACK_IN_HOOKS` setting to `HIDDEN_TRACEBACK`.
+- Renamed `MINIMIZE_LIST_DIFFS` settings to `MINIMAL_DIFFS`.
 
 # 0.14 (2021-05-21)
 
