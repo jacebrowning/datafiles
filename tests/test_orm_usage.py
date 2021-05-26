@@ -8,7 +8,7 @@ import pytest
 from datafiles import datafile
 from datafiles.utils import logbreak, write
 
-from . import xfail_on_latest
+from . import xfail_with_pep_563
 from .samples import SampleWithNestingAndOptionals
 
 
@@ -51,7 +51,7 @@ def test_multiple_instances_are_distinct(expect):
     }
 
 
-@xfail_on_latest
+@xfail_with_pep_563
 def test_classes_can_share_a_nested_dataclass(expect):
     @datafile
     class Nested:
@@ -117,7 +117,7 @@ def test_partial_nested_load_from_disk(expect):
     expect(items[0].nested.weight).is_(None)
 
 
-@xfail_on_latest
+@xfail_with_pep_563
 def test_missing_optional_fields_are_loaded(expect):
     @datafile
     class Name:

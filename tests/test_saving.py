@@ -9,7 +9,7 @@ import pytest
 from datafiles import datafile
 from datafiles.utils import dedent, logbreak, read, write
 
-from . import xfail_on_latest
+from . import xfail_with_pep_563
 from .samples import (
     Sample,
     SampleWithCustomFields,
@@ -277,7 +277,7 @@ def describe_optionals():
             """
         )
 
-    @xfail_on_latest
+    @xfail_with_pep_563
     def when_nested_dataclass_is_none(expect):
         @datafile
         class Name:

@@ -8,7 +8,7 @@ from typing import Dict
 from datafiles import Missing, datafile
 from datafiles.utils import logbreak, write
 
-from . import xfail_on_latest
+from . import xfail_with_pep_563
 
 
 @datafile('../tmp/sample.yml', manual=True)
@@ -152,7 +152,7 @@ def describe_factory_defaults():
 
 
 def describe_missing_attributes():
-    @xfail_on_latest
+    @xfail_with_pep_563
     def when_dataclass(expect):
         @dataclass
         class Name:

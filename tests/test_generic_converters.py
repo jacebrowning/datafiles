@@ -5,10 +5,10 @@ from typing import Generic, List, TypeVar
 from datafiles import Missing, converters, datafile
 from datafiles.utils import dedent
 
-from . import xfail_on_latest
+from . import xfail_with_pep_563
 
 
-@xfail_on_latest
+@xfail_with_pep_563
 def test_generic_converters(expect):
     S = TypeVar("S")
     T = TypeVar("T")

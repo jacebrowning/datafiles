@@ -6,7 +6,7 @@ from typing import List, Optional
 from datafiles import datafile
 from datafiles.utils import logbreak
 
-from . import xfail_on_latest
+from . import xfail_with_pep_563
 
 
 def get_sample():
@@ -31,19 +31,19 @@ def get_sample():
     return Sample('profiling', Item(2, None), None, [Item(3, None)])
 
 
-@xfail_on_latest
+@xfail_with_pep_563
 def test_init():
     get_sample()
 
 
-@xfail_on_latest
+@xfail_with_pep_563
 def test_load():
     sample = get_sample()
     logbreak("Loading")
     sample.datafile.load()  # pylint: disable=no-member
 
 
-@xfail_on_latest
+@xfail_with_pep_563
 def test_save():
     sample = get_sample()
     logbreak("Saving")
