@@ -1,3 +1,7 @@
+# 0.15.1 (2021-07-01)
+
+- Fixed handling of no file extension to use YAML by default.
+
 # 0.15 (2021-05-26)
 
 - Removed `auto_load`/`auto_save` model options.
