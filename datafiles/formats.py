@@ -80,7 +80,7 @@ class YAML(Formatter):
 
     @classmethod
     def extensions(cls):
-        return {'.yml', '.yaml'}
+        return {'', '.yml', '.yaml'}
 
     @classmethod
     def deserialize(cls, file_object):

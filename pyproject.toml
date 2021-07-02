@@ -1,7 +1,7 @@
 [tool.poetry]
 
 name = "datafiles"
-version = "0.15"
+version = "0.15.1"
 description = "File-based ORM for dataclasses."
 
 license = "MIT"
@@ -86,7 +86,7 @@ coveragespace = "^4.0"
 
 # Documentation
 mkdocs = "~1.0"
-pygments = "^2.7.4"
+pygments = "^2.9"
 
 # Notebooks
 ipython = "^7.4"

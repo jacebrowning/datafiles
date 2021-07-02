@@ -12,6 +12,11 @@ def describe_serialize():
     def data():
         return {'key': "value", 'items': [1, 'a', None]}
 
+    def describe_default():
+        def it_uses_yaml_when_no_extension(expect, data):
+            text = formats.serialize(data, '')
+            expect(text).contains("key: value")
+
     def describe_yaml():
         def it_indents_blocks_by_default(expect, data):
             text = formats.serialize(data, '.yaml')
