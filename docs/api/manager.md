@@ -1,8 +1,6 @@
 <h1>Manager API</h1>
 
-Object-relational mapping (ORM) methods are available on all model classes via the `objects` proxy.
-
-The following examples assume an empty filesystem and the following datafile definition:
+Object-relational mapping (ORM) methods are available on all model classes via the `objects` proxy. The following sections assume an empty filesystem and the following sample datafile definition:
 
 ```python
 from datafiles import datafile
