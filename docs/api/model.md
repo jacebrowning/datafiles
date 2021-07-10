@@ -52,12 +52,13 @@ Item("abc")  # <=> items/abc.yml
 Item("def")  # <=> items/def.yml
 ```
 
-Attributes included in the filename pattern are automatically excluded from the file contents.
-Filename patterns are relative to the file in which models are defined unless `<pattern>` is an absolute path or explicitly relative to the current directory:
+Filename patterns are relative to the file in which the model is defined unless `<pattern>` is an absolute path or explicitly relative to the current directory:
 
 - Absolute: `/tmp/items/{self.name}.yml`
 - Relative to model: `items/{self.name}.yml`
 - Relative to current directory: `./items/{self.name}.yml`
+
+Attributes included in the filename pattern and those with default value are automatically excluded from serialization since these redundant values are not required to restore objects from disk.
 
 <h3>Options</h3>
 
