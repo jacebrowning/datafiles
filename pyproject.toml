@@ -72,7 +72,7 @@ pydocstyle = "*"
 
 # Testing
 pytest = "^6.2.3"
-pytest-describe = "^1.0"
+pytest-describe = "^2.0"
 pytest-expecter = "^2.1"
 pytest-mock = "*"
 pytest-random = "*"

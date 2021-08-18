@@ -975,14 +975,14 @@ testing = ["fields", "hunter", "process-tests (==2.0.2)", "six", "pytest-xdist",
 
 [[package]]
 name = "pytest-describe"
-version = "1.0.0"
+version = "2.0.0"
 description = "Describe-style plugin for pytest"
 category = "dev"
 optional = false
 python-versions = "*"
 
 [package.dependencies]
-pytest = ">=2.6.0"
+pytest = ">=4.0.0"
 
 [[package]]
 name = "pytest-expecter"
@@ -1398,7 +1398,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pyt
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "bb383e92649dbd942598089d666c15d7cd42f3b67ebc36b727f440da2806dff0"
+content-hash = "f65efefdfa004d51f467d46b09a1231606a96ad402c61bd34e19823d63c5bf6b"
 
 [metadata.files]
 ansiwrap = [
@@ -1910,9 +1910,8 @@ pytest-cov = [
     {file = "pytest_cov-2.11.1-py2.py3-none-any.whl", hash = "sha256:bdb9fdb0b85a7cc825269a4c56b48ccaa5c7e365054b6038772c32ddcdc969da"},
 ]
 pytest-describe = [
-    {file = "pytest-describe-1.0.0.tar.gz", hash = "sha256:3e2ea0e77efa09edb98cf90423bf1da21a462ed90bd3120f8f98fe7519a167d5"},
-    {file = "pytest_describe-1.0.0-py2-none-any.whl", hash = "sha256:cc3862662faa5a6fb721927aaef46b46cf787e4a8163e5459fc8778e650fabad"},
-    {file = "pytest_describe-1.0.0-py3-none-any.whl", hash = "sha256:95fe78639d4d16c4a1e7d62c70f63030b217c08d2ee6dca49559fe6e730c6696"},
+    {file = "pytest-describe-2.0.0.tar.gz", hash = "sha256:71b80ccf55e7d18c682e5048516a9f5b0aca0e93f31822424a62c87aafc96ef6"},
+    {file = "pytest_describe-2.0.0-py3-none-any.whl", hash = "sha256:4f179634074afbf9a5305b33e46ecb5263d21b212c344a49f618eb6f1278c143"},
 ]
 pytest-expecter = [
     {file = "pytest-expecter-2.2.tar.gz", hash = "sha256:33c5b05008cad9b95ba0deb0a5bac6a51c68ae94f09de74a19cd1384a04c85d6"},
