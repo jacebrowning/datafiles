@@ -3,6 +3,8 @@
 # pylint: disable=unused-variable
 
 
+from enum import Enum
+
 import pytest
 
 from datafiles import datafile
@@ -111,3 +113,23 @@ def describe_text():
         sample.datafile.save()
 
         expect(sample.text) == "abc\ndef\n"
+
+
+def describe_enum():
+    def as_toml(expect):
+        class FileOutputType(Enum):
+            IN_MESSAGE = 1
+            FILESYSTEM = 2
+
+        @datafile('../tmp/sample.toml')
+        class Sample:
+            path_type: FileOutputType = FileOutputType.IN_MESSAGE
+
+        sample = Sample()
+        sample.path_type = FileOutputType.FILESYSTEM
+
+        expect(read('tmp/sample.toml')) == dedent(
+            """
+            path_type = 2
+            """
+        )
