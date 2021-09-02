@@ -232,30 +232,30 @@ def describe_converter():
             expect(converter.to_python_value(data, target_object=None)) == value
 
         def with_existing_list(expect):
-            orginal = [1, 2]
+            original = [1, 2]
 
-            value = IntegerList.to_python_value("3, 4", target_object=orginal)
+            value = IntegerList.to_python_value("3, 4", target_object=original)
 
             expect(value) == [3, 4]
-            expect(id(value)) == id(orginal)
+            expect(id(value)) == id(original)
 
         def when_existing_dict(expect):
-            orginal = {'a': 1}
+            original = {'a': 1}
 
-            value = MyDict.to_python_value({'b': 2}, target_object=orginal)
+            value = MyDict.to_python_value({'b': 2}, target_object=original)
 
             expect(value) == {'b': 2}
-            expect(id(value)) == id(orginal)
+            expect(id(value)) == id(original)
 
         def with_existing_dataclass(expect):
-            orginal = MyDataclass(foobar=1)
+            original = MyDataclass(foobar=1)
 
             value = MyDataclassConverter.to_python_value(
-                {'foobar': 2}, target_object=orginal
+                {'foobar': 2}, target_object=original
             )
 
             expect(value) == MyDataclass(foobar=2)
-            expect(id(value)) == id(orginal)
+            expect(id(value)) == id(original)
 
     def describe_to_preserialization_data():
         @pytest.mark.parametrize(
