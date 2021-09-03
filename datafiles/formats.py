@@ -9,7 +9,7 @@ from typing import IO, Dict, List
 
 import log
 
-from . import types
+from . import types, utils
 
 
 _REGISTRY: Dict[str, type] = {}
@@ -66,7 +66,7 @@ class TOML(Formatter):
     def deserialize(cls, file_object):
         import tomlkit
 
-        return tomlkit.loads(file_object.read())
+        return utils.dictify(tomlkit.loads(file_object.read()))
 
     @classmethod
     def serialize(cls, data):

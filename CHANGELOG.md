@@ -1,3 +1,7 @@
+# 0.15.2 (2021-09-03)
+
+- Fixed `ValueError` when loading enum values from TOML files.
+
 # 0.15.1 (2021-07-01)
 
 - Fixed handling of no file extension to use YAML by default.
