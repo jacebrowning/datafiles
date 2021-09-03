@@ -133,3 +133,12 @@ def describe_enum():
             path_type = 2
             """
         )
+
+        write(
+            'tmp/sample.toml',
+            """
+            path_type = 1
+            """,
+        )
+
+        expect(sample.path_type) == FileOutputType.IN_MESSAGE
