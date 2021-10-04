@@ -1,4 +1,4 @@
-# 1.0 (beta)
+# 1.0 (2021-10-04)
 
 - Initial stable release.
 

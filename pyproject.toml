@@ -1,7 +1,7 @@
 [tool.poetry]
 
 name = "datafiles"
-version = "1.0b1"
+version = "1.0"
 description = "File-based ORM for dataclasses."
 
 license = "MIT"
@@ -24,7 +24,7 @@ keywords = [
     "TOML",
 ]
 classifiers = [
-    "Development Status :: 4 - Beta",
+    "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
     "Natural Language :: English",
