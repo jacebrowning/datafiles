@@ -1,3 +1,7 @@
+# 1.0 (beta)
+
+- Initial stable release.
+
 # 0.15.2 (2021-09-03)
 
 - Fixed `ValueError` when loading enum values from TOML files.
