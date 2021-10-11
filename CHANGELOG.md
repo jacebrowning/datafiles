@@ -1,3 +1,7 @@
+# 1.1 (alpha)
+
+- Added support for Python 3.10's builtin optional types (e.g. `int | None`).
+
 # 1.0 (2021-10-04)
 
 - Initial stable release.

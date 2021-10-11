@@ -103,6 +103,12 @@ def describe_map_type():
         expect(converter.__name__) == 'ColorConverter'
 
     def it_handles_optionals(expect):
+        converter = converters.map_type(str | None)
+        expect(converter.__name__) == 'OptionalString'
+        expect(converter.TYPE) == str
+        expect(converter.DEFAULT).is_(None)
+
+    def it_handles_optionals_with_legacy_syntax(expect):
         converter = converters.map_type(Optional[str])
         expect(converter.__name__) == 'OptionalString'
         expect(converter.TYPE) == str
