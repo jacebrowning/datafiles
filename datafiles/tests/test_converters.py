@@ -9,6 +9,8 @@ from ruamel.yaml.scalarstring import LiteralScalarString
 
 from datafiles import converters, settings
 
+from . import xfail_without_pep_604
+
 
 @dataclass
 class MyDataclass:
@@ -102,6 +104,7 @@ def describe_map_type():
         converter = converters.map_type(Color)
         expect(converter.__name__) == 'ColorConverter'
 
+    @xfail_without_pep_604
     def it_handles_optionals(expect):
         converter = converters.map_type(str | None)
         expect(converter.__name__) == 'OptionalString'
