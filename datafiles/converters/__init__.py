@@ -1,8 +1,8 @@
 import dataclasses
 import inspect
+import types
 from enum import Enum
 from inspect import isclass
-from types import UnionType  # type: ignore
 from typing import Any, Dict, Mapping, Optional, Union
 
 import log
@@ -66,7 +66,8 @@ def map_type(cls, *, name: str = '', item_cls: Optional[type] = None):
         log.debug(f'Mapped {cls!r} to new converter: {converter}')
         return converter
 
-    if isinstance(cls, UnionType):  # Python 3.10 behavior
+    if hasattr(types, 'UnionType') and isinstance(cls, types.UnionType):  # type: ignore
+        # Python 3.10 behavior
         converter = map_type(cls.__args__[0])
         assert len(cls.__args__) == 2
         assert cls.__args__[1] == type(None)
