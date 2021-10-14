@@ -85,7 +85,7 @@ pytest-profiling = "*"
 coveragespace = "^4.0"
 
 # Documentation
-mkdocs = "~1.0"
+mkdocs = "~1.2.3"
 pygments = "^2.9"
 
 # Notebooks
