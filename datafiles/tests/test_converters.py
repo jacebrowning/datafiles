@@ -106,7 +106,7 @@ def describe_map_type():
 
     @xfail_without_pep_604
     def it_handles_optionals(expect):
-        converter = converters.map_type(str | None)
+        converter = converters.map_type(str | None)  # type: ignore
         expect(converter.__name__) == 'OptionalString'
         expect(converter.TYPE) == str
         expect(converter.DEFAULT).is_(None)
