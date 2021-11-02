@@ -1,7 +1,7 @@
 [tool.poetry]
 
 name = "datafiles"
-version = "1.0"
+version = "1.1b1"
 description = "File-based ORM for dataclasses."
 
 license = "MIT"
@@ -65,8 +65,7 @@ black = "=21.9b0"
 isort = "=5.9.2"
 
 # Linters
-mypy = "~0.790"
-typed_ast = "^1.4.3" # updated mypy dependency for Python 3.10
+mypy = "~0.910"
 pylint = "~2.7.4"
 pydocstyle = "*"
 
@@ -85,7 +84,7 @@ pytest-profiling = "*"
 coveragespace = "^4.0"
 
 # Documentation
-mkdocs = "~1.0"
+mkdocs = "~1.0.4"
 pygments = "^2.9"
 
 # Notebooks

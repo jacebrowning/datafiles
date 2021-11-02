@@ -1,5 +1,6 @@
 import dataclasses
 import inspect
+import types
 from enum import Enum
 from inspect import isclass
 from typing import Any, Dict, Mapping, Optional, Union
@@ -63,6 +64,14 @@ def map_type(cls, *, name: str = '', item_cls: Optional[type] = None):
             converters[field.name] = map_type(resolve(field.type), name=field.name)  # type: ignore
         converter = Dataclass.of_mappings(cls, converters)
         log.debug(f'Mapped {cls!r} to new converter: {converter}')
+        return converter
+
+    if hasattr(types, 'UnionType') and isinstance(cls, types.UnionType):  # type: ignore
+        # Python 3.10 behavior
+        converter = map_type(cls.__args__[0])
+        assert len(cls.__args__) == 2
+        assert cls.__args__[1] == type(None)
+        converter = converter.as_optional()
         return converter
 
     cls = resolve(cls)
