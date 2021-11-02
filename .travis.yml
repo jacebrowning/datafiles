@@ -1,10 +1,11 @@
-dist: xenial
+dist: focal
 
 language: python
 python:
-  - 3.7
-  - 3.8
-  - 3.9
+  - "3.7"
+  - "3.8"
+  - "3.9"
+  - "3.10.0"
 
 cache:
   pip: true
@@ -12,8 +13,7 @@ cache:
     - ${VIRTUAL_ENV}
 
 before_install:
-  - curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
-  - source $HOME/.poetry/env
+  - curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/install-poetry.py | python -
   - make doctor
 
 install:
