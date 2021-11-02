@@ -1420,7 +1420,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pyt
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "bb75a035cbd022a0bc7dbd5664b8223e80a6fd1ead42850a4c98ddb3c6d04a5c"
+content-hash = "c5461efa88acb98924418c5ef4e6ef9bdaf65033889a1efb50ca6cee1ad5f7a9"
 
 [metadata.files]
 ansiwrap = [
