@@ -1,4 +1,4 @@
-# 1.1 (alpha)
+# 1.1 (beta)
 
 - Added support for Python 3.10's builtin optional types (e.g. `int | None`).
 
