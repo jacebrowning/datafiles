@@ -6,7 +6,9 @@ from inspect import isclass
 from typing import Any, Dict, Mapping, Optional, Union
 
 import log
+from ruamel.yaml.comments import CommentedMap
 from ruamel.yaml.scalarfloat import ScalarFloat
+from ruamel.yaml.scalarstring import DoubleQuotedScalarString
 
 from ..utils import cached, subclasses
 from ._bases import Converter
@@ -31,6 +33,10 @@ register(Float.TYPE, Float)
 register(ScalarFloat, Float)
 register(Boolean.TYPE, Boolean)
 register(String.TYPE, String)
+register(DoubleQuotedScalarString, String)
+register(CommentedMap, Dictionary)
+register(list, List)
+register(dict, Dictionary)
 
 
 def resolve(annotation, obj=None):
