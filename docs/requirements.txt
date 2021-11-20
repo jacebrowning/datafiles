@@ -1,4 +1,4 @@
 markdown==3.3.4; python_version >= "3.6"
 mkdocs==1.2.3; python_version >= "3.6"
 jupyterlab-pygments==0.1.2; python_version >= "3.6"
-pygments==2.9.0; python_version >= "3.5"
+pygments==2.10.0; python_version >= "3.5"
