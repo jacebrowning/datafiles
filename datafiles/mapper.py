@@ -5,6 +5,7 @@ from __future__ import annotations
 import dataclasses
 import inspect
 import os
+from contextlib import suppress
 from pathlib import Path
 from typing import Any, Dict, Optional
 
@@ -98,7 +99,8 @@ class Mapper:
 
     @property
     def data(self) -> Dict:
-        return self._get_data()
+        with hooks.disabled():
+            return self._get_data()
 
     def _get_data(self, include_default_values: Trilean = None) -> Dict:
         log.debug(f'Preserializing object to data: {self._instance!r}')
@@ -188,7 +190,8 @@ class Mapper:
     def _infer_attr(name, value):
         cls: Any = type(value)
         if issubclass(cls, list):
-            cls.__origin__ = list
+            with suppress(TypeError):
+                cls.__origin__ = list
             if value:
                 item_cls = type(value[0])
                 for item in value:
@@ -203,7 +206,8 @@ class Mapper:
             return map_type(cls, name=name, item_cls=item_cls)  # type: ignore
 
         if issubclass(cls, dict):
-            cls.__origin__ = dict
+            with suppress(TypeError):
+                cls.__origin__ = dict
             log.debug(f'Inferring {name!r} type: {cls}')
             return map_type(cls, name=name, item_cls=Converter)
 

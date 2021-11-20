@@ -100,6 +100,16 @@ def describe_map_type():
             'flag': converters.Boolean,
         }
 
+    @pytest.mark.parametrize(
+        ("cls", "converter"),
+        [
+            (list, converters.List),
+            (dict, converters.Dictionary),
+        ],
+    )
+    def it_handles_container_literals(expect, cls, converter):
+        expect(converters.map_type(cls)) == converter
+
     def it_handles_enums(expect):
         converter = converters.map_type(Color)
         expect(converter.__name__) == 'ColorConverter'
