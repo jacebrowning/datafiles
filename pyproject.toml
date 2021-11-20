@@ -88,6 +88,7 @@ mkdocs = "~1.2.3"
 pygments = "^2.9"
 
 # Notebooks
+idna = "^3.3" # papermill dependency
 ipython = "^7.4"
 jupyter = "^1.0"
 nbstripout ="~0.4"
