@@ -1,4 +1,4 @@
-<h1>Custom Types</h1>
+# Custom Types
 
 Additional types are supported though custom type as annotations.
 

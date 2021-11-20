@@ -1,4 +1,4 @@
-<h1>File Formats</h1>
+# File Formats
 
 The following formats are supported for serialization.
 

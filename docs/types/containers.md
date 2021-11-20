@@ -1,4 +1,4 @@
-<h1>Container Types</h1>
+# Container Types
 
 Various container types are supported to defined collections of objects.
 

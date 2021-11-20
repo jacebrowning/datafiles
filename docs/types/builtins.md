@@ -1,4 +1,4 @@
-<h1>Builtin Types</h1>
+# Builtin Types
 
 When Python builtin types are used as type annotations they are automatically mapped to the corresponding type in the chosen file format. Any of these types will accept `None` as a value when made optional.
 

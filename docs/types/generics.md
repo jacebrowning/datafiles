@@ -1,4 +1,4 @@
-<h1>Generic Types</h1>
+# Generic Types
 
 Python generic types are supported, but require `to_python_value` and
 `to_preserialization_data` implementations similar to custom types. The
