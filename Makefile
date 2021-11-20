@@ -95,7 +95,9 @@ $(MKDOCS_INDEX): docs/requirements.txt mkdocs.yml docs/*.md
 	poetry run mkdocs build --clean --strict
 
 docs/requirements.txt: poetry.lock
-	@ poetry export --dev --without-hashes | grep mkdocs > $@
+	@ rm -f $@
+	@ poetry export --dev --without-hashes | grep markdown >> $@
+	@ poetry export --dev --without-hashes | grep mkdocs >> $@
 	@ poetry export --dev --without-hashes | grep pygments >> $@
 
 .PHONY: mkdocs-serve

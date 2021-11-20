@@ -1,4 +1,4 @@
-<h1>Manager API</h1>
+# Manager API
 
 Object-relational mapping (ORM) methods are available on all model classes via the `objects` proxy. The following sections assume an empty filesystem and the following sample datafile definition:
 

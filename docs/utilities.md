@@ -1,8 +1,8 @@
-<h1>Utilities</h1>
+# Utilities
 
 The following functions exist to provide additional high-level functionality.
 
-# `auto()`
+## `auto()`
 
 Given an arbitrary file, this library can attempt to map its structure into a Python object synchronized back to that file. For example, a YAML file named `sample.yml` containing the following:
 

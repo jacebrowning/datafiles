@@ -1,4 +1,4 @@
-<h1>Model API</h1>
+# Model API
 
 A model is created by either extending the `Model` class or using the `datafile()` decorator.
 
@@ -43,7 +43,7 @@ class Item:
     available: bool
 ```
 
-<h3>Filename</h3>
+### Filename
 
 Instances of the class are synchronized to disk according to the `<pattern>` string:
 
@@ -60,7 +60,7 @@ Filename patterns are relative to the file in which the model is defined unless 
 
 Attributes included in the filename pattern and those with default value are automatically excluded from serialization since these redundant values are not required to restore objects from disk.
 
-<h3>Options</h3>
+### Options
 
 The following options can be passed to the `@datafile()` decorator:
 

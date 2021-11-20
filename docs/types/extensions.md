@@ -1,4 +1,4 @@
-<h1>Extended Types</h1>
+# Extended Types
 
 For convenience, additional types are defined to handle common scenarios.
 

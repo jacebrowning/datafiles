@@ -1,4 +1,4 @@
-<h1>Mapper API</h1>
+# Mapper API
 
 Instances of datafile models have an additional `datafile` proxy to manually interact with the filesystem. The following sections assume an empty filesystem and use the following sample datafile definition:
 

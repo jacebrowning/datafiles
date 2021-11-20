@@ -84,10 +84,11 @@ pytest-profiling = "*"
 coveragespace = "^4.0"
 
 # Documentation
-mkdocs = "~1.2.3"
-pygments = "^2.9"
+mkdocs = "^1.2.3"
+pygments = "^2.10"
 
 # Notebooks
+idna = "^3.3" # papermill dependency
 ipython = "^7.4"
 jupyter = "^1.0"
 nbstripout ="~0.4"
