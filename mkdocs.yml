@@ -19,15 +19,16 @@ nav:
     - Model: api/model.md
     - Manager: api/manager.md
     - Mapper: api/mapper.md
-  - Supported Types:
+  - Types:
     - Builtins: types/builtins.md
     - Containers: types/containers.md
     - Extended Types: types/extensions.md
     - Custom Types: types/custom.md
     - Generic Types: types/generics.md
-  - File Formats: formats.md
-  - Utilities: utilities.md
-  - Settings: settings.md
+  - Extras:
+    - File Formats: formats.md
+    - Utilities: utilities.md
+    - Settings: settings.md
   - About:
     - Release Notes: about/changelog.md
     - Contributing: about/contributing.md
