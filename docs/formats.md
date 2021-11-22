@@ -115,17 +115,17 @@ from datafile import datafile, formats
 class MyFormat(formats.Format):
 
     @classmethod
-    def extensions(cls) -> List[str]:
+    def extensions(cls) -> list[str]:
         return ['.my_ext']
 
     @classmethod
     @abstractmethod
-    def deserialize(cls, file_object: IO) -> Dict:
+    def deserialize(cls, file_object: IO) -> dict:
         # Read `file_object` and return a dictionary
 
     @classmethod
     @abstractmethod
-    def serialize(cls, data: Dict) -> str:
+    def serialize(cls, data: dict) -> str:
         # Convert `data` to a string
 
 

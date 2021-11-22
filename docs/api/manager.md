@@ -14,7 +14,7 @@ class MyModel:
 
 Many of the following examples are also shown in this [Jupyter Notebook](https://github.com/jacebrowning/datafiles/blob/main/notebooks/manager_api.ipynb).
 
-# `get()`
+## `get()`
 
 Instantiate an object from an existing file. If no matching file exist, or if any other problem occurs, an appropriate exception will be raised.
 
@@ -34,7 +34,7 @@ FileNotFoundError: [Errno 2] No such file or directory: 'foobar.yml'
 MyModel(my_key='foobar', my_value=42)
 ```
 
-# `get_or_none()`
+## `get_or_none()`
 
 Instantiate an object from an existing file or return `None` if no matching file exists:
 
@@ -52,7 +52,7 @@ None
 MyModel(my_key='foobar', my_value=42)
 ```
 
-# `get_or_create()`
+## `get_or_create()`
 
 Instantiate an object from an existing file or create one if no matching file exists:
 
@@ -70,7 +70,7 @@ MyModel(my_key='foo', my_value=42)
 MyModel(my_key='bar', my_value=0)
 ```
 
-# `all()`
+## `all()`
 
 Iterate over all objects matching the pattern:
 
@@ -99,7 +99,7 @@ Exclude objects from ever being loaded and returned with `_exclude`:
 >>> generator = MyModel.objects.all(_exclude='foo')
 ```
 
-# `filter()`
+## `filter()`
 
 Iterate all objects matching the pattern with additional required attribute values:
 

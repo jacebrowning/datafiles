@@ -18,7 +18,7 @@ class MyModel:
 
 Many of the following examples are also shown in this [Jupyter Notebook](https://github.com/jacebrowning/datafiles/blob/main/notebooks/mapper_api.ipynb).
 
-# `path`
+## `path`
 
 Get the full path to the mapped file:
 
@@ -27,7 +27,7 @@ Get the full path to the mapped file:
 PosixPath('/Projects/Demo/my_models/foo.yml')
 ```
 
-# `exists`
+## `exists`
 
 Determine if the mapped file exists:
 
@@ -38,7 +38,7 @@ False
 
 _By default, the file is created automatically. Set `manual=True` to disable this behavior._
 
-# `save()`
+## `save()`
 
 Manually save an object to the filesystem:
 
@@ -48,7 +48,7 @@ Manually save an object to the filesystem:
 
 _By default, this method is called automatically. Set `manual=True` to disable this behavior._
 
-# `load()`
+## `load()`
 
 Manually load an object from the filesystem:
 
@@ -58,7 +58,7 @@ Manually load an object from the filesystem:
 
 _By default, this method is called automatically. Set `manual=True` to disable this behavior._
 
-# `modified`
+## `modified`
 
 Determine if there are any unsynchronized changes on the filesystem:
 
@@ -71,7 +71,7 @@ $ echo "my_value: 42" > my_models/foo.yml
 True
 ```
 
-# `data`
+## `data`
 
 Access the parsed model attributes directly:
 
