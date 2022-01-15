@@ -2,6 +2,7 @@
 
 - Added support for Python 3.10's builtin optional types (e.g. `int | None`).
 - Fixed handling of commented blocks in YAML files.
+- Fixed serialization for `list` of `dict` in YAML.
 
 # 1.0 (2021-10-04)
 
