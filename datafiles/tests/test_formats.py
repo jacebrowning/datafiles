@@ -30,6 +30,16 @@ def describe_serialize():
             """
             )
 
+        def it_handles_lists_of_dicts(expect):
+            data = [{"one": 1, "two": 2}]
+            text = formats.serialize(data, '.yaml')
+            expect(text) == dedent(
+                """
+            - one: 1
+              two: 2
+            """
+            )
+
 
 def describe_deserialize():
     @pytest.fixture

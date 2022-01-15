@@ -5,7 +5,7 @@ from abc import ABCMeta, abstractmethod
 from contextlib import suppress
 from io import StringIO
 from pathlib import Path
-from typing import IO, Dict, List
+from typing import IO, Dict, List, Union
 
 import log
 
@@ -105,7 +105,10 @@ class YAML(Formatter):
 
         stream = StringIO()
         yaml.dump(data, stream)
-        text = stream.getvalue().strip() + '\n'
+        text = stream.getvalue()
+
+        if text.startswith('  '):
+            return text[2:].replace('\n  ', '\n')
 
         if text == "{}\n":
             return ""
@@ -127,7 +130,9 @@ def deserialize(path: Path, extension: str, *, formatter=None) -> Dict:
         return data
 
 
-def serialize(data: Dict, extension: str = '.yml', *, formatter=None) -> str:
+def serialize(
+    data: Union[Dict, List], extension: str = '.yml', *, formatter=None
+) -> str:
     if formatter is None:
         formatter = _get_formatter(extension)
     return formatter.serialize(data)
