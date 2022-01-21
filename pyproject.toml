@@ -89,7 +89,7 @@ pygments = "^2.10"
 
 # Notebooks
 idna = "^3.3" # papermill dependency
-ipython = "^7.4"
+ipython = "^7.31"
 jupyter = "^1.0"
 nbstripout ="~0.4"
 papermill = "^2.3"
