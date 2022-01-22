@@ -1,4 +1,4 @@
-# 1.1 (beta)
+# 1.1 (2022-01-21)
 
 - Added support for Python 3.10's builtin optional types (e.g. `int | None`).
 - Fixed handling of commented blocks in YAML files.
