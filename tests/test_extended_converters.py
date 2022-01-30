@@ -12,7 +12,7 @@ from datafiles.converters import Number, Text
 from datafiles.utils import dedent, read, write
 
 
-@datafile('../tmp/sample.yml')
+@datafile("../tmp/sample.yml")
 class Sample:
     number: Number = Number(0)
     text: Text = Text("")
@@ -26,7 +26,7 @@ def describe_number():
     def with_float_to_integer(sample, expect):
         sample.number = 1.23
 
-        expect(read('tmp/sample.yml')) == dedent(
+        expect(read("tmp/sample.yml")) == dedent(
             """
             number: 1.23
             """
@@ -34,7 +34,7 @@ def describe_number():
 
         sample.number = 4
 
-        expect(read('tmp/sample.yml')) == dedent(
+        expect(read("tmp/sample.yml")) == dedent(
             """
             number: 4
             """
@@ -42,7 +42,7 @@ def describe_number():
 
     def with_integer_to_float(sample, expect):
         write(
-            'tmp/sample.yml',
+            "tmp/sample.yml",
             """
             number: 5
             """,
@@ -51,7 +51,7 @@ def describe_number():
         expect(sample.number) == 5
 
         write(
-            'tmp/sample.yml',
+            "tmp/sample.yml",
             """
             number: 6.78
             """,
@@ -68,16 +68,16 @@ def describe_text():
     def with_single_line(sample, expect):
         sample.text = "Hello, world!"
 
-        expect(read('tmp/sample.yml')) == dedent(
+        expect(read("tmp/sample.yml")) == dedent(
             """
             text: Hello, world!
             """
         )
 
     def with_multiple_lines(sample, expect):
-        sample.text = '\n'.join(f'Line {i+1}' for i in range(3))
+        sample.text = "\n".join(f"Line {i+1}" for i in range(3))
 
-        expect(read('tmp/sample.yml')) == dedent(
+        expect(read("tmp/sample.yml")) == dedent(
             """
             text: |
               Line 1
@@ -87,7 +87,7 @@ def describe_text():
         )
 
         write(
-            'tmp/sample.yml',
+            "tmp/sample.yml",
             """
             text: |
               Line 4
@@ -101,7 +101,7 @@ def describe_text():
     def with_extra_newlines(sample, expect):
         sample.text = "\nabc\ndef\n\n"
 
-        expect(read('tmp/sample.yml')) == dedent(
+        expect(read("tmp/sample.yml")) == dedent(
             """
             text: |
               abc
@@ -121,21 +121,21 @@ def describe_enum():
             IN_MESSAGE = 1
             FILESYSTEM = 2
 
-        @datafile('../tmp/sample.toml')
+        @datafile("../tmp/sample.toml")
         class Sample:
             path_type: FileOutputType = FileOutputType.IN_MESSAGE
 
         sample = Sample()
         sample.path_type = FileOutputType.FILESYSTEM
 
-        expect(read('tmp/sample.toml')) == dedent(
+        expect(read("tmp/sample.toml")) == dedent(
             """
             path_type = 2
             """
         )
 
         write(
-            'tmp/sample.toml',
+            "tmp/sample.toml",
             """
             path_type = 1
             """,

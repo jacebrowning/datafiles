@@ -7,34 +7,33 @@ import log
 from . import settings, types
 from .mapper import create_mapper
 
-
 LOAD_BEFORE_METHODS = [
-    '__getattribute__',
-    '__getitem__',
-    '__iter__',
+    "__getattribute__",
+    "__getitem__",
+    "__iter__",
 ]
 SAVE_AFTER_METHODS = [
-    '__setattr__',
-    '__setitem__',
-    '__delitem__',
-    'append',
-    'extend',
-    'insert',
-    'remove',
-    'pop',
-    'clear',
-    'sort',
-    'reverse',
-    'popitem',
-    'update',
+    "__setattr__",
+    "__setitem__",
+    "__delitem__",
+    "append",
+    "extend",
+    "insert",
+    "remove",
+    "pop",
+    "clear",
+    "sort",
+    "reverse",
+    "popitem",
+    "update",
 ]
-FLAG = '_patched'
+FLAG = "_patched"
 
 
 def apply(instance, mapper):
     """Path methods that get or set attributes."""
     cls = instance.__class__
-    log.debug(f'Patching methods on {cls}')
+    log.debug(f"Patching methods on {cls}")
 
     for method_name in LOAD_BEFORE_METHODS:
         with suppress(AttributeError):
@@ -94,7 +93,7 @@ def load_before(cls, method):
 
         return method(self, *args, **kwargs)
 
-    log.debug(f'Patched method to load before call: {cls.__name__}.{method.__name__}')
+    log.debug(f"Patched method to load before call: {cls.__name__}.{method.__name__}")
     setattr(wrapped, FLAG, True)
 
     return wrapped
@@ -125,7 +124,7 @@ def save_after(cls, method):
 
         return result
 
-    log.debug(f'Patched method to save after call: {cls.__name__}.{method.__name__}')
+    log.debug(f"Patched method to save after call: {cls.__name__}.{method.__name__}")
     setattr(wrapped, FLAG, True)
 
     return wrapped
@@ -133,7 +132,7 @@ def save_after(cls, method):
 
 def get_mapper(obj):
     try:
-        return object.__getattribute__(obj, 'datafile')
+        return object.__getattribute__(obj, "datafile")
     except AttributeError:
         return None
 
@@ -150,9 +149,9 @@ def enabled(mapper, args) -> bool:
         return False
 
     if args and isinstance(args[0], str):
-        if args[0] in {'Meta', 'datafile'}:
+        if args[0] in {"Meta", "datafile"}:
             return False
-        if args[0].startswith('_'):
+        if args[0].startswith("_"):
             return False
 
     return True

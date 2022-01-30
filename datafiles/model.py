@@ -13,7 +13,7 @@ class Model:
     Meta: config.Meta = config.Meta()
 
     def __post_init__(self):
-        log.debug(f'Initializing {self.__class__} object')
+        log.debug(f"Initializing {self.__class__} object")
 
         self.datafile = create_mapper(self)
 
@@ -25,8 +25,8 @@ class Model:
                 create = not self.datafile.manual
 
                 if path:
-                    log.debug(f'Datafile path: {path}')
-                    log.debug(f'Datafile exists: {exists}')
+                    log.debug(f"Datafile path: {path}")
+                    log.debug(f"Datafile exists: {exists}")
 
                     if exists:
                         self.datafile.load(_first_load=True)
@@ -35,7 +35,7 @@ class Model:
 
                     hooks.apply(self, self.datafile)
 
-        log.debug(f'Initialized {self.__class__} object')
+        log.debug(f"Initialized {self.__class__} object")
 
     @classproperty
     def objects(cls) -> Manager:  # pylint: disable=no-self-argument
@@ -46,25 +46,25 @@ def create_model(
     cls, *, attrs=None, manual=None, pattern=None, defaults=None, infer=None
 ):
     """Patch model attributes on to an existing dataclass."""
-    log.debug(f'Converting {cls} to a datafile model')
+    log.debug(f"Converting {cls} to a datafile model")
 
     if not dataclasses.is_dataclass(cls):
-        raise ValueError(f'{cls} must be a dataclass')
+        raise ValueError(f"{cls} must be a dataclass")
 
     # Patch meta
 
-    m = getattr(cls, 'Meta', config.Meta())
+    m = getattr(cls, "Meta", config.Meta())
 
     if attrs is not None:
         m.datafile_attrs = attrs
     if pattern is not None:
         m.datafile_pattern = pattern
 
-    if not hasattr(cls, 'Meta') and manual is not None:
+    if not hasattr(cls, "Meta") and manual is not None:
         m.datafile_manual = manual
-    if not hasattr(cls, 'Meta') and defaults is not None:
+    if not hasattr(cls, "Meta") and defaults is not None:
         m.datafile_defaults = defaults
-    if not hasattr(cls, 'Meta') and infer is not None:
+    if not hasattr(cls, "Meta") and infer is not None:
         m.datafile_infer = infer
 
     cls.Meta = m

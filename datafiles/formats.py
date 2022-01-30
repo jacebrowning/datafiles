@@ -11,7 +11,6 @@ import log
 
 from . import types, utils
 
-
 _REGISTRY: Dict[str, type] = {}
 
 
@@ -44,7 +43,7 @@ class JSON(Formatter):
 
     @classmethod
     def extensions(cls):
-        return {'.json'}
+        return {".json"}
 
     @classmethod
     def deserialize(cls, file_object):
@@ -60,7 +59,7 @@ class TOML(Formatter):
 
     @classmethod
     def extensions(cls):
-        return {'.toml'}
+        return {".toml"}
 
     @classmethod
     def deserialize(cls, file_object):
@@ -80,7 +79,7 @@ class YAML(Formatter):
 
     @classmethod
     def extensions(cls):
-        return {'', '.yml', '.yaml'}
+        return {"", ".yml", ".yaml"}
 
     @classmethod
     def deserialize(cls, file_object):
@@ -107,19 +106,19 @@ class YAML(Formatter):
         yaml.dump(data, stream)
         text = stream.getvalue()
 
-        if text.startswith('  '):
-            return text[2:].replace('\n  ', '\n')
+        if text.startswith("  "):
+            return text[2:].replace("\n  ", "\n")
 
         if text == "{}\n":
             return ""
 
-        return text.replace('- \n', '-\n')
+        return text.replace("- \n", "-\n")
 
 
 def deserialize(path: Path, extension: str, *, formatter=None) -> Dict:
     if formatter is None:
         formatter = _get_formatter(extension)
-    with path.open('r') as file_object:
+    with path.open("r") as file_object:
         data = formatter.deserialize(file_object)
         if data is None:
             log.debug(f"No data in {path}")
@@ -131,7 +130,7 @@ def deserialize(path: Path, extension: str, *, formatter=None) -> Dict:
 
 
 def serialize(
-    data: Union[Dict, List], extension: str = '.yml', *, formatter=None
+    data: Union[Dict, List], extension: str = ".yml", *, formatter=None
 ) -> str:
     if formatter is None:
         formatter = _get_formatter(extension)
@@ -146,4 +145,4 @@ def _get_formatter(extension: str):
         if extension in formatter.extensions():
             return formatter
 
-    raise ValueError(f'Unsupported file extension: {extension!r}')
+    raise ValueError(f"Unsupported file extension: {extension!r}")

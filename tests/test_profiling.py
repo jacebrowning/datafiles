@@ -17,7 +17,7 @@ def get_sample():
         optional: Optional[int]
         default: int = 42
 
-    @datafile('../tmp/{self.key}.yml', defaults=True)
+    @datafile("../tmp/{self.key}.yml", defaults=True)
     class Sample:
 
         key: str
@@ -28,7 +28,7 @@ def get_sample():
         item_default: Item = Item(1, None)
         items_default: List[Item] = field(default_factory=list)
 
-    return Sample('profiling', Item(2, None), None, [Item(3, None)])
+    return Sample("profiling", Item(2, None), None, [Item(3, None)])
 
 
 @xfail_with_pep_563

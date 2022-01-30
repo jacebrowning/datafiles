@@ -14,7 +14,7 @@ from .samples import SampleWithNestingAndOptionals
 
 # This model is based on the example dataclass from:
 # https://docs.python.org/3/library/dataclasses.html
-@datafile('../tmp/inventory/{self.pk}.yml')
+@datafile("../tmp/inventory/{self.pk}.yml")
 class InventoryItem:
     pk: int
     name: str
@@ -29,25 +29,25 @@ def test_multiple_instances_are_distinct(expect):
     item_1 = InventoryItem.objects.get_or_create(1, "Nuts", 0.23)
     item_2 = InventoryItem.objects.get_or_create(2, "Bolts", 0.45, quantity_on_hand=100)
 
-    expect(item_1.datafile.data) == {'name': 'Nuts', 'unit_price': 0.23}
+    expect(item_1.datafile.data) == {"name": "Nuts", "unit_price": 0.23}
     expect(item_2.datafile.data) == {
-        'name': 'Bolts',
-        'unit_price': 0.45,
-        'quantity_on_hand': 100,
+        "name": "Bolts",
+        "unit_price": 0.45,
+        "quantity_on_hand": 100,
     }
 
     item_1.quantity_on_hand = 200
     item_2.unit_price = 0.34
 
     expect(item_1.datafile.data) == {
-        'name': 'Nuts',
-        'unit_price': 0.23,
-        'quantity_on_hand': 200,
+        "name": "Nuts",
+        "unit_price": 0.23,
+        "quantity_on_hand": 200,
     }
     expect(item_2.datafile.data) == {
-        'name': 'Bolts',
-        'unit_price': 0.34,
-        'quantity_on_hand': 100,
+        "name": "Bolts",
+        "unit_price": 0.34,
+        "quantity_on_hand": 100,
     }
 
 
@@ -57,7 +57,7 @@ def test_classes_can_share_a_nested_dataclass(expect):
     class Nested:
         value: int
 
-    @datafile('../tmp/sample.json')
+    @datafile("../tmp/sample.json")
     class Foo:
         nested: Nested
 
@@ -66,7 +66,7 @@ def test_classes_can_share_a_nested_dataclass(expect):
 
     expect(foo.nested.value) == 1
 
-    @datafile('../tmp/sample.toml')
+    @datafile("../tmp/sample.toml")
     class Bar:
         nested: Nested
 
@@ -76,7 +76,7 @@ def test_classes_can_share_a_nested_dataclass(expect):
     expect(bar.nested.value) == 2
 
 
-@pytest.mark.xfail(reason='https://github.com/jacebrowning/datafiles/issues/147')
+@pytest.mark.xfail(reason="https://github.com/jacebrowning/datafiles/issues/147")
 def test_values_are_filled_from_disk(expect):
     InventoryItem.objects.get_or_create(42, "Things", 0.99)
 
@@ -87,7 +87,7 @@ def test_values_are_filled_from_disk(expect):
 
 def test_partial_load_from_disk(expect):
     write(
-        'tmp/inventory/42.yml',
+        "tmp/inventory/42.yml",
         """
         name: Things"
         """,
@@ -101,7 +101,7 @@ def test_partial_load_from_disk(expect):
 
 def test_partial_nested_load_from_disk(expect):
     write(
-        'tmp/sample.yml',
+        "tmp/sample.yml",
         """
             name: foo
             score: 7
@@ -112,7 +112,7 @@ def test_partial_nested_load_from_disk(expect):
 
     items = list(SampleWithNestingAndOptionals.objects.all())
 
-    expect(items[0].nested.name) == 'bar'
+    expect(items[0].nested.name) == "bar"
     expect(items[0].nested.score) == 0.0
     expect(items[0].nested.weight).is_(None)
 
@@ -147,7 +147,7 @@ def test_comments_in_matched_files(expect):
         aliases: List[str]
 
     write(
-        'tmp/templates/foo/config.yml',
+        "tmp/templates/foo/config.yml",
         """
         link: # placeholder
         default:
@@ -158,7 +158,7 @@ def test_comments_in_matched_files(expect):
         """,
     )
     write(
-        'tmp/templates/bar/config.yml',
+        "tmp/templates/bar/config.yml",
         """
         link: http://example.com
         default:
@@ -181,19 +181,19 @@ def test_paths_in_pattern(expect):
         value: int
 
     write(
-        'tmp/routes/foo/public.yml',
+        "tmp/routes/foo/public.yml",
         """
         value: 2
         """,
     )
     write(
-        'tmp/routes/foo/bar/public.yml',
+        "tmp/routes/foo/bar/public.yml",
         """
         value: 2
         """,
     )
     write(
-        'tmp/routes/foo/bar/private.yml',
+        "tmp/routes/foo/bar/private.yml",
         """
         value: 2
         """,
@@ -201,7 +201,7 @@ def test_paths_in_pattern(expect):
 
     items = list(LegacyTemplate.objects.all())
     expect(len(items)) == 3
-    if platform.system() == 'Windows':
-        expect(items[-1].path) == 'foo\\bar'
+    if platform.system() == "Windows":
+        expect(items[-1].path) == "foo\\bar"
     else:
-        expect(items[-1].path) == 'foo/bar'
+        expect(items[-1].path) == "foo/bar"

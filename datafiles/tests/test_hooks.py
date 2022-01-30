@@ -19,20 +19,20 @@ class Sample:
 def describe_apply():
     def it_can_be_called_twice(expect, mocker):
         instance = Sample()
-        setattr(instance, 'datafile', mocker.MagicMock(attrs=['key', 'items']))
+        setattr(instance, "datafile", mocker.MagicMock(attrs=["key", "items"]))
 
         hooks.apply(instance, None)
-        expect(hasattr(instance.__setattr__, '_patched')).is_(True)
+        expect(hasattr(instance.__setattr__, "_patched")).is_(True)
 
         hooks.apply(instance, None)
-        expect(hasattr(instance.__setattr__, '_patched')).is_(True)
+        expect(hasattr(instance.__setattr__, "_patched")).is_(True)
 
     def it_patches_list_elements(expect, mocker):
-        instance = Sample(items=[Item('a'), Item('b')])
-        setattr(instance, 'datafile', mocker.MagicMock(attrs=['key', 'items']))
+        instance = Sample(items=[Item("a"), Item("b")])
+        setattr(instance, "datafile", mocker.MagicMock(attrs=["key", "items"]))
 
         hooks.apply(instance, None)
-        expect(hasattr(instance.items[0].__setattr__, '_patched')).is_(True)
+        expect(hasattr(instance.items[0].__setattr__, "_patched")).is_(True)
 
 
 def describe_disabled():

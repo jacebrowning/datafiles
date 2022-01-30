@@ -5,14 +5,14 @@ from datafiles import datafile
 from datafiles.utils import logbreak
 
 
-@datafile('../tmp/{self.name}.yml', infer=True)
+@datafile("../tmp/{self.name}.yml", infer=True)
 class Sample:
     name: str
 
 
 def describe_infer():
     def with_builtin(expect):
-        sample = Sample('abc')
+        sample = Sample("abc")
 
         sample.datafile.text = "count: 1"
 
@@ -26,7 +26,7 @@ def describe_infer():
         expect(sample.count) == 4
 
     def with_empty_list(expect):
-        sample = Sample('abc')
+        sample = Sample("abc")
 
         sample.datafile.text = "empty_items: []"
 
@@ -41,7 +41,7 @@ def describe_infer():
         expect(sample.empty_items) == [4.2, "abc"]
 
     def with_homogeneous_list(expect):
-        sample = Sample('abc')
+        sample = Sample("abc")
 
         sample.datafile.text = "same_items: [1, 2]"
 
@@ -55,7 +55,7 @@ def describe_infer():
         expect(sample.same_items) == [1, 2, 3]
 
     def with_heterogeneous_list(expect):
-        sample = Sample('abc')
+        sample = Sample("abc")
 
         sample.datafile.text = "mixed_items: [1, 'abc']"
 
@@ -69,15 +69,15 @@ def describe_infer():
         expect(sample.mixed_items) == [1, "abc", 3.2]
 
     def with_dict(expect):
-        sample = Sample('abc')
+        sample = Sample("abc")
 
         sample.datafile.text = "data: {'a': 1}"
 
         logbreak("Getting attribute")
-        expect(sample.data) == {'a': 1}
+        expect(sample.data) == {"a": 1}
 
         logbreak("Setting attribute")
-        sample.data['b'] = 2.3
+        sample.data["b"] = 2.3
 
         logbreak("Getting attribute")
-        expect(sample.data) == {'a': 1, 'b': 2.3}
+        expect(sample.data) == {"a": 1, "b": 2.3}

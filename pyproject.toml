@@ -61,8 +61,8 @@ typing-extensions = "^3.7"
 [tool.poetry.dev-dependencies]
 
 # Formatters
-black = "=21.9b0"
-isort = "=5.9.2"
+black = "^22.1"
+isort = "^5.10"
 
 # Linters
 mypy = "~0.910"
@@ -96,8 +96,11 @@ papermill = "^2.3"
 
 [tool.black]
 
-target-version = ["py37"]
-skip-string-normalization = true
+quiet = true
+
+[tool.isort]
+
+profile = "black"
 
 [build-system]
 

@@ -9,21 +9,21 @@ from datafiles import datafile
 from datafiles.utils import dedent, logbreak, read, write
 
 
-@datafile('../tmp/sample.yml')
+@datafile("../tmp/sample.yml")
 class Sample:
-    item: str = 'a'
+    item: str = "a"
     items: List[int] = field(default_factory=lambda: [1])
-    data: Dict[str, int] = field(default_factory=lambda: {'a': 1})
+    data: Dict[str, int] = field(default_factory=lambda: {"a": 1})
 
 
 @dataclass
 class Nested:
-    name: str = 'b'
+    name: str = "b"
     score: float = 3.4
     items: List[int] = field(default_factory=list)
 
 
-@datafile('../tmp/sample.yml')
+@datafile("../tmp/sample.yml")
 class SampleWithNesting:
     item: int
     nested: Nested = field(default_factory=Nested)
@@ -34,14 +34,14 @@ def describe_automatic_load():
         sample = Sample()
 
         write(
-            'tmp/sample.yml',
+            "tmp/sample.yml",
             """
             item: b
             """,
         )
 
         logbreak("Getting attribute")
-        expect(sample.item) == 'b'
+        expect(sample.item) == "b"
 
 
 def describe_automatic_save():
@@ -49,9 +49,9 @@ def describe_automatic_save():
         sample = Sample()
 
         logbreak("Setting attribute")
-        sample.item = 'b'
+        sample.item = "b"
 
-        expect(read('tmp/sample.yml')) == dedent(
+        expect(read("tmp/sample.yml")) == dedent(
             """
             item: b
             """
@@ -61,10 +61,10 @@ def describe_automatic_save():
         sample = SampleWithNesting(2)
 
         logbreak("Setting nested attribute")
-        sample.nested.name = 'd'
+        sample.nested.name = "d"
 
         logbreak("Reading file")
-        expect(read('tmp/sample.yml')) == dedent(
+        expect(read("tmp/sample.yml")) == dedent(
             """
             item: 2
             nested:
@@ -77,7 +77,7 @@ def describe_automatic_save():
 
         sample.items[0] = 2
 
-        expect(read('tmp/sample.yml')) == dedent(
+        expect(read("tmp/sample.yml")) == dedent(
             """
             items:
               - 2
@@ -89,7 +89,7 @@ def describe_automatic_save():
 
         del sample.items[0]
 
-        expect(read('tmp/sample.yml')) == dedent(
+        expect(read("tmp/sample.yml")) == dedent(
             """
             items:
               -
@@ -102,7 +102,7 @@ def describe_automatic_save():
         logbreak("Appending to list: 2")
         sample.items.append(2)
 
-        expect(read('tmp/sample.yml')) == dedent(
+        expect(read("tmp/sample.yml")) == dedent(
             """
             items:
               - 1
@@ -115,7 +115,7 @@ def describe_automatic_save():
         logbreak("Appending to list: 3")
         sample.items.append(3)
 
-        expect(read('tmp/sample.yml')) == dedent(
+        expect(read("tmp/sample.yml")) == dedent(
             """
             items:
               - 1
@@ -130,7 +130,7 @@ def describe_automatic_save():
         logbreak("Appending to nested list: 2")
         sample.nested.items.append(2)
 
-        expect(read('tmp/sample.yml')) == dedent(
+        expect(read("tmp/sample.yml")) == dedent(
             """
             item: 1
             nested:
@@ -142,7 +142,7 @@ def describe_automatic_save():
         logbreak("Appending to nested list: 3")
         sample.nested.items.append(3)
 
-        expect(read('tmp/sample.yml')) == dedent(
+        expect(read("tmp/sample.yml")) == dedent(
             """
             item: 1
             nested:
@@ -156,9 +156,9 @@ def describe_automatic_save():
         sample = Sample()
 
         logbreak()
-        sample.data.update({'b': 2})
+        sample.data.update({"b": 2})
 
-        expect(read('tmp/sample.yml')) == dedent(
+        expect(read("tmp/sample.yml")) == dedent(
             """
             data:
               a: 1
@@ -169,9 +169,9 @@ def describe_automatic_save():
         sample.datafile.load()
 
         logbreak()
-        sample.data.update({'c': 3})
+        sample.data.update({"c": 3})
 
-        expect(read('tmp/sample.yml')) == dedent(
+        expect(read("tmp/sample.yml")) == dedent(
             """
             data:
               a: 1
@@ -186,13 +186,13 @@ def describe_automatic_load_before_save():
         sample = Sample()
 
         write(
-            'tmp/sample.yml',
+            "tmp/sample.yml",
             """
             item: 42
             """,
         )
 
-        expect(sample.item) == '42'
+        expect(sample.item) == "42"
 
         expect(sample.datafile.text) == dedent(
             """
@@ -213,4 +213,4 @@ def describe_automatic_load_after_save():
             """
         )
 
-        expect(sample.item) == '42'
+        expect(sample.item) == "42"

@@ -15,7 +15,6 @@ from parse import parse
 
 from . import hooks
 
-
 if TYPE_CHECKING:
     from .model import Model
 
@@ -26,7 +25,7 @@ Missing = dataclasses._MISSING_TYPE
 
 class Splats:
     def __getattr__(self, name):
-        return '*'
+        return "*"
 
 
 class Manager:
@@ -62,30 +61,30 @@ class Manager:
             instance.datafile.load()
             return instance
 
-    def all(self, *, _exclude: str = '') -> Iterator[Model]:
+    def all(self, *, _exclude: str = "") -> Iterator[Model]:
         path = Path(self.model.Meta.datafile_pattern)
         if path.is_absolute():
             log.debug(f"Detected absolute pattern: {path}")
-        elif self.model.Meta.datafile_pattern[:2] == './':
+        elif self.model.Meta.datafile_pattern[:2] == "./":
             log.debug(f"Detected relative pattern: {path}")
         else:
             try:
                 root = Path(inspect.getfile(self.model)).parent
             except TypeError:
-                level = log.DEBUG if '__main__' in str(self.model) else log.WARNING
-                log.log(level, f'Unable to determine module for {self.model}')
+                level = log.DEBUG if "__main__" in str(self.model) else log.WARNING
+                log.log(level, f"Unable to determine module for {self.model}")
                 root = Path.cwd()
             path = root / self.model.Meta.datafile_pattern
 
         pattern = str(path.resolve())
         splatted = pattern.format(self=Splats()).replace(
-            f'{os.sep}*{os.sep}', f'{os.sep}**{os.sep}'
+            f"{os.sep}*{os.sep}", f"{os.sep}**{os.sep}"
         )
 
-        log.info(f'Finding files matching pattern: {splatted}')
+        log.info(f"Finding files matching pattern: {splatted}")
         for index, filename in enumerate(iglob(splatted, recursive=True)):
 
-            log.debug(f'Found matching path {index + 1}: {filename}')
+            log.debug(f"Found matching path {index + 1}: {filename}")
             result = parse(pattern, filename)
             if result:
                 values = list(result.named.values())
@@ -96,17 +95,17 @@ class Manager:
                     values[-1] = parts[1]
 
                 if _exclude and values[0].startswith(_exclude):
-                    log.debug(f'Skipped loading of excluded value: {values[0]}')
+                    log.debug(f"Skipped loading of excluded value: {values[0]}")
                     continue
 
                 yield self.get(*values)
 
-    def filter(self, *, _exclude: str = '', **query):
+    def filter(self, *, _exclude: str = "", **query):
         for item in self.all(_exclude=_exclude):
             match = True
             for key, value in query.items():
                 # The use of reduce helps to handle nested attribute queries
-                if reduce(getattr, [item] + key.split('__')) != value:  # type: ignore
+                if reduce(getattr, [item] + key.split("__")) != value:  # type: ignore
                     match = False
             if match:
                 yield item
