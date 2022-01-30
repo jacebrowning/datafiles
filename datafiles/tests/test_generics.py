@@ -4,7 +4,6 @@ from typing import Generic, List, TypeVar
 
 from datafiles import converters
 
-
 T = TypeVar("T")
 
 

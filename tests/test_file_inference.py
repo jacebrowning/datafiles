@@ -8,12 +8,12 @@ from datafiles.utils import dedent, logbreak, read, write
 
 def describe_auto():
     @pytest.mark.parametrize(
-        ('filename', 'count'),
+        ("filename", "count"),
         [
-            ('.appveyor.yml', 5),
-            ('.travis.yml', 9),
-            ('mkdocs.yml', 8),
-            ('pyproject.toml', 2),
+            (".appveyor.yml", 5),
+            (".travis.yml", 9),
+            ("mkdocs.yml", 8),
+            ("pyproject.toml", 2),
         ],
     )
     def with_real_file(expect, filename, count):
@@ -25,7 +25,7 @@ def describe_auto():
 
     def with_sample_file(expect):
         write(
-            'tmp/sample.yml',
+            "tmp/sample.yml",
             """
             homogeneous_list:
               - 1
@@ -38,11 +38,11 @@ def describe_auto():
         )
 
         logbreak("Inferring object")
-        sample = auto('tmp/sample.yml')
+        sample = auto("tmp/sample.yml")
 
         logbreak("Reading attributes")
         expect(sample.homogeneous_list) == [1, 2]
-        expect(sample.heterogeneous_list) == [1, 'abc']
+        expect(sample.heterogeneous_list) == [1, "abc"]
         expect(sample.empty_list) == []
 
         logbreak("Updating attribute")
@@ -51,7 +51,7 @@ def describe_auto():
         sample.empty_list.append(7.8)
 
         logbreak("Reading file")
-        expect(read('tmp/sample.yml')) == dedent(
+        expect(read("tmp/sample.yml")) == dedent(
             """
             homogeneous_list:
               - 1
@@ -68,7 +68,7 @@ def describe_auto():
 
     def with_floats(expect):
         write(
-            'tmp/sample.yml',
+            "tmp/sample.yml",
             """
             language: python
             python:
@@ -78,13 +78,13 @@ def describe_auto():
         )
 
         logbreak("Inferring object")
-        sample = auto('tmp/sample.yml')
+        sample = auto("tmp/sample.yml")
 
         logbreak("Updating attribute")
         sample.python.append(4)
 
         logbreak("Reading file")
-        expect(read('tmp/sample.yml')) == dedent(
+        expect(read("tmp/sample.yml")) == dedent(
             """
             language: python
             python:
@@ -96,7 +96,7 @@ def describe_auto():
 
     def with_nested_mutables(expect):
         write(
-            'tmp/sample.yml',
+            "tmp/sample.yml",
             """
             name: Test
             roles:
@@ -110,13 +110,13 @@ def describe_auto():
         )
 
         logbreak("Inferring object")
-        sample = auto('tmp/sample.yml')
+        sample = auto("tmp/sample.yml")
 
         logbreak("Updating attributes")
-        sample.roles['category1'].append('value3')
+        sample.roles["category1"].append("value3")
 
         logbreak("Reading file")
-        expect(read('tmp/sample.yml')) == dedent(
+        expect(read("tmp/sample.yml")) == dedent(
             """
             name: Test
             roles:

@@ -52,15 +52,15 @@ class Mapper:
             return None
 
         path = Path(self._pattern.format(self=self._instance))
-        if path.is_absolute() or self._pattern.startswith('./'):
+        if path.is_absolute() or self._pattern.startswith("./"):
             return path.resolve()
 
         cls = self._instance.__class__
         try:
             root = Path(inspect.getfile(cls)).parent
         except TypeError:
-            level = log.DEBUG if '__main__' in str(cls) else log.WARNING
-            log.log(level, f'Unable to determine module for {cls}')
+            level = log.DEBUG if "__main__" in str(cls) else log.WARNING
+            log.log(level, f"Unable to determine module for {cls}")
             root = Path.cwd()
 
         return (root / path).resolve()
@@ -86,7 +86,7 @@ class Mapper:
         if modified:
             self._last_load = 0.0
         else:
-            assert self.path, 'Cannot mark a missing file as unmodified'
+            assert self.path, "Cannot mark a missing file as unmodified"
             self._last_load = self.path.stat().st_mtime
 
     @property
@@ -103,7 +103,7 @@ class Mapper:
             return self._get_data()
 
     def _get_data(self, include_default_values: Trilean = None) -> Dict:
-        log.debug(f'Preserializing object to data: {self._instance!r}')
+        log.debug(f"Preserializing object to data: {self._instance!r}")
         if include_default_values is None:
             include_default_values = self.defaults
 
@@ -114,13 +114,13 @@ class Mapper:
 
         for name in list(data.keys()):
             if name not in self.attrs:
-                log.debug(f'Removed unmapped attribute: {name}')
+                log.debug(f"Removed unmapped attribute: {name}")
                 data.pop(name)
 
         for name, converter in self.attrs.items():
             value = data[name]
 
-            if getattr(converter, 'DATACLASS', None):
+            if getattr(converter, "DATACLASS", None):
                 log.debug(f"Converting '{name}' dataclass with {converter}")
                 new_value = converter.to_preserialization_data(
                     value,
@@ -141,7 +141,7 @@ class Mapper:
                 log.debug(f"Converting '{name}' value with {converter}: {value!r}")
                 data[name] = converter.to_preserialization_data(value)
 
-        log.debug(f'Preserialized object data: {data}')
+        log.debug(f"Preserialized object data: {data}")
         return data
 
     @property
@@ -150,7 +150,7 @@ class Mapper:
 
     @text.setter
     def text(self, value: str):
-        write(self.path, value.strip() + '\n', display=True)
+        write(self.path, value.strip() + "\n", display=True)
 
     def _get_text(self, **kwargs) -> str:
         data = self._get_data(**kwargs)
@@ -196,22 +196,22 @@ class Mapper:
                 item_cls = type(value[0])
                 for item in value:
                     if not isinstance(item, item_cls):
-                        log.warn(f'{name!r} list type cannot be inferred')
+                        log.warn(f"{name!r} list type cannot be inferred")
                         item_cls = Converter
                         break
             else:
-                log.warn(f'{name!r} list type cannot be inferred')
+                log.warn(f"{name!r} list type cannot be inferred")
                 item_cls = Converter
-            log.debug(f'Inferring {name!r} type: {cls} of {item_cls}')
+            log.debug(f"Inferring {name!r} type: {cls} of {item_cls}")
             return map_type(cls, name=name, item_cls=item_cls)  # type: ignore
 
         if issubclass(cls, dict):
             with suppress(TypeError):
                 cls.__origin__ = dict
-            log.debug(f'Inferring {name!r} type: {cls}')
+            log.debug(f"Inferring {name!r} type: {cls}")
             return map_type(cls, name=name, item_cls=Converter)
 
-        log.debug(f'Inferring {name!r} type: {cls}')
+        log.debug(f"Inferring {name!r} type: {cls}")
         return map_type(cls, name=name)
 
     @staticmethod
@@ -224,7 +224,7 @@ class Mapper:
 
         if first_load:
             log.debug(
-                'Initial load values: file=%r, init=%r, default=%r',
+                "Initial load values: file=%r, init=%r, default=%r",
                 file_value,
                 init_value,
                 default_value,
@@ -268,7 +268,7 @@ class Mapper:
 
 def create_mapper(obj, root=None) -> Mapper:
     try:
-        return object.__getattribute__(obj, 'datafile')
+        return object.__getattribute__(obj, "datafile")
     except AttributeError:
         log.debug(f"Building 'datafile' for {obj.__class__} object")
 
@@ -278,9 +278,9 @@ def create_mapper(obj, root=None) -> Mapper:
 
     if attrs is None and dataclasses.is_dataclass(obj):
         attrs = {}
-        log.debug(f'Mapping attributes for {obj.__class__} object')
+        log.debug(f"Mapping attributes for {obj.__class__} object")
         for field in [field for field in dataclasses.fields(obj) if field.init]:
-            self_name = f'self.{field.name}'
+            self_name = f"self.{field.name}"
             if pattern is None or self_name not in pattern:
                 attrs[field.name] = map_type(resolve(field.type, obj), name=field.name)  # type: ignore
 

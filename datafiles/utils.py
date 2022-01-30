@@ -14,7 +14,6 @@ import log
 from . import settings
 from .types import Missing
 
-
 cached = lru_cache()
 
 
@@ -33,7 +32,7 @@ def get_default_field_value(instance, name):
             if not isinstance(field.default_factory, Missing):  # type: ignore
                 return field.default_factory()  # type: ignore
 
-            if not field.init and hasattr(instance, '__post_init__'):
+            if not field.init and hasattr(instance, "__post_init__"):
                 return getattr(instance, name)
 
     return Missing
@@ -96,9 +95,9 @@ def _merge(old: Any, new: Any) -> Any:
 
 def dedent(text: str) -> str:
     """Remove indentation from a multiline string."""
-    text = text.strip('\n')
-    indent = text.split('\n')[0].count('    ')
-    return text.replace('    ' * indent, '')
+    text = text.strip("\n")
+    indent = text.split("\n")[0].count("    ")
+    return text.replace("    " * indent, "")
 
 
 def write(filename_or_path: Union[str, Path], text: str, *, display=False) -> None:
@@ -109,14 +108,14 @@ def write(filename_or_path: Union[str, Path], text: str, *, display=False) -> No
         path = Path(filename_or_path).resolve()
         text = dedent(text)
 
-    message = f'Writing file: {path}'
-    line = '=' * (31 + len(message))
+    message = f"Writing file: {path}"
+    line = "=" * (31 + len(message))
     if text:
-        content = text.replace(' \n', '␠\n')
+        content = text.replace(" \n", "␠\n")
     else:
-        content = '∅\n'
+        content = "∅\n"
     if display:
-        log.debug(message + '\n' + line + '\n' + content + line)
+        log.debug(message + "\n" + line + "\n" + content + line)
     else:
         log.critical(message)
 
@@ -128,15 +127,15 @@ def write(filename_or_path: Union[str, Path], text: str, *, display=False) -> No
 def read(filename: str, *, display=False) -> str:
     """Read text from a file and optionally log it."""
     path = Path(filename).resolve()
-    message = f'Reading file: {path}'
-    line = '=' * (31 + len(message))
+    message = f"Reading file: {path}"
+    line = "=" * (31 + len(message))
     text = path.read_text()
     if text:
-        content = text.replace(' \n', '␠\n')
+        content = text.replace(" \n", "␠\n")
     else:
-        content = '∅\n'
+        content = "∅\n"
     if display:
-        log.debug(message + '\n' + line + '\n' + content + line)
+        log.debug(message + "\n" + line + "\n" + content + line)
     else:
         log.critical(message)
     return text
@@ -144,17 +143,17 @@ def read(filename: str, *, display=False) -> str:
 
 def display(path: Path, data: Dict) -> None:
     """Display data read from a file."""
-    message = f'Data from file: {path}'
-    line = '=' * (31 + len(message))
+    message = f"Data from file: {path}"
+    line = "=" * (31 + len(message))
     content = prettify(data)
-    log.debug(message + '\n' + line + '\n' + content + '\n' + line)
+    log.debug(message + "\n" + line + "\n" + content + "\n" + line)
 
 
 def logbreak(message: str = "") -> None:
     """Insert a noticeable logging record for debugging."""
     width = get_terminal_size().columns - 31
     if message:
-        line = '-' * (width - len(message) - 1) + ' ' + message
+        line = "-" * (width - len(message) - 1) + " " + message
     else:
-        line = '-' * width
+        line = "-" * width
     log.critical(line)

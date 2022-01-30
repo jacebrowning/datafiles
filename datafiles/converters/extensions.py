@@ -26,13 +26,13 @@ class Text(String):
     @classmethod
     def to_python_value(cls, deserialized_data, *, target_object=None):
         value = cls.to_preserialization_data(deserialized_data).strip()
-        if '\n' in value:
-            value = value + '\n'
+        if "\n" in value:
+            value = value + "\n"
         return value
 
     @classmethod
     def to_preserialization_data(cls, python_value, *, default_to_skip=None):
         data = super().to_preserialization_data(python_value).strip()
-        if '\n' in data:
-            return LiteralScalarString(data + '\n')
+        if "\n" in data:
+            return LiteralScalarString(data + "\n")
         return data

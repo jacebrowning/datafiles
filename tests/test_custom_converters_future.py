@@ -22,7 +22,7 @@ def test_optional_type(expect):
     expect(x.datafile.text) == "value1: 42\n"
 
 
-@pytest.mark.xfail(reason='https://github.com/jacebrowning/datafiles/issues/131')
+@pytest.mark.xfail(reason="https://github.com/jacebrowning/datafiles/issues/131")
 def test_nested_type(expect):
     class Nested:
         pass

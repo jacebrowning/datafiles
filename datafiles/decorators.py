@@ -42,10 +42,10 @@ def datafile(
 
 
 def auto(filename: str, **kwargs):
-    kwargs['infer'] = True
+    kwargs["infer"] = True
 
     path = Path.cwd() / filename
 
-    cls = type(path.stem.strip('.'), (), {})
+    cls = type(path.stem.strip("."), (), {})
 
     return datafile(str(path), **kwargs)(cls)()

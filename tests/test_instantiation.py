@@ -11,10 +11,10 @@ from datafiles.utils import logbreak, write
 from . import xfail_with_pep_563
 
 
-@datafile('../tmp/sample.yml', manual=True)
+@datafile("../tmp/sample.yml", manual=True)
 class SampleWithDefaults:
     foo: int = 1
-    bar: str = 'a'
+    bar: str = "a"
 
 
 @dataclass
@@ -23,21 +23,21 @@ class NestedSample:
     score: float
 
 
-@datafile('../tmp/sample.yml', manual=True)
+@datafile("../tmp/sample.yml", manual=True)
 class SampleWithDefaultsAndNesting:
     nested: NestedSample
-    name: str = ''
+    name: str = ""
     score: float = 0.0
 
 
-@datafile('../tmp/sample.yml', manual=True)
+@datafile("../tmp/sample.yml", manual=True)
 class SampleWithFactoryDefaults:
     a: float
     b: float
     c: float = field(default_factory=lambda: 42)
 
 
-@datafile('../tmp/sample.yml', manual=True)
+@datafile("../tmp/sample.yml", manual=True)
 class SampleWithComputedDefaults:
     a: float
     b: float
@@ -50,7 +50,7 @@ class SampleWithComputedDefaults:
 def describe_existing_file():
     def it_wins_when_no_init_values(expect):
         write(
-            'tmp/sample.yml',
+            "tmp/sample.yml",
             """
             foo: 2
             bar: b
@@ -60,25 +60,25 @@ def describe_existing_file():
         sample = SampleWithDefaults()
 
         expect(sample.foo) == 2
-        expect(sample.bar) == 'b'
+        expect(sample.bar) == "b"
 
     def it_loses_against_init_values(expect):
         write(
-            'tmp/sample.yml',
+            "tmp/sample.yml",
             """
             foo: 3
             bar: c
             """,
         )
 
-        sample = SampleWithDefaults(4, 'd')
+        sample = SampleWithDefaults(4, "d")
 
         expect(sample.foo) == 4
-        expect(sample.bar) == 'd'
+        expect(sample.bar) == "d"
 
     def it_wins_against_default_init_values(expect):
         write(
-            'tmp/sample.yml',
+            "tmp/sample.yml",
             """
             bar: e
             """,
@@ -87,11 +87,11 @@ def describe_existing_file():
         sample = SampleWithDefaults(foo=5)
 
         expect(sample.foo) == 5
-        expect(sample.bar) == 'e'
+        expect(sample.bar) == "e"
 
     def it_merges_with_nested_value(expect):
         write(
-            'tmp/sample.yml',
+            "tmp/sample.yml",
             """
             name: foo
             score: 7
@@ -99,17 +99,17 @@ def describe_existing_file():
         )
 
         sample = SampleWithDefaultsAndNesting(
-            name='', score=0.0, nested=NestedSample(name='bar', score=8)
+            name="", score=0.0, nested=NestedSample(name="bar", score=8)
         )
 
-        expect(sample.name) == 'foo'
+        expect(sample.name) == "foo"
         expect(sample.score) == 7.0
-        expect(sample.nested.name) == 'bar'
+        expect(sample.nested.name) == "bar"
         expect(sample.nested.score) == 8.0
 
 
 def describe_nonexisting_file():
-    @datafile('../tmp/sample.yml')
+    @datafile("../tmp/sample.yml")
     class SampleAutomatic:
         pass
 
@@ -136,7 +136,7 @@ def describe_factory_defaults():
 
     def when_file_exists(expect):
         write(
-            'tmp/sample.yml',
+            "tmp/sample.yml",
             """
             a: 1.0
             b: 2.0

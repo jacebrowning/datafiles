@@ -17,9 +17,9 @@ class List(Converter):
 
     @classmethod
     def of_type(cls, converter: type):
-        name = f'{converter.__name__}{cls.__name__}'
+        name = f"{converter.__name__}{cls.__name__}"
         bases = (cls,)
-        attributes = {'CONVERTER': converter}
+        attributes = {"CONVERTER": converter}
         return type(name, bases, attributes)
 
     @classmethod
@@ -41,7 +41,7 @@ class List(Converter):
             pass
 
         elif isinstance(deserialized_data, str):
-            for item in deserialized_data.split(','):
+            for item in deserialized_data.split(","):
                 value.append(convert(item))
         else:
             try:
@@ -110,7 +110,7 @@ class Set(List):
             pass
 
         elif isinstance(deserialized_data, str):
-            for item in deserialized_data.split(','):
+            for item in deserialized_data.split(","):
                 value.add(convert(item))
         else:
             try:
@@ -129,7 +129,7 @@ class Dictionary(Converter):
 
     @classmethod
     def of_mapping(cls, key: type, value: type):
-        name = f'{key.__name__}{value.__name__}Dict'
+        name = f"{key.__name__}{value.__name__}Dict"
         bases = (cls,)
         return type(name, bases, {})
 
@@ -167,9 +167,9 @@ class Dataclass(Converter):
 
     @classmethod
     def of_mappings(cls, dataclass, converters: Dict[str, type]):
-        name = f'{dataclass.__name__}Converter'
+        name = f"{dataclass.__name__}Converter"
         bases = (cls,)
-        attributes = {'DATACLASS': dataclass, 'CONVERTERS': converters}
+        attributes = {"DATACLASS": dataclass, "CONVERTERS": converters}
         return type(name, bases, attributes)
 
     @classmethod
@@ -186,7 +186,7 @@ class Dataclass(Converter):
 
         for name, value in list(data.items()):
             if name not in cls.CONVERTERS:
-                log.debug(f'Removed unmapped nested file attribute: {name}')
+                log.debug(f"Removed unmapped nested file attribute: {name}")
                 data.pop(name)
 
         for name, converter in cls.CONVERTERS.items():
@@ -226,13 +226,13 @@ class Dataclass(Converter):
                 try:
                     value = python_value[name]
                 except KeyError:
-                    log.debug(f'Added missing nested attribute: {name}')
+                    log.debug(f"Added missing nested attribute: {name}")
                     value = None
             else:
                 try:
                     value = getattr(python_value, name)
                 except AttributeError:
-                    log.debug(f'Added missing nested attribute: {name}')
+                    log.debug(f"Added missing nested attribute: {name}")
                     value = None
 
             with suppress(AttributeError):

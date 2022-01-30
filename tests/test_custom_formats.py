@@ -3,7 +3,7 @@ from datafiles import datafile, formats
 
 def test_registration(expect):
 
-    formats.register('.conf', formats.JSON)
+    formats.register(".conf", formats.JSON)
 
     @datafile("../tmp/sample.conf")
     class Sample:

@@ -34,7 +34,7 @@ def describe_nominal():
     def without_initial_values(sample, expect):
         sample.datafile.save()
 
-        with open('tmp/sample.yml') as f:
+        with open("tmp/sample.yml") as f:
             expect(f.read()) == dedent(
                 """
                 bool_: false
@@ -49,7 +49,7 @@ def describe_nominal():
 
         sample.datafile.save()
 
-        with open('tmp/sample.yml') as f:
+        with open("tmp/sample.yml") as f:
             expect(f.read()) == dedent(
                 """
                 bool_: true
@@ -64,15 +64,15 @@ def describe_nominal():
 
         sample.datafile.save()
 
-        with open('tmp/sample.yml') as f:
-            expect(f.read()).excludes('extra')
+        with open("tmp/sample.yml") as f:
+            expect(f.read()).excludes("extra")
 
     def with_custom_fields(expect):
-        sample = SampleWithCustomFields('foo', 'bar')
+        sample = SampleWithCustomFields("foo", "bar")
 
         sample.datafile.save()
 
-        with open('tmp/sample.yml') as f:
+        with open("tmp/sample.yml") as f:
             expect(f.read()) == dedent(
                 """
                 included: foo
@@ -86,7 +86,7 @@ def describe_lists():
 
         sample.datafile.save()
 
-        with open('tmp/sample.yml') as f:
+        with open("tmp/sample.yml") as f:
             expect(f.read()) == dedent(
                 """
                 items:
@@ -95,12 +95,12 @@ def describe_lists():
             )
 
     def with_conversion(expect):
-        sample = SampleWithList([1, 2.3, '4.5'])
+        sample = SampleWithList([1, 2.3, "4.5"])
 
         logbreak("Saving")
         sample.datafile.save()
 
-        with open('tmp/sample.yml') as f:
+        with open("tmp/sample.yml") as f:
             expect(f.read()) == dedent(
                 """
                 items:
@@ -111,12 +111,12 @@ def describe_lists():
             )
 
     def with_dataclasses(expect):
-        sample = SampleWithListOfDataclasses([_NestedSample1('foobar', 42)])
+        sample = SampleWithListOfDataclasses([_NestedSample1("foobar", 42)])
 
         logbreak("Saving")
         sample.datafile.save()
 
-        with open('tmp/sample.yml') as f:
+        with open("tmp/sample.yml") as f:
             expect(f.read()) == dedent(
                 """
                 items:
@@ -132,7 +132,7 @@ def describe_sets():
 
         sample.datafile.save()
 
-        with open('tmp/sample.yml') as f:
+        with open("tmp/sample.yml") as f:
             expect(f.read()) == dedent(
                 """
                 items:
@@ -141,12 +141,12 @@ def describe_sets():
             )
 
     def with_conversion(expect):
-        sample = SampleWithSet({1, 2.3, '4.5'})
+        sample = SampleWithSet({1, 2.3, "4.5"})
 
         logbreak("Saving")
         sample.datafile.save()
 
-        with open('tmp/sample.yml') as f:
+        with open("tmp/sample.yml") as f:
             expect(f.read()) == dedent(
                 """
                 items:
@@ -157,12 +157,12 @@ def describe_sets():
             )
 
     def with_dataclasses(expect):
-        sample = SampleWithSetOfDataclasses({_FrozenNestedSample1('foobar', 42)})
+        sample = SampleWithSetOfDataclasses({_FrozenNestedSample1("foobar", 42)})
 
         logbreak("Saving")
         sample.datafile.save()
 
-        with open('tmp/sample.yml') as f:
+        with open("tmp/sample.yml") as f:
             expect(f.read()) == dedent(
                 """
                 items:
@@ -178,7 +178,7 @@ def describe_nesting():
 
         sample.datafile.save()
 
-        with open('tmp/sample.yml') as f:
+        with open("tmp/sample.yml") as f:
             expect(f.read()) == dedent(
                 """
                 name: ''
@@ -190,11 +190,11 @@ def describe_nesting():
             )
 
     def with_initial_values(expect):
-        sample = SampleWithNesting('foo', 1.2, {'name': 'bar', 'score': 3.4})
+        sample = SampleWithNesting("foo", 1.2, {"name": "bar", "score": 3.4})
 
         sample.datafile.save()
 
-        with open('tmp/sample.yml') as f:
+        with open("tmp/sample.yml") as f:
             expect(f.read()) == dedent(
                 """
                 name: foo
@@ -206,11 +206,11 @@ def describe_nesting():
             )
 
     def with_default_values(expect):
-        sample = SampleWithNestingAndDefaults('a')
+        sample = SampleWithNestingAndDefaults("a")
 
         sample.datafile.save()
 
-        with open('tmp/sample.yml') as f:
+        with open("tmp/sample.yml") as f:
             expect(f.read()) == dedent(
                 """
                 name: a
@@ -219,11 +219,11 @@ def describe_nesting():
             )
 
     def with_missing_keys(expect):
-        sample = SampleWithNesting('foo', 1.2, {'name': 'bar'})
+        sample = SampleWithNesting("foo", 1.2, {"name": "bar"})
 
         sample.datafile.save()
 
-        with open('tmp/sample.yml') as f:
+        with open("tmp/sample.yml") as f:
             expect(f.read()) == dedent(
                 """
                 name: foo
@@ -235,12 +235,12 @@ def describe_nesting():
             )
 
     def when_manually_setting_none(expect):
-        sample = SampleWithNesting('foo', 1.2, {'name': 'bar', 'score': 3.4})
+        sample = SampleWithNesting("foo", 1.2, {"name": "bar", "score": 3.4})
         sample.nested = None
 
         sample.datafile.save()
 
-        with open('tmp/sample.yml') as f:
+        with open("tmp/sample.yml") as f:
             expect(f.read()) == dedent(
                 """
                 name: foo
@@ -258,7 +258,7 @@ def describe_optionals():
 
         sample.datafile.save()
 
-        expect(read('tmp/sample.yml')) == dedent(
+        expect(read("tmp/sample.yml")) == dedent(
             """
             required: 1.0
             optional: 2.0
@@ -270,7 +270,7 @@ def describe_optionals():
 
         sample.datafile.save()
 
-        expect(read('tmp/sample.yml')) == dedent(
+        expect(read("tmp/sample.yml")) == dedent(
             """
             required: 0.0
             optional:
@@ -292,7 +292,7 @@ def describe_optionals():
 
         sample = Sample(42, None)
 
-        expect(read('tmp/samples/42.yml')) == dedent(
+        expect(read("tmp/samples/42.yml")) == dedent(
             """
             name:
             """
@@ -301,11 +301,11 @@ def describe_optionals():
 
 def describe_defaults():
     def with_custom_values(expect):
-        sample = SampleWithDefaults('a', 'b')
+        sample = SampleWithDefaults("a", "b")
 
         sample.datafile.save()
 
-        expect(read('tmp/sample.yml')) == dedent(
+        expect(read("tmp/sample.yml")) == dedent(
             """
             without_default: a
             with_default: b
@@ -313,22 +313,22 @@ def describe_defaults():
         )
 
     def with_default_values(expect):
-        sample = SampleWithDefaults('a')
+        sample = SampleWithDefaults("a")
 
         sample.datafile.save()
 
-        expect(read('tmp/sample.yml')) == dedent(
+        expect(read("tmp/sample.yml")) == dedent(
             """
             without_default: a
             """
         )
 
     def with_default_values_and_full_save(expect):
-        sample = SampleWithDefaults('a', 'foo')
+        sample = SampleWithDefaults("a", "foo")
 
         sample.datafile.save(include_default_values=True)
 
-        expect(read('tmp/sample.yml')) == dedent(
+        expect(read("tmp/sample.yml")) == dedent(
             """
             without_default: a
             with_default: foo
@@ -341,7 +341,7 @@ def describe_preservation():
         sample = SampleWithOptionals(1, 2)
 
         write(
-            'tmp/sample.yml',
+            "tmp/sample.yml",
             """
             required: 1.0
 
@@ -353,7 +353,7 @@ def describe_preservation():
         sample.optional = 3
         sample.datafile.save()
 
-        expect(read('tmp/sample.yml')) == dedent(
+        expect(read("tmp/sample.yml")) == dedent(
             """
             required: 1.0
 
@@ -365,7 +365,7 @@ def describe_preservation():
         sample = SampleWithOptionals(1, 2)
 
         write(
-            'tmp/sample.yml',
+            "tmp/sample.yml",
             """
             # Header
             required: 1.0       # Line
@@ -377,7 +377,7 @@ def describe_preservation():
         sample.required = 3
         sample.datafile.save()
 
-        expect(read('tmp/sample.yml')) == dedent(
+        expect(read("tmp/sample.yml")) == dedent(
             """
             # Header
             required: 3.0       # Line
@@ -389,7 +389,7 @@ def describe_preservation():
         sample = SampleWithNestingAndDefaults(None)
 
         write(
-            'tmp/sample.yml',
+            "tmp/sample.yml",
             """
             # Header
             name: a
@@ -407,7 +407,7 @@ def describe_preservation():
         sample.nested.score = 4
         sample.datafile.save()
 
-        expect(read('tmp/sample.yml')) == dedent(
+        expect(read("tmp/sample.yml")) == dedent(
             """
             # Header
             name: a
@@ -424,7 +424,7 @@ def describe_preservation():
         sample = SampleWithNestingAndDefaults(None)
 
         write(
-            'tmp/sample.yml',
+            "tmp/sample.yml",
             """
             # Header
             name: a
@@ -442,7 +442,7 @@ def describe_preservation():
         sample.nested.score = 4
         sample.datafile.save()
 
-        expect(read('tmp/sample.yml')) == dedent(
+        expect(read("tmp/sample.yml")) == dedent(
             """
             # Header
             name: a
@@ -460,7 +460,7 @@ def describe_preservation():
         sample = SampleWithListOfDataclasses()
 
         write(
-            'tmp/sample.yml',
+            "tmp/sample.yml",
             """
             # Header
 
@@ -479,10 +479,10 @@ def describe_preservation():
         )
 
         sample.datafile.load()
-        sample.items[1].name = 'c'
+        sample.items[1].name = "c"
         sample.datafile.save()
 
-        expect(read('tmp/sample.yml')) == dedent(
+        expect(read("tmp/sample.yml")) == dedent(
             """
             # Header
 
@@ -501,16 +501,16 @@ def describe_preservation():
         )
 
     def with_quotes(expect):
-        @datafile('../tmp/sample.yml', manual=True)
+        @datafile("../tmp/sample.yml", manual=True)
         class Sample:
-            s1: str = ''
-            s2: str = ''
-            s3: str = ''
+            s1: str = ""
+            s2: str = ""
+            s3: str = ""
 
         sample = Sample()
 
         write(
-            'tmp/sample.yml',
+            "tmp/sample.yml",
             """
             s1: a
             s2: 'b'
@@ -519,12 +519,12 @@ def describe_preservation():
         )
 
         sample.datafile.load()
-        sample.s1 = 'd'
-        sample.s2 = 'e'
-        sample.s3 = 'f'
+        sample.s1 = "d"
+        sample.s2 = "e"
+        sample.s3 = "f"
         sample.datafile.save()
 
-        expect(read('tmp/sample.yml')) == dedent(
+        expect(read("tmp/sample.yml")) == dedent(
             """
             s1: d
             s2: 'e'

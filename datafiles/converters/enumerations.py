@@ -9,9 +9,9 @@ class Enumeration(Converter):
 
     @classmethod
     def of_type(cls, enum: type):
-        name = f'{enum.__name__}Converter'
+        name = f"{enum.__name__}Converter"
         bases = (cls,)
-        attributes = {'ENUM': enum}
+        attributes = {"ENUM": enum}
         return type(name, bases, attributes)
 
     @classmethod

@@ -38,61 +38,61 @@ def describe_mapper():
             expect(mapper.path).is_(None)
 
         def is_relative_to_file_by_default(expect, mapper):
-            mapper._pattern = '../../tmp/sample.yml'
+            mapper._pattern = "../../tmp/sample.yml"
             root = Path(__file__).parents[2]
-            expect(mapper.path) == root / 'tmp' / 'sample.yml'
+            expect(mapper.path) == root / "tmp" / "sample.yml"
 
         def is_absolute_when_specified(expect, mapper):
-            mapper._pattern = '/private/tmp/sample.yml'
-            if platform.system() == 'Windows':
-                path = Path('C:/private/tmp/sample.yml')
+            mapper._pattern = "/private/tmp/sample.yml"
+            if platform.system() == "Windows":
+                path = Path("C:/private/tmp/sample.yml")
             else:
-                path = Path('/private/tmp/sample.yml')
+                path = Path("/private/tmp/sample.yml")
             expect(mapper.path) == path
 
         def is_relative_to_cwd_when_specified(expect, mapper):
-            mapper._pattern = './foobar/sample.yml'
-            if platform.system() == 'Windows':
-                path = Path('foobar/sample.yml')
+            mapper._pattern = "./foobar/sample.yml"
+            if platform.system() == "Windows":
+                path = Path("foobar/sample.yml")
             else:
-                path = Path.cwd() / 'foobar' / 'sample.yml'
+                path = Path.cwd() / "foobar" / "sample.yml"
             expect(mapper.path) == path
 
     def describe_relpath():
         def when_cwd_is_parent(expect, mapper):
-            mapper._pattern = '../../tmp/sample.yml'
-            expect(mapper.relpath) == Path('tmp', 'sample.yml')
+            mapper._pattern = "../../tmp/sample.yml"
+            expect(mapper.relpath) == Path("tmp", "sample.yml")
 
         def when_cwd_is_sibling(expect, mapper):
-            mapper._pattern = '../../../tmp/sample.yml'
-            expect(mapper.relpath) == Path('..', 'tmp', 'sample.yml')
+            mapper._pattern = "../../../tmp/sample.yml"
+            expect(mapper.relpath) == Path("..", "tmp", "sample.yml")
 
     def describe_text():
         def is_blank_when_no_attrs(expect, mapper):
             expect(mapper.text) == ""
 
         def is_yaml_by_default(expect, mapper):
-            mapper.attrs = {'foobar': MyField}
+            mapper.attrs = {"foobar": MyField}
             expect(mapper.text) == "foobar: 42\n"
 
         def with_json_format(expect, mapper):
-            mapper._pattern = '_.json'
-            mapper.attrs = {'foobar': MyField}
+            mapper._pattern = "_.json"
+            mapper.attrs = {"foobar": MyField}
             expect(mapper.text) == '{\n  "foobar": 42\n}'
 
         def with_toml_format(expect, mapper):
-            mapper._pattern = '_.toml'
-            mapper.attrs = {'foobar': MyField}
+            mapper._pattern = "_.toml"
+            mapper.attrs = {"foobar": MyField}
             expect(mapper.text) == "foobar = 42\n"
 
         def with_no_format(expect, mapper):
-            mapper._pattern = '_'
-            mapper.attrs = {'foobar': MyField}
+            mapper._pattern = "_"
+            mapper.attrs = {"foobar": MyField}
             expect(mapper.text) == "foobar: 42\n"
 
         def with_unknown_format(expect, mapper):
-            mapper._pattern = '_.xyz'
-            mapper.attrs = {'foobar': MyField}
+            mapper._pattern = "_.xyz"
+            mapper.attrs = {"foobar": MyField}
             with expect.raises(ValueError):
                 print(mapper.text)
 

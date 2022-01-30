@@ -32,14 +32,14 @@ class Converter:  # pylint: disable=unused-argument
             name += t.__name__
         name += cls.__name__
         bases = (cls,)
-        attributes = {'CONVERTERS': subtypes}
+        attributes = {"CONVERTERS": subtypes}
         return type(name, bases, attributes)
 
     @classmethod
     def as_optional(cls):
-        name = 'Optional' + cls.__name__
+        name = "Optional" + cls.__name__
         bases = (Optional, cls)
-        attributes = {'DEFAULT': None}
+        attributes = {"DEFAULT": None}
         return type(name, bases, attributes)
 
     @classmethod

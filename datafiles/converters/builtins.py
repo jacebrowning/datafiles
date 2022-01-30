@@ -10,7 +10,7 @@ class Boolean(Converter, int):
 
     TYPE = bool
     DEFAULT = False
-    _FALSY = {'false', 'f', 'no', 'n', 'disabled', 'off', '0'}
+    _FALSY = {"false", "f", "no", "n", "disabled", "off", "0"}
 
     @classmethod
     def to_python_value(cls, deserialized_data, *, target_object=None):
@@ -46,7 +46,7 @@ class Integer(Converter, int):
             except ValueError:
                 raise exc from None
             else:
-                log.warn(f'Precision lost in conversion to int: {python_value}')
+                log.warn(f"Precision lost in conversion to int: {python_value}")
                 return data
 
 
