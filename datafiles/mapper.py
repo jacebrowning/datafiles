@@ -58,7 +58,7 @@ class Mapper:
         cls = self._instance.__class__
         try:
             root = Path(inspect.getfile(cls)).parent
-        except TypeError:
+        except (TypeError, OSError):
             level = log.DEBUG if "__main__" in str(cls) else log.WARNING
             log.log(level, f"Unable to determine module for {cls}")
             root = Path.cwd()

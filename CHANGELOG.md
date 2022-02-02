@@ -1,3 +1,7 @@
+# 1.1.1 (2022-02-02)
+
+- Fixed handling of `OSError` when trying to determine a models path.
+
 # 1.1 (2022-01-21)
 
 - Added support for Python 3.10's builtin optional types (e.g. `int | None`).
