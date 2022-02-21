@@ -67,7 +67,15 @@ Widget
 
 ## Type Checking
 
-If using mypy, enable the plugin via the `mypy.ini` configuration file:
+If using mypy, enable the plugin via `pyproject.toml` settings:
+
+```toml
+[tool.mypy]
+
+plugins = "datafiles.plugins:mypy"
+```
+
+or `mypy.ini` configuration file:
 
 ```ini
 [mypy]
