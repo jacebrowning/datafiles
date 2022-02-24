@@ -38,6 +38,6 @@ from typing import Optional
 | Type Annotation         | Python Value               | YAML Content            |
 | ----------------------- | -------------------------- | ----------------------- |
 | `foobar: str`           | `foobar = "Hello, world!"` | `foobar: Hello, world!` |
-| `foobar: str`           | `foobar = 42`              | `foobar: '42'`          |
-| `foobar: str`           | `foobar = None`            | `foobar: ''`            |
+| `foobar: str`           | `foobar = 42`              | `foobar: "42"`          |
+| `foobar: str`           | `foobar = None`            | `foobar: ""`            |
 | `foobar: Optional[str]` | `foobar = None`            | `foobar:`               |

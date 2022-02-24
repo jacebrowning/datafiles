@@ -33,7 +33,7 @@ from datafiles.converters import Text
 | ------------------------ | ---------------------------- | ---------------------------------------------------------------------------------- |
 | `foobar: Text`           | `foobar = "Hello, world!"`   | `foobar: Hello, world!`                                                            |
 | `foobar: Text`           | `foobar = "First\nSecond\n"` | `foobar: |`<br>&nbsp;&nbsp;&nbsp;&nbsp;`First`<br>&nbsp;&nbsp;&nbsp;&nbsp;`Second` |
-| `foobar: Text`           | `foobar = None`              | `foobar: ''`                                                                       |
+| `foobar: Text`           | `foobar = None`              | `foobar: ""`                                                                       |
 | `foobar: Optional[Text]` | `foobar = None`              | `foobar:`                                                                          |
 
 ## Enumerations

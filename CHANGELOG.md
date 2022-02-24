@@ -1,3 +1,7 @@
+# 1.2 (2022-02-24)
+
+- Added a `frozen()` context manager to temporarily disable file updates.
+
 # 1.1.1 (2022-02-02)
 
 - Fixed handling of `OSError` when trying to determine a models path.

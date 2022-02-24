@@ -19,9 +19,9 @@ can be loaded into an object:
 
 ```python
 >>> from datafiles import auto
->>> sample = auto('sample.yml')
+>>> sample = auto("sample.yml")
 >>> sample.names
-['Alice', 'Bob']
+["Alice", "Bob"]
 ```
 
 where modified attributes:
@@ -32,10 +32,7 @@ where modified attributes:
 
 are automatically reflected in the file:
 
-```
-#!text hl_lines="9"
-$ cat sample.yml
-
+```yaml hl_lines='7'
 names:
   - Alice
   - Bob
@@ -46,3 +43,20 @@ numbers:
 ```
 
 Additional examples can be found in this [Jupyter Notebook](https://github.com/jacebrowning/datafiles/blob/main/notebooks/file_inference.ipynb).
+
+## `frozen()`
+
+This context manager can be used to temporarily disable saving objects to the filesystem:
+
+```python
+import datafiles
+
+from .models import MyModel
+
+instance = MyModel()
+
+with datafiles.frozen():
+    instance.value = 42
+```
+
+Additional modifications to the object will synchronize all changes.

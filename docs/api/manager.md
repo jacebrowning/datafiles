@@ -19,19 +19,19 @@ Many of the following examples are also shown in this [Jupyter Notebook](https:/
 Instantiate an object from an existing file. If no matching file exist, or if any other problem occurs, an appropriate exception will be raised.
 
 ```python
->>> MyModel.objects.get('foobar')
+>>> MyModel.objects.get("foobar")
 Traceback (most recent call last):
   ...
-FileNotFoundError: [Errno 2] No such file or directory: 'foobar.yml'
+FileNotFoundError: [Errno 2] No such file or directory: "foobar.yml"
 ```
 
 ```python
->>> m = MyModel('foobar', 42)
+>>> m = MyModel("foobar", 42)
 ```
 
 ```python
->>> MyModel.objects.get('foobar')
-MyModel(my_key='foobar', my_value=42)
+>>> MyModel.objects.get("foobar")
+MyModel(my_key="foobar", my_value=42)
 ```
 
 ## `get_or_none()`
@@ -39,17 +39,17 @@ MyModel(my_key='foobar', my_value=42)
 Instantiate an object from an existing file or return `None` if no matching file exists:
 
 ```python
->>> MyModel.objects.get_or_none('foobar')
+>>> MyModel.objects.get_or_none("foobar")
 None
 ```
 
 ```python
->>> m = MyModel('foobar', 42)
+>>> m = MyModel("foobar", 42)
 ```
 
 ```python
->>> MyModel.objects.get_or_none('foobar')
-MyModel(my_key='foobar', my_value=42)
+>>> MyModel.objects.get_or_none("foobar")
+MyModel(my_key="foobar", my_value=42)
 ```
 
 ## `get_or_create()`
@@ -57,17 +57,17 @@ MyModel(my_key='foobar', my_value=42)
 Instantiate an object from an existing file or create one if no matching file exists:
 
 ```python
->>> m = MyModel('foo', 42)
+>>> m = MyModel("foo", 42)
 ```
 
 ```python
->>> MyModel.objects.get_or_create('foo')
-MyModel(my_key='foo', my_value=42)
+>>> MyModel.objects.get_or_create("foo")
+MyModel(my_key="foo", my_value=42)
 ```
 
 ```python
->>> MyModel.objects.get_or_create('bar')
-MyModel(my_key='bar', my_value=0)
+>>> MyModel.objects.get_or_create("bar")
+MyModel(my_key="bar", my_value=0)
 ```
 
 ## `all()`
@@ -81,22 +81,22 @@ Iterate over all objects matching the pattern:
 ```
 
 ```python
->>> m1 = MyModel('foo')
->>> m2 = MyModel('bar', 42)
+>>> m1 = MyModel("foo")
+>>> m2 = MyModel("bar", 42)
 ```
 
 ```python
 >>> for m in MyModel.objects.all():
 ...     print(m)
 ...
-MyModel(my_key='foo' my_value=0)
-MyModel(my_key='bar', my_value=42)
+MyModel(my_key="foo" my_value=0)
+MyModel(my_key="bar", my_value=42)
 ```
 
 Exclude objects from ever being loaded and returned with `_exclude`:
 
 ```python
->>> generator = MyModel.objects.all(_exclude='foo')
+>>> generator = MyModel.objects.all(_exclude="foo")
 ```
 
 ## `filter()`
@@ -106,13 +106,13 @@ Iterate all objects matching the pattern with additional required attribute valu
 ```python
 >>> generator = MyModel.objects.filter(my_value=42)
 >>> list(generator)
-[MyModel(my_key='foo', my_value=42)]
+[MyModel(my_key="foo", my_value=42)]
 ```
 
 Exclude objects from ever being loaded and returned with `_exclude`:
 
 ```python
->>> generator = MyModel.objects.filter(_exclude='foo')
+>>> generator = MyModel.objects.filter(_exclude="foo")
 ```
 
 Nested dataclass values can be queried using `__` as a delimiter:

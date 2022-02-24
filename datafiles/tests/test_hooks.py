@@ -2,6 +2,7 @@
 
 from typing import List
 
+import datafiles
 from datafiles import datafile, field, hooks, settings
 
 
@@ -45,6 +46,14 @@ def describe_disabled():
             with hooks.disabled():
                 expect(settings.HOOKS_ENABLED).is_(False)
 
+            expect(settings.HOOKS_ENABLED).is_(False)
+
+        expect(settings.HOOKS_ENABLED).is_(True)
+
+    def with_alias(expect):
+        expect(settings.HOOKS_ENABLED).is_(True)
+
+        with datafiles.frozen():
             expect(settings.HOOKS_ENABLED).is_(False)
 
         expect(settings.HOOKS_ENABLED).is_(True)

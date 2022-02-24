@@ -97,7 +97,7 @@ To map one of the existing formatter classes to a new file extension:
 from datafile import datafile, formats
 
 
-formats.register('.conf', formats.YAML)
+formats.register(".conf", formats.YAML)
 
 
 @datafile("my-file-path.conf")
@@ -116,7 +116,7 @@ class MyFormat(formats.Format):
 
     @classmethod
     def extensions(cls) -> list[str]:
-        return ['.my_ext']
+        return [".my_ext"]
 
     @classmethod
     @abstractmethod
@@ -129,7 +129,7 @@ class MyFormat(formats.Format):
         # Convert `data` to a string
 
 
-formats.register('.my_ext', MyFormat)
+formats.register(".my_ext", MyFormat)
 
 
 @datafile("my-file-path.my_ext")
