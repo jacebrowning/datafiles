@@ -13,7 +13,7 @@ class MyModel:
 ```
 
 ```python
->>> model = MyModel('foo')
+>>> model = MyModel("foo")
 ```
 
 Many of the following examples are also shown in this [Jupyter Notebook](https://github.com/jacebrowning/datafiles/blob/main/notebooks/mapper_api.ipynb).
@@ -24,7 +24,7 @@ Get the full path to the mapped file:
 
 ```python
 >>> model.datafile.path
-PosixPath('/Projects/Demo/my_models/foo.yml')
+PosixPath("/Projects/Demo/my_models/foo.yml")
 ```
 
 ## `exists`
@@ -77,5 +77,5 @@ Access the parsed model attributes directly:
 
 ```python
 >>> model.datafile.data
-ordereddict([('my_value', 1)])
+ordereddict([("my_value", 1)])
 ```

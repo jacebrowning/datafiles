@@ -45,7 +45,7 @@ from typing import Dict, Optional
 | Type Annotation                    | Python Value         | YAML Content                                 |
 | ---------------------------------- | -------------------- | -------------------------------------------- |
 | `foobar: Dict[str, int]`           | `foobar = {}`        | `foobar: {}`                                 |
-| `foobar: Dict[str, int]`           | `foobar = {'a': 42}` | `foobar:`<br>&nbsp;&nbsp;&nbsp;&nbsp;`a: 42` |
+| `foobar: Dict[str, int]`           | `foobar = {"a": 42}` | `foobar:`<br>&nbsp;&nbsp;&nbsp;&nbsp;`a: 42` |
 | `foobar: Dict[str, int]`           | `foobar = None`      | `foobar: {}`                                 |
 | `foobar: Optional[Dict[str, int]]` | `foobar = None`      | `foobar:`                                    |
 

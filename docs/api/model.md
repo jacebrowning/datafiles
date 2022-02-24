@@ -103,7 +103,7 @@ class Item:
     available: bool
 
     class Meta:
-        datafile_attrs = {'count': converters.Integer}
+        datafile_attrs = {"count": converters.Integer}
         datafile_manual = True
         datafile_defaults = True
 ```
@@ -125,7 +125,7 @@ class Item(Model):
 
     class Meta:
         datafile_pattern = "items/{self.name}.yml"
-        datafile_attrs = {'count': converters.Integer}
+        datafile_attrs = {"count": converters.Integer}
         datafile_manual = True
         datafile_defaults = True
 ```
