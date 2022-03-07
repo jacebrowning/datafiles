@@ -581,11 +581,11 @@ python-versions = ">=3.6"
 
 [[package]]
 name = "minilog"
-version = "2.0"
+version = "2.1"
 description = "Minimalistic wrapper for Python logging."
 category = "main"
 optional = false
-python-versions = ">=3.6,<4.0"
+python-versions = ">=3.7,<4.0"
 
 [[package]]
 name = "mistune"
@@ -1454,7 +1454,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pyt
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "f7f35e7f0187bc7a8e8a821dfcddf8fa6b735187ad5eea31810bdaf8e38455f9"
+content-hash = "a34d33c007684b36f2ffe13e22fffea92beb45e7f5bca6c98250410e55cc121d"
 
 [metadata.files]
 ansiwrap = [
@@ -1856,8 +1856,8 @@ mergedeep = [
     {file = "mergedeep-1.3.4.tar.gz", hash = "sha256:0096d52e9dad9939c3d975a774666af186eda617e6ca84df4c94dec30004f2a8"},
 ]
 minilog = [
-    {file = "minilog-2.0-py3-none-any.whl", hash = "sha256:891ad346bdd63aee4c210faa688497f7ba412cf52a54fb6cba6bf511a34a5138"},
-    {file = "minilog-2.0.tar.gz", hash = "sha256:58499302bca86cf507eb3c3dfa3853de9389bfde275ba5155bdc3b4551175918"},
+    {file = "minilog-2.1-py3-none-any.whl", hash = "sha256:0c48879cc9e72f0127aa2c36b522dc6fa10fa8532956197436b491d31617d5d5"},
+    {file = "minilog-2.1.tar.gz", hash = "sha256:2048a8d381b36ef5f146fb9a657e627729411f8e2ed0047e2c1286cf8e3e58d7"},
 ]
 mistune = [
     {file = "mistune-0.8.4-py2.py3-none-any.whl", hash = "sha256:88a1051873018da288eee8538d476dffe1262495144b33ecb586c4ab266bb8d4"},
