@@ -96,6 +96,7 @@ $(MKDOCS_INDEX): docs/requirements.txt mkdocs.yml docs/*.md
 
 docs/requirements.txt: poetry.lock
 	@ rm -f $@
+	@ poetry export --dev --without-hashes | grep jinja2 >> $@
 	@ poetry export --dev --without-hashes | grep markdown >> $@
 	@ poetry export --dev --without-hashes | grep mkdocs >> $@
 	@ poetry export --dev --without-hashes | grep pygments >> $@
