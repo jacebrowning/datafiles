@@ -57,6 +57,7 @@ Filename patterns are relative to the file in which the model is defined unless 
 - Absolute: `/tmp/items/{self.name}.yml`
 - Relative to model: `items/{self.name}.yml`
 - Relative to current directory: `./items/{self.name}.yml`
+- Relative to the user's home directory: `~/items/{self.name}.yml`
 
 Attributes included in the filename pattern and those with default value are automatically excluded from serialization since these redundant values are not required to restore objects from disk.
 
