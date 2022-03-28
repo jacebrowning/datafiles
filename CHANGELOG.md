@@ -1,3 +1,7 @@
+# 1.3 (alpha)
+
+- Added support for paths relative to the user's home directory.
+
 # 1.2 (2022-02-24)
 
 - Added a `frozen()` context manager to temporarily disable file updates.

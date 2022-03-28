@@ -1,7 +1,7 @@
 [tool.poetry]
 
 name = "datafiles"
-version = "1.2"
+version = "1.3a1"
 description = "File-based ORM for dataclasses."
 
 license = "MIT"
@@ -86,6 +86,7 @@ coveragespace = "^4.0"
 # Documentation
 mkdocs = "^1.2.3"
 pygments = "^2.10"
+jinja2 = "~3.0.3" # fix for 'mkdocs' incompatiblity
 
 # Notebooks
 idna = "^3.3" # papermill dependency

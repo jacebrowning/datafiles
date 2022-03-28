@@ -58,6 +58,11 @@ def describe_mapper():
                 path = Path.cwd() / "foobar" / "sample.yml"
             expect(mapper.path) == path
 
+        def is_relative_to_home_when_specified(expect, mapper):
+            mapper._pattern = "~/foobar/sample.yml"
+            path = Path.home() / "foobar" / "sample.yml"
+            expect(mapper.path) == path
+
     def describe_relpath():
         def when_cwd_is_parent(expect, mapper):
             mapper._pattern = "../../tmp/sample.yml"

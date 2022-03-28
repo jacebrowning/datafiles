@@ -54,6 +54,8 @@ class Mapper:
         path = Path(self._pattern.format(self=self._instance))
         if path.is_absolute() or self._pattern.startswith("./"):
             return path.resolve()
+        if self._pattern.startswith("~/"):
+            return path.expanduser()
 
         cls = self._instance.__class__
         try:
