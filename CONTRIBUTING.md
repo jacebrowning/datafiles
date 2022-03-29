@@ -1,6 +1,8 @@
-# Setup
+# Contributor Guide
 
-## Requirements
+## Setup
+
+### Requirements
 
 * Make:
     * macOS: `$ xcode-select --install`
@@ -19,7 +21,7 @@ To confirm these system dependencies are configured correctly:
 $ make doctor
 ```
 
-## Installation
+### Installation
 
 Install project dependencies into a virtual environment:
 
@@ -27,9 +29,9 @@ Install project dependencies into a virtual environment:
 $ make install
 ```
 
-# Development Tasks
+## Development Tasks
 
-## Manual
+### Manual
 
 Run the tests:
 
@@ -49,7 +51,7 @@ Build the documentation:
 $ make docs
 ```
 
-## Automatic
+### Automatic
 
 Keep all of the above tasks running on change:
 
@@ -59,7 +61,7 @@ $ make dev
 
 > In order to have OS X notifications, `brew install terminal-notifier`.
 
-# Continuous Integration
+## Continuous Integration
 
 The CI server will report overall build status:
 
@@ -67,7 +69,7 @@ The CI server will report overall build status:
 $ make ci
 ```
 
-# Release Tasks
+## Release Tasks
 
 Release to PyPI:
 
