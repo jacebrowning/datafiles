@@ -28,6 +28,11 @@ def describe_manager():
         model = create_model(MyClass, pattern="files/{self.foo}.yml")
         return Manager(model)
 
+    @pytest.fixture
+    def manager_home():
+        model = create_model(Nested, pattern="~/.{self.name}.json")
+        return Manager(model)
+
     def describe_get_or_none():
         @patch("datafiles.mapper.Mapper.load")
         @patch("datafiles.mapper.Mapper.exists", True)
@@ -63,6 +68,10 @@ def describe_manager():
         def when_no_files_exist(expect, manager):
             items = list(manager.all())
             expect(items) == []
+
+        def with_home_directory(expect, manager_home):
+            items = list(manager_home.all())
+            expect(len(items)) > 5
 
     def describe_filter():
         @patch("datafiles.mapper.Mapper.exists", False)

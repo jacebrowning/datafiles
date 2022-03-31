@@ -1,6 +1,6 @@
 # Release Notes
 
-## 1.3 (alpha)
+## 1.3 (beta)
 
 - Added support for paths relative to the user's home directory.
 
