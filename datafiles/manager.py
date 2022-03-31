@@ -62,11 +62,9 @@ class Manager:
             return instance
 
     def all(self, *, _exclude: str = "") -> Iterator[Model]:
-        path = Path(self.model.Meta.datafile_pattern)
-        if path.is_absolute():
-            log.debug(f"Detected absolute pattern: {path}")
-        elif self.model.Meta.datafile_pattern[:2] == "./":
-            log.debug(f"Detected relative pattern: {path}")
+        path = Path(self.model.Meta.datafile_pattern).expanduser()
+        if path.is_absolute() or self.model.Meta.datafile_pattern[:2] == "./":
+            log.debug(f"Detected static pattern: {path}")
         else:
             try:
                 root = Path(inspect.getfile(self.model)).parent
@@ -75,6 +73,7 @@ class Manager:
                 log.log(level, f"Unable to determine module for {self.model}")
                 root = Path.cwd()
             path = root / self.model.Meta.datafile_pattern
+            log.debug(f"Detected dynamic pattern: {path}")
 
         pattern = str(path.resolve())
         splatted = pattern.format(self=Splats()).replace(
@@ -83,6 +82,10 @@ class Manager:
 
         log.info(f"Finding files matching pattern: {splatted}")
         for index, filename in enumerate(iglob(splatted, recursive=True)):
+
+            if Path(filename).is_dir():
+                log.debug(f"Skipped matching directory {index + 1}: {filename}")
+                continue
 
             log.debug(f"Found matching path {index + 1}: {filename}")
             result = parse(pattern, filename)

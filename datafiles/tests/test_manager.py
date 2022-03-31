@@ -1,5 +1,6 @@
 # pylint: disable=unused-variable
 
+import os
 from dataclasses import dataclass
 from typing import Optional
 from unittest.mock import patch
@@ -26,6 +27,11 @@ def describe_manager():
     @pytest.fixture
     def manager():
         model = create_model(MyClass, pattern="files/{self.foo}.yml")
+        return Manager(model)
+
+    @pytest.fixture
+    def manager_home():
+        model = create_model(Nested, pattern="~/.{self.name}.json")
         return Manager(model)
 
     def describe_get_or_none():
@@ -63,6 +69,11 @@ def describe_manager():
         def when_no_files_exist(expect, manager):
             items = list(manager.all())
             expect(items) == []
+
+        def with_home_directory(expect, manager_home):
+            items = list(manager_home.all())
+            if "CI" not in os.environ:
+                expect(len(items)) > 0
 
     def describe_filter():
         @patch("datafiles.mapper.Mapper.exists", False)

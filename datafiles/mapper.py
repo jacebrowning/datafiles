@@ -51,11 +51,10 @@ class Mapper:
         if not self._pattern:
             return None
 
-        path = Path(self._pattern.format(self=self._instance))
+        path = Path(self._pattern.format(self=self._instance)).expanduser()
         if path.is_absolute() or self._pattern.startswith("./"):
+            log.debug(f"Detected static pattern: {path}")
             return path.resolve()
-        if self._pattern.startswith("~/"):
-            return path.expanduser()
 
         cls = self._instance.__class__
         try:
@@ -65,7 +64,9 @@ class Mapper:
             log.log(level, f"Unable to determine module for {cls}")
             root = Path.cwd()
 
-        return (root / path).resolve()
+        path = (root / path).resolve()
+        log.debug(f"Detected dynamic pattern: {path}")
+        return path
 
     @property
     def relpath(self) -> Path:
