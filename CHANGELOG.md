@@ -1,6 +1,6 @@
 # Release Notes
 
-## 1.3 (beta)
+## 1.3 (2022-04-09)
 
 - Added support for paths relative to the user's home directory.
 
