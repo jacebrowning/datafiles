@@ -113,7 +113,7 @@ def describe_auto():
         sample = auto("tmp/sample.yml")
 
         logbreak("Updating attributes")
-        sample.roles["category1"].append("value3")
+        sample.roles.category1.append("value3")
 
         logbreak("Reading file")
         expect(read("tmp/sample.yml")) == dedent(

@@ -1,5 +1,9 @@
 # Release Notes
 
+## 1.4 (beta)
+
+- Added support for accessing `Dict` keys as attributes.
+
 ## 1.3 (2022-04-09)
 
 - Added support for paths relative to the user's home directory.
