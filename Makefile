@@ -13,6 +13,10 @@ ci: format check test mkdocs  ## Run all tasks that determine CI status
 dev: install  ## Continuously run all CI tasks when files chanage
 	poetry run ptw
 
+.PHONY: shell
+shell: install
+	poetry run ipython --ipython-dir=notebooks
+
 .PHONY: demo
 demo: install
 	poetry run nbstripout notebooks/*.ipynb
