@@ -45,7 +45,13 @@ def auto(filename: str, **kwargs):
     kwargs["infer"] = True
 
     path = Path.cwd() / filename
+    name = path.stem.strip(".").capitalize()
 
-    cls = type(path.stem.strip("."), (), {})
+    def auto_repr(self):
+        items = (f"{k}={v!r}" for k, v in self.__dict__.items() if k != "datafile")
+        params = ", ".join(items)
+        return f"{name}({params})"
+
+    cls = type(name, (), {"__repr__": auto_repr})
 
     return datafile(str(path), **kwargs)(cls)()

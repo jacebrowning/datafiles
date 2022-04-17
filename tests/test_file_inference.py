@@ -7,6 +7,22 @@ from datafiles.utils import dedent, logbreak, read, write
 
 
 def describe_auto():
+    def it_implements_repr(expect):
+        write(
+            "tmp/sample.yml",
+            """
+            items:
+              - 1
+              - 2
+            value: abc
+            """,
+        )
+
+        logbreak("Inferring object")
+        sample = auto("tmp/sample.yml")
+
+        expect(repr(sample)) == "Sample(items=[1, 2], value='abc')"
+
     @pytest.mark.parametrize(
         ("filename", "count"),
         [
