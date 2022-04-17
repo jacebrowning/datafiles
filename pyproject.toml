@@ -1,7 +1,7 @@
 [tool.poetry]
 
 name = "datafiles"
-version = "1.4b1"
+version = "1.4b2"
 description = "File-based ORM for dataclasses."
 
 license = "MIT"
@@ -44,8 +44,8 @@ classifiers = [
 python = "^3.7"
 
 # Formats
-"ruamel.yaml" = "^0.17.20"
-tomlkit = "^0.7.2"
+"ruamel.yaml" = "^0.17.21"
+tomlkit = "^0.10.1"
 
 # ORM
 parse = "^1.12"
