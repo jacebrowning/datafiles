@@ -4,6 +4,7 @@
 
 - Added support for accessing `Dict` keys as attributes.
 - Added a proper `repr()` implementation for `auto()` datafiles.
+- Added support for "thawing" objects upon exiting the `frozen()` context manager.
 
 ## 1.3 (2022-04-09)
 

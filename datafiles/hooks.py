@@ -158,7 +158,7 @@ def enabled(mapper, args) -> bool:
 
 
 @contextmanager
-def disabled():
+def disabled(*objects):
     """Globally disable method hooks, temporarily."""
     enabled = settings.HOOKS_ENABLED
     if enabled:
@@ -167,3 +167,7 @@ def disabled():
         yield
     finally:
         settings.HOOKS_ENABLED = enabled
+        if enabled:
+            for o in objects:
+                with suppress(AttributeError):
+                    o.datafile.save()

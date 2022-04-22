@@ -56,7 +56,27 @@ from .models import MyModel
 instance = MyModel()
 
 with datafiles.frozen():
-    instance.value = 42
+    instance.a = 1
+    instance.b = 2
+    instance.c = 3
+
+instance.d = 4
+
 ```
 
-Additional modifications to the object will synchronize all changes.
+This is useful when changes manipulate a complex object's structure in such a way that references to synchronized attributes are lost or to improve performance when making lots of changes.
+
+### Thawing Objects
+
+Unless `manual=True` is set, the next modification outside of the context manager will trigger a save. To do this automatically, include the objects as arguments:
+
+```python
+...
+
+with datafiles.frozen(instance):
+    instance.a = 1
+    instance.b = 2
+    instance.c = 3
+```
+
+
