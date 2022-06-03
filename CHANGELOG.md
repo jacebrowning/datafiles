@@ -1,6 +1,6 @@
 # Release Notes
 
-## 1.4 (beta)
+## 1.4 (2022-06-03)
 
 - Added support for accessing `Dict` keys as attributes.
 - Added a proper `repr()` implementation for `auto()` datafiles.
