@@ -1,4 +1,4 @@
-# Datafiles: A file-based ORM for dataclasses
+# Datafiles: A file-based ORM for Python dataclasses
 
 Datafiles is a bidirectional serialization library for Python [dataclasses](https://docs.python.org/3/library/dataclasses.html) to synchronize objects to the filesystem using type annotations. It supports a variety of file formats with round-trip preservation of formatting and comments, where possible. Object changes are automatically saved to disk and only include the minimum data needed to restore each object.
 
