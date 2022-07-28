@@ -129,7 +129,10 @@ class Dictionary(Converter):
 
     @classmethod
     def of_mapping(cls, key: type, value: type):
-        name = f"{key.__name__}{value.__name__}Dict"
+        try:
+            name = f"{key.__name__}{value.__name__}Dict"
+        except AttributeError:  # Python < 3.10
+            name = "UntypedDict"
         bases = (cls,)
         return type(name, bases, {})
 
@@ -151,7 +154,7 @@ class Dictionary(Converter):
 
     @classmethod
     def to_preserialization_data(cls, python_value, *, default_to_skip=None):
-        data = dict(python_value)
+        data = dict(python_value) if python_value else {}
 
         if data == default_to_skip:
             data.clear()

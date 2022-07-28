@@ -6,10 +6,11 @@ from typing import ByteString, Dict, List, Mapping, Optional, Set
 
 import pytest
 from ruamel.yaml.scalarstring import LiteralScalarString
+from typing_extensions import TypedDict
 
 from datafiles import converters, settings
 
-from . import xfail_without_pep_604
+from . import xfail_without_pep_604, xfail_without_type_names
 
 
 @dataclass
@@ -22,6 +23,11 @@ class MyDataclass:
 class MyNestedDataclass:
     name: str
     dc: MyDataclass
+
+
+class MyTypedDict(TypedDict):
+    title: str
+    salary: int
 
 
 class MyNonDataclass:
@@ -45,6 +51,7 @@ IntegerSet = converters.Set.of_type(converters.Integer)
 StringSet = converters.Set.of_type(converters.String)
 MyDataclassConverter = converters.map_type(MyDataclass)
 MyDataclassConverterList = converters.map_type(List[MyDataclass])
+MyTypedDictConverter = converters.map_type(MyTypedDict)
 
 
 def describe_map_type():
@@ -87,6 +94,11 @@ def describe_map_type():
     def it_requires_dict_annotations_to_have_types(expect):
         with expect.raises(TypeError, "Types are required with 'Dict' annotation"):
             converters.map_type(Dict)
+
+    @xfail_without_type_names
+    def it_handles_typed_dict_annotations(expect):
+        converter = converters.map_type(MyTypedDict)
+        expect(converter.__name__) == "StringAnyDict"
 
     def it_handles_abstract_mapping_types(expect):
         converter = converters.map_type(Mapping[str, int])
@@ -211,6 +223,9 @@ def describe_converter():
                 (MyDataclassConverter, MyDataclass(42), MyDataclass(foobar=42)),
                 (MyDataclassConverterList, None, []),
                 (MyDataclassConverterList, 42, [MyDataclass(foobar=0)]),
+                (MyTypedDictConverter, None, {}),
+                (MyTypedDictConverter, {}, {}),
+                (MyTypedDictConverter, {"a": 1}, {"a": 1}),
             ],
         )
         def when_mutable(expect, converter, data, value):
@@ -293,6 +308,10 @@ def describe_converter():
                 (StringList, [123, True, False], ["123", "True", "False"]),
                 (StringList, [], [None]),
                 (StringList, None, [None]),
+                # Dicts
+                (MyTypedDictConverter, None, {}),
+                (MyTypedDictConverter, {}, {}),
+                (MyTypedDictConverter, {"a": 1}, {"a": 1}),
                 # Sets
                 (StringSet, "ab", ["ab"]),
                 (StringSet, ("b", 1, "A"), ["b", "1", "A"]),
