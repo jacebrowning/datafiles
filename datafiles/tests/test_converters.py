@@ -10,7 +10,7 @@ from typing_extensions import TypedDict
 
 from datafiles import converters, settings
 
-from . import xfail_without_pep_604
+from . import xfail_without_pep_604, xfail_without_type_names
 
 
 @dataclass
@@ -95,6 +95,7 @@ def describe_map_type():
         with expect.raises(TypeError, "Types are required with 'Dict' annotation"):
             converters.map_type(Dict)
 
+    @xfail_without_type_names
     def it_handles_typed_dict_annotations(expect):
         converter = converters.map_type(MyTypedDict)
         expect(converter.__name__) == "StringAnyDict"
