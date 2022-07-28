@@ -68,7 +68,7 @@ class Manager:
         else:
             try:
                 root = Path(inspect.getfile(self.model)).parent
-            except TypeError:
+            except (TypeError, OSError):
                 level = log.DEBUG if "__main__" in str(self.model) else log.WARNING
                 log.log(level, f"Unable to determine module for {self.model}")
                 root = Path.cwd()
