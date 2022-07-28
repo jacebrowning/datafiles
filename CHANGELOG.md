@@ -1,5 +1,9 @@
 # Release Notes
 
+## 1.4.1 (2022-07-28)
+
+- Fixed exception when `TypedDict` is used, but schema is not yet supported.
+
 ## 1.4 (2022-06-03)
 
 - Added support for accessing `Dict` keys as attributes.

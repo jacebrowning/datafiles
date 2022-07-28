@@ -151,7 +151,7 @@ class Dictionary(Converter):
 
     @classmethod
     def to_preserialization_data(cls, python_value, *, default_to_skip=None):
-        data = dict(python_value)
+        data = dict(python_value) if python_value else {}
 
         if data == default_to_skip:
             data.clear()

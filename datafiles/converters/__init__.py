@@ -164,4 +164,10 @@ def map_type(cls, *, name: str = "", item_cls: Optional[type] = None):
     if issubclass(cls, Enum):
         return Enumeration.of_type(cls)
 
+    if issubclass(cls, dict):
+        log.warn("Schema enforcement not possible with 'TypedDict' annotation")
+        key = map_type(str)
+        value = Any
+        return Dictionary.of_mapping(key, value)
+
     raise TypeError(f"Could not map type: {cls}")
