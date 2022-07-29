@@ -131,10 +131,16 @@ def map_type(cls, *, name: str = "", item_cls: Optional[type] = None):
             converter = Dictionary.of_mapping(key, value)
 
         elif cls.__origin__ == Union:
-            converter = map_type(cls.__args__[0])
-            assert len(cls.__args__) == 2
-            assert cls.__args__[1] == type(None)
-            converter = converter.as_optional()
+            if str in cls.__args__:
+                converter = map_type(str)
+                if type(None) in cls.__args__:
+                    converter = converter.as_optional()
+            elif cls.__args__ == (int, float) or cls.__args__ == (float, int):
+                converter = Number
+            else:
+                assert len(cls.__args__) == 2
+                assert cls.__args__[1] == type(None)
+                converter = map_type(cls.__args__[0]).as_optional()
 
         elif issubclass(cls.__origin__, Converter):
             subtypes = [map_type(t) for t in cls.__args__]

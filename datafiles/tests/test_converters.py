@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass
 from enum import Enum
-from typing import ByteString, Dict, List, Mapping, Optional, Set
+from typing import ByteString, Dict, List, Mapping, Optional, Set, Union
 
 import pytest
 from ruamel.yaml.scalarstring import LiteralScalarString
@@ -138,6 +138,14 @@ def describe_map_type():
         expect(converter.__name__) == "OptionalString"
         expect(converter.TYPE) == str
         expect(converter.DEFAULT).is_(None)
+
+    def it_handles_unions_with_strings(expect):
+        converter = converters.map_type(Union[int, str])
+        expect(converter.TYPE) == str
+
+    def it_handles_unions_with_numbers(expect):
+        converter = converters.map_type(Union[int, float])
+        expect(converter.TYPE) == float
 
     def it_handles_string_type_annotations(expect):
         converter = converters.map_type("float")
