@@ -2,11 +2,10 @@
 
 from dataclasses import dataclass
 from enum import Enum
-from typing import ByteString, Dict, List, Mapping, Optional, Set, Union
+from typing import ByteString, Dict, List, Mapping, Optional, Set, TypedDict, Union
 
 import pytest
 from ruamel.yaml.scalarstring import LiteralScalarString
-from typing_extensions import TypedDict
 
 from datafiles import converters, settings
 

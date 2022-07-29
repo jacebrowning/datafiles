@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.0 (alpha)
+
+- Dropped support for Python 3.7.
+
 ## 1.4.3 (2022-08-19)
 
 - Fixed handling of unparseable YAML files in manager methods.
@@ -7,6 +11,7 @@
 ## 1.4.2 (2022-07-29)
 
 - Fixed exception when `Union[int, float]` or `Union[str, ...]` is used.
+
 
 ## 1.4.1 (2022-07-28)
 

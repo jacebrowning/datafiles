@@ -1,7 +1,7 @@
 [tool.poetry]
 
 name = "datafiles"
-version = "1.4.3"
+version = "2.0a1"
 description = "File-based ORM for dataclasses."
 
 license = "MIT"
@@ -30,7 +30,6 @@ classifiers = [
     "Natural Language :: English",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
@@ -41,7 +40,7 @@ classifiers = [
 
 [tool.poetry.dependencies]
 
-python = "^3.7"
+python = "^3.8"
 
 # Formats
 "ruamel.yaml" = "^0.17.21"
@@ -54,9 +53,6 @@ parse = "^1.12"
 cached_property = "^1.5"
 classproperties = "^0.2"
 minilog = "^2.1"
-
-# Typing
-typing-extensions = "^3.7" # remove this when Python 3.7 support is dropped
 
 [tool.poetry.dev-dependencies]
 
