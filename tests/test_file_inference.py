@@ -26,7 +26,7 @@ def describe_auto():
     @pytest.mark.parametrize(
         ("filename", "count"),
         [
-            (".appveyor.yml", 5),
+            (".appveyor.yml", 6),
             (".travis.yml", 9),
             ("mkdocs.yml", 8),
             ("pyproject.toml", 2),
