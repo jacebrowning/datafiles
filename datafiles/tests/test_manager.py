@@ -1,7 +1,9 @@
 # pylint: disable=unused-variable
 
 import os
+import shutil
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Optional
 from unittest.mock import patch
 
@@ -26,6 +28,7 @@ class MyClass:
 def describe_manager():
     @pytest.fixture
     def manager():
+        shutil.rmtree(Path(__file__).parent / "files", ignore_errors=True)
         model = create_model(MyClass, pattern="files/{self.foo}.yml")
         return Manager(model)
 
@@ -46,6 +49,12 @@ def describe_manager():
         def when_file_missing(expect, manager):
             expect(manager.get_or_none(foo=3, bar=4)).is_(None)
 
+        def when_file_corrupt(expect, manager):
+            instance = manager.get_or_create(foo=2, bar=1)
+            instance.datafile.path.write_text("{")
+            instance = manager.get_or_none(foo=2, bar=2)
+            expect(instance).is_(None)
+
     def describe_get_or_create():
         @patch("datafiles.mapper.Mapper.save")
         @patch("datafiles.mapper.Mapper.load")
@@ -63,6 +72,12 @@ def describe_manager():
             expect(manager.get_or_create(foo=1, bar=2)) == MyClass(foo=1, bar=2)
             expect(mock_save.called).is_(True)
             expect(mock_load.called).is_(True)
+
+        def when_file_corrupt(expect, manager):
+            instance = manager.get_or_create(foo=2, bar=1)
+            instance.datafile.path.write_text("{")
+            instance = manager.get_or_create(foo=2, bar=2)
+            expect(instance.bar) == 2
 
     def describe_all():
         @patch("datafiles.mapper.Mapper.exists", False)

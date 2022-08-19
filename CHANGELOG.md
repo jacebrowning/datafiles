@@ -1,5 +1,9 @@
 # Release Notes
 
+## 1.4.3 (2022-08-19)
+
+- Fixed handling of unparseable YAML files in manager methods.
+
 ## 1.4.2 (2022-07-29)
 
 - Fixed exception when `Union[int, float]` or `Union[str, ...]` is used.
