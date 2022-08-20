@@ -101,7 +101,7 @@ Objects can also be restored from the filesystem:
 
 ## Installation
 
-Because datafiles relies on dataclasses and type annotations, Python 3.7+ is required. Install this library directly into an activated virtual environment:
+Install this library directly into an activated virtual environment:
 
 ```
 $ pip install datafiles

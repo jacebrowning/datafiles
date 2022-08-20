@@ -52,8 +52,9 @@ def describe_manager():
         def when_file_corrupt(expect, manager):
             instance = manager.get_or_create(foo=2, bar=1)
             instance.datafile.path.write_text("{")
-            instance = manager.get_or_none(foo=2, bar=2)
-            expect(instance).is_(None)
+            instance2 = manager.get_or_none(foo=2, bar=2)
+            expect(instance2).is_(None)
+            expect(instance.datafile.path.is_file()).is_(False)
 
     def describe_get_or_create():
         @patch("datafiles.mapper.Mapper.save")
@@ -76,8 +77,8 @@ def describe_manager():
         def when_file_corrupt(expect, manager):
             instance = manager.get_or_create(foo=2, bar=1)
             instance.datafile.path.write_text("{")
-            instance = manager.get_or_create(foo=2, bar=2)
-            expect(instance.bar) == 2
+            instance2 = manager.get_or_create(foo=2, bar=2)
+            expect(instance2.bar) == 2
 
     def describe_all():
         @patch("datafiles.mapper.Mapper.exists", False)
