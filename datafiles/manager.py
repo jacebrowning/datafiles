@@ -13,6 +13,7 @@ from typing import TYPE_CHECKING, Iterator, Optional
 import log
 from parse import parse
 from ruamel.yaml.parser import ParserError
+from ruamel.yaml.scanner import ScannerError
 
 from . import hooks
 
@@ -43,8 +44,10 @@ class Manager:
             instance = self.model(*args, **kwargs)
             try:
                 instance.datafile.load()
-            except ParserError:
-                log.critical(f"Deleting unparseable YAML: {instance.datafile.path}")
+            except (ParserError, ScannerError) as e:
+                log.critical(
+                    f"Deleting invalid YAML: {instance.datafile.path} ({e.problem})"
+                )
                 instance.datafile.path.unlink()
                 instance.datafile.load()
 
