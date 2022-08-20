@@ -12,7 +12,6 @@
 
 - Fixed exception when `Union[int, float]` or `Union[str, ...]` is used.
 
-
 ## 1.4.1 (2022-07-28)
 
 - Fixed exception when `TypedDict` is used, but schema is not yet supported.
