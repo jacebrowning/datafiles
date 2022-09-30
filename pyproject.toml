@@ -68,7 +68,7 @@ pydocstyle = "*"
 # Testing
 pytest = "^6.2.5"
 pytest-describe = "^2.0"
-pytest-expecter = "^2.1"
+pytest-expecter = "^3.0"
 pytest-mock = "*"
 pytest-random = "*"
 pytest-repeat = "*"
@@ -77,7 +77,7 @@ pytest-cov = "^2.8.1"
 pytest-profiling = "*"
 
 # Coverage
-coveragespace = "^4.0"
+coveragespace = "^6.0"
 
 # Documentation
 mkdocs = "^1.3"
