@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+from contextlib import suppress
 import importlib
 import tempfile
 import shutil
@@ -48,30 +49,27 @@ def run():
 
 def copy():
     for filename in [
+        os.path.join('bin', 'update'),
+        os.path.join('bin', 'checksum'),
+        os.path.join('bin', 'open'),
+        os.path.join('bin', 'verchew'),
         '.appveyor.yml',
         '.coveragerc',
         '.gitattributes',
         '.gitignore',
-        '.isort.cfg',
-        '.mypy.ini',
         '.pydocstyle.ini',
         '.pylint.ini',
         '.scrutinizer.yml',
-        '.travis.yml',
         '.verchew.ini',
         'CONTRIBUTING.md',
         'Makefile',
-        os.path.join('bin', 'checksum'),
-        os.path.join('bin', 'open'),
-        os.path.join('bin', 'update'),
-        os.path.join('bin', 'verchew'),
-        'pytest.ini',
         'scent.py',
     ]:
         src = os.path.join(TMP, CONFIG['project_name'], filename)
         dst = os.path.join(CWD, filename)
         print("Updating " + filename)
-        shutil.copy(src, dst)
+        with suppress(FileNotFoundError):
+            shutil.copy(src, dst)
 
 
 if __name__ == '__main__':
