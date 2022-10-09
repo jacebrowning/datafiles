@@ -104,6 +104,7 @@ docs/requirements.txt: poetry.lock
 	@ poetry export --dev --without-hashes | grep markdown >> $@
 	@ poetry export --dev --without-hashes | grep mkdocs >> $@
 	@ poetry export --dev --without-hashes | grep pygments >> $@
+	@ poetry export --dev --without-hashes | grep importlib-metadata >> $@
 
 .PHONY: mkdocs-serve
 mkdocs-serve: mkdocs
