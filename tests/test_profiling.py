@@ -25,7 +25,7 @@ def get_sample():
         item_required: Item
         item_optional: Optional[Item]
         items_required: List[Item]
-        item_default: Item = Item(1, None)
+        item_default: Item = field(default_factory=lambda: Item(1, None))
         items_default: List[Item] = field(default_factory=list)
 
     return Sample("profiling", Item(2, None), None, [Item(3, None)])
