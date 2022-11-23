@@ -135,7 +135,7 @@ def map_type(cls, *, name: str = "", item_cls: Optional[type] = None):
                 converter = map_type(str)
                 if type(None) in cls.__args__:
                     converter = converter.as_optional()
-            elif cls.__args__ == (int, float) or cls.__args__ == (float, int):
+            elif cls.__args__ in {(int, float), (float, int)}:
                 converter = Number
             else:
                 assert len(cls.__args__) == 2

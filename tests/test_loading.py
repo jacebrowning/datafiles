@@ -2,7 +2,7 @@
 
 # pylint: disable=unused-variable
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 import pytest
 
@@ -49,7 +49,7 @@ def describe_nominal():
         expect(sample.float_) == 2.3
         expect(sample.str_) == "foobar"
 
-    def with_convertable_types(sample, expect):
+    def with_convertible_types(sample, expect):
         write(
             "tmp/sample.yml",
             """
@@ -175,7 +175,7 @@ def describe_nesting():
         expect(sample.nested.name) == ""
         expect(sample.nested.score) == 0.0
 
-    def with_convertable_types(sample, expect):
+    def with_convertible_types(sample, expect):
         write(
             "tmp/sample.yml",
             """
@@ -259,22 +259,22 @@ def describe_nesting():
         @dataclass
         class C:
             level: int = 3
-            d: Bottom = Bottom()
+            d: Bottom = field(default_factory=Bottom)
 
         @dataclass
         class B:
             level: int = 2
-            c: C = C()
+            c: C = field(default_factory=C)
 
         @dataclass
         class A:
             level: int = 1
-            b: B = B()
+            b: B = field(default_factory=B)
 
         @datafile("../tmp/sample.toml", defaults=True)
         class Top:
             level: int = 0
-            a: A = A()
+            a: A = field(default_factory=A)
 
         sample = Top()
 

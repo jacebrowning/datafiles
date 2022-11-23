@@ -1,6 +1,10 @@
 # Release Notes
 
-## 2.0 (alpha)
+## 2.1 (beta)
+
+- Added support for Python 3.11.
+
+## 2.0 (2022-08-20)
 
 - Dropped support for Python 3.7.
 

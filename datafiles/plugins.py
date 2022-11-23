@@ -1,4 +1,4 @@
-# pylint: disable=no-name-in-module,no-self-use,unused-argument
+# pylint: disable=no-name-in-module,unused-argument
 
 from typing import Callable, Optional
 
