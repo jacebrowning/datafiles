@@ -27,7 +27,7 @@ def datafile(
         if dataclasses.is_dataclass(cls):
             dataclass = cls
         else:
-            dataclass = dataclasses.dataclass(cls)
+            dataclass = dataclasses.dataclass(cls, **kwargs)
 
         return create_model(
             dataclass,
