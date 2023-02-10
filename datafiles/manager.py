@@ -50,7 +50,7 @@ class Manager:
             pattern = self.model.Meta.datafile_pattern
             args_iter = iter(args)
             for field in fields:
-                placeholder = '{{self.{field.name}}}'.format(field=field)
+                placeholder = f"{{self.{field.name}}}"
 
                 try:
                     # we always need to consume an arg if it exists,
@@ -62,7 +62,7 @@ class Manager:
                 if placeholder in pattern:
                     if value is _NOT_PASSED:
                         raise MissingPlaceholderArgumentError(
-                            f'Missing value for placeholder field {field.name}'
+                            f"Missing value for placeholder field {field.name}"
                         )
 
                 if value is not _NOT_PASSED:
