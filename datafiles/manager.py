@@ -5,6 +5,7 @@ from __future__ import annotations
 import dataclasses
 import inspect
 import os
+import re
 from functools import reduce
 from glob import iglob
 from pathlib import Path
@@ -15,6 +16,7 @@ from parse import parse
 from ruamel.yaml.error import MarkedYAMLError
 
 from . import hooks
+from . import model
 
 if TYPE_CHECKING:
     from .model import Model
@@ -22,6 +24,12 @@ if TYPE_CHECKING:
 
 Trilean = Optional[bool]
 Missing = dataclasses._MISSING_TYPE
+_PLACEHOLDER_PATTERN = re.compile(r'\{.*?\}')
+_NOT_PASSED = object()
+
+
+class MissingPlaceholderArgumentError(Exception):
+    pass
 
 
 class Splats:
@@ -34,13 +42,40 @@ class Manager:
         self.model = cls
 
     def get(self, *args, **kwargs) -> Model:
-        fields = dataclasses.fields(self.model)
-        required = sum(1 for field in fields if isinstance(field.default, Missing))
-        missing_args = [Missing] * (required - len(args) - len(kwargs))
-        args = (*args, *missing_args)
-
         with hooks.disabled():
-            instance = self.model(*args, **kwargs)
+            instance = self.model.__new__(self.model)
+
+            use_self = self.model.Meta.datafile_use_self
+
+            # We **must** set up fields on the uninitialized instance which play a role
+            # in loading, e.g., those with placeholders in the pattern. Other fields
+            # which happen to have a value passed as an arg or kwarg are set as well, but
+            # these will eventually be loaded over anyhow.
+            fields = [field for field in dataclasses.fields(self.model) if field.init]
+            pattern = self.model.Meta.datafile_pattern
+            args_iter = iter(args)
+            for field in fields:
+                placeholder = '{' + field.name + '}' if not use_self else f'{{self.{field.name}}}'
+
+                try:
+                    # we always need to consume an arg if it exists,
+                    # even if it's not one with a placeholder
+                    value = next(args_iter)
+                except StopIteration:
+                    value = kwargs.get(field.name, _NOT_PASSED)
+
+                if placeholder in pattern:
+                    if value is _NOT_PASSED:
+                        raise MissingPlaceholderArgumentError(
+                            f'Missing value for placeholder field {field.name}'
+                        )
+
+                if value is not _NOT_PASSED:
+                    object.__setattr__(instance, field.name, value)
+
+            # NOTE: the following doesn't call instance.datafile.load because hooks are disabled currently
+            model.Model.__post_init__(instance)
+
             try:
                 instance.datafile.load()
             except MarkedYAMLError as e:
@@ -49,6 +84,12 @@ class Manager:
                 )
                 instance.datafile.path.unlink()
                 instance.datafile.load()
+
+            # reconstruct the dataclass so that __init__ gets called
+            instance = dataclasses.replace(instance)
+
+            # make sure the mapper knows that it's actually been loaded
+            instance.datafile.modified = False
 
         return instance
 
@@ -84,7 +125,8 @@ class Manager:
             log.debug(f"Detected dynamic pattern: {path}")
 
         pattern = str(path.resolve())
-        splatted = pattern.format(self=Splats()).replace(
+
+        splatted = _PLACEHOLDER_PATTERN.sub('*', pattern).replace(
             f"{os.sep}*{os.sep}", f"{os.sep}**{os.sep}"
         )
 

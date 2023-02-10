@@ -15,7 +15,8 @@ class Model:
     def __post_init__(self):
         log.debug(f"Initializing {self.__class__} object")
 
-        self.datafile = create_mapper(self)
+        # Using object.__setattr__ in case of frozen dataclasses
+        object.__setattr__(self, 'datafile', create_mapper(self))
 
         if settings.HOOKS_ENABLED:
             with hooks.disabled():
@@ -43,7 +44,7 @@ class Model:
 
 
 def create_model(
-    cls, *, attrs=None, manual=None, pattern=None, defaults=None, infer=None
+    cls, *, attrs=None, manual=None, pattern=None, defaults=None, infer=None, use_self=None
 ):
     """Patch model attributes on to an existing dataclass."""
     log.debug(f"Converting {cls} to a datafile model")
@@ -66,6 +67,8 @@ def create_model(
         m.datafile_defaults = defaults
     if not hasattr(cls, "Meta") and infer is not None:
         m.datafile_infer = infer
+    if not hasattr(cls, "Meta") and use_self is not None:
+        m.datafile_use_self = use_self
 
     cls.Meta = m
 

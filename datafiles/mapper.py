@@ -28,6 +28,7 @@ class Mapper:
         manual: bool,
         defaults: bool,
         infer: bool,
+        use_self: bool,
         root: Optional[Mapper] = None,
     ) -> None:
         assert manual is not None
@@ -38,6 +39,7 @@ class Mapper:
         self._manual = manual
         self.defaults = defaults
         self._infer = infer
+        self._use_self = use_self
         self._last_load = 0.0
         self._last_data: Dict = {}
         self._root = root
@@ -51,7 +53,12 @@ class Mapper:
         if not self._pattern:
             return None
 
-        path = Path(self._pattern.format(self=self._instance)).expanduser()
+        if not self.use_self:
+            path_str = self._pattern.format(**self._instance.__dict__)
+        else:
+            path_str = self._pattern.format(self=self._instance)
+        path = Path(path_str).expanduser()
+
         if path.is_absolute() or self._pattern.startswith("./"):
             log.debug(f"Detected static pattern: {path}")
             return path.resolve()
@@ -99,6 +106,10 @@ class Mapper:
     @property
     def infer(self) -> bool:
         return self._root.infer if self._root else self._infer
+
+    @property
+    def use_self(self) -> bool:
+        return self._root.use_self if self._root else self._use_self
 
     @property
     def data(self) -> Dict:
@@ -162,6 +173,13 @@ class Mapper:
         return formats.serialize(data)
 
     def load(self, *, _log=True, _first_load=False) -> None:
+        if (
+            dataclasses.is_dataclass(self._instance)
+            and self._instance.__dataclass_params__.frozen
+            and not _first_load
+        ):
+            raise dataclasses.FrozenInstanceError('Cannot load frozen dataclass instances more than once.')
+
         if self._root:
             self._root.load(_log=_log, _first_load=_first_load)
             return
@@ -248,7 +266,7 @@ class Mapper:
             value = converter.to_python_value(file_value, target_object=init_value)
 
         log.debug(f"Setting '{name}' value: {value!r}")
-        setattr(instance, name, value)
+        object.__setattr__(instance, name, value)
 
     def save(self, *, include_default_values: Trilean = None, _log=True) -> None:
         if self._root:
@@ -278,13 +296,14 @@ def create_mapper(obj, root=None) -> Mapper:
     meta = config.load(obj)
     attrs = meta.datafile_attrs
     pattern = meta.datafile_pattern
+    use_self = meta.datafile_use_self
 
     if attrs is None and dataclasses.is_dataclass(obj):
         attrs = {}
         log.debug(f"Mapping attributes for {obj.__class__} object")
         for field in [field for field in dataclasses.fields(obj) if field.init]:
-            self_name = f"self.{field.name}"
-            if pattern is None or self_name not in pattern:
+            placeholder = '{' + field.name + '}' if not use_self else f'{{self.{field.name}}}'
+            if pattern is None or placeholder not in pattern:
                 attrs[field.name] = map_type(resolve(field.type, obj), name=field.name)  # type: ignore
 
     return Mapper(
@@ -294,5 +313,6 @@ def create_mapper(obj, root=None) -> Mapper:
         manual=meta.datafile_manual,
         defaults=meta.datafile_defaults,
         infer=meta.datafile_infer,
+        use_self=use_self,
         root=root,
     )

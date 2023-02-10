@@ -13,6 +13,7 @@ def datafile(
     manual: bool = Meta.datafile_manual,
     defaults: bool = Meta.datafile_defaults,
     infer: bool = Meta.datafile_infer,
+    use_self: bool = Meta.datafile_use_self,
     **kwargs,
 ):
     """Synchronize a data class to the specified path."""
@@ -27,7 +28,7 @@ def datafile(
         if dataclasses.is_dataclass(cls):
             dataclass = cls
         else:
-            dataclass = dataclasses.dataclass(cls)
+            dataclass = dataclasses.dataclass(cls, **kwargs)
 
         return create_model(
             dataclass,
@@ -36,6 +37,7 @@ def datafile(
             manual=manual,
             defaults=defaults,
             infer=infer,
+            use_self=use_self,
         )
 
     return decorator
