@@ -14,7 +14,7 @@ import log
 from parse import parse
 from ruamel.yaml.error import MarkedYAMLError
 
-from . import hooks
+from . import hooks, model
 
 if TYPE_CHECKING:
     from .model import Model
@@ -22,6 +22,11 @@ if TYPE_CHECKING:
 
 Trilean = Optional[bool]
 Missing = dataclasses._MISSING_TYPE
+_NOT_PASSED = object()  # sentinel
+
+
+class MissingPlaceholderArgumentError(Exception):
+    pass
 
 
 class Splats:
@@ -34,21 +39,52 @@ class Manager:
         self.model = cls
 
     def get(self, *args, **kwargs) -> Model:
-        fields = dataclasses.fields(self.model)
-        required = sum(1 for field in fields if isinstance(field.default, Missing))
-        missing_args = [Missing] * (required - len(args) - len(kwargs))
-        args = (*args, *missing_args)
-
         with hooks.disabled():
-            instance = self.model(*args, **kwargs)
+            instance = self.model.__new__(self.model)
+
+            # We **must** set up fields on the uninitialized instance which play a role
+            # in loading, e.g., those with placeholders in the pattern. Other fields
+            # which happen to have a value passed as an arg or kwarg are set as well, but
+            # these will eventually be loaded over anyhow.
+            fields = [field for field in dataclasses.fields(self.model) if field.init]
+            pattern = self.model.Meta.datafile_pattern
+            args_iter = iter(args)
+            for field in fields:
+                placeholder = '{{self.{field.name}}}'.format(field=field)
+
+                try:
+                    # we always need to consume an arg if it exists,
+                    # even if it's not one with a placeholder
+                    value = next(args_iter)
+                except StopIteration:
+                    value = kwargs.get(field.name, _NOT_PASSED)
+
+                if placeholder in pattern:
+                    if value is _NOT_PASSED:
+                        raise MissingPlaceholderArgumentError(
+                            f'Missing value for placeholder field {field.name}'
+                        )
+
+                if value is not _NOT_PASSED:
+                    setattr(instance, field.name, value)
+
+            # NOTE: the following doesn't call instance.datafile.load because hooks are disabled currently
+            model.Model.__post_init__(instance)
+
             try:
-                instance.datafile.load()
+                instance.datafile.load(_first_load=True)
             except MarkedYAMLError as e:
                 log.critical(
                     f"Deleting invalid YAML: {instance.datafile.path} ({e.problem})"
                 )
                 instance.datafile.path.unlink()
                 instance.datafile.load()
+
+            # reconstruct the dataclass so that __init__ gets called
+            instance = dataclasses.replace(instance)
+
+            # make sure the mapper knows that it's actually been loaded
+            instance.datafile.modified = False
 
         return instance
 
