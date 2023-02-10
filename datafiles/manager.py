@@ -77,7 +77,7 @@ class Manager:
             model.Model.__post_init__(instance)
 
             try:
-                instance.datafile.load()
+                instance.datafile.load(_first_load=True)
             except MarkedYAMLError as e:
                 log.critical(
                     f"Deleting invalid YAML: {instance.datafile.path} ({e.problem})"
