@@ -5,17 +5,19 @@ from classproperties import classproperty
 
 from . import config, hooks, settings
 from .manager import Manager
-from .mapper import create_mapper
+from .mapper import Mapper, create_mapper
 
 
 class Model:
 
     Meta: config.Meta = config.Meta()
+    datafile: Mapper
 
     def __post_init__(self):
         log.debug(f"Initializing {self.__class__} object")
 
-        self.datafile = create_mapper(self)
+        # Using object.__setattr__ in case of frozen dataclasses
+        object.__setattr__(self, "datafile", create_mapper(self))
 
         if settings.HOOKS_ENABLED:
             with hooks.disabled():

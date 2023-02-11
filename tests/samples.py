@@ -13,6 +13,14 @@ class Sample:
     str_: str
 
 
+@datafile("../tmp/sample.yml", manual=True, frozen=True)
+class SampleFrozen:
+    bool_: bool
+    int_: int
+    float_: float
+    str_: str
+
+
 @datafile("../tmp/sample.json", manual=True)
 class SampleAsJSON:
     bool_: bool

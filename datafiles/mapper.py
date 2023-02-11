@@ -33,6 +33,10 @@ class Mapper:
         assert manual is not None
         assert defaults is not None
         self._instance = instance
+        self._frozen = (
+            dataclasses.is_dataclass(self._instance)
+            and self._instance.__dataclass_params__.frozen
+        )
         self.attrs = attrs
         self._pattern = pattern
         self._manual = manual
@@ -162,6 +166,11 @@ class Mapper:
         return formats.serialize(data)
 
     def load(self, *, _log=True, _first_load=False) -> None:
+        if self._frozen and not _first_load:
+            raise dataclasses.FrozenInstanceError(
+                "Cannot load frozen dataclass instances more than once."
+            )
+
         if self._root:
             self._root.load(_log=_log, _first_load=_first_load)
             return
@@ -248,7 +257,7 @@ class Mapper:
             value = converter.to_python_value(file_value, target_object=init_value)
 
         log.debug(f"Setting '{name}' value: {value!r}")
-        setattr(instance, name, value)
+        object.__setattr__(instance, name, value)
 
     def save(self, *, include_default_values: Trilean = None, _log=True) -> None:
         if self._root:
@@ -256,6 +265,11 @@ class Mapper:
             return
 
         if self.path:
+            if self.exists and self._frozen:
+                raise dataclasses.FrozenInstanceError(
+                    f"Cannot save frozen dataclass instances which already exist, "
+                    f"delete '{self.path}' before saving."
+                )
             if _log:
                 log.info(f"Saving '{self.classname}' object to '{self.relpath}'")
         else:

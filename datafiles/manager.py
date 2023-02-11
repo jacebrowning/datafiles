@@ -69,7 +69,7 @@ class Manager:
                         value = field.default_factory()
                     else:
                         value = Missing
-                setattr(instance, field.name, value)
+                object.__setattr__(instance, field.name, value)
 
             # NOTE: the following doesn't call instance.datafile.load because hooks are disabled currently
             model.Model.__post_init__(instance)

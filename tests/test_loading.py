@@ -2,7 +2,7 @@
 
 # pylint: disable=unused-variable
 
-from dataclasses import dataclass, field
+from dataclasses import FrozenInstanceError, dataclass, field
 
 import pytest
 
@@ -13,6 +13,7 @@ from . import xfail_with_pep_563
 from .samples import (
     Sample,
     SampleAsJSON,
+    SampleFrozen,
     SampleWithDefaults,
     SampleWithList,
     SampleWithListAndDefaults,
@@ -96,6 +97,34 @@ def describe_nominal():
         sample.datafile.load()
 
         expect(sample.int_) == 0
+
+
+def describe_frozen():
+    def with_already_loaded(expect):
+        write(
+            "tmp/sample.yml",
+            """
+            bool_: true
+            int_: 1
+            float_: 2.3
+            str_: 'foobar'
+            """,
+        )
+        # NOTE: To trigger a load with frozen dataclasses we can't simply
+        # use sample.datafile.load() because this will have _first_load=False
+        # and raise, and if we set _first_load=True then the None values
+        # would be taken as non-default init values and override the data
+        # from the file. Here, we use Manager.get to trigger the appropriate
+        # call to Mapper.load with no non-default init arguments.
+        sample = SampleFrozen.objects.get()
+
+        expect(sample.bool_).is_(True)
+        expect(sample.int_) == 1
+        expect(sample.float_) == 2.3
+        expect(sample.str_) == "foobar"
+
+        with expect.raises(FrozenInstanceError):
+            sample.datafile.load()
 
 
 def describe_alternate_formats():

@@ -2,6 +2,7 @@
 
 # pylint: disable=unused-variable,assigning-non-slot,unsubscriptable-object
 
+from dataclasses import FrozenInstanceError
 from typing import Optional
 
 import pytest
@@ -12,6 +13,7 @@ from datafiles.utils import dedent, logbreak, read, write
 from . import xfail_with_pep_563
 from .samples import (
     Sample,
+    SampleFrozen,
     SampleWithCustomFields,
     SampleWithDefaults,
     SampleWithList,
@@ -78,6 +80,22 @@ def describe_nominal():
                 included: foo
                 """
             )
+
+
+def describe_frozen():
+    def with_already_existing(expect):
+        write(
+            "tmp/sample.yml",
+            """
+            bool_: true
+            int_: 1
+            float_: 2.3
+            str_: 'foobar'
+            """,
+        )
+        sample = SampleFrozen(True, 1, 2.3, "foobar")
+        with expect.raises(FrozenInstanceError):
+            sample.datafile.save()
 
 
 def describe_lists():
