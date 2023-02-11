@@ -9,7 +9,7 @@ from unittest.mock import patch
 
 import pytest
 
-from datafiles.manager import Manager
+from datafiles.manager import Manager, Missing
 from datafiles.model import create_model
 
 
@@ -36,6 +36,47 @@ def describe_manager():
     def manager_home():
         model = create_model(Nested, pattern="~/.{self.name}.json")
         return Manager(model)
+
+    @pytest.fixture()
+    def manager_with_files():
+        files_dir = Path(__file__).parent / "files"
+        shutil.rmtree(files_dir, ignore_errors=True)
+        files_dir.mkdir(exist_ok=True)
+        model = create_model(MyClass, pattern="files/{self.foo}.yml")
+        model(foo=1, bar=2).datafile.save()
+        return Manager(model)
+
+    def describe_get():
+        @patch("datafiles.mapper.Mapper.load")
+        @patch("datafiles.mapper.Mapper.exists", True)
+        @patch("datafiles.mapper.Mapper.modified", False)
+        def when_partial_args_passed_init_args_missing(mock_load, expect, manager):
+            got = manager.get(1)
+            expect(got.foo) == 1
+            expect(got.bar) is Missing
+            expect(mock_load.called).is_(True)
+
+            with expect.raises(
+                TypeError,
+                "Manager.get() missing required placeholder field argument: 'foo'",
+            ):
+                manager.get(bar=2)
+
+        @patch("datafiles.mapper.Mapper.exists", True)
+        @patch("datafiles.mapper.Mapper.modified", False)
+        def when_partial_args_passed_init_arg_missing_file_exists(
+            expect, manager_with_files
+        ):
+            # demonstrates that `Manager.get` loads the value for bar, when it is not passed
+            expect(manager_with_files.get(1)) == MyClass(foo=1, bar=2)
+
+        @patch("datafiles.mapper.Mapper.exists", True)
+        @patch("datafiles.mapper.Mapper.modified", False)
+        def when_partial_kwargs_passed_init_arg_missing_file_exists(
+            expect, manager_with_files
+        ):
+            # demonstrates that `Manager.get` loads the value for bar, when it is not passed
+            expect(manager_with_files.get(foo=1)) == MyClass(foo=1, bar=2)
 
     def describe_get_or_none():
         @patch("datafiles.mapper.Mapper.load")
