@@ -71,6 +71,7 @@ The following options can be passed to the `@datafile()` decorator:
 | `manual`   | `bool` | Synchronize object and file changes manually.                         | `False`           |
 | `defaults` | `bool` | Include attributes with default values when serializing.              | `False`           |
 | `infer`    | `bool` | Automatically infer new attributes from the file.                     | `False`           |
+| `frozen`   | `bool` | Freeze the underlying `dataclass` and prevent multiple loads.         | `False`           |
 
 <sup>1</sup> _By default, synchronized attributes are inferred from the type annotations._
 
