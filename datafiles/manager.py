@@ -25,10 +25,6 @@ Missing = dataclasses._MISSING_TYPE
 _NOT_PASSED = object()  # sentinel
 
 
-class MissingPlaceholderArgumentError(Exception):
-    pass
-
-
 class Splats:
     def __getattr__(self, name):
         return "*"
@@ -42,10 +38,11 @@ class Manager:
         with hooks.disabled():
             instance = self.model.__new__(self.model)
 
-            # We **must** set up fields on the uninitialized instance which play a role
-            # in loading, e.g., those with placeholders in the pattern. Other fields
-            # which happen to have a value passed as an arg or kwarg are set as well, but
-            # these will eventually be loaded over anyhow.
+            # We **must** initialize with a value all fields on the uninitialized
+            # instance which play a role in loading, e.g., those with placeholders
+            # in the pattern. Other init fields of the instance which are not passed
+            # as args or kwargs will be set to `dataclasses._MISSING_TYPE` and their
+            # values will be loaded over.
             fields = [field for field in dataclasses.fields(self.model) if field.init]
             pattern = self.model.Meta.datafile_pattern
             args_iter = iter(args)
@@ -61,12 +58,18 @@ class Manager:
 
                 if placeholder in pattern:
                     if value is _NOT_PASSED:
-                        raise MissingPlaceholderArgumentError(
-                            f"Missing value for placeholder field {field.name}"
+                        raise TypeError(
+                            f"Manager.get() missing required placeholder field argument: '{field.name}'"
                         )
 
-                if value is not _NOT_PASSED:
-                    setattr(instance, field.name, value)
+                if value is _NOT_PASSED:
+                    if not isinstance(field.default, Missing):
+                        value = field.default
+                    elif not isinstance(field.default_factory, Missing):
+                        value = field.default_factory()
+                    else:
+                        value = Missing
+                setattr(instance, field.name, value)
 
             # NOTE: the following doesn't call instance.datafile.load because hooks are disabled currently
             model.Model.__post_init__(instance)
