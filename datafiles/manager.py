@@ -83,10 +83,10 @@ class Manager:
                 instance.datafile.path.unlink()
                 instance.datafile.load()
 
-            # reconstruct the dataclass so that __init__ gets called
+            # Reconstruct the dataclass so that __init__ gets called
             instance = dataclasses.replace(instance)
 
-            # make sure the mapper knows that it's actually been loaded
+            # Make sure the mapper knows that it's actually been loaded
             instance.datafile.modified = False
 
         return instance

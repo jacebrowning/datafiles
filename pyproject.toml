@@ -1,7 +1,7 @@
 [tool.poetry]
 
 name = "datafiles"
-version = "2.1b2"
+version = "2.1b3"
 description = "File-based ORM for dataclasses."
 
 license = "MIT"
@@ -88,7 +88,7 @@ importlib-metadata = "<5"
 
 # Notebooks
 idna = "^3.3" # papermill dependency
-ipython = "^7.31"
+ipython = "^8.10"
 jupyter = { version = "^1.0", markers = "sys_platform != 'win32'" }
 nbstripout ="~0.4"
 papermill = "^2.3"

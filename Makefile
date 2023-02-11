@@ -100,11 +100,11 @@ $(MKDOCS_INDEX): docs/requirements.txt mkdocs.yml docs/*.md
 
 docs/requirements.txt: poetry.lock
 	@ rm -f $@
-	@ poetry export --dev --without-hashes | grep jinja2 >> $@
-	@ poetry export --dev --without-hashes | grep markdown >> $@
-	@ poetry export --dev --without-hashes | grep mkdocs >> $@
-	@ poetry export --dev --without-hashes | grep pygments >> $@
-	@ poetry export --dev --without-hashes | grep importlib-metadata >> $@
+	@ poetry export --with dev --without-hashes | grep jinja2 >> $@
+	@ poetry export --with dev --without-hashes | grep markdown >> $@
+	@ poetry export --with dev --without-hashes | grep mkdocs >> $@
+	@ poetry export --with dev --without-hashes | grep pygments >> $@
+	@ poetry export --with dev --without-hashes | grep importlib-metadata >> $@
 
 .PHONY: mkdocs-serve
 mkdocs-serve: mkdocs
