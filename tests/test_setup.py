@@ -27,6 +27,16 @@ def describe_automatic():
 
         return Sample(1, "a")
 
+    @pytest.fixture
+    def sample_without_self():
+        @datafile("../tmp/{key}.yml")
+        class Sample:
+            key: int
+            name: str
+            score: float = 1 / 2
+
+        return Sample(1, "a")
+
     def it_inferrs_attrs(expect, sample):
         expect(sample.datafile.attrs) == {
             "name": datafiles.converters.String,
@@ -36,6 +46,22 @@ def describe_automatic():
     def it_formats_path_from_pattern(expect, sample):
         root = Path(__file__).parents[1]
         expect(sample.datafile.path) == root / "tmp" / "1.yml"
+
+    def it_formats_path_from_pattern_without_self(expect, sample_without_self):
+        root = Path(__file__).parents[1]
+        expect(sample_without_self.datafile.path) == root / "tmp" / "1.yml"
+
+    def it_raises_when_pattern_has_both_styles(expect):
+        with expect.raises(
+            ValueError,
+            "Pattern contains identifiers with and without 'self.': ../tmp/{key}{self.name}.yml",
+        ):
+
+            @datafile("../tmp/{key}{self.name}.yml")
+            class Sample:
+                key: int
+                name: str
+                score: float = 1 / 2
 
     def it_converts_attributes(expect, sample):
         expect(sample.key) == 1

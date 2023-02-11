@@ -1,13 +1,14 @@
 """Internal helper functions."""
 
 import dataclasses
+import re
 import time
 from contextlib import suppress
 from functools import lru_cache
 from pathlib import Path
 from pprint import pformat
 from shutil import get_terminal_size
-from typing import Any, Dict, Union
+from typing import Any, Dict, Optional, Union
 
 import log
 
@@ -15,6 +16,7 @@ from . import settings
 from .types import Missing
 
 cached = lru_cache()
+_PLACEHOLDER_PATTERN = re.compile(r"\{(.*?)\}")
 
 
 def subclasses(cls):
@@ -157,3 +159,31 @@ def logbreak(message: str = "") -> None:
     else:
         line = "-" * width
     log.critical(line)
+
+
+def pattern_uses_self(pattern: Optional[str]) -> bool:
+    if pattern is None:
+        return False
+    matches = _PLACEHOLDER_PATTERN.findall(pattern)
+    has_self = None
+    error = False
+    for match in matches:
+        if match.startswith("self."):
+            if has_self is None:
+                has_self = True
+            elif not has_self:
+                # match starts with self., but a previous one did not
+                error = True
+        elif has_self:
+            # match doesn't start with self., but a previous one did
+            error = True
+        else:
+            # mark that we encountered a placeholder without self.
+            has_self = False
+
+        if error:
+            raise ValueError(
+                f"Pattern contains identifiers with and without 'self.': {pattern}"
+            )
+
+    return has_self or False

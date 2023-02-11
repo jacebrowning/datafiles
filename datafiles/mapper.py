@@ -15,7 +15,13 @@ from cached_property import cached_property
 from . import config, formats, hooks
 from .converters import Converter, List, map_type, resolve
 from .types import Missing, Trilean
-from .utils import display, get_default_field_value, recursive_update, write
+from .utils import (
+    display,
+    get_default_field_value,
+    pattern_uses_self,
+    recursive_update,
+    write,
+)
 
 
 class Mapper:
@@ -35,6 +41,7 @@ class Mapper:
         self._instance = instance
         self.attrs = attrs
         self._pattern = pattern
+        self._use_self = pattern_uses_self(pattern)
         self._manual = manual
         self.defaults = defaults
         self._infer = infer
@@ -51,7 +58,12 @@ class Mapper:
         if not self._pattern:
             return None
 
-        path = Path(self._pattern.format(self=self._instance)).expanduser()
+        if self._use_self:
+            path_str = self._pattern.format(self=self._instance)
+        else:
+            path_str = self._pattern.format(**self._instance.__dict__)
+        path = Path(path_str).expanduser()
+
         if path.is_absolute() or self._pattern.startswith("./"):
             log.debug(f"Detected static pattern: {path}")
             return path.resolve()
@@ -278,13 +290,16 @@ def create_mapper(obj, root=None) -> Mapper:
     meta = config.load(obj)
     attrs = meta.datafile_attrs
     pattern = meta.datafile_pattern
+    use_self = pattern_uses_self(pattern)
 
     if attrs is None and dataclasses.is_dataclass(obj):
         attrs = {}
         log.debug(f"Mapping attributes for {obj.__class__} object")
         for field in [field for field in dataclasses.fields(obj) if field.init]:
-            self_name = f"self.{field.name}"
-            if pattern is None or self_name not in pattern:
+            placeholder = (
+                "{" + field.name + "}" if not use_self else f"{{self.{field.name}}}"
+            )
+            if pattern is None or placeholder not in pattern:
                 attrs[field.name] = map_type(resolve(field.type, obj), name=field.name)  # type: ignore
 
     return Mapper(

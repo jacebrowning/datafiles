@@ -5,6 +5,7 @@ from __future__ import annotations
 import dataclasses
 import inspect
 import os
+import re
 from functools import reduce
 from glob import iglob
 from pathlib import Path
@@ -15,6 +16,7 @@ from parse import parse
 from ruamel.yaml.error import MarkedYAMLError
 
 from . import hooks, model
+from .utils import pattern_uses_self
 
 if TYPE_CHECKING:
     from .model import Model
@@ -23,6 +25,7 @@ if TYPE_CHECKING:
 Trilean = Optional[bool]
 Missing = dataclasses._MISSING_TYPE
 _NOT_PASSED = object()  # sentinel
+_PLACEHOLDER_PATTERN = re.compile(r"\{.*?\}")
 
 
 class Splats:
@@ -33,6 +36,8 @@ class Splats:
 class Manager:
     def __init__(self, cls):
         self.model = cls
+        self._pattern = cls.Meta.datafile_pattern
+        self._use_self = pattern_uses_self(self._pattern)
 
     def get(self, *args, **kwargs) -> Model:
         with hooks.disabled():
@@ -44,10 +49,14 @@ class Manager:
             # as args or kwargs will be set to `dataclasses._MISSING_TYPE` and their
             # values will be loaded over.
             fields = [field for field in dataclasses.fields(self.model) if field.init]
-            pattern = self.model.Meta.datafile_pattern
+            pattern = self._pattern
             args_iter = iter(args)
             for field in fields:
-                placeholder = f"{{self.{field.name}}}"
+                placeholder = (
+                    "{" + field.name + "}"
+                    if not self._use_self
+                    else f"{{self.{field.name}}}"
+                )
 
                 try:
                     # we always need to consume an arg if it exists,
@@ -123,7 +132,8 @@ class Manager:
             log.debug(f"Detected dynamic pattern: {path}")
 
         pattern = str(path.resolve())
-        splatted = pattern.format(self=Splats()).replace(
+
+        splatted = _PLACEHOLDER_PATTERN.sub("*", pattern).replace(
             f"{os.sep}*{os.sep}", f"{os.sep}**{os.sep}"
         )
 
