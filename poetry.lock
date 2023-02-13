@@ -1148,30 +1148,32 @@ files = [
 
 [[package]]
 name = "mkdocs"
-version = "1.3.1"
+version = "1.4.2"
 description = "Project documentation with Markdown."
 category = "dev"
 optional = false
-python-versions = ">=3.6"
+python-versions = ">=3.7"
 files = [
-    {file = "mkdocs-1.3.1-py3-none-any.whl", hash = "sha256:fda92466393127d2da830bc6edc3a625a14b436316d1caf347690648e774c4f0"},
-    {file = "mkdocs-1.3.1.tar.gz", hash = "sha256:a41a2ff25ce3bbacc953f9844ba07d106233cd76c88bac1f59cb1564ac0d87ed"},
+    {file = "mkdocs-1.4.2-py3-none-any.whl", hash = "sha256:c8856a832c1e56702577023cd64cc5f84948280c1c0fcc6af4cd39006ea6aa8c"},
+    {file = "mkdocs-1.4.2.tar.gz", hash = "sha256:8947af423a6d0facf41ea1195b8e1e8c85ad94ac95ae307fe11232e0424b11c5"},
 ]
 
 [package.dependencies]
-click = ">=3.3"
+click = ">=7.0"
+colorama = {version = ">=0.4", markers = "platform_system == \"Windows\""}
 ghp-import = ">=1.0"
-importlib-metadata = ">=4.3"
-Jinja2 = ">=2.10.2"
-Markdown = ">=3.2.1,<3.4"
+importlib-metadata = {version = ">=4.3", markers = "python_version < \"3.10\""}
+jinja2 = ">=2.11.1"
+markdown = ">=3.2.1,<3.4"
 mergedeep = ">=1.3.4"
 packaging = ">=20.5"
-PyYAML = ">=3.10"
+pyyaml = ">=5.1"
 pyyaml-env-tag = ">=0.1"
 watchdog = ">=2.0"
 
 [package.extras]
 i18n = ["babel (>=2.9.0)"]
+min-versions = ["babel (==2.9.0)", "click (==7.0)", "colorama (==0.4)", "ghp-import (==1.0)", "importlib-metadata (==4.3)", "jinja2 (==2.11.1)", "markdown (==3.2.1)", "markupsafe (==2.0.1)", "mergedeep (==1.3.4)", "packaging (==20.5)", "pyyaml (==5.1)", "pyyaml-env-tag (==0.1)", "typing-extensions (==3.10)", "watchdog (==2.0)"]
 
 [[package]]
 name = "mypy"
@@ -2607,4 +2609,4 @@ testing = ["func-timeout", "jaraco.itertools", "pytest (>=4.6)", "pytest-black (
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "ed8991d94f4b4ae29257dd51a06a5d0d51a20d998009f73d93b5c050375fbea6"
+content-hash = "a9173e8c38c7931a85ad730c031c99e1f83684746915ee211bb82a3aeba7b810"

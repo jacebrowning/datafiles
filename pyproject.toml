@@ -81,10 +81,8 @@ pytest-profiling = "*"
 coveragespace = "^6.0"
 
 # Documentation
-mkdocs = "^1.3"
+mkdocs = "^1.4"
 pygments = "^2.10"
-jinja2 = "~3.0.3" # fix for 'mkdocs' incompatiblity
-importlib-metadata = "<5"
 
 # Notebooks
 idna = "^3.3" # papermill dependency
