@@ -4,10 +4,7 @@ MODULES := $(wildcard $(PACKAGE)/*.py)
 # MAIN TASKS ##################################################################
 
 .PHONY: all
-all: install
-
-.PHONY: ci
-ci: format check test mkdocs  ## Run all tasks that determine CI status
+all: format check test mkdocs ## Run all tasks that determine CI status
 
 .PHONY: dev
 dev: install  ## Continuously run all CI tasks when files chanage
@@ -151,7 +148,7 @@ clean:  ## Delete all generated and temporary files
 # HELP ########################################################################
 
 .PHONY: help
-help: all
+help: install
 	@ grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
 .DEFAULT_GOAL := help
