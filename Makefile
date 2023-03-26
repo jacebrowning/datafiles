@@ -4,7 +4,7 @@ MODULES := $(wildcard $(PACKAGE)/*.py)
 # MAIN TASKS ##################################################################
 
 .PHONY: all
-all: format check test mkdocs ## Run all tasks that determine CI status
+all: doctor format check test mkdocs ## Run all tasks that determine CI status
 
 .PHONY: dev
 dev: install  ## Continuously run all CI tasks when files chanage
@@ -21,9 +21,15 @@ demo: install
 
 # SYSTEM DEPENDENCIES #########################################################
 
+.PHONY: boostrap
+boostrap: ## Attempt to install system dependencies
+	asdf plugin add python || asdf plugin update python
+	asdf plugin add poetry https://github.com/asdf-community/asdf-poetry.git || asdf plugin update poetry
+	asdf install
+
 .PHONY: doctor
-doctor:  ## Confirm system dependencies are available
-	bin/verchew --exit-code
+doctor: ## Confirm system dependencies are available
+	bin/verchew
 
 # PROJECT DEPENDENCIES ########################################################
 
@@ -31,10 +37,11 @@ VIRTUAL_ENV ?= .venv
 DEPENDENCIES := $(VIRTUAL_ENV)/.poetry-$(shell bin/checksum pyproject.toml poetry.lock)
 
 .PHONY: install
-install: $(DEPENDENCIES) .cache
+install: $(DEPENDENCIES) .cache ## Install project dependencies
 
 $(DEPENDENCIES): poetry.lock
-	@ poetry config virtualenvs.in-project true || poetry config settings.virtualenvs.in-project true
+	@ rm -rf $(VIRTUAL_ENV)/.poetry-*
+	@ poetry config virtualenvs.in-project true
 	poetry install
 	@ touch $@
 
