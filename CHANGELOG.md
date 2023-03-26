@@ -1,6 +1,6 @@
 # Release Notes
 
-## 2.1 (beta)
+## 2.1 (2023-03-26)
 
 - Added support for Python 3.11.
 - Updated `Manager.get()` to be more flexible with positional arguments.
