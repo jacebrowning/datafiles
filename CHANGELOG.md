@@ -5,6 +5,7 @@
 - Added support for Python 3.11.
 - Updated `Manager.get()` to be more flexible with positional arguments.
 - Added support for passing `frozen=True` to the underlying `dataclass`.
+- Added `py.typed` to tell type checkers that `datafiles` has types.
 
 ## 2.0 (2022-08-20)
 
