@@ -23,7 +23,7 @@ class List(Converter):
         return type(name, bases, attributes)
 
     @classmethod
-    def to_python_value(cls, deserialized_data, *, target_object):
+    def to_python_value(cls, deserialized_data, *, target_object=None):
         if target_object is None or target_object is Missing:
             value = []
         else:
@@ -92,7 +92,7 @@ class Set(List):
     """Base converter for sets."""
 
     @classmethod
-    def to_python_value(cls, deserialized_data, *, target_object):
+    def to_python_value(cls, deserialized_data, *, target_object=None):
         if target_object is None or target_object is Missing:
             value = set()
         else:
@@ -137,7 +137,7 @@ class Dictionary(Converter):
         return type(name, bases, {})
 
     @classmethod
-    def to_python_value(cls, deserialized_data, *, target_object):
+    def to_python_value(cls, deserialized_data, *, target_object=None):
         if isinstance(deserialized_data, dict):
             data = deserialized_data.copy()
         else:
@@ -176,7 +176,7 @@ class Dataclass(Converter):
         return type(name, bases, attributes)
 
     @classmethod
-    def to_python_value(cls, deserialized_data, *, target_object):
+    def to_python_value(cls, deserialized_data, *, target_object=None):
         if dataclasses.is_dataclass(deserialized_data):
             data = dataclasses.asdict(deserialized_data)
         elif isinstance(deserialized_data, dict):

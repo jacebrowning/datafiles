@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.1.1 (2023-05-04)
+
+- Fixed missing default value for `target_object` in container converters.
+
 ## 2.1 (2023-03-26)
 
 - Added support for Python 3.11.
