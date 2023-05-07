@@ -69,7 +69,6 @@ The CI server will report overall build status:
 ```text
 $ make all
 ```
-```
 
 ## Release Tasks
 
