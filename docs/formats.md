@@ -119,12 +119,10 @@ class MyFormat(formats.Format):
         return [".my_ext"]
 
     @classmethod
-    @abstractmethod
     def deserialize(cls, file_object: IO) -> dict:
         # Read `file_object` and return a dictionary
 
     @classmethod
-    @abstractmethod
     def serialize(cls, data: dict) -> str:
         # Convert `data` to a string
 
