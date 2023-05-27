@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.1.2 (2023-05-27)
+
+- Fixed the `mypy` plugin to support newer versions.
+
 ## 2.1.1 (2023-05-04)
 
 - Fixed missing default value for `target_object` in container converters.
