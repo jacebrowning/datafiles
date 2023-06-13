@@ -15,7 +15,7 @@ from cached_property import cached_property
 from . import config, formats, hooks
 from .converters import Converter, List, map_type, resolve
 from .types import Missing, Trilean
-from .utils import display, get_default_field_value, recursive_update, write
+from .utils import display, get_default_field_value, recursive_update, remove, write
 
 
 class Mapper:
@@ -264,6 +264,17 @@ class Mapper:
             self._root.save(include_default_values=include_default_values, _log=_log)
             return
 
+        # Determine whether the attributes that are involved in the path were changed
+        file_rename_required = False
+        original_path = self.path
+        with hooks.disabled():  # hooks have to be disabled to prevent infinite loop
+            if "path" in self.__dict__:
+                del self.__dict__["path"]  # invalidate the cached property
+
+            # This call of self.path updates the value since the cache is invalidated
+            if self.path != original_path:
+                file_rename_required = True
+
         if self.path:
             if self.exists and self._frozen:
                 raise dataclasses.FrozenInstanceError(
@@ -279,6 +290,8 @@ class Mapper:
             text = self._get_text(include_default_values=include_default_values)
 
         write(self.path, text, display=True)
+        if file_rename_required:
+            remove(original_path)
 
         self.modified = False
 
