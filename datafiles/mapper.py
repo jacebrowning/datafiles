@@ -28,6 +28,7 @@ class Mapper:
         manual: bool,
         defaults: bool,
         infer: bool,
+        rename: bool,
         root: Optional[Mapper] = None,
     ) -> None:
         assert manual is not None
@@ -40,6 +41,7 @@ class Mapper:
         self.attrs = attrs
         self._pattern = pattern
         self._manual = manual
+        self._rename = rename
         self.defaults = defaults
         self._infer = infer
         self._last_load = 0.0
@@ -319,6 +321,7 @@ def create_mapper(obj, root=None) -> Mapper:
         attrs=attrs or {},
         pattern=pattern,
         manual=meta.datafile_manual,
+        rename=meta.datafile_rename,
         defaults=meta.datafile_defaults,
         infer=meta.datafile_infer,
         root=root,

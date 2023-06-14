@@ -13,6 +13,7 @@ def datafile(
     manual: bool = Meta.datafile_manual,
     defaults: bool = Meta.datafile_defaults,
     infer: bool = Meta.datafile_infer,
+    rename: bool = Meta.datafile_rename,
     **kwargs,
 ):
     """Synchronize a data class to the specified path."""
@@ -36,6 +37,7 @@ def datafile(
             manual=manual,
             defaults=defaults,
             infer=infer,
+            rename=rename,
         )
 
     return decorator
