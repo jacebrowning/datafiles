@@ -31,6 +31,7 @@ def describe_mapper():
             manual=Meta.datafile_manual,
             defaults=Meta.datafile_defaults,
             infer=Meta.datafile_infer,
+            rename=Meta.datafile_rename,
         )
 
     def describe_path():
