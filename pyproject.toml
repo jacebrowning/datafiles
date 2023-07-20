@@ -82,7 +82,7 @@ coveragespace = "^6.0"
 
 # Documentation
 mkdocs = "^1.4"
-pygments = "^2.10"
+pygments = "^2.15"
 
 # Notebooks
 idna = "^3.3" # papermill dependency
