@@ -23,7 +23,7 @@ def describe_datafile():
 
         expect(id(cls)) == id(Existing)
 
-    def it_maps_to_dataclass_without_paranthesis(expect):
+    def it_maps_to_dataclass_without_parentheses(expect):
         class Sample:
             pass
 
@@ -38,3 +38,16 @@ def describe_datafile():
         cls = decorators.datafile(order=True)(Sample)
 
         expect(is_dataclass(cls)).is_(True)
+
+
+def describe_sync():
+    def it_turns_dataclass_instance_into_model_instance(expect):
+        @dataclass
+        class Existing:
+            count: int = 42
+
+        instance = Existing()
+
+        decorators.sync(instance, "tmp/example.yml", defaults=True)
+
+        expect(instance.datafile.data) == {"count": 42}  # type: ignore
