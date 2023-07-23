@@ -141,6 +141,14 @@ def read(filename: str, *, display=False) -> str:
     return text
 
 
+def remove(filename_or_path: Union[str, Path]) -> None:
+    """Remove a given file, if it exists."""
+    filepath = Path(filename_or_path)
+    if filepath.exists():
+        filepath.unlink()
+        log.debug("Removed filepath: %s", str(filepath))
+
+
 def display(path: Path, data: Dict) -> None:
     """Display data read from a file."""
     message = f"Data from file: {path}"

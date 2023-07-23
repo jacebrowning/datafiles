@@ -45,7 +45,14 @@ class Model:
 
 
 def create_model(
-    cls, *, attrs=None, manual=None, pattern=None, defaults=None, infer=None
+    cls,
+    *,
+    attrs=None,
+    manual=None,
+    pattern=None,
+    defaults=None,
+    infer=None,
+    rename=None,
 ):
     """Patch model attributes on to an existing dataclass."""
     log.debug(f"Converting {cls} to a datafile model")
@@ -68,6 +75,8 @@ def create_model(
         m.datafile_defaults = defaults
     if not hasattr(cls, "Meta") and infer is not None:
         m.datafile_infer = infer
+    if not hasattr(cls, "Meta") and rename is not None:
+        m.datafile_rename = rename
 
     cls.Meta = m
 
