@@ -55,21 +55,21 @@ def create_model(
 
     # Patch meta
 
-    m = getattr(cls, "Meta", config.Meta())
+    meta = getattr(cls, "Meta", config.Meta())
 
     if attrs is not None:
-        m.datafile_attrs = attrs
+        meta.datafile_attrs = attrs
     if pattern is not None:
-        m.datafile_pattern = pattern
+        meta.datafile_pattern = pattern
 
     if not hasattr(cls, "Meta") and manual is not None:
-        m.datafile_manual = manual
+        meta.datafile_manual = manual
     if not hasattr(cls, "Meta") and defaults is not None:
-        m.datafile_defaults = defaults
+        meta.datafile_defaults = defaults
     if not hasattr(cls, "Meta") and infer is not None:
-        m.datafile_infer = infer
+        meta.datafile_infer = infer
 
-    cls.Meta = m
+    cls.Meta = meta
 
     # Patch manager
 

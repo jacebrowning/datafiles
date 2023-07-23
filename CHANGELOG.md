@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.2 (beta)
+
+- Added a `sync()` utility map arbitrary objects to the filesystem.
+
 ## 2.1.2 (2023-05-27)
 
 - Fixed the `mypy` plugin to support newer versions.

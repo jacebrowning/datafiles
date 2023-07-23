@@ -79,4 +79,24 @@ with datafiles.frozen(instance):
     instance.c = 3
 ```
 
+## `sync()`
 
+This helper can be used to enable file synchronization on an arbitrary object:
+
+```python
+from dataclasses import dataclass
+
+@dataclass
+class InventoryItem:
+    name: str
+    unit_price: float
+    quantity_on_hand: int = 0
+```
+
+by providing it a path or directory pattern:
+
+```python
+>>> from datafiles import sync
+>>> item = InventoryItem("widget", 3)
+>>> sync(item, "inventory/items/{self.name}.yml")
+```
