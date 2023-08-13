@@ -5,7 +5,7 @@ Datafiles is a bidirectional serialization library for Python [dataclasses](http
 Some common use cases include:
 
 - Coercing user-editable files into the proper Python types
-- Storing program configuration and data in version control
+- Storing program configuration and state in version control
 - Loading data fixtures for demonstration or testing purposes
 - Synchronizing application state using file sharing services
 - Prototyping data models agnostic of persistence backends
