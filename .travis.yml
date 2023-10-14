@@ -22,9 +22,8 @@ install:
 script:
   - make test-repeat
   - make check
-  # TODO: Get targets working with Python 3.10
-  # - make notebooks
-  # - make mkdocs
+  - make notebooks
+  - make mkdocs
 
 after_success:
   - pip install coveralls
