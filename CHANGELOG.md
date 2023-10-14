@@ -1,6 +1,6 @@
 # Release Notes
 
-## 2.2 (beta)
+## 2.2 (2023-10-14)
 
 - Added a `sync()` utility to map arbitrary objects to the filesystem.
 
