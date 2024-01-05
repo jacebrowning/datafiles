@@ -21,8 +21,8 @@ if TYPE_CHECKING:
 
 
 Trilean = Optional[bool]
-Missing = dataclasses._MISSING_TYPE
-_NOT_PASSED = object()  # sentinel
+Missing = dataclasses._MISSING_TYPE  # sentinel value for arguments to be loaded
+Absent = object()  # sentinel value for required arguments not passed
 
 
 class Splats:
@@ -38,11 +38,7 @@ class Manager:
         with hooks.disabled():
             instance = self.model.__new__(self.model)
 
-            # We **must** initialize with a value all fields on the uninitialized
-            # instance which play a role in loading, e.g., those with placeholders
-            # in the pattern. Other init fields of the instance which are not passed
-            # as args or kwargs will be set to `dataclasses._MISSING_TYPE` and their
-            # values will be loaded over.
+            # Set initial values for all passed arguments
             fields = [field for field in dataclasses.fields(self.model) if field.init]
             pattern = self.model.Meta.datafile_pattern
             args_iter = iter(args)
@@ -50,19 +46,20 @@ class Manager:
                 placeholder = f"{{self.{field.name}}}"
 
                 try:
-                    # we always need to consume an arg if it exists,
-                    # even if it's not one with a placeholder
                     value = next(args_iter)
                 except StopIteration:
-                    value = kwargs.get(field.name, _NOT_PASSED)
+                    value = kwargs.get(field.name, Absent)
 
-                if placeholder in pattern:
-                    if value is _NOT_PASSED:
-                        raise TypeError(
-                            f"Manager.get() missing required placeholder field argument: '{field.name}'"
-                        )
+                if (
+                    placeholder in pattern
+                    and value is Absent
+                    and isinstance(field.default, Missing)
+                ):
+                    raise TypeError(
+                        f"Manager.get() missing required placeholder field argument: '{field.name}'"
+                    )
 
-                if value is _NOT_PASSED:
+                if value is Absent:
                     if not isinstance(field.default, Missing):
                         value = field.default
                     elif not isinstance(field.default_factory, Missing):
@@ -71,7 +68,7 @@ class Manager:
                         value = Missing
                 object.__setattr__(instance, field.name, value)
 
-            # NOTE: the following doesn't call instance.datafile.load because hooks are disabled currently
+            # Bypass calling load() because hooks are disabled currently
             model.Model.__post_init__(instance)
 
             try:
@@ -129,7 +126,6 @@ class Manager:
 
         log.info(f"Finding files matching pattern: {splatted}")
         for index, filename in enumerate(iglob(splatted, recursive=True)):
-
             if Path(filename).is_dir():
                 log.debug(f"Skipped matching directory {index + 1}: {filename}")
                 continue
