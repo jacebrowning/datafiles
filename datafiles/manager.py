@@ -119,7 +119,10 @@ class Manager:
             path = root / self.model.Meta.datafile_pattern
             log.debug(f"Detected dynamic pattern: {path}")
 
-        pattern = str(path.resolve())
+        pattern = alt_pattern = str(path.resolve())
+        for field in dataclasses.fields(self.model):
+            if not isinstance(field.default, Missing):
+                alt_pattern = alt_pattern.replace("{self." + field.name + "}", "")
         splatted = pattern.format(self=Splats()).replace(
             f"{os.sep}*{os.sep}", f"{os.sep}**{os.sep}"
         )
@@ -131,7 +134,7 @@ class Manager:
                 continue
 
             log.debug(f"Found matching path {index + 1}: {filename}")
-            result = parse(pattern, filename)
+            result = parse(pattern, filename) or parse(alt_pattern, filename)
             if result:
                 values = list(result.named.values())
 
