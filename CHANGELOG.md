@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.2.2 (2024-01-06)
+
+- Fixed `Manager.all()` behavior for patterns with default vales.
+
 ## 2.2.1 (2024-01-04)
 
 - Updated `Manager.get()` to handle default values in pattern arguments.
