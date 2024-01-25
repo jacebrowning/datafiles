@@ -15,6 +15,7 @@ class Meta:
     datafile_manual: bool = False
     datafile_defaults: bool = False
     datafile_infer: bool = False
+    datafile_key_attrs: Optional[Dict[str, Converter]] = None
 
 
 def load(obj) -> Meta:
@@ -30,5 +31,7 @@ def load(obj) -> Meta:
         meta.datafile_defaults = obj.Meta.datafile_defaults
     with suppress(AttributeError):
         meta.datafile_infer = obj.Meta.datafile_infer
+    with suppress(AttributeError):
+        meta.datafile_key_attrs = obj.Meta.datafile_key_attrs
 
     return meta
