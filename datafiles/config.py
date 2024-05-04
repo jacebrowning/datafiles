@@ -1,6 +1,5 @@
 """Configuration defaults for each model."""
 
-
 from contextlib import suppress
 from dataclasses import dataclass
 from typing import Dict, Optional
