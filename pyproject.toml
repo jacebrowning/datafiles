@@ -53,7 +53,7 @@ parse = "^1.12"
 # Utilities
 cached_property = "^1.5"
 classproperties = "^0.2"
-minilog = "^2.1"
+minilog = "^2.3"
 
 [tool.poetry.dev-dependencies]
 
@@ -87,9 +87,9 @@ pygments = "^2.15"
 # Notebooks
 idna = "^3.3" # papermill dependency
 ipython = "^8.10"
-jupyter = { version = "^1.0", markers = "sys_platform != 'win32'" }
+jupyter = { version = "^1.0", markers = "os.name != 'nt'" }
 nbstripout ="~0.4"
-papermill = "^2.3"
+papermill = { version = "^2.3", markers = "os.name != 'nt'" }
 
 [tool.black]
 

@@ -131,9 +131,11 @@ class Mapper:
                 log.debug(f"Converting '{name}' dataclass with {converter}")
                 new_value = converter.to_preserialization_data(
                     value,
-                    default_to_skip=Missing
-                    if include_default_values
-                    else get_default_field_value(self._instance, name),
+                    default_to_skip=(
+                        Missing
+                        if include_default_values
+                        else get_default_field_value(self._instance, name)
+                    ),
                 )
                 data[name] = recursive_update(value, new_value)
 

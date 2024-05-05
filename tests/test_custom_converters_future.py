@@ -1,6 +1,5 @@
 """Tests demonstrating failures caused by the PEP 563 behavior."""
 
-
 from __future__ import annotations
 
 from typing import Optional
