@@ -9,6 +9,10 @@ cache:
   - .venv -> poetry.lock
 
 install:
+  # Remove UTF-8 from pytest.ini
+  - findstr /V tput pytest.ini > pytest.ini.tmp
+  - del pytest.ini
+  - ren pytest.ini.tmp pytest.ini
   # Install system dependencies
   - choco install make
   - curl -sSL https://install.python-poetry.org | python -
