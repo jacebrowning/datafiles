@@ -27,7 +27,7 @@ def describe_auto():
         ("filename", "count"),
         [
             (".appveyor.yml", 6),
-            (".travis.yml", 9),
+            (".github/workflows/main.yml", 3),
             ("mkdocs.yml", 8),
             ("pyproject.toml", 2),
         ],
