@@ -2,11 +2,13 @@
 
 Datafiles is a bidirectional serialization library for Python [dataclasses](https://docs.python.org/3/library/dataclasses.html) to synchronize objects to the filesystem using type annotations. It supports a variety of file formats with round-trip preservation of formatting and comments, where possible. Object changes are automatically saved to disk and only include the minimum data needed to restore each object.
 
-[![GitHub Actions](https://img.shields.io/github/actions/workflow/status/jacebrowning/datafiles/main.yml?label=linux)](https://github.com/jacebrowning/datafiles/actions)
-[![AppVeyor CI](https://img.shields.io/appveyor/ci/jacebrowning/datafiles/main.svg?label=windows)](https://ci.appveyor.com/project/jacebrowning/datafiles)
-[![Codecov](https://codecov.io/gh/jacebrowning/datafiles/branch/main/graph/badge.svg)](https://codecov.io/gh/jacebrowning/datafiles)
+[![Linux Build](https://img.shields.io/github/actions/workflow/status/jacebrowning/datafiles/main.yml?branch=main&label=linux)](https://github.com/jacebrowning/datafiles/actions)
+[![Windows Build](https://img.shields.io/appveyor/ci/jacebrowning/datafiles/main.svg?label=windows)](https://ci.appveyor.com/project/jacebrowning/datafiles)
+[![Code Coverage](https://img.shields.io/codecov/c/github/jacebrowning/datafiles)
+](https://codecov.io/gh/jacebrowning/datafiles)
+[![Code Quality](https://img.shields.io/scrutinizer/g/jacebrowning/datafiles.svg?label=quality)](https://scrutinizer-ci.com/g/jacebrowning/datafiles/?branch=main)
 [![PyPI License](https://img.shields.io/pypi/l/datafiles.svg)](https://pypi.org/project/datafiles)
-[![PyPI Version](https://img.shields.io/pypi/v/datafiles.svg)](https://pypi.org/project/datafiles)
+[![PyPI Version](https://img.shields.io/pypi/v/datafiles.svg?label=version)](https://pypi.org/project/datafiles)
 [![PyPI Downloads](https://img.shields.io/pypi/dm/datafiles.svg?color=orange)](https://pypistats.org/packages/datafiles)
 [![Gitter](https://img.shields.io/gitter/room/jacebrowning/datafiles?color=D0164E)](https://gitter.im/jacebrowning/datafiles)
 
