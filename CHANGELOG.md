@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.2.3 (2024-05-26)
+
+- Added caching to default factory calls.
+
 ## 2.2.2 (2024-01-06)
 
 - Fixed `Manager.all()` behavior for patterns with default vales.

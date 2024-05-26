@@ -46,7 +46,7 @@ def describe_nominal():
                 """
             )
 
-    def with_convertable_initial_values(expect):
+    def with_convertible_initial_values(expect):
         sample = Sample(1, 2, 3, 4)
 
         sample.datafile.save()

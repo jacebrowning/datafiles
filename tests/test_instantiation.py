@@ -10,6 +10,8 @@ from datafiles.utils import logbreak, write
 
 from . import xfail_with_pep_563
 
+counter = 0
+
 
 @datafile("../tmp/sample.yml", manual=True)
 class SampleWithDefaults:
@@ -149,6 +151,27 @@ def describe_factory_defaults():
         expect(sample.a) == 1.2
         expect(sample.b) == 3.4
         expect(sample.c) == 9.9
+
+    def it_only_calls_factory_when_needed(expect):
+        global counter
+        counter = 0
+
+        def default_factory():
+            global counter
+            counter += 1
+            logbreak(f"Called default factory: {counter}")
+            return "a"
+
+        @datafile("../tmp/sample.yml")
+        class Sample:
+            value: str = field(default_factory=default_factory)
+
+        sample = Sample()
+
+        sample.value = "b"
+        sample.value = "c"
+
+        expect(counter) == 2
 
 
 def describe_missing_attributes():
