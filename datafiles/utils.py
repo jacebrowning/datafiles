@@ -3,6 +3,7 @@
 import dataclasses
 import time
 from contextlib import suppress
+from dataclasses import Field
 from functools import lru_cache
 from pathlib import Path
 from pprint import pformat
@@ -30,12 +31,17 @@ def get_default_field_value(instance, name):
                 return field.default
 
             if not isinstance(field.default_factory, Missing):  # type: ignore
-                return field.default_factory()  # type: ignore
+                return _call_default_factory(field)
 
             if not field.init and hasattr(instance, "__post_init__"):
                 return getattr(instance, name)
 
     return Missing
+
+
+@cached
+def _call_default_factory(field: Field):
+    return field.default_factory()  # type: ignore
 
 
 def prettify(value) -> str:
