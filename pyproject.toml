@@ -1,7 +1,7 @@
 [tool.poetry]
 
 name = "datafiles"
-version = "2.2.3"
+version = "2.3"
 description = "File-based ORM for dataclasses."
 
 license = "MIT"
@@ -21,6 +21,7 @@ keywords = [
     "object-relational mapping",
     "YAML",
     "JSON",
+    "JSON5",
     "TOML",
 ]
 classifiers = [
@@ -44,6 +45,7 @@ classifiers = [
 python = "^3.8"
 
 # Formats
+json-five =  "^1.1.2"
 "ruamel.yaml" = "^0.17.21"
 tomlkit = "^0.10.1"
 
@@ -85,11 +87,10 @@ mkdocs = "^1.4"
 pygments = "^2.15"
 
 # Notebooks
-idna = "^3.7" # papermill dependency
-ipython = "^8.10"
-notebook = { version = "^7.2", markers = "os.name != 'nt'" }
-nbstripout ="~0.4"
-papermill = { version = "^2.3", markers = "os.name != 'nt'" }
+ipython = "^8.12.3"
+notebook = { version = "^7.2.2", markers = "os.name != 'nt'" }
+nbstripout ="~0.7.1"
+papermill = { version = "^2.6", markers = "os.name != 'nt'" }
 
 [tool.black]
 

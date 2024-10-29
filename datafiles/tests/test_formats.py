@@ -59,6 +59,12 @@ def describe_deserialize():
             data = formats.deserialize(path, ".json")
             expect(data) == {}
 
+    def describe_json5():
+        def with_empty_file(expect, path):
+            path.write_text("{}")
+            data = formats.deserialize(path, ".json5")
+            expect(data) == {}
+
     def describe_toml():
         def with_empty_file(expect, path):
             data = formats.deserialize(path, ".toml")

@@ -42,7 +42,7 @@ numbers:
   - 3
 ```
 
-Additional examples can be found in this [Jupyter Notebook](https://github.com/jacebrowning/datafiles/blob/main/notebooks/file_inference.ipynb).
+Additional examples can be found in [this notebook](https://github.com/jacebrowning/datafiles/blob/main/notebooks/file_inference.ipynb).
 
 ## `frozen()`
 

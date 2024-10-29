@@ -127,8 +127,7 @@ notebooks: install
 	@ cd notebooks; for filename in *.ipynb; do \
 	  poetry run papermill $$filename $$filename; \
 	done
-	git config filter.nbstripout.extrakeys 'cell.id cell.metadata.execution cell.metadata.papermill metadata.papermill'
-	poetry run nbstripout --keep-output notebooks/*.ipynb
+	poetry run nbstripout --keep-output --extra-keys="cell.metadata.papermill metadata.papermill" notebooks/*.ipynb
 
 # RELEASE #####################################################################
 

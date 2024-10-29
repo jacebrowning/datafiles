@@ -61,4 +61,4 @@ contents:
       - 3.14
 ```
 
-An example of using generic types can be found in this [Jupyter Notebook](https://github.com/jacebrowning/datafiles/blob/main/notebooks/generic_types.ipynb).
+An example of using generic types can be found in [this notebook](https://github.com/jacebrowning/datafiles/blob/main/notebooks/generic_types.ipynb).
