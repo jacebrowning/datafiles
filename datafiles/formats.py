@@ -7,7 +7,9 @@ from io import StringIO
 from pathlib import Path
 from typing import IO, Dict, List, Union
 
+import json5
 import log
+from ruamel.yaml import YAML as _YAML
 
 from . import types, utils
 
@@ -54,6 +56,22 @@ class JSON(Formatter):
         return json.dumps(data, indent=2)
 
 
+class JSON5(Formatter):
+    """Formatter for "JSON for Humans" language."""
+
+    @classmethod
+    def extensions(cls):
+        return {".json5"}
+
+    @classmethod
+    def deserialize(cls, file_object):
+        return json5.load(file_object)
+
+    @classmethod
+    def serialize(cls, data):
+        return json5.dumps(data, indent=2)
+
+
 class TOML(Formatter):
     """Formatter for (round-trip) Tom's Obvious Minimal Language."""
 
@@ -83,8 +101,6 @@ class YAML(Formatter):
 
     @classmethod
     def deserialize(cls, file_object):
-        from ruamel.yaml import YAML as _YAML
-
         yaml = _YAML()
         yaml.preserve_quotes = True  # type: ignore
         try:
@@ -95,8 +111,6 @@ class YAML(Formatter):
 
     @classmethod
     def serialize(cls, data):
-        from ruamel.yaml import YAML as _YAML
-
         yaml = _YAML()
         yaml.register_class(types.List)
         yaml.register_class(types.Dict)

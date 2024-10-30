@@ -1,0 +1,17 @@
+{
+  "my_dict": {
+    "value": 0
+  },
+  "my_list": [
+    {
+      "value": 1
+    },
+    {
+      "value": 2
+    }
+  ],
+  "my_bool": true,
+  "my_float": 1.23,
+  "my_int": 42,
+  "my_str": "Hello, world!"
+}

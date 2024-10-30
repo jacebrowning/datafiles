@@ -16,7 +16,7 @@ class MyModel:
 >>> model = MyModel("foo")
 ```
 
-Many of the following examples are also shown in this [Jupyter Notebook](https://github.com/jacebrowning/datafiles/blob/main/notebooks/mapper_api.ipynb).
+Many of the following examples are also shown in [this notebook](https://github.com/jacebrowning/datafiles/blob/main/notebooks/mapper_api.ipynb).
 
 ## `path`
 
