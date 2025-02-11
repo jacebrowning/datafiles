@@ -9,6 +9,7 @@ import pytest
 from datafiles import datafile
 
 
+@pytest.mark.xfail(reason="https://github.com/jacebrowning/datafiles/issues/131")
 def test_optional_type(expect):
     @datafile("../tmp/sample.yml")
     class MyObject:

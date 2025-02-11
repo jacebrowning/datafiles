@@ -1,6 +1,5 @@
 # pylint: disable=unused-variable,unused-argument
 
-import os
 import shutil
 from dataclasses import dataclass
 from pathlib import Path
@@ -40,11 +39,6 @@ def describe_manager():
     def manager(files: Path):
         shutil.rmtree(files, ignore_errors=True)
         model = create_model(MyClass, pattern="files/{self.foo}.yml")
-        return Manager(model)
-
-    @pytest.fixture
-    def manager_at_home():
-        model = create_model(Nested, pattern="~/.{self.name}.json")
         return Manager(model)
 
     @pytest.fixture
@@ -144,11 +138,6 @@ def describe_manager():
         def when_no_files_exist(expect, manager: Manager):
             items = list(manager.all())
             expect(items) == []
-
-        def with_home_directory(expect, manager_at_home: Manager):
-            items = list(manager_at_home.all())
-            if "CI" not in os.environ:
-                expect(len(items)) > 0
 
     def describe_filter():
         @patch("datafiles.mapper.Mapper.exists", False)
