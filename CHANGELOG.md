@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.3.1 (2025-02-11)
+
+- Removed unnecessary `eval()` call to map annotations to types.
+
 ## 2.3 (2024-10-30)
 
 - Added support for the [JSON5](https://json5.org) file format.

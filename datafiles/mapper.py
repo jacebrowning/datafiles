@@ -13,7 +13,7 @@ import log
 from cached_property import cached_property
 
 from . import config, formats, hooks
-from .converters import Converter, List, map_type, resolve
+from .converters import Converter, List, map_type
 from .types import Missing, Trilean
 from .utils import display, get_default_field_value, recursive_update, write
 
@@ -301,7 +301,7 @@ def create_mapper(obj, root=None) -> Mapper:
         for field in [field for field in dataclasses.fields(obj) if field.init]:
             self_name = f"self.{field.name}"
             if pattern is None or self_name not in pattern:
-                attrs[field.name] = map_type(resolve(field.type, obj), name=field.name)  # type: ignore
+                attrs[field.name] = map_type(field.type, name=field.name)  # type: ignore
 
     return Mapper(
         obj,

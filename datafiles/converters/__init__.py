@@ -1,5 +1,4 @@
 import dataclasses
-import inspect
 import types
 from enum import Enum
 from inspect import isclass
@@ -38,18 +37,6 @@ register(list, List)
 register(dict, Dictionary)
 
 
-def resolve(annotation, obj=None):
-    if isinstance(annotation, str):
-        log.debug(f"Attempting to eval {annotation!r} using {obj}")
-        annotation = annotation.replace("List", "list").replace("Dict", "list")
-        namespace = inspect.getmodule(obj).__dict__ if obj else None
-        try:
-            return eval(annotation, namespace)  # pylint: disable=eval-used
-        except NameError as e:
-            log.warn(f"Unable to eval: {e}")
-    return annotation
-
-
 @cached
 def map_type(cls, *, name: str = "", item_cls: Optional[type] = None):
     """Infer the converter type from a dataclass, type, or annotation."""
@@ -66,7 +53,7 @@ def map_type(cls, *, name: str = "", item_cls: Optional[type] = None):
     if dataclasses.is_dataclass(cls):
         converters = {}
         for field in dataclasses.fields(cls):
-            converters[field.name] = map_type(resolve(field.type), name=field.name)  # type: ignore
+            converters[field.name] = map_type(field.type, name=field.name)  # type: ignore
         converter = Dataclass.of_mappings(cls, converters)
         log.debug(f"Mapped {cls!r} to new converter: {converter}")
         return converter
@@ -78,8 +65,6 @@ def map_type(cls, *, name: str = "", item_cls: Optional[type] = None):
         assert cls.__args__[1] == type(None)
         converter = converter.as_optional()
         return converter
-
-    cls = resolve(cls)
 
     if hasattr(cls, "__origin__"):
         converter = None
