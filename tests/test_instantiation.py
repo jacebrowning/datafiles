@@ -5,8 +5,6 @@
 from dataclasses import dataclass, field
 from typing import Dict
 
-import pytest
-
 from datafiles import Missing, datafile
 from datafiles.utils import logbreak, write
 
@@ -67,7 +65,6 @@ def describe_existing_file():
         expect(sample.foo) == 2
         expect(sample.bar) == "b"
 
-    @pytest.mark.xfail(reason="https://github.com/jacebrowning/datafiles/issues/344")
     def it_loses_against_init_values(expect):
         write(
             "tmp/sample.yml",

@@ -6,7 +6,7 @@ from dataclasses import FrozenInstanceError, dataclass, field
 
 import pytest
 
-from datafiles import datafile
+from datafiles import Missing, datafile
 from datafiles.utils import dedent, logbreak, read, write
 
 from . import xfail_with_pep_563
@@ -384,7 +384,7 @@ def describe_lists():
             """,
         )
 
-        sample = SampleWithList(None)
+        sample = SampleWithList(Missing)
 
         expect(sample.items) == [1.2, 3.4]
 
@@ -396,7 +396,7 @@ def describe_lists():
             """,
         )
 
-        sample = SampleWithList(None)
+        sample = SampleWithList(Missing)
 
         expect(sample.items) == [1.0, 2.3]
 
@@ -452,7 +452,7 @@ def describe_sets():
             """,
         )
 
-        sample = SampleWithSet(None)
+        sample = SampleWithSet(Missing)
 
         expect(sample.items) == {1.2, 3.4}
 
@@ -464,7 +464,7 @@ def describe_sets():
             """,
         )
 
-        sample = SampleWithSet(None)
+        sample = SampleWithSet(Missing)
 
         expect(sample.items) == {1.0, 2.3}
 

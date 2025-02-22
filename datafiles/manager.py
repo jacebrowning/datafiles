@@ -108,8 +108,11 @@ class Manager:
     def all(self, *, _exclude: str = "") -> Iterator[Model]:
         path = Path(self.model.Meta.datafile_pattern).expanduser()
         if path.is_absolute() or self.model.Meta.datafile_pattern[:2] == "./":
-            log.debug(f"Detected static pattern: {path}")
+            log.debug(f"Detected static path pattern: {path}")
         else:
+            log.debug(
+                f"Detected relative path pattern: {self.model.Meta.datafile_pattern}"
+            )
             try:
                 root = Path(inspect.getfile(self.model)).parent
             except (TypeError, OSError):
@@ -117,7 +120,6 @@ class Manager:
                 log.log(level, f"Unable to determine module for {self.model}")
                 root = Path.cwd()
             path = root / self.model.Meta.datafile_pattern
-            log.debug(f"Detected dynamic pattern: {path}")
 
         pattern = alt_pattern = str(path.resolve())
         for field in dataclasses.fields(self.model):

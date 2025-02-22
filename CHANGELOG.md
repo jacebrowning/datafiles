@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.3.3 (2025-02-23)
+
+- Fixed list attributes being ignored during initialization with existing files.
+
 ## 2.3.2 (2025-02-23)
 
 - Dropped support for Python 3.8 (past end of life).

@@ -27,8 +27,7 @@ class Model:
                 create = not self.datafile.manual
 
                 if path:
-                    log.debug(f"Datafile path: {path}")
-                    log.debug(f"Datafile exists: {exists}")
+                    log.debug(f"Resolved datafile path: {path} ({exists=})")
 
                     if exists:
                         self.datafile.load(_first_load=True)
