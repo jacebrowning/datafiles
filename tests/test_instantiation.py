@@ -5,6 +5,8 @@
 from dataclasses import dataclass, field
 from typing import Dict
 
+import pytest
+
 from datafiles import Missing, datafile
 from datafiles.utils import logbreak, write
 
@@ -17,6 +19,7 @@ counter = 0
 class SampleWithDefaults:
     foo: int = 1
     bar: str = "a"
+    items: list[str] = field(default_factory=list)
 
 
 @dataclass
@@ -64,19 +67,22 @@ def describe_existing_file():
         expect(sample.foo) == 2
         expect(sample.bar) == "b"
 
+    @pytest.mark.xfail(reason="https://github.com/jacebrowning/datafiles/issues/344")
     def it_loses_against_init_values(expect):
         write(
             "tmp/sample.yml",
             """
             foo: 3
             bar: c
+            items: ["aaa"]
             """,
         )
 
-        sample = SampleWithDefaults(4, "d")
+        sample = SampleWithDefaults(4, "d", ["aaa", "bbb"])
 
         expect(sample.foo) == 4
         expect(sample.bar) == "d"
+        expect(sample.items) == ["aaa", "bbb"]
 
     def it_wins_against_default_init_values(expect):
         write(
