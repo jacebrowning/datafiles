@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.3.2 (2025-02-23)
+
+- Dropped support for Python 3.8 (past end of life).
+
 ## 2.3.1 (2025-02-11)
 
 - Removed unnecessary `eval()` call to map annotations to types.
