@@ -13,7 +13,7 @@ import log
 from cached_property import cached_property
 
 from . import config, formats, hooks
-from .converters import Converter, List, map_type
+from .converters import Converter, map_type
 from .types import Missing, Trilean
 from .utils import display, get_default_field_value, recursive_update, write
 
@@ -57,7 +57,7 @@ class Mapper:
 
         path = Path(self._pattern.format(self=self._instance)).expanduser()
         if path.is_absolute() or self._pattern.startswith("./"):
-            log.debug(f"Detected static pattern: {path}")
+            log.debug(f"Detected static path pattern: {path}")
             return path.resolve()
 
         cls = self._instance.__class__
@@ -68,8 +68,8 @@ class Mapper:
             log.log(level, f"Unable to determine module for {cls}")
             root = Path.cwd()
 
+        log.debug(f"Detected relative path pattern: {path}")
         path = (root / path).resolve()
-        log.debug(f"Detected dynamic pattern: {path}")
         return path
 
     @property
@@ -244,7 +244,7 @@ class Mapper:
                 default_value,
             )
 
-            if init_value != default_value and not issubclass(converter, List):
+            if init_value != default_value:
                 log.debug(f"Keeping non-default '{name}' init value: {init_value!r}")
                 return
 
