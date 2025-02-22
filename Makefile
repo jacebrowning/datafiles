@@ -7,7 +7,7 @@ MODULES := $(wildcard $(PACKAGE)/*.py)
 all: doctor format check test mkdocs ## Run all tasks that determine CI status
 
 .PHONY: dev
-dev: install  ## Continuously run all CI tasks when files chanage
+dev: install ## Continuously run all CI tasks when files change
 	poetry run ptw
 
 .PHONY: shell
@@ -24,12 +24,12 @@ demo: install
 .PHONY: bootstrap
 bootstrap: ## Attempt to install system dependencies
 	asdf plugin add python || asdf plugin update python
-	asdf plugin add poetry https://github.com/asdf-community/asdf-poetry.git || asdf plugin update poetry
+	asdf plugin add poetry || asdf plugin update poetry
 	asdf install
 
 .PHONY: doctor
 doctor: ## Confirm system dependencies are available
-	bin/verchew
+	bin/verchew --exit-code
 
 # PROJECT DEPENDENCIES ########################################################
 
@@ -47,7 +47,7 @@ $(DEPENDENCIES): poetry.lock
 
 ifndef CI
 poetry.lock: pyproject.toml
-	poetry lock --no-update
+	poetry lock
 	@ touch $@
 endif
 
@@ -63,7 +63,7 @@ format: install
 	@ echo
 
 .PHONY: check
-check: install format  ## Run formaters, linters, and static analysis
+check: install format ## Run formatters, linters, and static analysis
 ifdef CI
 	git diff --exit-code
 endif
@@ -74,7 +74,7 @@ endif
 # TESTS #######################################################################
 
 .PHONY: test
-test: install  ## Run unit and integration tests
+test: install ## Run unit and integration tests
 	poetry run pytest --random
 	poetry run coveragespace update overall
 
@@ -91,7 +91,7 @@ test-profile: install
 MKDOCS_INDEX := site/index.html
 
 .PHONY: docs
-docs: mkdocs uml notebooks  ## Generate documentation and UML
+docs: mkdocs uml notebooks ## Generate documentation and UML
 
 .PHONY: mkdocs
 mkdocs: install $(MKDOCS_INDEX)
@@ -104,11 +104,11 @@ $(MKDOCS_INDEX): docs/requirements.txt mkdocs.yml docs/*.md
 
 docs/requirements.txt: poetry.lock
 	@ rm -f $@
-	@ poetry export --with dev --without-hashes | grep jinja2 >> $@
-	@ poetry export --with dev --without-hashes | grep markdown >> $@
-	@ poetry export --with dev --without-hashes | grep mkdocs >> $@
-	@ poetry export --with dev --without-hashes | grep pygments >> $@
-	@ poetry export --with dev --without-hashes | grep importlib-metadata >> $@
+	@ poetry export --all-groups --without-hashes | grep jinja2 >> $@
+	@ poetry export --all-groups --without-hashes | grep markdown >> $@
+	@ poetry export --all-groups --without-hashes | grep mkdocs >> $@
+	@ poetry export --all-groups --without-hashes | grep pygments >> $@
+	@ poetry export --all-groups --without-hashes | grep importlib-metadata >> $@
 
 .PHONY: mkdocs-serve
 mkdocs-serve: mkdocs
@@ -140,7 +140,7 @@ $(DIST_FILES): $(MODULES) pyproject.toml
 	poetry build
 
 .PHONY: upload
-upload: dist  ## Upload the current version to PyPI
+upload: dist ## Upload the current version to PyPI
 	git diff --name-only --exit-code
 	poetry publish
 	bin/open https://pypi.org/project/$(PACKAGE)
@@ -148,7 +148,7 @@ upload: dist  ## Upload the current version to PyPI
 # CLEANUP #####################################################################
 
 .PHONY: clean
-clean:  ## Delete all generated and temporary files
+clean: ## Delete all generated and temporary files
 	rm -rf .venv
 
 # HELP ########################################################################

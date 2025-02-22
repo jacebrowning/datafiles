@@ -1,7 +1,7 @@
 [tool.poetry]
 
 name = "datafiles"
-version = "2.3.1"
+version = "2.3.2"
 description = "File-based ORM for dataclasses."
 
 license = "MIT"
@@ -31,10 +31,10 @@ classifiers = [
     "Natural Language :: English",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
     "Programming Language :: Python",
     "Topic :: Software Development",
     "Topic :: Utilities",
@@ -42,7 +42,7 @@ classifiers = [
 
 [tool.poetry.dependencies]
 
-python = "^3.8"
+python = "^3.9"
 
 # Formats
 json-five =  "^1.1.2"
@@ -57,7 +57,7 @@ cached_property = "^1.5"
 classproperties = "^0.2"
 minilog = "^2.3"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 
 # Formatters
 black = "^24.3"
@@ -87,10 +87,14 @@ mkdocs = "^1.4"
 pygments = "^2.15"
 
 # Notebooks
-ipython = "^8.12.3"
-notebook = { version = "^7.2.2", markers = "os.name != 'nt'" }
-nbstripout ="~0.7.1"
+ipython = "^8.14.0"
+notebook = { version = "^7.1.1", markers = "os.name != 'nt'" }
+nbstripout = "~0.7.1"
 papermill = { version = "^2.6", markers = "os.name != 'nt'" }
+
+[tool.poetry.requires-plugins]
+
+poetry-plugin-export = ">=1.8"
 
 [tool.black]
 
