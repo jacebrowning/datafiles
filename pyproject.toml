@@ -46,7 +46,7 @@ python = "^3.9"
 
 # Formats
 json-five =  "^1.1.2"
-"ruamel.yaml" = "^0.17.21"
+"ruamel.yaml" = "^0.18.10"
 tomlkit = "^0.10.1"
 
 # ORM
