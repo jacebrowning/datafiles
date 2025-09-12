@@ -68,22 +68,22 @@ def create_model(
     if not hasattr(cls, "Meta") and infer is not None:
         meta.datafile_infer = infer
 
-    cls.Meta = meta
+    cls.Meta = meta  # type: ignore
 
     # Patch manager
 
-    cls.objects = Manager(cls)
+    cls.objects = Manager(cls)  # type: ignore
 
     # Patch __init__
 
-    init = cls.__init__
+    init = cls.__init__  # type: ignore
 
     def modified_init(self, *args, **kwargs):
         with hooks.disabled():
             init(self, *args, **kwargs)
         Model.__post_init__(self)
 
-    cls.__init__ = modified_init
-    cls.__init__.__doc__ = init.__doc__
+    cls.__init__ = modified_init  # type: ignore
+    cls.__init__.__doc__ = init.__doc__  # type: ignore
 
     return cls

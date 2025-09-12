@@ -64,8 +64,8 @@ black = "^24.3"
 isort = "^5.10"
 
 # Linters
-mypy = "^1.3"
-pylint = "~2.15"
+mypy = "^1.18.1"
+pylint = "~3.3.8"
 pydocstyle = "*"
 
 # Testing

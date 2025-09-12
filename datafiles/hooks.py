@@ -48,7 +48,7 @@ def apply(instance, mapper):
             setattr(cls, method_name, modified_method)
 
     if is_dataclass(instance):
-        for attr_name in instance.datafile.attrs:
+        for attr_name in instance.datafile.attrs:  # type: ignore
             attr = getattr(instance, attr_name)
             if isinstance(attr, list):
                 attr = types.List(attr)
@@ -64,7 +64,7 @@ def apply(instance, mapper):
     elif isinstance(instance, list):
         for item in instance:
             if is_dataclass(item):
-                item.datafile = create_mapper(item, root=mapper)
+                item.datafile = create_mapper(item, root=mapper)  # type: ignore
                 apply(item, mapper)
 
     elif isinstance(instance, dict):

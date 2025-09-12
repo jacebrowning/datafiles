@@ -35,7 +35,7 @@ class Mapper:
         self._instance = instance
         self._frozen = (
             dataclasses.is_dataclass(self._instance)
-            and self._instance.__dataclass_params__.frozen
+            and self._instance.__dataclass_params__.frozen  # type: ignore[union-attr]
         )
         self.attrs = attrs
         self._pattern = pattern
