@@ -178,6 +178,9 @@ class Dataclass(Converter):
     @classmethod
     def to_python_value(cls, deserialized_data, *, target_object=None):
         if dataclasses.is_dataclass(deserialized_data):
+            assert not isinstance(
+                deserialized_data, type
+            ), "Expected dataclass instance, not class"
             data = dataclasses.asdict(deserialized_data)
         elif isinstance(deserialized_data, dict):
             data = deserialized_data.copy()

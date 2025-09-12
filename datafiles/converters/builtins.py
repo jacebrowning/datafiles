@@ -45,9 +45,8 @@ class Integer(Converter, int):
                 data = cls.TYPE(float(python_value))
             except ValueError:
                 raise exc from None
-            else:
-                log.warn(f"Precision lost in conversion to int: {python_value}")
-                return data
+            log.warn(f"Precision lost in conversion to int: {python_value}")
+            return data
 
 
 class String(Converter, str):
