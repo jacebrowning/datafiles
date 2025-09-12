@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.3.4 (2025-09-12)
+
+- Added support for Python 3.12 and 3.13.
+
 ## 2.3.3 (2025-02-23)
 
 - Fixed list attributes being ignored during initialization with existing files.
