@@ -11,8 +11,6 @@ import pytest
 import datafiles
 from datafiles import datafile
 
-from . import xfail_with_pep_563
-
 
 def describe_automatic():
     """Test creating a datafile using the decorator."""
@@ -27,7 +25,7 @@ def describe_automatic():
 
         return Sample(1, "a")
 
-    def it_inferrs_attrs(expect, sample):
+    def it_infers_attrs(expect, sample):
         expect(sample.datafile.attrs) == {
             "name": datafiles.converters.String,
             "score": datafiles.converters.Float,
@@ -78,7 +76,6 @@ def describe_automatic_with_defaults():
 
             return Sample(1, Nested(name="b"), "a")
 
-        @xfail_with_pep_563
         def it_converts_attributes(expect, sample):
             expect(sample.datafile.data) == {
                 "name": "a",

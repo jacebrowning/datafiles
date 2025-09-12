@@ -8,8 +8,6 @@ from typing import Dict
 from datafiles import Missing, datafile
 from datafiles.utils import logbreak, write
 
-from . import xfail_with_pep_563
-
 counter = 0
 
 
@@ -178,7 +176,6 @@ def describe_factory_defaults():
 
 
 def describe_missing_attributes():
-    @xfail_with_pep_563
     def when_dataclass(expect):
         @dataclass
         class Name:
