@@ -9,7 +9,6 @@ import pytest
 from datafiles import Missing, datafile
 from datafiles.utils import dedent, logbreak, read, write
 
-from . import xfail_with_pep_563
 from .samples import (
     Sample,
     SampleAsJSON,
@@ -279,7 +278,6 @@ def describe_nesting():
         expect(sample.nested.score) == 3.4
         expect(hasattr(sample.nested, "extra")).is_(False)
 
-    @xfail_with_pep_563
     def with_multiple_levels(expect):
         @dataclass
         class Bottom:
