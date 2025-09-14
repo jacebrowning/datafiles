@@ -92,6 +92,7 @@ ipython = "^8.14.0"
 notebook = { version = "^7.1.1", markers = "os.name != 'nt'" }
 nbstripout = "~0.7.1"
 papermill = { version = "^2.6", markers = "os.name != 'nt'" }
+six = "*" # missing papermill dependency
 
 [tool.poetry.requires-plugins]
 
