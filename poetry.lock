@@ -159,6 +159,7 @@ description = "High level compatibility layer for multiple asynchronous event lo
 optional = false
 python-versions = ">=3.8"
 groups = ["dev"]
+markers = "os_name != \"nt\""
 files = [
     {file = "anyio-4.3.0-py3-none-any.whl", hash = "sha256:048e05d0f6caeed70d731f3db756d35dcc1f35747c8c403364a8332c630441b8"},
     {file = "anyio-4.3.0.tar.gz", hash = "sha256:f75253795a87df48568485fd18cdd2a3fa5c4f7c5be8e5e36637733fce06fed6"},
@@ -182,7 +183,7 @@ description = "Disable App Nap on macOS >= 10.9"
 optional = false
 python-versions = "*"
 groups = ["dev"]
-markers = "platform_system == \"Darwin\""
+markers = "os_name != \"nt\" and platform_system == \"Darwin\""
 files = [
     {file = "appnope-0.1.2-py2.py3-none-any.whl", hash = "sha256:93aa393e9d6c54c5cd570ccadd8edad61ea0c4b9ea7a01409020c9aa019eb442"},
     {file = "appnope-0.1.2.tar.gz", hash = "sha256:dd83cd4b5b460958838f6eb3000c660b1f9caf2a5b1de4264e941512f603258a"},
@@ -195,6 +196,7 @@ description = "Argon2 for Python"
 optional = false
 python-versions = ">=3.7"
 groups = ["dev"]
+markers = "os_name != \"nt\""
 files = [
     {file = "argon2_cffi-23.1.0-py3-none-any.whl", hash = "sha256:c670642b78ba29641818ab2e68bd4e6a78ba53b7eff7b4c3815ae16abf91c7ea"},
     {file = "argon2_cffi-23.1.0.tar.gz", hash = "sha256:879c3e79a2729ce768ebb7d36d4609e3a78a4ca2ec3a9f12286ca057e3d0db08"},
@@ -216,6 +218,7 @@ description = "Low-level CFFI bindings for Argon2"
 optional = false
 python-versions = ">=3.6"
 groups = ["dev"]
+markers = "os_name != \"nt\""
 files = [
     {file = "argon2-cffi-bindings-21.2.0.tar.gz", hash = "sha256:bb89ceffa6c791807d1305ceb77dbfacc5aa499891d2c55661c6459651fc39e3"},
     {file = "argon2_cffi_bindings-21.2.0-cp36-abi3-macosx_10_9_x86_64.whl", hash = "sha256:ccb949252cb2ab3a08c02024acb77cfb179492d5701c7cbdbfd776124d4d2367"},
@@ -254,6 +257,7 @@ description = "Better dates & times for Python"
 optional = false
 python-versions = ">=3.8"
 groups = ["dev"]
+markers = "os_name != \"nt\""
 files = [
     {file = "arrow-1.3.0-py3-none-any.whl", hash = "sha256:c728b120ebc00eb84e01882a6f5e7927a53960aa990ce7dd2b10f39005a67f80"},
     {file = "arrow-1.3.0.tar.gz", hash = "sha256:d4540617648cb5f895730f1ad8c82a65f2dad0166f57b75f3ca54759c4d67a85"},
@@ -307,6 +311,7 @@ description = "Simple LRU cache for asyncio"
 optional = false
 python-versions = ">=3.8"
 groups = ["dev"]
+markers = "os_name != \"nt\""
 files = [
     {file = "async-lru-2.0.4.tar.gz", hash = "sha256:b8a59a5df60805ff63220b2a0c5b5393da5521b113cd5465a44eb037d81a5627"},
     {file = "async_lru-2.0.4-py3-none-any.whl", hash = "sha256:ff02944ce3c288c5be660c42dbcca0742b32c3b279d6dceda655190240b99224"},
@@ -314,19 +319,6 @@ files = [
 
 [package.dependencies]
 typing-extensions = {version = ">=4.0.0", markers = "python_version < \"3.11\""}
-
-[[package]]
-name = "atomicwrites"
-version = "1.4.0"
-description = "Atomic file writes."
-optional = false
-python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
-groups = ["dev"]
-markers = "sys_platform == \"win32\""
-files = [
-    {file = "atomicwrites-1.4.0-py2.py3-none-any.whl", hash = "sha256:6d1784dea7c0c8d4a5172b6c620f40b6e4cbfdf96d783691f2e1302a7b88e197"},
-    {file = "atomicwrites-1.4.0.tar.gz", hash = "sha256:ae70396ad1a434f9c7046fd2dd196fc04b12f9e91ffb859164193be8b6168a7a"},
-]
 
 [[package]]
 name = "attrs"
@@ -355,6 +347,7 @@ description = "Internationalization utilities"
 optional = false
 python-versions = ">=3.8"
 groups = ["dev"]
+markers = "os_name != \"nt\""
 files = [
     {file = "Babel-2.15.0-py3-none-any.whl", hash = "sha256:08706bdad8d0a3413266ab61bd6c34d0c28d6e1e7badf40a2cebe67644e2e1fb"},
     {file = "babel-2.15.0.tar.gz", hash = "sha256:8daf0e265d05768bc6c7a314cf1321e9a123afc328cc635c18622a2f30a04413"},
@@ -370,6 +363,7 @@ description = "Screen-scraping library"
 optional = false
 python-versions = ">=3.6.0"
 groups = ["dev"]
+markers = "os_name != \"nt\""
 files = [
     {file = "beautifulsoup4-4.11.1-py3-none-any.whl", hash = "sha256:58d5c3d29f5a36ffeb94f02f0d786cd53014cf9b3b3951d42e0080d8a9498d30"},
     {file = "beautifulsoup4-4.11.1.tar.gz", hash = "sha256:ad9aa55b65ef2808eb405f46cf74df7fcb7044d5cbc26487f96eb2ef2e436693"},
@@ -436,6 +430,7 @@ description = "An easy safelist-based HTML-sanitizing tool."
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 groups = ["dev"]
+markers = "os_name != \"nt\""
 files = [
     {file = "bleach-3.3.0-py2.py3-none-any.whl", hash = "sha256:6123ddc1052673e52bab52cdc955bcb57a015264a1c57d37bea2f6b817af0125"},
     {file = "bleach-3.3.0.tar.gz", hash = "sha256:98b3170739e5e83dd9dc19633f074727ad848cbedb6026708c8ac2d3b697a433"},
@@ -477,6 +472,7 @@ description = "Foreign Function Interface for Python calling C code."
 optional = false
 python-versions = "*"
 groups = ["dev"]
+markers = "os_name != \"nt\""
 files = [
     {file = "cffi-1.14.5-cp27-cp27m-macosx_10_9_x86_64.whl", hash = "sha256:bb89f306e5da99f4d922728ddcd6f7fcebb3241fc40edebcb7284d7514741991"},
     {file = "cffi-1.14.5-cp27-cp27m-manylinux1_i686.whl", hash = "sha256:34eff4b97f3d982fb93e2831e6750127d1355a923ebaeeb565407b3d2f8d41a1"},
@@ -592,6 +588,7 @@ description = "Jupyter Python Comm implementation, for usage in ipykernel, xeus-
 optional = false
 python-versions = ">=3.8"
 groups = ["dev"]
+markers = "os_name != \"nt\""
 files = [
     {file = "comm-0.2.2-py3-none-any.whl", hash = "sha256:e6fb86cb70ff661ee8c9c14e7d36d6de3b4066f1441be4063df9c5009f0a64d3"},
     {file = "comm-0.2.2.tar.gz", hash = "sha256:3fd7a84065306e07bea1773df6eb8282de51ba82f77c72f9c85716ab11fe980e"},
@@ -733,6 +730,7 @@ description = "An implementation of the Debug Adapter Protocol for Python"
 optional = false
 python-versions = ">=3.8"
 groups = ["dev"]
+markers = "os_name != \"nt\""
 files = [
     {file = "debugpy-1.8.1-cp310-cp310-macosx_11_0_x86_64.whl", hash = "sha256:3bda0f1e943d386cc7a0e71bfa59f4137909e2ed947fb3946c506e113000f741"},
     {file = "debugpy-1.8.1-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:dda73bf69ea479c8577a0448f8c707691152e6c4de7f0c4dec5a4bc11dee516e"},
@@ -777,6 +775,7 @@ description = "XML bomb protection for Python stdlib modules"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 groups = ["dev"]
+markers = "os_name != \"nt\""
 files = [
     {file = "defusedxml-0.7.1-py2.py3-none-any.whl", hash = "sha256:a352e7e428770286cc899e2542b6cdaedb2b4953ff269a210103ec58f6198a61"},
     {file = "defusedxml-0.7.1.tar.gz", hash = "sha256:1bb3032db185915b62d7c6209c5a8792be6a32ab2fedacc84e01b52c51aa3e69"},
@@ -875,6 +874,7 @@ description = "Validates fully-qualified domain names against RFC 1123, so that 
 optional = false
 python-versions = ">=2.7, !=3.0, !=3.1, !=3.2, !=3.3, !=3.4, <4"
 groups = ["dev"]
+markers = "os_name != \"nt\""
 files = [
     {file = "fqdn-1.5.1-py3-none-any.whl", hash = "sha256:3a179af3761e4df6eb2e026ff9e1a3033d3587bf980a0b1b2e1e5d08d7358014"},
     {file = "fqdn-1.5.1.tar.gz", hash = "sha256:105ed3677e767fb5ca086a0c1f4bb66ebc3c100be518f0e0d755d9eae164d89f"},
@@ -1019,6 +1019,7 @@ description = "A pure-Python, bring-your-own-I/O implementation of HTTP/1.1"
 optional = false
 python-versions = ">=3.8"
 groups = ["dev"]
+markers = "os_name != \"nt\""
 files = [
     {file = "h11-0.16.0-py3-none-any.whl", hash = "sha256:63cf8bbe7522de3bf65932fda1d9c2772064ffb3dae62d55932da54b31cb6c86"},
     {file = "h11-0.16.0.tar.gz", hash = "sha256:4e35b956cf45792e4caa5885e69fba00bdbc6ffafbfa020300e549b208ee5ff1"},
@@ -1031,6 +1032,7 @@ description = "A minimal low-level HTTP client."
 optional = false
 python-versions = ">=3.8"
 groups = ["dev"]
+markers = "os_name != \"nt\""
 files = [
     {file = "httpcore-1.0.9-py3-none-any.whl", hash = "sha256:2d400746a40668fc9dec9810239072b40b4484b640a8c38fd654a024c7a1bf55"},
     {file = "httpcore-1.0.9.tar.gz", hash = "sha256:6e34463af53fd2ab5d807f399a9b45ea31c3dfa2276f15a2c3f00afff6e176e8"},
@@ -1053,6 +1055,7 @@ description = "The next generation HTTP client."
 optional = false
 python-versions = ">=3.8"
 groups = ["dev"]
+markers = "os_name != \"nt\""
 files = [
     {file = "httpx-0.27.0-py3-none-any.whl", hash = "sha256:71d5465162c13681bff01ad59b2cc68dd838ea1f10e51574bac27103f00c91a5"},
     {file = "httpx-0.27.0.tar.gz", hash = "sha256:a0cb88a46f32dc874e04ee956e4c2764aba2aa228f650b06788ba6bda2962ab5"},
@@ -1123,6 +1126,7 @@ description = "IPython Kernel for Jupyter"
 optional = false
 python-versions = ">=3.8"
 groups = ["dev"]
+markers = "os_name != \"nt\""
 files = [
     {file = "ipykernel-6.29.4-py3-none-any.whl", hash = "sha256:1181e653d95c6808039c509ef8e67c4126b3b3af7781496c7cbfb5ed938a27da"},
     {file = "ipykernel-6.29.4.tar.gz", hash = "sha256:3d44070060f9475ac2092b760123fadf105d2e2493c24848b6691a7c4f42af5c"},
@@ -1195,6 +1199,7 @@ description = "Operations with ISO 8601 durations"
 optional = false
 python-versions = ">=3.7"
 groups = ["dev"]
+markers = "os_name != \"nt\""
 files = [
     {file = "isoduration-20.11.0-py3-none-any.whl", hash = "sha256:b2904c2a4228c3d44f409c8ae8e2370eb21a26f7ac2ec5446df141dde3452042"},
     {file = "isoduration-20.11.0.tar.gz", hash = "sha256:ac2f9015137935279eac671f94f89eb00584f940f5dc49462a0c4ee692ba1bd9"},
@@ -1279,6 +1284,7 @@ description = "A Python implementation of the JSON5 data format."
 optional = false
 python-versions = ">=3.8"
 groups = ["dev"]
+markers = "os_name != \"nt\""
 files = [
     {file = "json5-0.9.25-py3-none-any.whl", hash = "sha256:34ed7d834b1341a86987ed52f3f76cd8ee184394906b6e22a1e0deb9ab294e8f"},
     {file = "json5-0.9.25.tar.gz", hash = "sha256:548e41b9be043f9426776f05df8635a00fe06104ea51ed24b67f908856e151ae"},
@@ -1291,6 +1297,7 @@ description = "Identify specific nodes in a JSON document (RFC 6901)"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, !=3.5.*, !=3.6.*"
 groups = ["dev"]
+markers = "os_name != \"nt\""
 files = [
     {file = "jsonpointer-2.4-py2.py3-none-any.whl", hash = "sha256:15d51bba20eea3165644553647711d150376234112651b4f1811022aecad7d7a"},
     {file = "jsonpointer-2.4.tar.gz", hash = "sha256:585cee82b70211fa9e6043b7bb89db6e1aa49524340dde8ad6b63206ea689d88"},
@@ -1348,6 +1355,7 @@ description = "Jupyter protocol implementation and client libraries"
 optional = false
 python-versions = ">=3.8"
 groups = ["dev"]
+markers = "os_name != \"nt\""
 files = [
     {file = "jupyter_client-8.6.1-py3-none-any.whl", hash = "sha256:3b7bd22f058434e3b9a7ea4b1500ed47de2713872288c0d511d19926f99b459f"},
     {file = "jupyter_client-8.6.1.tar.gz", hash = "sha256:e842515e2bab8e19186d89fdfea7abd15e39dd581f94e399f00e2af5a1652d3f"},
@@ -1391,6 +1399,7 @@ description = "Jupyter Event System library"
 optional = false
 python-versions = ">=3.8"
 groups = ["dev"]
+markers = "os_name != \"nt\""
 files = [
     {file = "jupyter_events-0.10.0-py3-none-any.whl", hash = "sha256:4b72130875e59d57716d327ea70d3ebc3af1944d3717e5a498b8a06c6c159960"},
     {file = "jupyter_events-0.10.0.tar.gz", hash = "sha256:670b8229d3cc882ec782144ed22e0d29e1c2d639263f92ca8383e66682845e22"},
@@ -1417,6 +1426,7 @@ description = "Multi-Language Server WebSocket proxy for Jupyter Notebook/Lab se
 optional = false
 python-versions = ">=3.8"
 groups = ["dev"]
+markers = "os_name != \"nt\""
 files = [
     {file = "jupyter-lsp-2.2.5.tar.gz", hash = "sha256:793147a05ad446f809fd53ef1cd19a9f5256fd0a2d6b7ce943a982cb4f545001"},
     {file = "jupyter_lsp-2.2.5-py3-none-any.whl", hash = "sha256:45fbddbd505f3fbfb0b6cb2f1bc5e15e83ab7c79cd6e89416b248cb3c00c11da"},
@@ -1433,6 +1443,7 @@ description = "The backend—i.e. core services, APIs, and REST endpoints—to J
 optional = false
 python-versions = ">=3.8"
 groups = ["dev"]
+markers = "os_name != \"nt\""
 files = [
     {file = "jupyter_server-2.14.0-py3-none-any.whl", hash = "sha256:fb6be52c713e80e004fac34b35a0990d6d36ba06fd0a2b2ed82b899143a64210"},
     {file = "jupyter_server-2.14.0.tar.gz", hash = "sha256:659154cea512083434fd7c93b7fe0897af7a2fd0b9dd4749282b42eaac4ae677"},
@@ -1451,7 +1462,6 @@ nbformat = ">=5.3.0"
 overrides = ">=5.0"
 packaging = ">=22.0"
 prometheus-client = ">=0.9"
-pywinpty = {version = ">=2.0.1", markers = "os_name == \"nt\""}
 pyzmq = ">=24"
 send2trash = ">=1.8.2"
 terminado = ">=0.8.3"
@@ -1470,13 +1480,13 @@ description = "A Jupyter Server Extension Providing Terminals."
 optional = false
 python-versions = ">=3.8"
 groups = ["dev"]
+markers = "os_name != \"nt\""
 files = [
     {file = "jupyter_server_terminals-0.5.3-py3-none-any.whl", hash = "sha256:41ee0d7dc0ebf2809c668e0fc726dfaf258fcd3e769568996ca731b6194ae9aa"},
     {file = "jupyter_server_terminals-0.5.3.tar.gz", hash = "sha256:5ae0295167220e9ace0edcfdb212afd2b01ee8d179fe6f23c899590e9b8a5269"},
 ]
 
 [package.dependencies]
-pywinpty = {version = ">=2.0.3", markers = "os_name == \"nt\""}
 terminado = ">=0.8.3"
 
 [package.extras]
@@ -1490,6 +1500,7 @@ description = "JupyterLab computational environment"
 optional = false
 python-versions = ">=3.9"
 groups = ["dev"]
+markers = "os_name != \"nt\""
 files = [
     {file = "jupyterlab-4.4.8-py3-none-any.whl", hash = "sha256:81b56f33f35be15150e7ccd43440963a93d2b115ffa614a06d38b91e4d650f92"},
     {file = "jupyterlab-4.4.8.tar.gz", hash = "sha256:a89e5a2e9f9295ae039356fc5247e5bfac64936126ab805e3ff8e47f385b0c7e"},
@@ -1526,6 +1537,7 @@ description = "Pygments theme using JupyterLab CSS variables"
 optional = false
 python-versions = ">=3.7"
 groups = ["dev"]
+markers = "os_name != \"nt\""
 files = [
     {file = "jupyterlab_pygments-0.2.2-py2.py3-none-any.whl", hash = "sha256:2405800db07c9f770863bcf8049a529c3dd4d3e28536638bd7c1c01d2748309f"},
     {file = "jupyterlab_pygments-0.2.2.tar.gz", hash = "sha256:7405d7fde60819d905a9fa8ce89e4cd830e318cdad22a0030f7a901da705585d"},
@@ -1538,6 +1550,7 @@ description = "A set of server components for JupyterLab and JupyterLab like app
 optional = false
 python-versions = ">=3.8"
 groups = ["dev"]
+markers = "os_name != \"nt\""
 files = [
     {file = "jupyterlab_server-2.27.1-py3-none-any.whl", hash = "sha256:f5e26156e5258b24d532c84e7c74cc212e203bff93eb856f81c24c16daeecc75"},
     {file = "jupyterlab_server-2.27.1.tar.gz", hash = "sha256:097b5ac709b676c7284ac9c5e373f11930a561f52cd5a86e4fc7e5a9c8a8631d"},
@@ -1565,6 +1578,7 @@ description = "Powerful and Pythonic XML processing library combining libxml2/li
 optional = false
 python-versions = ">=3.8"
 groups = ["dev"]
+markers = "os_name != \"nt\""
 files = [
     {file = "lxml-6.0.1-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:3b38e20c578149fdbba1fd3f36cb1928a3aaca4b011dfd41ba09d11fb396e1b9"},
     {file = "lxml-6.0.1-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:11a052cbd013b7140bbbb38a14e2329b6192478344c99097e378c691b7119551"},
@@ -1817,6 +1831,7 @@ description = "A sane Markdown parser with useful plugins and renderers"
 optional = false
 python-versions = "*"
 groups = ["dev"]
+markers = "os_name != \"nt\""
 files = [
     {file = "mistune-2.0.4-py2.py3-none-any.whl", hash = "sha256:182cc5ee6f8ed1b807de6b7bb50155df7b66495412836b9a74c8fbdfc75fe36d"},
     {file = "mistune-2.0.4.tar.gz", hash = "sha256:9ee0a66053e2267aba772c71e06891fa8f1af6d4b01d5e84e267b4570d4d9808"},
@@ -2055,6 +2070,7 @@ description = "A client library for executing notebooks. Formerly nbconvert's Ex
 optional = false
 python-versions = ">=3.8.0"
 groups = ["dev"]
+markers = "os_name != \"nt\""
 files = [
     {file = "nbclient-0.10.0-py3-none-any.whl", hash = "sha256:f13e3529332a1f1f81d82a53210322476a168bb7090a0289c795fe9cc11c9d3f"},
     {file = "nbclient-0.10.0.tar.gz", hash = "sha256:4b3f1b7dba531e498449c4db4f53da339c91d449dc11e9af3a43b4eb5c5abb09"},
@@ -2078,6 +2094,7 @@ description = "Converting Jupyter Notebooks"
 optional = false
 python-versions = ">=3.7"
 groups = ["dev"]
+markers = "os_name != \"nt\""
 files = [
     {file = "nbconvert-7.0.0-py3-none-any.whl", hash = "sha256:26843ae233167e8aae31c20e3e1d91f431f04c9f34363bbe2dd0d247f772641c"},
     {file = "nbconvert-7.0.0.tar.gz", hash = "sha256:fd1e361da30e30e4c5a5ae89f7cae95ca2a4d4407389672473312249a7ba0060"},
@@ -2155,6 +2172,7 @@ description = "Patch asyncio to allow nested event loops"
 optional = false
 python-versions = ">=3.5"
 groups = ["dev"]
+markers = "os_name != \"nt\""
 files = [
     {file = "nest_asyncio-1.5.6-py3-none-any.whl", hash = "sha256:b9a953fb40dceaa587d109609098db21900182b16440652454a146cffb06e8b8"},
     {file = "nest_asyncio-1.5.6.tar.gz", hash = "sha256:d267cc1ff794403f7df692964d1d2a3fa9418ffea2a3f6859a439ff482fef290"},
@@ -2192,6 +2210,7 @@ description = "A shim layer for notebook traits and config"
 optional = false
 python-versions = ">=3.7"
 groups = ["dev"]
+markers = "os_name != \"nt\""
 files = [
     {file = "notebook_shim-0.2.4-py3-none-any.whl", hash = "sha256:411a5be4e9dc882a074ccbcae671eda64cceb068767e9a3419096986560e1cef"},
     {file = "notebook_shim-0.2.4.tar.gz", hash = "sha256:b4b2cfa1b65d98307ca24361f5b30fe785b53c3fd07b7a47e89acb5e6ac638cb"},
@@ -2210,6 +2229,7 @@ description = "A decorator to automatically detect mismatch when overriding a me
 optional = false
 python-versions = ">=3.6"
 groups = ["dev"]
+markers = "os_name != \"nt\""
 files = [
     {file = "overrides-7.7.0-py3-none-any.whl", hash = "sha256:c7ed9d062f78b8e4c1a7b70bd8796b35ead4d9f510227ef9c5dc7626c60d7e49"},
     {file = "overrides-7.7.0.tar.gz", hash = "sha256:55158fa3d93b98cc75299b1e67078ad9003ca27945c76162c1c0766d6f91820a"},
@@ -2234,6 +2254,7 @@ description = "Utilities for writing pandoc filters in python"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 groups = ["dev"]
+markers = "os_name != \"nt\""
 files = [
     {file = "pandocfilters-1.4.3.tar.gz", hash = "sha256:bc63fbb50534b4b1f8ebe1860889289e8af94a23bff7445259592df25a3906eb"},
 ]
@@ -2370,6 +2391,7 @@ description = "Python client for the Prometheus monitoring system."
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 groups = ["dev"]
+markers = "os_name != \"nt\""
 files = [
     {file = "prometheus_client-0.10.1-py2.py3-none-any.whl", hash = "sha256:030e4f9df5f53db2292eec37c6255957eb76168c6f974e4176c711cf91ed34aa"},
     {file = "prometheus_client-0.10.1.tar.gz", hash = "sha256:b6c5a9643e3545bcbfd9451766cbaa5d9c67e7303c7bc32c750b6fa70ecb107d"},
@@ -2509,6 +2531,7 @@ description = "Cross-platform lib for process and system monitoring in Python."
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, !=3.5.*"
 groups = ["dev"]
+markers = "os_name != \"nt\""
 files = [
     {file = "psutil-5.9.8-cp27-cp27m-macosx_10_9_x86_64.whl", hash = "sha256:26bd09967ae00920df88e0352a91cff1a78f8d69b3ecabbfe733610c0af486c8"},
     {file = "psutil-5.9.8-cp27-cp27m-manylinux2010_i686.whl", hash = "sha256:05806de88103b25903dff19bb6692bd2e714ccf9e668d050d144012055cbca73"},
@@ -2560,24 +2583,13 @@ files = [
 tests = ["pytest"]
 
 [[package]]
-name = "py"
-version = "1.11.0"
-description = "library with cross-python path, ini-parsing, io, code, log facilities"
-optional = false
-python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
-groups = ["dev"]
-files = [
-    {file = "py-1.11.0-py2.py3-none-any.whl", hash = "sha256:607c53218732647dff4acdfcd50cb62615cedf612e72d1724fb1a0cc6405b378"},
-    {file = "py-1.11.0.tar.gz", hash = "sha256:51c75c4126074b472f746a24399ad32f6053d1b34b68d2fa41e558e6f4a98719"},
-]
-
-[[package]]
 name = "pycparser"
 version = "2.20"
 description = "C parser in Python"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 groups = ["dev"]
+markers = "os_name != \"nt\""
 files = [
     {file = "pycparser-2.20-py2.py3-none-any.whl", hash = "sha256:7582ad22678f0fcd81102833f60ef8d0e57288b6b5fb00323d101be910e35705"},
     {file = "pycparser-2.20.tar.gz", hash = "sha256:2d475327684562c3a96cc71adf7dc8c4f0565175cf86b6d7a404ff4c771f15f0"},
@@ -2649,28 +2661,27 @@ testutils = ["gitpython (>3)"]
 
 [[package]]
 name = "pytest"
-version = "6.2.5"
+version = "8.4.2"
 description = "pytest: simple powerful testing with Python"
 optional = false
-python-versions = ">=3.6"
+python-versions = ">=3.9"
 groups = ["dev"]
 files = [
-    {file = "pytest-6.2.5-py3-none-any.whl", hash = "sha256:7310f8d27bc79ced999e760ca304d69f6ba6c6649c0b60fb0e04a4a77cacc134"},
-    {file = "pytest-6.2.5.tar.gz", hash = "sha256:131b36680866a76e6781d13f101efb86cf674ebb9762eb70d3082b6f29889e89"},
+    {file = "pytest-8.4.2-py3-none-any.whl", hash = "sha256:872f880de3fc3a5bdc88a11b39c9710c3497a547cfa9320bc3c5e62fbf272e79"},
+    {file = "pytest-8.4.2.tar.gz", hash = "sha256:86c0d0b93306b961d58d62a4db4879f27fe25513d4b969df351abdddb3c30e01"},
 ]
 
 [package.dependencies]
-atomicwrites = {version = ">=1.0", markers = "sys_platform == \"win32\""}
-attrs = ">=19.2.0"
-colorama = {version = "*", markers = "sys_platform == \"win32\""}
-iniconfig = "*"
-packaging = "*"
-pluggy = ">=0.12,<2.0"
-py = ">=1.8.2"
-toml = "*"
+colorama = {version = ">=0.4", markers = "sys_platform == \"win32\""}
+exceptiongroup = {version = ">=1", markers = "python_version < \"3.11\""}
+iniconfig = ">=1"
+packaging = ">=20"
+pluggy = ">=1.5,<2"
+pygments = ">=2.7.2"
+tomli = {version = ">=1", markers = "python_version < \"3.11\""}
 
 [package.extras]
-testing = ["argcomplete", "hypothesis (>=3.56)", "mock", "nose", "requests", "xmlschema"]
+dev = ["argcomplete", "attrs (>=19.2)", "hypothesis (>=3.56)", "mock", "requests", "setuptools", "xmlschema"]
 
 [[package]]
 name = "pytest-cov"
@@ -2822,6 +2833,7 @@ description = "A python library adding a json log formatter"
 optional = false
 python-versions = ">=3.6"
 groups = ["dev"]
+markers = "os_name != \"nt\""
 files = [
     {file = "python-json-logger-2.0.7.tar.gz", hash = "sha256:23e7ec02d34237c5aa1e29a070193a4ea87583bb4e7f8fd06d3de8264c4b2e1c"},
     {file = "python_json_logger-2.0.7-py3-none-any.whl", hash = "sha256:f380b826a991ebbe3de4d897aeec42760035ac760345e57b812938dc8b35e2bd"},
@@ -2850,24 +2862,6 @@ files = [
     {file = "pywin32-306-cp38-cp38-win_amd64.whl", hash = "sha256:e8ac1ae3601bee6ca9f7cb4b5363bf1c0badb935ef243c4733ff9a393b1690c0"},
     {file = "pywin32-306-cp39-cp39-win32.whl", hash = "sha256:e25fd5b485b55ac9c057f67d94bc203f3f6595078d1fb3b458c9c28b7153a802"},
     {file = "pywin32-306-cp39-cp39-win_amd64.whl", hash = "sha256:39b61c15272833b5c329a2989999dcae836b1eed650252ab1b7bfbe1d59f30f4"},
-]
-
-[[package]]
-name = "pywinpty"
-version = "3.0.0"
-description = ""
-optional = false
-python-versions = ">=3.9"
-groups = ["dev"]
-markers = "os_name == \"nt\""
-files = [
-    {file = "pywinpty-3.0.0-cp310-cp310-win_amd64.whl", hash = "sha256:327b6034e0dc38352c1c99a7c0b3e54941b4e506a5f21acce63609cd2ab6cce2"},
-    {file = "pywinpty-3.0.0-cp311-cp311-win_amd64.whl", hash = "sha256:29daa71ac5dcbe1496ef99f4cde85a732b1f0a3b71405d42177dbcf9ee405e5a"},
-    {file = "pywinpty-3.0.0-cp312-cp312-win_amd64.whl", hash = "sha256:1e0c4b01e5b03b1531d7c5d0e044b8c66dd0288c6d2b661820849f2a8d91aec3"},
-    {file = "pywinpty-3.0.0-cp313-cp313-win_amd64.whl", hash = "sha256:828cbe756b7e3d25d886fbd5691a1d523cd59c5fb79286bb32bb75c5221e7ba1"},
-    {file = "pywinpty-3.0.0-cp313-cp313t-win_amd64.whl", hash = "sha256:de0cbe27b96e5a2cebd86c4a6b8b4139f978d9c169d44a8edc7e30e88e5d7a69"},
-    {file = "pywinpty-3.0.0-cp39-cp39-win_amd64.whl", hash = "sha256:007735316170ec1b6e773deadab5fe9ec4074dfdc06f27513fe87b8cfe45237d"},
-    {file = "pywinpty-3.0.0.tar.gz", hash = "sha256:68f70e68a9f0766ffdea3fc500351cb7b9b012bcb8239a411f7ff0fc8f86dcb1"},
 ]
 
 [[package]]
@@ -2953,6 +2947,7 @@ description = "Python bindings for 0MQ"
 optional = false
 python-versions = ">=3.8"
 groups = ["dev"]
+markers = "os_name != \"nt\""
 files = [
     {file = "pyzmq-27.1.0-cp310-cp310-macosx_10_15_universal2.whl", hash = "sha256:508e23ec9bc44c0005c4946ea013d9317ae00ac67778bd47519fdf5a0e930ff4"},
     {file = "pyzmq-27.1.0-cp310-cp310-manylinux2014_i686.manylinux_2_17_i686.whl", hash = "sha256:507b6f430bdcf0ee48c0d30e734ea89ce5567fd7b8a0f0044a369c176aa44556"},
@@ -3200,6 +3195,7 @@ description = "A pure python RFC3339 validator"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 groups = ["dev"]
+markers = "os_name != \"nt\""
 files = [
     {file = "rfc3339_validator-0.1.4-py2.py3-none-any.whl", hash = "sha256:24f6ec1eda14ef823da9e36ec7113124b39c04d50a4d3d3a3c2859577e7791fa"},
     {file = "rfc3339_validator-0.1.4.tar.gz", hash = "sha256:138a2abdf93304ad60530167e51d2dfb9549521a836871b88d7f4695d0022f6b"},
@@ -3215,6 +3211,7 @@ description = "Pure python rfc3986 validator"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 groups = ["dev"]
+markers = "os_name != \"nt\""
 files = [
     {file = "rfc3986_validator-0.1.1-py2.py3-none-any.whl", hash = "sha256:2f235c432ef459970b4306369336b9d5dbdda31b510ca1e327636e01f528bfa9"},
     {file = "rfc3986_validator-0.1.1.tar.gz", hash = "sha256:3d44bde7921b3b9ec3ae4e3adca370438eccebc676456449b145d533b240d055"},
@@ -3416,6 +3413,7 @@ description = "Send file to trash natively under Mac OS X, Windows and Linux"
 optional = false
 python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,!=3.5.*,>=2.7"
 groups = ["dev"]
+markers = "os_name != \"nt\""
 files = [
     {file = "Send2Trash-1.8.3-py3-none-any.whl", hash = "sha256:0c31227e0bd08961c7665474a3d1ef7193929fedda4233843689baa056be46c9"},
     {file = "Send2Trash-1.8.3.tar.gz", hash = "sha256:b18e7a3966d99871aefeb00cfbcfdced55ce4871194810fc71f4aa484b953abf"},
@@ -3433,6 +3431,7 @@ description = "Easily download, build, install, upgrade, and uninstall Python pa
 optional = false
 python-versions = ">=3.9"
 groups = ["dev"]
+markers = "os_name != \"nt\""
 files = [
     {file = "setuptools-78.1.1-py3-none-any.whl", hash = "sha256:c3a9c4211ff4c309edb8b8c4f1cbfa7ae324c4ba9f91ff254e3d305b9fd54561"},
     {file = "setuptools-78.1.1.tar.gz", hash = "sha256:fcc17fd9cd898242f6b4adfaca46137a9edef687f43e6f78469692a5e70d851d"},
@@ -3478,6 +3477,7 @@ description = "Sniff out which async library your code is running under"
 optional = false
 python-versions = ">=3.7"
 groups = ["dev"]
+markers = "os_name != \"nt\""
 files = [
     {file = "sniffio-1.3.1-py3-none-any.whl", hash = "sha256:2f6da418d1f1e0fddd844478f41680e794e6051915791a034ff65e5f100525a2"},
     {file = "sniffio-1.3.1.tar.gz", hash = "sha256:f4324edc670a0f49750a81b895f35c3adb843cca46f0530f79fc1babb23789dc"},
@@ -3502,6 +3502,7 @@ description = "A modern CSS selector implementation for Beautiful Soup."
 optional = false
 python-versions = ">=3.6"
 groups = ["dev"]
+markers = "os_name != \"nt\""
 files = [
     {file = "soupsieve-2.3.2.post1-py3-none-any.whl", hash = "sha256:3b2503d3c7084a42b1ebd08116e5f81aadfaea95863628c80a3b774a11b7c759"},
     {file = "soupsieve-2.3.2.post1.tar.gz", hash = "sha256:fc53893b3da2c33de295667a0e19f078c14bf86544af307354de5fcf12a3f30d"},
@@ -3553,6 +3554,7 @@ description = "Tornado websocket backend for the Xterm.js Javascript terminal em
 optional = false
 python-versions = ">=3.6"
 groups = ["dev"]
+markers = "os_name != \"nt\""
 files = [
     {file = "terminado-0.9.4-py3-none-any.whl", hash = "sha256:daed77f9fad7b32558fa84b226a76f45a02242c20813502f36c4e1ade6d8f1ad"},
     {file = "terminado-0.9.4.tar.gz", hash = "sha256:9a7dbcfbc2778830eeb70261bf7aa9d98a3eac8631a3afe3febeb57c12f798be"},
@@ -3560,7 +3562,6 @@ files = [
 
 [package.dependencies]
 ptyprocess = {version = "*", markers = "os_name != \"nt\""}
-pywinpty = {version = ">=0.5", markers = "os_name == \"nt\""}
 tornado = ">=4"
 
 [package.extras]
@@ -3573,6 +3574,7 @@ description = "A tiny CSS parser"
 optional = false
 python-versions = ">=3.6"
 groups = ["dev"]
+markers = "os_name != \"nt\""
 files = [
     {file = "tinycss2-1.1.1-py3-none-any.whl", hash = "sha256:fe794ceaadfe3cf3e686b22155d0da5780dd0e273471a51846d0a02bc204fec8"},
     {file = "tinycss2-1.1.1.tar.gz", hash = "sha256:b2e44dd8883c360c35dd0d1b5aad0b610e5156c2cb3b33434634e539ead9d8bf"},
@@ -3584,18 +3586,6 @@ webencodings = ">=0.4"
 [package.extras]
 doc = ["sphinx", "sphinx_rtd_theme"]
 test = ["coverage[toml]", "pytest", "pytest-cov", "pytest-flake8", "pytest-isort"]
-
-[[package]]
-name = "toml"
-version = "0.10.2"
-description = "Python Library for Tom's Obvious, Minimal Language"
-optional = false
-python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*"
-groups = ["dev"]
-files = [
-    {file = "toml-0.10.2-py2.py3-none-any.whl", hash = "sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"},
-    {file = "toml-0.10.2.tar.gz", hash = "sha256:b3bda1d108d5dd99f4a20d24d9c348e91c4db7ab1b749200bded2f839ccbe68f"},
-]
 
 [[package]]
 name = "tomli"
@@ -3629,6 +3619,7 @@ description = "Tornado is a Python web framework and asynchronous networking lib
 optional = false
 python-versions = ">=3.9"
 groups = ["dev"]
+markers = "os_name != \"nt\""
 files = [
     {file = "tornado-6.5.1-cp39-abi3-macosx_10_9_universal2.whl", hash = "sha256:d50065ba7fd11d3bd41bcad0825227cc9a95154bad83239357094c36708001f7"},
     {file = "tornado-6.5.1-cp39-abi3-macosx_10_9_x86_64.whl", hash = "sha256:9e9ca370f717997cb85606d074b0e5b247282cf5e2e1611568b8821afe0342d6"},
@@ -3689,6 +3680,7 @@ description = "Typing stubs for python-dateutil"
 optional = false
 python-versions = ">=3.8"
 groups = ["dev"]
+markers = "os_name != \"nt\""
 files = [
     {file = "types-python-dateutil-2.9.0.20240316.tar.gz", hash = "sha256:5d2f2e240b86905e40944dd787db6da9263f0deabef1076ddaed797351ec0202"},
     {file = "types_python_dateutil-2.9.0.20240316-py3-none-any.whl", hash = "sha256:6b8cb66d960771ce5ff974e9dd45e38facb81718cc1e208b10b1baccbfdbee3b"},
@@ -3713,6 +3705,7 @@ description = "RFC 6570 URI Template Processor"
 optional = false
 python-versions = ">=3.7"
 groups = ["dev"]
+markers = "os_name != \"nt\""
 files = [
     {file = "uri-template-1.3.0.tar.gz", hash = "sha256:0e00f8eb65e18c7de20d595a14336e9f337ead580c70934141624b6d1ffdacc7"},
     {file = "uri_template-1.3.0-py3-none-any.whl", hash = "sha256:a44a133ea12d44a0c0f06d7d42a52d71282e77e2f937d8abd5655b8d56fc1363"},
@@ -3788,6 +3781,7 @@ description = "A library for working with the color formats defined by HTML and 
 optional = false
 python-versions = ">=3.7"
 groups = ["dev"]
+markers = "os_name != \"nt\""
 files = [
     {file = "webcolors-1.13-py3-none-any.whl", hash = "sha256:29bc7e8752c0a1bd4a1f03c14d6e6a72e93d82193738fa860cbff59d0fcc11bf"},
     {file = "webcolors-1.13.tar.gz", hash = "sha256:c225b674c83fa923be93d235330ce0300373d02885cef23238813b0d5668304a"},
@@ -3804,6 +3798,7 @@ description = "Character encoding aliases for legacy web content"
 optional = false
 python-versions = "*"
 groups = ["dev"]
+markers = "os_name != \"nt\""
 files = [
     {file = "webencodings-0.5.1-py2.py3-none-any.whl", hash = "sha256:a0af1213f3c2226497a97e2b3aa01a7e4bee4f403f95be16fc9acd2947514a78"},
     {file = "webencodings-0.5.1.tar.gz", hash = "sha256:b36a1c245f2d304965eb4e0a82848379241dc04b865afcc4aab16748587e1923"},
@@ -3816,6 +3811,7 @@ description = "WebSocket client for Python with low level API options"
 optional = false
 python-versions = ">=3.8"
 groups = ["dev"]
+markers = "os_name != \"nt\""
 files = [
     {file = "websocket_client-1.8.0-py3-none-any.whl", hash = "sha256:17b44cc997f5c498e809b22cdf2d9c7a9e71c02c8cc2b6c56e7c2d1239bfa526"},
     {file = "websocket_client-1.8.0.tar.gz", hash = "sha256:3239df9f44da632f96012472805d40a23281a991027ce11d2f45a6f24ac4c3da"},
@@ -3944,4 +3940,4 @@ test = ["big-O", "jaraco.functools", "jaraco.itertools", "jaraco.test", "more-it
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.9"
-content-hash = "0aec34086cfd08656bdc12482fb11f7fc3d6ecca5b4c6c10a58186aee9b7dd46"
+content-hash = "4528d8001367d1ea9fc7cf16bdf7d60cb0888594a1575d3b9f9ee0c65cd11135"

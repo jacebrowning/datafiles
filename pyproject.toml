@@ -70,7 +70,7 @@ pylint = "~3.3.8"
 pydocstyle = "*"
 
 # Testing
-pytest = "^6.2.5"
+pytest = ">=6.2.5,<9.0.0"
 pytest-describe = "^2.0"
 pytest-expecter = "^3.0"
 pytest-mock = "*"
