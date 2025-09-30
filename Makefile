@@ -127,7 +127,7 @@ notebooks: install
 	@ cd notebooks; for filename in *.ipynb; do \
 	  poetry run papermill $$filename $$filename; \
 	done
-	poetry run nbstripout --keep-output --extra-keys="cell.metadata.papermill metadata.papermill" notebooks/*.ipynb
+	poetry run nbstripout --keep-output notebooks/*.ipynb
 
 # RELEASE #####################################################################
 

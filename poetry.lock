@@ -2152,14 +2152,14 @@ test = ["pep440", "pre-commit", "pytest", "testpath"]
 
 [[package]]
 name = "nbstripout"
-version = "0.7.1"
+version = "0.8.1"
 description = "Strips outputs from Jupyter and IPython notebooks"
 optional = false
 python-versions = ">=3.8"
 groups = ["dev"]
 files = [
-    {file = "nbstripout-0.7.1-py2.py3-none-any.whl", hash = "sha256:dfb0688b42b02ff13925e583313fc009c87342ad13b79ae0329357749aa6ed0c"},
-    {file = "nbstripout-0.7.1.tar.gz", hash = "sha256:2aad3454dc13e356f2fc94917856bc44f2bed3add77e8ba9f3a78003074bcd84"},
+    {file = "nbstripout-0.8.1-py2.py3-none-any.whl", hash = "sha256:79a8c8da488d98c54c112fa87185045f0271a97d84f1d46918d6a3ee561b30e7"},
+    {file = "nbstripout-0.8.1.tar.gz", hash = "sha256:eaac8b6b4e729e8dfe1e5df2c0f8ba44abc5a17a65448f0480141f80be230bb1"},
 ]
 
 [package.dependencies]
@@ -3940,4 +3940,4 @@ test = ["big-O", "jaraco.functools", "jaraco.itertools", "jaraco.test", "more-it
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.9"
-content-hash = "4528d8001367d1ea9fc7cf16bdf7d60cb0888594a1575d3b9f9ee0c65cd11135"
+content-hash = "7a5664c35a7c37565a9294d82142b7a8ce738ee2e52b6f1aeb6d9f4b68b8ec90"
