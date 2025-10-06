@@ -1815,14 +1815,14 @@ files = [
 
 [[package]]
 name = "minilog"
-version = "2.3"
+version = "2.3.1"
 description = "Minimalistic wrapper for Python logging."
 optional = false
-python-versions = ">=3.8,<4.0"
+python-versions = "<4.0,>=3.8"
 groups = ["main", "dev"]
 files = [
-    {file = "minilog-2.3-py3-none-any.whl", hash = "sha256:e42dc2def1da424e90d6664279c128dde94adc5840557b27857957ed23ee09b6"},
-    {file = "minilog-2.3.tar.gz", hash = "sha256:ebdf354f1dd86a2e8a824cdde4b7b50cdbc24b99a5465bc4d1806bd1e030bc92"},
+    {file = "minilog-2.3.1-py3-none-any.whl", hash = "sha256:1a679fefe6140ce1d59c3246adc991f9eb480169e5a6c54d2be9023ee459dc30"},
+    {file = "minilog-2.3.1.tar.gz", hash = "sha256:4b602572c3bcdd2d8f00d879f635c0de9e632d5d0307e131c91074be8acf444e"},
 ]
 
 [[package]]
