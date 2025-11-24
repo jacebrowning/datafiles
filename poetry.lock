@@ -2160,14 +2160,14 @@ test = ["pep440", "pre-commit", "pytest", "testpath"]
 
 [[package]]
 name = "nbstripout"
-version = "0.8.1"
+version = "0.8.2"
 description = "Strips outputs from Jupyter and IPython notebooks"
 optional = false
 python-versions = ">=3.8"
 groups = ["dev"]
 files = [
-    {file = "nbstripout-0.8.1-py2.py3-none-any.whl", hash = "sha256:79a8c8da488d98c54c112fa87185045f0271a97d84f1d46918d6a3ee561b30e7"},
-    {file = "nbstripout-0.8.1.tar.gz", hash = "sha256:eaac8b6b4e729e8dfe1e5df2c0f8ba44abc5a17a65448f0480141f80be230bb1"},
+    {file = "nbstripout-0.8.2-py2.py3-none-any.whl", hash = "sha256:5f06f9138cb64daed3e91c5359ff0fff85bab4d0db7d72723be1da6f51b890ae"},
+    {file = "nbstripout-0.8.2.tar.gz", hash = "sha256:2876530eb684bf93a5b48fe6d92b2163f78d040721c76b37d5b9e1514d38fc69"},
 ]
 
 [package.dependencies]
@@ -3436,6 +3436,8 @@ files = [
     {file = "ruamel.yaml.clib-0.2.14-cp39-cp39-win32.whl", hash = "sha256:6d5472f63a31b042aadf5ed28dd3ef0523da49ac17f0463e10fda9c4a2773352"},
     {file = "ruamel.yaml.clib-0.2.14-cp39-cp39-win_amd64.whl", hash = "sha256:8dd3c2cc49caa7a8d64b67146462aed6723a0495e44bf0aa0a2e94beaa8432f6"},
     {file = "ruamel.yaml.clib-0.2.14.tar.gz", hash = "sha256:803f5044b13602d58ea378576dd75aa759f52116a0232608e8fdada4da33752e"},
+    {file = "ruamel_yaml_clib-0.2.14-cp314-cp314-win32.whl", hash = "sha256:9b4104bf43ca0cd4e6f738cb86326a3b2f6eef00f417bd1e7efb7bdffe74c539"},
+    {file = "ruamel_yaml_clib-0.2.14-cp314-cp314-win_amd64.whl", hash = "sha256:13997d7d354a9890ea1ec5937a219817464e5cc344805b37671562a401ca3008"},
 ]
 
 [[package]]
