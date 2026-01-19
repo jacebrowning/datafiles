@@ -3,7 +3,7 @@ image: Visual Studio 2022
 environment:
   matrix:
     - PYTHON_MAJOR: 3
-      PYTHON_MINOR: 9
+      PYTHON_MINOR: 10
 
 cache:
   - .venv -> poetry.lock
