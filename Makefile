@@ -52,11 +52,10 @@ poetry.lock: pyproject.toml
 
 docs/requirements.txt: poetry.lock
 	@ rm -f $@
-	@ poetry export --all-groups --without-hashes | grep jinja2 >> $@
-	@ poetry export --all-groups --without-hashes | grep markdown >> $@
-	@ poetry export --all-groups --without-hashes | grep mkdocs >> $@
-	@ poetry export --all-groups --without-hashes | grep pygments >> $@
-	@ poetry export --all-groups --without-hashes | grep importlib-metadata >> $@
+	poetry export --all-groups --without-hashes | grep jinja2 >> $@
+	poetry export --all-groups --without-hashes | grep markdown >> $@
+	poetry export --all-groups --without-hashes | grep mkdocs >> $@
+	poetry export --all-groups --without-hashes | grep pygments >> $@
 endif
 
 .cache:
