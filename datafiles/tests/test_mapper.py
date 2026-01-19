@@ -52,10 +52,7 @@ def describe_mapper():
 
         def is_relative_to_cwd_when_specified(expect, mapper):
             mapper._pattern = "./foobar/sample.yml"
-            if platform.system() == "Windows":
-                path = Path("foobar/sample.yml")
-            else:
-                path = Path.cwd() / "foobar" / "sample.yml"
+            path = Path.cwd() / "foobar" / "sample.yml"
             expect(mapper.path) == path
 
         def is_relative_to_home_when_specified(expect, mapper):
