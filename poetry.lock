@@ -2244,14 +2244,14 @@ test = ["pep440", "pre-commit", "pytest", "testpath"]
 
 [[package]]
 name = "nbstripout"
-version = "0.8.2"
+version = "0.9.0"
 description = "Strips outputs from Jupyter and IPython notebooks"
 optional = false
-python-versions = ">=3.8"
+python-versions = ">=3.10"
 groups = ["dev"]
 files = [
-    {file = "nbstripout-0.8.2-py2.py3-none-any.whl", hash = "sha256:5f06f9138cb64daed3e91c5359ff0fff85bab4d0db7d72723be1da6f51b890ae"},
-    {file = "nbstripout-0.8.2.tar.gz", hash = "sha256:2876530eb684bf93a5b48fe6d92b2163f78d040721c76b37d5b9e1514d38fc69"},
+    {file = "nbstripout-0.9.0-py3-none-any.whl", hash = "sha256:98acb9d8152beeece931564bf1a7b8e7763d9f0919b09103bbb181913bbe0b3d"},
+    {file = "nbstripout-0.9.0.tar.gz", hash = "sha256:4354284d11309f254a6ba4bd9e2f8c5953b16474b7431c278ce67b470e2123a2"},
 ]
 
 [package.dependencies]
@@ -3983,4 +3983,4 @@ propcache = ">=0.2.0"
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.10"
-content-hash = "5fb68c3a717fc2f1d047cddc3a52af44f4ef4b54af1ab6c74ca0491f20442da8"
+content-hash = "9a25ac8b0bba6beaf9fe740e7262e9952e18ed980fa62d3e845162a008eb411a"
