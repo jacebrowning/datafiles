@@ -20,25 +20,21 @@ def describe_serialize():
     def describe_yaml():
         def it_indents_blocks_by_default(expect, data):
             text = formats.serialize(data, ".yaml")
-            expect(text) == dedent(
-                """
+            expect(text) == dedent("""
             key: value
             items:
               - 1
               - a
               -
-            """
-            )
+            """)
 
         def it_handles_lists_of_dicts(expect):
             data = [{"one": 1, "two": 2}]
             text = formats.serialize(data, ".yaml")
-            expect(text) == dedent(
-                """
+            expect(text) == dedent("""
             - one: 1
               two: 2
-            """
-            )
+            """)
 
 
 def describe_deserialize():

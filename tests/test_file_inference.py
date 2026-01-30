@@ -67,8 +67,7 @@ def describe_auto():
         sample.empty_list.append(7.8)
 
         logbreak("Reading file")
-        expect(read("tmp/sample.yml")) == dedent(
-            """
+        expect(read("tmp/sample.yml")) == dedent("""
             homogeneous_list:
               - 1
               - 2
@@ -79,8 +78,7 @@ def describe_auto():
               - 5.6
             empty_list:
               - 7.8
-            """
-        )
+            """)
 
     def with_floats(expect):
         write(
@@ -100,15 +98,13 @@ def describe_auto():
         sample.python.append(4)
 
         logbreak("Reading file")
-        expect(read("tmp/sample.yml")) == dedent(
-            """
+        expect(read("tmp/sample.yml")) == dedent("""
             language: python
             python:
               - 3.7
               - 3.8
               - 4.0
-            """
-        )
+            """)
 
     def with_nested_mutables(expect):
         write(
@@ -132,8 +128,7 @@ def describe_auto():
         sample.roles.category1.append("value3")
 
         logbreak("Reading file")
-        expect(read("tmp/sample.yml")) == dedent(
-            """
+        expect(read("tmp/sample.yml")) == dedent("""
             name: Test
             roles:
               category1:
@@ -143,5 +138,4 @@ def describe_auto():
               category2:
                 - something
                 - else
-            """
-        )
+            """)

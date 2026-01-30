@@ -51,11 +51,9 @@ def describe_automatic_save():
         logbreak("Setting attribute")
         sample.item = "b"
 
-        expect(read("tmp/sample.yml")) == dedent(
-            """
+        expect(read("tmp/sample.yml")) == dedent("""
             item: b
-            """
-        )
+            """)
 
     def with_setattr_on_nested_dataclass(expect):
         sample = SampleWithNesting(2)
@@ -64,37 +62,31 @@ def describe_automatic_save():
         sample.nested.name = "d"
 
         logbreak("Reading file")
-        expect(read("tmp/sample.yml")) == dedent(
-            """
+        expect(read("tmp/sample.yml")) == dedent("""
             item: 2
             nested:
               name: d
-            """
-        )
+            """)
 
     def with_setitem(expect):
         sample = Sample()
 
         sample.items[0] = 2
 
-        expect(read("tmp/sample.yml")) == dedent(
-            """
+        expect(read("tmp/sample.yml")) == dedent("""
             items:
               - 2
-            """
-        )
+            """)
 
     def with_delitem(expect):
         sample = Sample()
 
         del sample.items[0]
 
-        expect(read("tmp/sample.yml")) == dedent(
-            """
+        expect(read("tmp/sample.yml")) == dedent("""
             items:
               -
-            """
-        )
+            """)
 
     def with_append(expect):
         sample = Sample()
@@ -102,27 +94,23 @@ def describe_automatic_save():
         logbreak("Appending to list: 2")
         sample.items.append(2)
 
-        expect(read("tmp/sample.yml")) == dedent(
-            """
+        expect(read("tmp/sample.yml")) == dedent("""
             items:
               - 1
               - 2
-            """
-        )
+            """)
 
         sample.datafile.load()
 
         logbreak("Appending to list: 3")
         sample.items.append(3)
 
-        expect(read("tmp/sample.yml")) == dedent(
-            """
+        expect(read("tmp/sample.yml")) == dedent("""
             items:
               - 1
               - 2
               - 3
-            """
-        )
+            """)
 
     def with_append_on_nested_dataclass(expect):
         sample = SampleWithNesting(1)
@@ -130,27 +118,23 @@ def describe_automatic_save():
         logbreak("Appending to nested list: 2")
         sample.nested.items.append(2)
 
-        expect(read("tmp/sample.yml")) == dedent(
-            """
+        expect(read("tmp/sample.yml")) == dedent("""
             item: 1
             nested:
               items:
                 - 2
-            """
-        )
+            """)
 
         logbreak("Appending to nested list: 3")
         sample.nested.items.append(3)
 
-        expect(read("tmp/sample.yml")) == dedent(
-            """
+        expect(read("tmp/sample.yml")) == dedent("""
             item: 1
             nested:
               items:
                 - 2
                 - 3
-            """
-        )
+            """)
 
     def with_update(expect):
         sample = Sample()
@@ -158,27 +142,23 @@ def describe_automatic_save():
         logbreak()
         sample.data.update({"b": 2})
 
-        expect(read("tmp/sample.yml")) == dedent(
-            """
+        expect(read("tmp/sample.yml")) == dedent("""
             data:
               a: 1
               b: 2
-            """
-        )
+            """)
 
         sample.datafile.load()
 
         logbreak()
         sample.data.update({"c": 3})
 
-        expect(read("tmp/sample.yml")) == dedent(
-            """
+        expect(read("tmp/sample.yml")) == dedent("""
             data:
               a: 1
               b: 2
               c: 3
-            """
-        )
+            """)
 
 
 def describe_automatic_load_before_save():
@@ -194,11 +174,9 @@ def describe_automatic_load_before_save():
 
         expect(sample.item) == "42"
 
-        expect(sample.datafile.text) == dedent(
-            """
+        expect(sample.datafile.text) == dedent("""
             item: '42'
-            """
-        )
+            """)
 
 
 def describe_automatic_load_after_save():
@@ -207,10 +185,8 @@ def describe_automatic_load_after_save():
 
         sample.item = 42  # type: ignore
 
-        expect(sample.datafile.text) == dedent(
-            """
+        expect(sample.datafile.text) == dedent("""
             item: '42'
-            """
-        )
+            """)
 
         expect(sample.item) == "42"
