@@ -37,6 +37,21 @@ register(list, List)
 register(dict, Dictionary)
 
 
+def _convert_union(args: tuple[type, ...]) -> type | None:
+    """Return converter for currently supported unions."""
+    if len(args) != 2:
+        return None
+    none_type = type(None)
+    if args[0] is none_type or args[1] is none_type:
+        value_type = args[1] if args[0] is none_type else args[0]
+        return map_type(value_type).as_optional()
+    if str in args:
+        return map_type(str)
+    if args in {(int, float), (float, int)}:
+        return Number
+    return None
+
+
 @cached
 def map_type(cls, *, name: str = "", item_cls: Optional[type] = None):
     """Infer the converter type from a dataclass, type, or annotation."""
@@ -59,11 +74,10 @@ def map_type(cls, *, name: str = "", item_cls: Optional[type] = None):
         return converter
 
     if hasattr(types, "UnionType") and isinstance(cls, types.UnionType):  # type: ignore
-        # Python 3.10 behavior
-        converter = map_type(cls.__args__[0])
-        assert len(cls.__args__) == 2
-        assert cls.__args__[1] == type(None)
-        converter = converter.as_optional()
+        args = tuple(getattr(cls, "__args__", ()))
+        converter = _convert_union(args)
+        if converter is None:
+            raise TypeError(f"Unsupported union type: {cls}")
         return converter
 
     if hasattr(cls, "__origin__"):
@@ -114,16 +128,16 @@ def map_type(cls, *, name: str = "", item_cls: Optional[type] = None):
             converter = Dictionary.of_mapping(key, value)
 
         elif cls.__origin__ == Union:
-            if str in cls.__args__:
-                converter = map_type(str)
-                if type(None) in cls.__args__:
-                    converter = converter.as_optional()
-            elif cls.__args__ in {(int, float), (float, int)}:
-                converter = Number
+            args = tuple(cls.__args__)
+            if len(args) == 2:
+                converter = _convert_union(args)
             else:
-                assert len(cls.__args__) == 2
-                assert cls.__args__[1] == type(None)
-                converter = map_type(cls.__args__[0]).as_optional()
+                if str in cls.__args__:
+                    converter = map_type(str)
+                    if type(None) in cls.__args__:
+                        converter = converter.as_optional()
+            if converter is None:
+                raise TypeError(f"Unsupported union type: {cls}")
 
         elif issubclass(cls.__origin__, Converter):
             subtypes = [map_type(t) for t in cls.__args__]
