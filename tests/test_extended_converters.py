@@ -26,19 +26,15 @@ def describe_number():
     def with_float_to_integer(sample, expect):
         sample.number = 1.23
 
-        expect(read("tmp/sample.yml")) == dedent(
-            """
+        expect(read("tmp/sample.yml")) == dedent("""
             number: 1.23
-            """
-        )
+            """)
 
         sample.number = 4
 
-        expect(read("tmp/sample.yml")) == dedent(
-            """
+        expect(read("tmp/sample.yml")) == dedent("""
             number: 4
-            """
-        )
+            """)
 
     def with_integer_to_float(sample, expect):
         write(
@@ -68,23 +64,19 @@ def describe_text():
     def with_single_line(sample, expect):
         sample.text = "Hello, world!"
 
-        expect(read("tmp/sample.yml")) == dedent(
-            """
+        expect(read("tmp/sample.yml")) == dedent("""
             text: Hello, world!
-            """
-        )
+            """)
 
     def with_multiple_lines(sample, expect):
         sample.text = "\n".join(f"Line {i+1}" for i in range(3))
 
-        expect(read("tmp/sample.yml")) == dedent(
-            """
+        expect(read("tmp/sample.yml")) == dedent("""
             text: |
               Line 1
               Line 2
               Line 3
-            """
-        )
+            """)
 
         write(
             "tmp/sample.yml",
@@ -101,13 +93,11 @@ def describe_text():
     def with_extra_newlines(sample, expect):
         sample.text = "\nabc\ndef\n\n"
 
-        expect(read("tmp/sample.yml")) == dedent(
-            """
+        expect(read("tmp/sample.yml")) == dedent("""
             text: |
               abc
               def
-            """
-        )
+            """)
 
         sample.datafile.load()
         sample.datafile.save()
@@ -128,11 +118,9 @@ def describe_enum():
         sample = Sample()
         sample.path_type = FileOutputType.FILESYSTEM
 
-        expect(read("tmp/sample.toml")) == dedent(
-            """
+        expect(read("tmp/sample.toml")) == dedent("""
             path_type = 2
-            """
-        )
+            """)
 
         write(
             "tmp/sample.toml",

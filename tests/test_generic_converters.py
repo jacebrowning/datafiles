@@ -35,24 +35,20 @@ def test_generic_converters(expect):
         contents: List[Pair[str, converters.Number]]
 
     d = Dictish([Pair[str, converters.Number]("pi", 3.14)])  # type: ignore
-    expect(d.datafile.text) == dedent(
-        """
+    expect(d.datafile.text) == dedent("""
         contents:
           -   - pi
               - 3.14
-        """
-    )
+        """)
 
     d = Dictish(Missing)  # type: ignore
     expect(d.contents[0].first) == "pi"
     expect(d.contents[0].second) == 3.14
 
-    d.datafile.text = dedent(
-        """
+    d.datafile.text = dedent("""
         contents:
           -   - degrees
               - 360
-        """
-    )
+        """)
     expect(d.contents[0].first) == "degrees"
     expect(d.contents[0].second) == 360

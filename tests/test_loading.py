@@ -305,8 +305,7 @@ def describe_nesting():
 
         sample = Top()
 
-        expect(read("tmp/sample.toml")) == dedent(
-            """
+        expect(read("tmp/sample.toml")) == dedent("""
             level = 0
 
             [a]
@@ -320,14 +319,12 @@ def describe_nesting():
 
             [a.b.c.d]
             level = 4
-            """
-        )
+            """)
 
         logbreak("Modifying attribute")
         sample.a.b.c.d.level = 99
 
-        expect(read("tmp/sample.toml")) == dedent(
-            """
+        expect(read("tmp/sample.toml")) == dedent("""
             level = 0
 
             [a]
@@ -341,8 +338,7 @@ def describe_nesting():
 
             [a.b.c.d]
             level = 99
-            """
-        )
+            """)
 
         write(
             "tmp/sample.toml",
