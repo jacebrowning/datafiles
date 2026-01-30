@@ -9,7 +9,6 @@ Datafiles is a bidirectional serialization library for Python [dataclasses](http
 [![PyPI License](https://img.shields.io/pypi/l/datafiles.svg)](https://pypi.org/project/datafiles)
 [![PyPI Version](https://img.shields.io/pypi/v/datafiles.svg?label=version)](https://pypi.org/project/datafiles)
 [![PyPI Downloads](https://img.shields.io/pypi/dm/datafiles.svg?color=orange)](https://pypistats.org/packages/datafiles)
-[![Gitter](https://img.shields.io/gitter/room/jacebrowning/datafiles?color=D0164E)](https://gitter.im/jacebrowning/datafiles)
 
 Some common use cases include:
 
