@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.5 (2026-01-29)
+
+- Added support for Python 3.14.
+
 ## 2.4 (2026-01-19)
 
 - Dropped support for Python 3.9.
