@@ -63,7 +63,7 @@ minilog = "^2.3"
 
 # Formatters
 black = ">=24.3,<27.0"
-isort = ">=5.10,<7.0"
+isort = ">=5.10,<8.0"
 
 # Linters
 mypy = "^1.18.1"
