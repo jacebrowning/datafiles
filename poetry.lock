@@ -2257,14 +2257,14 @@ test = ["attrs (>=17.4.0)", "azure-datalake-store (>=0.0.30)", "azure-identity (
 
 [[package]]
 name = "parse"
-version = "1.21.0"
+version = "1.21.1"
 description = "parse() is the opposite of format()"
 optional = false
 python-versions = "*"
 groups = ["main"]
 files = [
-    {file = "parse-1.21.0-py2.py3-none-any.whl", hash = "sha256:6d81f7bae0ab25fd72818375c4a9c71c8705256bfc42e8725be609cf8b904aed"},
-    {file = "parse-1.21.0.tar.gz", hash = "sha256:937725d51330ffec9c7a26fdb5623baa135d8ba8ed78817ea9523538844e3ce4"},
+    {file = "parse-1.21.1-py2.py3-none-any.whl", hash = "sha256:55339ca698019815df3b8e8b550e5933933527e623b0cdf1ca2f404da35ffb47"},
+    {file = "parse-1.21.1.tar.gz", hash = "sha256:825e1a88e9d9fb481b8d2ca709c6195558b6eaa97c559ad3a9a20aa2d12815a3"},
 ]
 
 [[package]]
@@ -2611,7 +2611,7 @@ colorama = {version = ">=0.4.5", markers = "sys_platform == \"win32\""}
 dill = [
     {version = ">=0.2", markers = "python_version < \"3.11\""},
     {version = ">=0.3.7", markers = "python_version >= \"3.12\""},
-    {version = ">=0.3.6", markers = "python_version >= \"3.11\""},
+    {version = ">=0.3.6", markers = "python_version == \"3.11\""},
 ]
 isort = ">=5,<5.13 || >5.13,<9"
 mccabe = ">=0.6,<0.8"
