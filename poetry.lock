@@ -2111,14 +2111,14 @@ test = ["pep440", "pre-commit", "pytest", "testpath"]
 
 [[package]]
 name = "nbstripout"
-version = "0.9.0"
+version = "0.9.1"
 description = "Strips outputs from Jupyter and IPython notebooks"
 optional = false
 python-versions = ">=3.10"
 groups = ["dev"]
 files = [
-    {file = "nbstripout-0.9.0-py3-none-any.whl", hash = "sha256:98acb9d8152beeece931564bf1a7b8e7763d9f0919b09103bbb181913bbe0b3d"},
-    {file = "nbstripout-0.9.0.tar.gz", hash = "sha256:4354284d11309f254a6ba4bd9e2f8c5953b16474b7431c278ce67b470e2123a2"},
+    {file = "nbstripout-0.9.1-py3-none-any.whl", hash = "sha256:ca027ee45742ee77e4f8e9080254f9a707f1161ba11367b82fdf4a29892c759e"},
+    {file = "nbstripout-0.9.1.tar.gz", hash = "sha256:313bbb4217c8e38998567e5d790b6bd6c3a17a8c39073b205b84dadfc5d756dc"},
 ]
 
 [package.dependencies]
