@@ -104,7 +104,7 @@ class YAML(Formatter):
         yaml = _YAML()
         yaml.preserve_quotes = True  # type: ignore
         try:
-            return yaml.load(file_object)
+            return yaml.safe_load(file_object)
         except NotImplementedError as e:
             log.error(str(e))
             return {}
