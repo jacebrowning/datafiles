@@ -1312,14 +1312,14 @@ i18n = ["Babel (>=2.7)"]
 
 [[package]]
 name = "json5"
-version = "0.14.0"
+version = "0.15.0"
 description = "A Python implementation of the JSON5 data format."
 optional = false
 python-versions = ">=3.8.0"
 groups = ["main", "dev"]
 files = [
-    {file = "json5-0.14.0-py3-none-any.whl", hash = "sha256:56cf861bab076b1178eb8c92e1311d273a9b9acea2ccc82c276abf839ebaef3a"},
-    {file = "json5-0.14.0.tar.gz", hash = "sha256:b3f492fad9f6cdbced8b7d40b28b9b1c9701c5f561bef0d33b81c2ff433fefcb"},
+    {file = "json5-0.15.0-py3-none-any.whl", hash = "sha256:56636a30c0e8a4665fe2179c0212f32eae3796dea89ea6f649b9436ecdb39618"},
+    {file = "json5-0.15.0.tar.gz", hash = "sha256:7424d1f1eb1d56da6e3d70643f53619862b4ce81440bdb8ecfd6f875e5ba4a71"},
 ]
 markers = {dev = "os_name != \"nt\""}
 
