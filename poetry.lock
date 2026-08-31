@@ -1590,15 +1590,15 @@ test = ["jupyter-server (>=2.0.0)", "pytest (>=7.0)", "pytest-jupyter[server] (>
 
 [[package]]
 name = "jupyterlab"
-version = "4.6.2"
+version = "4.6.3"
 description = "JupyterLab computational environment"
 optional = false
 python-versions = ">=3.10"
 groups = ["dev"]
 markers = "os_name != \"nt\""
 files = [
-    {file = "jupyterlab-4.6.2-py3-none-any.whl", hash = "sha256:5964447036629adfcd3fc0969effc1da6f47d2cbd0a60b2c2eea7c31be0ec6a8"},
-    {file = "jupyterlab-4.6.2.tar.gz", hash = "sha256:e18ce8b34f3de350e93cd5b2c4f3ae884cbe266eb76bf5d6825a4ed34c13bcff"},
+    {file = "jupyterlab-4.6.3-py3-none-any.whl", hash = "sha256:0a1ebc6567186f1eabd99536e94df7ed9e96d1e7c5ddf3e4406ae16e88abacb7"},
+    {file = "jupyterlab-4.6.3.tar.gz", hash = "sha256:2e3db6e3a12495ebd188276e985bf5ac502fbde3d1e8628819920210008de498"},
 ]
 
 [package.dependencies]
@@ -2257,21 +2257,21 @@ files = [
 
 [[package]]
 name = "notebook"
-version = "7.6.1"
+version = "7.6.2"
 description = "Jupyter Notebook - A web-based notebook environment for interactive computing"
 optional = false
 python-versions = ">=3.10"
 groups = ["dev"]
 markers = "os_name != \"nt\""
 files = [
-    {file = "notebook-7.6.1-py3-none-any.whl", hash = "sha256:6ea1e4c926f0dc490444ddcc335797a3dacda470a805d01031872fb119988ba2"},
-    {file = "notebook-7.6.1.tar.gz", hash = "sha256:0b45fd1010668dd4808c40914d957706dbf044a677d28764dc881b74dfcede82"},
+    {file = "notebook-7.6.2-py3-none-any.whl", hash = "sha256:5fe9e09c335cb4b7de21627b860f77210e70e54b1fb1276ad942a4a7e1d858d3"},
+    {file = "notebook-7.6.2.tar.gz", hash = "sha256:cc02b5f0bb972160cccfe44ad8a1a202036206ba3439469c514f03aefa9ae807"},
 ]
 
 [package.dependencies]
 jupyter-builder = ">=1.0.2,<2"
 jupyter-server = ">=2.19.0,<3"
-jupyterlab = ">=4.6.2,<4.7"
+jupyterlab = ">=4.6.3,<4.7"
 jupyterlab-server = ">=2.28.0,<3"
 notebook-shim = ">=0.2,<0.3"
 tornado = ">=6.2.0"
