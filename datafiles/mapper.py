@@ -28,6 +28,7 @@ class Mapper:
         manual: bool,
         defaults: bool,
         infer: bool,
+        key_attrs: Dict,
         root: Optional[Mapper] = None,
     ) -> None:
         assert manual is not None
@@ -42,6 +43,7 @@ class Mapper:
         self._manual = manual
         self.defaults = defaults
         self._infer = infer
+        self.key_attrs = key_attrs
         self._last_load = 0.0
         self._last_data: Dict = {}
         self._root = root
@@ -294,6 +296,7 @@ def create_mapper(obj, root=None) -> Mapper:
     meta = config.load(obj)
     attrs = meta.datafile_attrs
     pattern = meta.datafile_pattern
+    key_attrs = meta.datafile_key_attrs
 
     if attrs is None and dataclasses.is_dataclass(obj):
         attrs = {}
@@ -303,6 +306,14 @@ def create_mapper(obj, root=None) -> Mapper:
             if pattern is None or self_name not in pattern:
                 attrs[field.name] = map_type(field.type, name=field.name)  # type: ignore
 
+    if key_attrs is None and dataclasses.is_dataclass(obj):
+        key_attrs = {}
+        log.debug(f"Mapping key attributes for {obj.__class__} object")
+        for field in dataclasses.fields(obj):
+            self_name = f"self.{field.name}"
+            if pattern is not None and self_name in pattern:
+                key_attrs[field.name] = map_type(resolve(field.type, obj), name=field.name)  # type: ignore
+
     return Mapper(
         obj,
         attrs=attrs or {},
@@ -310,5 +321,6 @@ def create_mapper(obj, root=None) -> Mapper:
         manual=meta.datafile_manual,
         defaults=meta.datafile_defaults,
         infer=meta.datafile_infer,
+        key_attrs=key_attrs or {},
         root=root,
     )
