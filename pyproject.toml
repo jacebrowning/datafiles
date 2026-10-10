@@ -88,7 +88,11 @@ mkdocs = "^1.4"
 pygments = "^2.15"
 
 # Notebooks
+appnope = { version = ">=1.0.0", markers = "sys_platform == 'darwin'" }
+ipykernel = ">=7.0.0"
 ipython = "^8.14.0"
+jupyter-client = ">=8.6.3"
+nbclient = ">=0.11.0"
 notebook = { version = "^7.1.1", markers = "os.name != 'nt'" }
 nbstripout = ">=0.7.1,<0.10.0"
 papermill = { version = "^2.6", markers = "os.name != 'nt'" }
