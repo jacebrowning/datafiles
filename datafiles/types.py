@@ -2,7 +2,7 @@ import dataclasses
 from typing import Optional
 
 Trilean = Optional[bool]
-Missing = dataclasses._MISSING_TYPE
+Missing = dataclasses.MISSING
 
 
 class List(list):

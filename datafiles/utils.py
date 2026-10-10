@@ -27,10 +27,10 @@ def subclasses(cls):
 def get_default_field_value(instance, name):
     for field in dataclasses.fields(instance):
         if field.name == name:
-            if not isinstance(field.default, Missing):
+            if field.default is not Missing:
                 return field.default
 
-            if not isinstance(field.default_factory, Missing):  # type: ignore
+            if field.default_factory is not Missing:  # type: ignore
                 return _call_default_factory(field)
 
             if not field.init and hasattr(instance, "__post_init__"):

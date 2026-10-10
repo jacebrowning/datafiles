@@ -1,8 +1,9 @@
 # pylint: disable=unused-variable
 
+from collections.abc import Sequence
 from dataclasses import dataclass
 from enum import Enum
-from typing import ByteString, Dict, List, Mapping, Optional, Set, TypedDict, Union
+from typing import Dict, List, Mapping, Optional, Set, TypedDict, Union
 
 import pytest
 from ruamel.yaml.scalarstring import LiteralScalarString
@@ -169,9 +170,9 @@ def describe_map_type():
     def it_rejects_unhandled_type_annotations(expect):
         with expect.raises(
             TypeError,
-            "Unsupported container type: <class 'collections.abc.ByteString'>",
+            "Unsupported container type: <class 'collections.abc.Sequence'>",
         ):
-            converters.map_type(ByteString)
+            converters.map_type(Sequence[int])
 
 
 def describe_converter():
