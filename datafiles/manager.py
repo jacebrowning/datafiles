@@ -21,7 +21,7 @@ if TYPE_CHECKING:
 
 
 Trilean = Optional[bool]
-Missing = dataclasses._MISSING_TYPE  # sentinel value for arguments to be loaded
+Missing = dataclasses.MISSING  # sentinel value for arguments to be loaded
 Absent = object()  # sentinel value for required arguments not passed
 
 
@@ -53,16 +53,16 @@ class Manager:
                 if (
                     placeholder in pattern
                     and value is Absent
-                    and isinstance(field.default, Missing)
+                    and field.default is Missing
                 ):
                     raise TypeError(
                         f"Manager.get() missing required placeholder field argument: '{field.name}'"
                     )
 
                 if value is Absent:
-                    if not isinstance(field.default, Missing):
+                    if field.default is not Missing:
                         value = field.default
-                    elif not isinstance(field.default_factory, Missing):
+                    elif field.default_factory is not Missing:
                         value = field.default_factory()
                     else:
                         value = Missing
@@ -123,7 +123,7 @@ class Manager:
 
         pattern = alt_pattern = str(path.resolve())
         for field in dataclasses.fields(self.model):
-            if not isinstance(field.default, Missing):
+            if field.default is not Missing:
                 alt_pattern = alt_pattern.replace("{self." + field.name + "}", "")
         splatted = pattern.format(self=Splats()).replace(
             f"{os.sep}*{os.sep}", f"{os.sep}**{os.sep}"
