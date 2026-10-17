@@ -149,7 +149,8 @@ class Manager:
                     log.debug(f"Skipped loading of excluded value: {values[0]}")
                     continue
 
-                yield self.get(*values)
+                names = [name.removeprefix("self.") for name in result.named]
+                yield self.get(**dict(zip(names, values)))
 
     def filter(self, *, _exclude: str = "", **query):
         for item in self.all(_exclude=_exclude):
