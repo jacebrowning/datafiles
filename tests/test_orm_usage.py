@@ -170,6 +170,99 @@ def test_comments_in_matched_files(expect):
     expect(len(items)) == 2
 
 
+@pytest.mark.parametrize("method", ["all", "filter"])
+def test_pattern_fields_can_be_declared_in_reverse_order(expect, tmp_path, method):
+    @datafile(str(tmp_path / "{self.environment}" / "{self.name}.yml"))
+    class Server:
+        name: str
+        environment: str
+        value: int = 0
+
+    path = tmp_path / "dev" / "server.yml"
+    path.parent.mkdir()
+    path.write_text("value: 7\n")
+
+    query = {"environment": "dev"} if method == "filter" else {}
+    items = list(getattr(Server.objects, method)(**query))
+
+    expect(len(items)) == 1
+    expect((items[0].name, items[0].environment, items[0].value)) == (
+        "server",
+        "dev",
+        7,
+    )
+    expect(items[0].datafile.path) == path
+    expect(path.read_text()) == "value: 7\n"
+
+
+@pytest.mark.parametrize("method", ["all", "filter"])
+def test_pattern_fields_can_follow_other_fields(expect, tmp_path, method):
+    @datafile(str(tmp_path / "{self.environment}" / "{self.name}.yml"))
+    class Server:
+        value: int
+        environment: str
+        name: str
+
+    path = tmp_path / "dev" / "server.yml"
+    path.parent.mkdir()
+    path.write_text("value: 7\n")
+
+    query = {"value": 7} if method == "filter" else {}
+    items = list(getattr(Server.objects, method)(**query))
+
+    expect(len(items)) == 1
+    expect((items[0].name, items[0].environment, items[0].value)) == (
+        "server",
+        "dev",
+        7,
+    )
+    expect(path.read_text()) == "value: 7\n"
+
+
+def test_reversed_pattern_fields_keep_recursive_paths_and_exclusions(expect, tmp_path):
+    @datafile(str(tmp_path / "{self.path}" / "{self.name}.yml"))
+    class Route:
+        name: str
+        path: str
+        value: int = 0
+
+    for folder, name in [
+        ("foo/bar", "public"),
+        ("foo/bar", "private"),
+        ("skip", "other"),
+    ]:
+        path = tmp_path / folder / f"{name}.yml"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("value: 2\n")
+
+    items = list(Route.objects.all(_exclude="skip"))
+
+    expect(sorted(item.name for item in items)) == ["private", "public"]
+    expect({item.path for item in items}) == {
+        str(tmp_path.joinpath("foo", "bar").relative_to(tmp_path))
+    }
+    expect([item.name for item in Route.objects.filter(_exclude="foo")]) == ["other"]
+    expect(Route.objects.get("public", items[0].path).name) == "public"
+    expect(Route.objects.get(path=items[0].path, name="private").name) == "private"
+
+
+def test_pattern_fields_keep_defaults_for_alternate_patterns(expect, tmp_path):
+    @datafile(str(tmp_path / "{self.prefix}{self.name}.yml"))
+    class Item:
+        name: str
+        prefix: str = ""
+        value: int = 0
+
+    path = tmp_path / "x.yml"
+    path.write_text("value: 3\n")
+
+    items = list(Item.objects.all())
+
+    expect(len(items)) == 1
+    expect((items[0].name, items[0].prefix, items[0].value)) == ("x", "", 3)
+    expect(path.read_text()) == "value: 3\n"
+
+
 def test_paths_in_pattern(expect):
     @datafile("../tmp/routes/{self.path}/{self.variant}.yml")
     class LegacyTemplate:
