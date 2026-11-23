@@ -8,13 +8,14 @@ import os
 from functools import reduce
 from glob import iglob
 from pathlib import Path
-from typing import TYPE_CHECKING, Iterator, Optional
+from typing import TYPE_CHECKING, Any, Iterator, Optional
 
 import log
 from parse import parse
 from ruamel.yaml.error import MarkedYAMLError
 
 from . import hooks, model
+from .converters import map_type
 
 if TYPE_CHECKING:
     from .model import Model
@@ -150,7 +151,30 @@ class Manager:
                     continue
 
                 names = [name.removeprefix("self.") for name in result.named]
-                yield self.get(**dict(zip(names, values)))
+                yield self.get(**dict(zip(names, self._coerce_values(names, values))))
+
+    def _coerce_values(self, names: list[str], values: list[str]) -> list[Any]:
+        """Coerce path-derived string values to their declared field types.
+
+        ``all()`` extracts placeholder values (e.g. the primary key) from the
+        filename as strings. Unlike the other attributes, these are not loaded
+        from the file contents, so they never pass through the field's
+        converter. Convert them here so ``Model.objects.all()`` yields instances
+        whose path fields match their declared types (see issue #147).
+        """
+        fields = {
+            field.name: field
+            for field in dataclasses.fields(self.model)
+            if field.init
+        }
+        coerced = []
+        for name, value in zip(names, values):
+            field = fields.get(name)
+            if field is not None:
+                converter = map_type(field.type, name=name)  # type: ignore
+                value = converter.to_python_value(value)
+            coerced.append(value)
+        return coerced
 
     def filter(self, *, _exclude: str = "", **query):
         for item in self.all(_exclude=_exclude):
