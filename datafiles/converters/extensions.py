@@ -13,7 +13,7 @@ class Number(Float):
     @classmethod
     def to_preserialization_data(cls, python_value, *, default_to_skip=None):
         data = super().to_preserialization_data(python_value)
-        if int(data) == data:
+        if data.is_integer():
             return int(data)
         return data
 

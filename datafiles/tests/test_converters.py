@@ -1,5 +1,6 @@
 # pylint: disable=unused-variable
 
+import math
 from collections.abc import Sequence
 from dataclasses import dataclass
 from enum import Enum
@@ -342,6 +343,12 @@ def describe_converter():
             convert = converters.Number.to_preserialization_data
             expect(convert(1.23)).isinstance(float)
             expect(convert(42)).isinstance(int)
+
+        def when_number_is_not_finite(expect):
+            convert = converters.Number.to_preserialization_data
+            assert math.isnan(convert(float("nan")))
+            expect(convert(float("inf"))) == float("inf")
+            expect(convert(float("-inf"))) == float("-inf")
 
         def when_text(expect):
             convert = converters.Text.to_preserialization_data
