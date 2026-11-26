@@ -241,12 +241,16 @@ class Dataclass(Converter):
                     log.debug(f"Added missing nested attribute: {name}")
                     value = None
 
-            with suppress(AttributeError):
-                if value == getattr(default_to_skip, name):
-                    log.debug(
-                        f"Skipped default value of {value!r} for {name!r} attribute"
-                    )
-                    continue
+            skip_value = Missing
+            if isinstance(default_to_skip, dict):
+                skip_value = default_to_skip.get(name, Missing)
+            else:
+                with suppress(AttributeError):
+                    skip_value = getattr(default_to_skip, name)
+
+            if skip_value is not Missing and value == skip_value:
+                log.debug(f"Skipped default value of {value!r} for {name!r} attribute")
+                continue
 
             data[name] = converter.to_preserialization_data(value)
 

@@ -129,13 +129,26 @@ class Mapper:
 
             if getattr(converter, "DATACLASS", None):
                 log.debug(f"Converting '{name}' dataclass with {converter}")
+                default_to_skip = (
+                    Missing
+                    if include_default_values
+                    else get_default_field_value(self._instance, name)
+                )
+                nested = getattr(self._instance, name, None)
+                meta = getattr(nested.__class__, "Meta", None)
+                if (
+                    dataclasses.is_dataclass(nested)
+                    and meta is not None
+                    and getattr(meta, "datafile_defaults", False) is False
+                ):
+                    default_to_skip = {
+                        field.name: get_default_field_value(nested, field.name)
+                        for field in dataclasses.fields(nested)
+                    }
+
                 new_value = converter.to_preserialization_data(
                     value,
-                    default_to_skip=(
-                        Missing
-                        if include_default_values
-                        else get_default_field_value(self._instance, name)
-                    ),
+                    default_to_skip=default_to_skip,
                 )
                 data[name] = recursive_update(value, new_value)
 
