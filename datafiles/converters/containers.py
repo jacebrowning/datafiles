@@ -249,9 +249,7 @@ class Dataclass(Converter):
                     skip_value = getattr(default_to_skip, name)
 
             if skip_value is not Missing and value == skip_value:
-                log.debug(
-                    f"Skipped default value of {value!r} for {name!r} attribute"
-                )
+                log.debug(f"Skipped default value of {value!r} for {name!r} attribute")
                 continue
 
             data[name] = converter.to_preserialization_data(value)
